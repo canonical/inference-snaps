@@ -1,0 +1,128 @@
+{
+   "lscpu": [
+      {
+         "field": "Architecture:",
+         "data": "aarch64",
+         "children": [
+            {
+               "field": "CPU op-mode(s):",
+               "data": "32-bit, 64-bit"
+            },{
+               "field": "Byte Order:",
+               "data": "Little Endian"
+            }
+         ]
+      },{
+         "field": "CPU(s):",
+         "data": "4",
+         "children": [
+            {
+               "field": "On-line CPU(s) list:",
+               "data": "0-3"
+            }
+         ]
+      },{
+         "field": "Vendor ID:",
+         "data": "ARM",
+         "children": [
+            {
+               "field": "Model name:",
+               "data": "Cortex-A53",
+               "children": [
+                  {
+                     "field": "Model:",
+                     "data": "4"
+                  },{
+                     "field": "Thread(s) per core:",
+                     "data": "1"
+                  },{
+                     "field": "Core(s) per cluster:",
+                     "data": "4"
+                  },{
+                     "field": "Socket(s):",
+                     "data": "-"
+                  },{
+                     "field": "Cluster(s):",
+                     "data": "1"
+                  },{
+                     "field": "Stepping:",
+                     "data": "r0p4"
+                  },{
+                     "field": "CPU max MHz:",
+                     "data": "2001.0000"
+                  },{
+                     "field": "CPU min MHz:",
+                     "data": "850.0000"
+                  },{
+                     "field": "BogoMIPS:",
+                     "data": "26.00"
+                  },{
+                     "field": "Flags:",
+                     "data": "fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid"
+                  }
+               ]
+            }
+         ]
+      },{
+         "field": "NUMA:",
+         "data": null,
+         "children": [
+            {
+               "field": "NUMA node(s):",
+               "data": "1"
+            },{
+               "field": "NUMA node0 CPU(s):",
+               "data": "0-3"
+            }
+         ]
+      },{
+         "field": "Vulnerabilities:",
+         "data": null,
+         "children": [
+            {
+               "field": "Gather data sampling:",
+               "data": "Not affected"
+            },{
+               "field": "Itlb multihit:",
+               "data": "Not affected"
+            },{
+               "field": "L1tf:",
+               "data": "Not affected"
+            },{
+               "field": "Mds:",
+               "data": "Not affected"
+            },{
+               "field": "Meltdown:",
+               "data": "Not affected"
+            },{
+               "field": "Mmio stale data:",
+               "data": "Not affected"
+            },{
+               "field": "Reg file data sampling:",
+               "data": "Not affected"
+            },{
+               "field": "Retbleed:",
+               "data": "Not affected"
+            },{
+               "field": "Spec rstack overflow:",
+               "data": "Not affected"
+            },{
+               "field": "Spec store bypass:",
+               "data": "Not affected"
+            },{
+               "field": "Spectre v1:",
+               "data": "Mitigation; __user pointer sanitization"
+            },{
+               "field": "Spectre v2:",
+               "data": "Not affected"
+            },{
+               "field": "Srbds:",
+               "data": "Not affected"
+            },{
+               "field": "Tsx async abort:",
+               "data": "Not affected"
+            }
+         ]
+      }
+   ]
+}

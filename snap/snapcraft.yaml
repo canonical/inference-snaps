@@ -1,0 +1,42 @@
+name: hardware-info
+base: core24
+version: git
+summary: Prints a summary of host hardware
+description: |
+  This application scans the host system and creates a summary of the available hardware.
+  The summary is provided in JSON format for other applications to consume.
+
+grade: devel
+confinement: strict
+
+# lshw requires access to the pci ids database file to look up vendor and product names. We download and include this file in a part.
+layout:
+  /usr/share/misc/pci.ids:
+    bind-file: $SNAP/pci.ids
+
+parts:
+  hardware-info-cli:
+    plugin: go
+    build-snaps:
+      - go/latest/stable
+    build-packages:
+      - git
+    stage-packages:
+      - lshw
+    source: .
+    source-type: local
+
+  pci-ids:
+    plugin: dump
+    source: https://pci-ids.ucw.cz/v2.2/pci.ids
+    source-type: file
+
+apps:
+  hardware-info:
+    plugs:
+      - hardware-observe
+# The following plugs clear up lshw apparmor denials, but we do not need them for the correct functionality of our application.
+#      - home
+#      - mount-observe
+#      - network
+    command: bin/hardware-info

@@ -116,3 +116,6 @@ fabric.properties
 *_LOCAL_*.txt
 *_REMOTE_*.txt
 
+# Ignore build outputs
+build/
+*.snap

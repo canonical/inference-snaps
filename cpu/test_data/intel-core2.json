@@ -1,0 +1,152 @@
+{
+  "lscpu": [
+    {
+      "field": "Architecture:",
+      "data": "x86_64",
+      "children": [
+        {
+          "field": "CPU op-mode(s):",
+          "data": "32-bit, 64-bit"
+        },{
+          "field": "Address sizes:",
+          "data": "36 bits physical, 48 bits virtual"
+        },{
+          "field": "Byte Order:",
+          "data": "Little Endian"
+        }
+      ]
+    },{
+      "field": "CPU(s):",
+      "data": "8",
+      "children": [
+        {
+          "field": "On-line CPU(s) list:",
+          "data": "0-7"
+        }
+      ]
+    },{
+      "field": "Vendor ID:",
+      "data": "GenuineIntel",
+      "children": [
+        {
+          "field": "Model name:",
+          "data": "Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz",
+          "children": [
+            {
+              "field": "CPU family:",
+              "data": "6"
+            },{
+              "field": "Model:",
+              "data": "42"
+            },{
+              "field": "Thread(s) per core:",
+              "data": "2"
+            },{
+              "field": "Core(s) per socket:",
+              "data": "4"
+            },{
+              "field": "Socket(s):",
+              "data": "1"
+            },{
+              "field": "Stepping:",
+              "data": "7"
+            },{
+              "field": "CPU(s) scaling MHz:",
+              "data": "69%"
+            },{
+              "field": "CPU max MHz:",
+              "data": "3800.0000"
+            },{
+              "field": "CPU min MHz:",
+              "data": "1600.0000"
+            },{
+              "field": "BogoMIPS:",
+              "data": "6822.38"
+            },{
+              "field": "Flags:",
+              "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm epb pti ssbd ibrs ibpb stibp xsaveopt dtherm ida arat pln pts md_clear flush_l1d"
+            }
+          ]
+        }
+      ]
+    },{
+      "field": "Caches (sum of all):",
+      "data": null,
+      "children": [
+        {
+          "field": "L1d:",
+          "data": "128 KiB (4 instances)"
+        },{
+          "field": "L1i:",
+          "data": "128 KiB (4 instances)"
+        },{
+          "field": "L2:",
+          "data": "1 MiB (4 instances)"
+        },{
+          "field": "L3:",
+          "data": "8 MiB (1 instance)"
+        }
+      ]
+    },{
+      "field": "NUMA:",
+      "data": null,
+      "children": [
+        {
+          "field": "NUMA node(s):",
+          "data": "1"
+        },{
+          "field": "NUMA node0 CPU(s):",
+          "data": "0-7"
+        }
+      ]
+    },{
+      "field": "Vulnerabilities:",
+      "data": null,
+      "children": [
+        {
+          "field": "Gather data sampling:",
+          "data": "Not affected"
+        },{
+          "field": "Itlb multihit:",
+          "data": "KVM: Mitigation: VMX unsupported"
+        },{
+          "field": "L1tf:",
+          "data": "Mitigation; PTE Inversion"
+        },{
+          "field": "Mds:",
+          "data": "Mitigation; Clear CPU buffers; SMT vulnerable"
+        },{
+          "field": "Meltdown:",
+          "data": "Mitigation; PTI"
+        },{
+          "field": "Mmio stale data:",
+          "data": "Unknown: No mitigations"
+        },{
+          "field": "Reg file data sampling:",
+          "data": "Not affected"
+        },{
+          "field": "Retbleed:",
+          "data": "Not affected"
+        },{
+          "field": "Spec rstack overflow:",
+          "data": "Not affected"
+        },{
+          "field": "Spec store bypass:",
+          "data": "Mitigation; Speculative Store Bypass disabled via prctl"
+        },{
+          "field": "Spectre v1:",
+          "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+        },{
+          "field": "Spectre v2:",
+          "data": "Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected"
+        },{
+          "field": "Srbds:",
+          "data": "Not affected"
+        },{
+          "field": "Tsx async abort:",
+          "data": "Not affected"
+        }
+      ]
+    }
+  ]
+}

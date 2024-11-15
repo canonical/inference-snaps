@@ -1,0 +1,161 @@
+{
+   "lscpu": [
+      {
+         "field": "Architecture:",
+         "data": "x86_64",
+         "children": [
+            {
+               "field": "CPU op-mode(s):",
+               "data": "32-bit, 64-bit"
+            },{
+               "field": "Address sizes:",
+               "data": "39 bits physical, 48 bits virtual"
+            },{
+               "field": "Byte Order:",
+               "data": "Little Endian"
+            }
+         ]
+      },{
+         "field": "CPU(s):",
+         "data": "8",
+         "children": [
+            {
+               "field": "On-line CPU(s) list:",
+               "data": "0-7"
+            }
+         ]
+      },{
+         "field": "Vendor ID:",
+         "data": "GenuineIntel",
+         "children": [
+            {
+               "field": "Model name:",
+               "data": "Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz",
+               "children": [
+                  {
+                     "field": "CPU family:",
+                     "data": "6"
+                  },{
+                     "field": "Model:",
+                     "data": "142"
+                  },{
+                     "field": "Thread(s) per core:",
+                     "data": "2"
+                  },{
+                     "field": "Core(s) per socket:",
+                     "data": "4"
+                  },{
+                     "field": "Socket(s):",
+                     "data": "1"
+                  },{
+                     "field": "Stepping:",
+                     "data": "12"
+                  },{
+                     "field": "CPU(s) scaling MHz:",
+                     "data": "28%"
+                  },{
+                     "field": "CPU max MHz:",
+                     "data": "4900.0000"
+                  },{
+                     "field": "CPU min MHz:",
+                     "data": "400.0000"
+                  },{
+                     "field": "BogoMIPS:",
+                     "data": "4599.93"
+                  },{
+                     "field": "Flags:",
+                     "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust sgx bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities"
+                  }
+               ]
+            }
+         ]
+      },{
+         "field": "Virtualization features:",
+         "data": null,
+         "children": [
+            {
+               "field": "Virtualization:",
+               "data": "VT-x"
+            }
+         ]
+      },{
+         "field": "Caches (sum of all):",
+         "data": null,
+         "children": [
+            {
+               "field": "L1d:",
+               "data": "128 KiB (4 instances)"
+            },{
+               "field": "L1i:",
+               "data": "128 KiB (4 instances)"
+            },{
+               "field": "L2:",
+               "data": "1 MiB (4 instances)"
+            },{
+               "field": "L3:",
+               "data": "8 MiB (1 instance)"
+            }
+         ]
+      },{
+         "field": "NUMA:",
+         "data": null,
+         "children": [
+            {
+               "field": "NUMA node(s):",
+               "data": "1"
+            },{
+               "field": "NUMA node0 CPU(s):",
+               "data": "0-7"
+            }
+         ]
+      },{
+         "field": "Vulnerabilities:",
+         "data": null,
+         "children": [
+            {
+               "field": "Gather data sampling:",
+               "data": "Mitigation; Microcode"
+            },{
+               "field": "Itlb multihit:",
+               "data": "KVM: Mitigation: VMX disabled"
+            },{
+               "field": "L1tf:",
+               "data": "Not affected"
+            },{
+               "field": "Mds:",
+               "data": "Not affected"
+            },{
+               "field": "Meltdown:",
+               "data": "Not affected"
+            },{
+               "field": "Mmio stale data:",
+               "data": "Mitigation; Clear CPU buffers; SMT vulnerable"
+            },{
+               "field": "Reg file data sampling:",
+               "data": "Not affected"
+            },{
+               "field": "Retbleed:",
+               "data": "Mitigation; Enhanced IBRS"
+            },{
+               "field": "Spec rstack overflow:",
+               "data": "Not affected"
+            },{
+               "field": "Spec store bypass:",
+               "data": "Mitigation; Speculative Store Bypass disabled via prctl"
+            },{
+               "field": "Spectre v1:",
+               "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+            },{
+               "field": "Spectre v2:",
+               "data": "Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop"
+            },{
+               "field": "Srbds:",
+               "data": "Mitigation; Microcode"
+            },{
+               "field": "Tsx async abort:",
+               "data": "Not affected"
+            }
+         ]
+      }
+   ]
+}
