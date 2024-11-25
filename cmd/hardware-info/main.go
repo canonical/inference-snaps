@@ -9,14 +9,17 @@ import (
 
 	"github.com/canonical/hardware-info/cpu"
 	"github.com/canonical/hardware-info/disk"
+	"github.com/canonical/hardware-info/gpu"
 	"github.com/canonical/hardware-info/memory"
 )
 
 func main() {
 	var prettyOutput bool
+	var friendlyNames bool
 	var fileOutput string
 
 	flag.BoolVar(&prettyOutput, "pretty", false, "Output pretty json. Default is compact json.")
+	flag.BoolVar(&friendlyNames, "friendly", false, "Include human readable names for devices.")
 	flag.StringVar(&fileOutput, "file", "", "Output json to this file. Default output is to stdout.")
 	flag.Parse()
 
@@ -39,6 +42,12 @@ func main() {
 		log.Println("Failed to get disk info:", err)
 	}
 	hwInfo.Disk = diskInfo
+
+	gpuInfo, err := gpu.Info(friendlyNames)
+	if err != nil {
+		log.Println("Failed to get GPU info:", err)
+	}
+	hwInfo.Gpus = gpuInfo
 
 	var jsonString []byte
 	if prettyOutput {

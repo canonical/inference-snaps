@@ -1,0 +1,30 @@
+[
+  {
+    "id" : "display",
+    "class" : "display",
+    "claimed" : true,
+    "handle" : "PCI:0000:00:02.0",
+    "description" : "VGA compatible controller",
+    "product" : "CometLake-U GT2 [UHD Graphics]",
+    "vendor" : "Intel Corporation",
+    "physid" : "2",
+    "businfo" : "pci@0000:00:02.0",
+    "logicalname" : "/dev/fb0",
+    "version" : "02",
+    "width" : 64,
+    "clock" : 33000000,
+    "configuration" : {
+      "depth" : "32",
+      "driver" : "i915",
+      "latency" : "0",
+      "resolution" : "3840,2160"
+    },
+    "capabilities" : {
+      "vga_controller" : true,
+      "bus_master" : "bus mastering",
+      "cap_list" : "PCI capabilities listing",
+      "rom" : "extension ROM",
+      "fb" : "framebuffer"
+    }
+  }
+]

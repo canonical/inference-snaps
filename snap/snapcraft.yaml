@@ -9,20 +9,29 @@ description: |
 grade: devel
 confinement: strict
 
-# lshw requires access to the pci ids database file to look up vendor and product names. We download and include this file in a part.
+# We require access to the pci ids database file to look up vendor and product names. We download and include this file in a part.
 layout:
   /usr/share/misc/pci.ids:
     bind-file: $SNAP/pci.ids
 
 parts:
+  system-utilities:
+    plugin: nil
+    stage-packages:
+      - pciutils
+      - nvidia-utils
+
+  # To use `version: git` in this file, we require git as a build dependency.
+  # This is fixed but not published yet. See https://github.com/canonical/snapcraft/issues/4944
+  git:
+    plugin: nil
+    build-packages:
+      - git
+
   hardware-info-cli:
     plugin: go
     build-snaps:
       - go/latest/stable
-    build-packages:
-      - git
-    stage-packages:
-      - lshw
     source: .
     source-type: local
 
@@ -35,8 +44,5 @@ apps:
   hardware-info:
     plugs:
       - hardware-observe
-# The following plugs clear up lshw apparmor denials, but we do not need them for the correct functionality of our application.
-#      - home
-#      - mount-observe
-#      - network
+      - opengl
     command: bin/hardware-info
