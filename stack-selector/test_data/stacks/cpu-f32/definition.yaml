@@ -1,0 +1,14 @@
+name: cpu-f32
+description: Fallback stack for CPU using llama.cpp engine
+maintainer: Canonical Ltd
+devices:
+  any:
+    - type: cpu
+      vendor-id: AuthenticAMD
+    - type: cpu
+      vendor-id: GenuineIntel
+memory: 64G
+disk-space: 29G
+components:
+  - llamacpp
+  - model-f32-gguf

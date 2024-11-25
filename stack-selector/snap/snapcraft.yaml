@@ -1,0 +1,30 @@
+name: select-stack
+base: core24
+version: git
+summary: Selects the best matching stack
+description: |
+  Kate Moss has all the tools to choose the best stack for the detected hardware.
+
+grade: devel
+confinement: strict
+
+parts:
+  # To use `version: git` in this file, we require git as a build dependency.
+  # This is fixed but not published yet. See https://github.com/canonical/snapcraft/issues/4944
+  git:
+    plugin: nil
+    build-packages:
+      - git
+
+  stack-selector:
+    plugin: go
+    build-snaps:
+      - go/latest/stable
+    source: .
+    source-type: local
+
+apps:
+  select-stack:
+    plugs:
+      - home
+    command: bin/select-stack
