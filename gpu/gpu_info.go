@@ -48,7 +48,7 @@ func pciGpus(pciDevices []pci.Device) ([]Gpu, error) {
 
 func vendorSpecificProperties(pciDevice pci.Device) map[string]interface{} {
 
-	var properties map[string]interface{}
+	properties := make(map[string]interface{})
 
 	switch pciDevice.VendorId {
 	case 0x1002: // AMD
