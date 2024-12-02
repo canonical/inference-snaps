@@ -31,7 +31,7 @@ func FindStack(hardwareInfo common.HwInfo, stacksDir string) (*common.StackResul
 			continue
 		}
 
-		data, err := os.ReadFile(stacksDir + file.Name() + "/definition.yaml")
+		data, err := os.ReadFile(stacksDir + file.Name() + "/stack.yaml")
 		if err != nil {
 			return nil, fmt.Errorf("%s: %s", stacksDir+file.Name(), err)
 		}
