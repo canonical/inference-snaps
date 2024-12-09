@@ -18,18 +18,26 @@ func TestCheckCpu(t *testing.T) {
 		Architecture: "",
 		CpuCount:     0,
 		Vendor:       vendorId,
-		Models:       nil,
+		Models: []common.CpuModel{
+			common.CpuModel{},
+		},
 	}
 
-	result := checkCpu(stackDevice, hwInfoCpu)
-	if !result {
+	result, err := checkCpus(stackDevice, hwInfoCpu)
+	if err != nil {
+		t.Error(err)
+	}
+	if result == 0 {
 		t.Fatal("CPU vendor should match")
 	}
 
 	vendorId = "AuthenticAMD"
 
-	result = checkCpu(stackDevice, hwInfoCpu)
-	if result {
+	result, err = checkCpus(stackDevice, hwInfoCpu)
+	if err != nil {
+		t.Error(err)
+	}
+	if result > 0 {
 		t.Fatal("CPU vendor should NOT match")
 	}
 

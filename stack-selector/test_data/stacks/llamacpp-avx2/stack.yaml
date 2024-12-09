@@ -1,0 +1,14 @@
+name: llamacpp-avx2
+description: CPU stack optimised with AVX2 instruction set extensions.
+maintainer: Canonical Ltd
+devices:
+  any:
+    - type: cpu
+      flags:
+        - avx
+        - avx2
+memory: 16G
+disk-space: 5G
+components:
+  - llamacpp-avx2
+  - model-q4-k-m-gguf

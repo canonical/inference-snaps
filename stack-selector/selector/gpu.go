@@ -7,19 +7,19 @@ import (
 	"katemoss/common"
 )
 
-func checkGpus(gpus []common.Gpu, stackDevice common.StackDevice) (bool, error) {
+func checkGpus(gpus []common.Gpu, stackDevice common.StackDevice) (float64, error) {
 	for _, gpu := range gpus {
 		result, err := gpuMatchesStack(gpu, stackDevice)
 		if err != nil {
-			return false, err
+			return 0, err
 		}
 		if result {
 			// At the first matching GPU we stop and return
-			return true, nil
+			return 1, nil
 		}
 	}
 	// If we get here, we checked all the GPUs and none were matches
-	return false, nil
+	return 0, nil
 }
 
 // gpuMatchesStack checks if the GPU matches what is required by the stack definition.

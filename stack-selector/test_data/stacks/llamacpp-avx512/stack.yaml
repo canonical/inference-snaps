@@ -1,0 +1,15 @@
+name: llamacpp-avx512
+description: CPU stack optimised with AVX512 instruction set extensions.
+maintainer: Canonical Ltd
+devices:
+  any:
+    - type: cpu
+      flags:
+        - avx512f
+        - avx512dq
+        - avx512bw
+memory: 16G
+disk-space: 5G
+components:
+  - llamacpp-avx512
+  - model-q4-k-m-gguf

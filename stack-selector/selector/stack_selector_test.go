@@ -6,12 +6,17 @@ import (
 	"os"
 	"testing"
 
+	"gopkg.in/yaml.v2"
 	"katemoss/common"
 )
 
 var hwInfoFiles = []string{
-	"../test_data/hardware_info/xps13-gen10.json",
+	"../test_data/hardware_info/amd-ryzen7-5700g.json",
+	"../test_data/hardware_info/amd-ryzen9-7900.json",
+	"../test_data/hardware_info/cbrd-i5-1350pe.json",
 	"../test_data/hardware_info/hp-dl380p-gen8.json",
+	"../test_data/hardware_info/xeon-6138.json",
+	"../test_data/hardware_info/xps13-gen10.json",
 }
 
 func TestFindStack(t *testing.T) {
@@ -103,4 +108,165 @@ func TestMemoryCheck(t *testing.T) {
 	if result > 0 {
 		t.Fatal("memory should NOT be enough")
 	}
+}
+
+func TestCpuFlagsAvx2(t *testing.T) {
+	file, err := os.Open("../test_data/hardware_info/amd-ryzen7-5700g.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var hardwareInfo common.HwInfo
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = os.ReadFile("../test_data/stacks/llamacpp-avx2/stack.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack common.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Valid hardware for stack
+	result, err := checkStack(hardwareInfo, stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", result)
+
+	file, err = os.Open("../test_data/hardware_info/hp-dl380p-gen8.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Invalid hardware for stack
+	result, err = checkStack(hardwareInfo, stack)
+	if err == nil {
+		t.Fatal("Stack should not match if avx2 is not available")
+	}
+}
+
+func TestCpuFlagsAvx512(t *testing.T) {
+	file, err := os.Open("../test_data/hardware_info/amd-ryzen9-7900.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var hardwareInfo common.HwInfo
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = os.ReadFile("../test_data/stacks/llamacpp-avx512/stack.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack common.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Valid hardware for stack
+	_, err = checkStack(hardwareInfo, stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	file, err = os.Open("../test_data/hardware_info/hp-dl380p-gen8.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Invalid hardware for stack
+	_, err = checkStack(hardwareInfo, stack)
+	if err == nil {
+		t.Fatal("Stack should not match if avx512 is not available")
+	}
+}
+
+func TestNoCpuInHwInfo(t *testing.T) {
+	hwInfo := common.HwInfo{
+		// All fields are nil or zero
+	}
+
+	data, err := os.ReadFile("../test_data/stacks/llamacpp-avx512/stack.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack common.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// No memory in hardware info
+	_, err = checkStack(hwInfo, stack)
+	if err == nil {
+		t.Fatal("No Memory in hardware_info should return err")
+	}
+	t.Log(err)
+
+	hwInfo.Memory = &common.MemoryInfo{
+		RamTotal:  17000000000,
+		SwapTotal: 2000000000,
+	}
+
+	// No disk space in hardware info
+	_, err = checkStack(hwInfo, stack)
+	if err == nil {
+		t.Fatal("No Disk space in hardware_info should return err")
+	}
+	t.Log(err)
+
+	hwInfo.Disk = make(map[string]*common.DirStats)
+	hwInfo.Disk["/"] = &common.DirStats{
+		Avail: 6000000000,
+	}
+
+	// No CPU in hardware info
+	_, err = checkStack(hwInfo, stack)
+	if err == nil {
+		t.Fatal("No CPU in hardware_info should return err")
+	}
+	t.Log(err)
 }

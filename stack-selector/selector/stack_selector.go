@@ -55,7 +55,7 @@ func FindStack(hardwareInfo common.HwInfo, stacksDir string) (*common.StackResul
 				Score:      score,
 			}
 			foundStacks = append(foundStacks, foundStack)
-			log.Printf("Stack %s matches. Score = %d", stack.Name, score)
+			log.Printf("Stack %s matches. Score = %f", stack.Name, score)
 		}
 	}
 
@@ -74,8 +74,8 @@ func FindStack(hardwareInfo common.HwInfo, stacksDir string) (*common.StackResul
 	return &foundStacks[0], nil
 }
 
-func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
-	score := 0
+func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (float64, error) {
+	stackScore := 0.0
 
 	// Enough memory
 	if stack.Memory != nil {
@@ -83,11 +83,16 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 		if err != nil {
 			return 0, err
 		}
+
+		if hardwareInfo.Memory == nil {
+			return 0, fmt.Errorf("no memory in hardware info")
+		}
+
 		// Checking combination of ram and swap
 		if hardwareInfo.Memory.RamTotal+hardwareInfo.Memory.SwapTotal < requiredMemory {
 			return 0, fmt.Errorf("not enough memory")
 		}
-		score++
+		stackScore++
 	}
 
 	// Enough disk space
@@ -102,7 +107,7 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 		if hardwareInfo.Disk["/var/lib/snapd/snaps"].Avail < requiredDisk {
 			return 0, fmt.Errorf("not enough free disk space")
 		}
-		score++
+		stackScore++
 	}
 
 	// Devices
@@ -114,22 +119,28 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 			if hardwareInfo.Cpu == nil {
 				return 0, fmt.Errorf("cpu device is required but none found")
 			}
-			if !checkCpus(device, *hardwareInfo.Cpu) {
+			cpuScore, err := checkCpus(device, *hardwareInfo.Cpu)
+			if err != nil {
+				return 0, err
+			}
+			if cpuScore == 0 {
 				return 0, fmt.Errorf("required cpu device not found")
 			}
+			stackScore += cpuScore
 			allOfDevicesFound++
 
 		case "gpu":
 			if len(hardwareInfo.Gpus) == 0 {
 				return 0, fmt.Errorf("gpu device is required but none found")
 			}
-			result, err := checkGpus(hardwareInfo.Gpus, device)
+			gpuScore, err := checkGpus(hardwareInfo.Gpus, device)
 			if err != nil {
 				return 0, err
 			}
-			if !result {
+			if gpuScore == 0 {
 				return 0, fmt.Errorf("required gpu device not found")
 			}
+			stackScore += gpuScore
 			allOfDevicesFound++
 		}
 	}
@@ -137,25 +148,36 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 	if len(stack.Devices.All) > 0 && allOfDevicesFound != len(stack.Devices.All) {
 		return 0, fmt.Errorf("all: could not find a required device")
 	}
-	score += allOfDevicesFound
 
 	// any
 	anyOfDevicesFound := 0
 	for _, device := range stack.Devices.Any {
 		switch device.Type {
 		case "cpu":
-			if checkCpus(device, *hardwareInfo.Cpu) {
-				anyOfDevicesFound++
+			if hardwareInfo.Cpu == nil {
+				continue
 			}
-
-		case "gpu":
-			result, err := checkGpus(hardwareInfo.Gpus, device)
+			cpuScore, err := checkCpus(device, *hardwareInfo.Cpu)
 			if err != nil {
 				return 0, err
 			}
-			if result {
+			if cpuScore > 0 {
 				anyOfDevicesFound++
 			}
+			stackScore += cpuScore
+
+		case "gpu":
+			if hardwareInfo.Gpus == nil {
+				continue
+			}
+			gpuScore, err := checkGpus(hardwareInfo.Gpus, device)
+			if err != nil {
+				return 0, err
+			}
+			if gpuScore > 0 {
+				anyOfDevicesFound++
+			}
+			stackScore += gpuScore
 		}
 	}
 
@@ -163,7 +185,6 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 	if len(stack.Devices.Any) > 0 && anyOfDevicesFound == 0 {
 		return 0, fmt.Errorf("any: could not find a required device")
 	}
-	score += anyOfDevicesFound
 
-	return score, nil
+	return stackScore, nil
 }

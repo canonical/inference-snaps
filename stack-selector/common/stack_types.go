@@ -3,7 +3,7 @@ package common
 type StackResult struct {
 	Name       string   `json:"name"`
 	Components []string `json:"components"`
-	Score      int      `json:"score"`
+	Score      float64  `json:"score"`
 }
 
 type Stack struct {
@@ -23,8 +23,9 @@ type StackDevices struct {
 }
 
 type StackDevice struct {
-	Type     string  `yaml:"type"`
-	Bus      *string `yaml:"bus"`
-	VendorId *string `yaml:"vendor-id"`
-	VRam     *string `yaml:"vram"`
+	Type     string   `yaml:"type"`
+	Bus      *string  `yaml:"bus"`
+	VendorId *string  `yaml:"vendor-id"`
+	VRam     *string  `yaml:"vram"`
+	Flags    []string `yaml:"flags"`
 }
