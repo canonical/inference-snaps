@@ -96,7 +96,10 @@ func checkStack(hardwareInfo common.HwInfo, stack common.Stack) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-		if hardwareInfo.Disk["/"].Avail < requiredDisk {
+		if _, ok := hardwareInfo.Disk["/var/lib/snapd/snaps"]; !ok {
+			return 0, fmt.Errorf("disk space not provided by hardware info")
+		}
+		if hardwareInfo.Disk["/var/lib/snapd/snaps"].Avail < requiredDisk {
 			return 0, fmt.Errorf("not enough free disk space")
 		}
 		score++

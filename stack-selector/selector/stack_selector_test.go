@@ -53,6 +53,7 @@ func TestDiskCheck(t *testing.T) {
 	hwInfo := common.HwInfo{}
 	hwInfo.Disk = make(map[string]*common.DirStats)
 	hwInfo.Disk["/"] = &dirStat
+	hwInfo.Disk["/var/lib/snapd/snaps"] = &dirStat
 
 	stackDisk := "300M"
 	stack := common.Stack{DiskSpace: &stackDisk}
