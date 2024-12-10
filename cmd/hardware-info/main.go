@@ -7,10 +7,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/canonical/hardware-info/cpu"
-	"github.com/canonical/hardware-info/disk"
-	"github.com/canonical/hardware-info/gpu"
-	"github.com/canonical/hardware-info/memory"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info/cpu"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info/disk"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info/gpu"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info/memory"
+	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	flag.StringVar(&fileOutput, "file", "", "Output json to this file. Default output is to stdout.")
 	flag.Parse()
 
-	var hwInfo HwInfo
+	var hwInfo types.HwInfo
 
 	memoryInfo, err := memory.Info()
 	if err != nil {

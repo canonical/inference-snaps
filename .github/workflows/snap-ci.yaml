@@ -1,0 +1,39 @@
+name: Snap CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual trigger
+  workflow_dispatch:
+
+env:
+  SNAP_NAME: ml-snap-utils
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        runs:
+          - architecture: amd64
+            runner: [ self-hosted, amd64, Linux ]
+          - architecture: arm64
+            runner: [ self-hosted, ARM64, Linux ]
+    runs-on: ${{ matrix.runs.runner }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build snap
+        uses: snapcore/action-build@v1
+        id: snapcraft
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{matrix.runs.architecture}}
+          path: ${{ steps.snapcraft.outputs.snap }}
+          if-no-files-found: error

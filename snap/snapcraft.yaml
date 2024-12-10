@@ -1,10 +1,9 @@
-name: hardware-info
+name: ml-snap-utils
 base: core24
 version: git
-summary: Prints a summary of host hardware
+summary: Utilities for snapping ML workloads
 description: |
-  This application scans the host system and creates a summary of the available hardware.
-  The summary is provided in JSON format for other applications to consume.
+  These utilities helps decide which components should be installed on a particular system.
 
 grade: devel
 confinement: strict
@@ -28,7 +27,7 @@ parts:
     build-packages:
       - git
 
-  hardware-info-cli:
+  go-clis:
     plugin: go
     build-snaps:
       - go/latest/stable
@@ -46,3 +45,8 @@ apps:
       - hardware-observe
       - opengl
     command: bin/hardware-info
+
+  select-stack:
+    plugs:
+      - home
+    command: bin/select-stack

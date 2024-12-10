@@ -1,16 +1,24 @@
-# Hardware Detect
+# ML Snap Utils
 
-This program detects system hardware and provides a summary in JSON format.
+This repo contains utilities used in snapping machine learning (AI) workloads.
 
 ## Build
 
-To build the CLI for hardware-info, run the following command in the root of this repository:
+The CLIs included in this repo can be built using the following commands.
+
+Hardware Info:
 
 ```bash
 go build github.com/canonical/hardware-info/cmd/hardware-info
 ```
 
-To build a snap for this application, run:
+Select Stack:
+
+```bash
+go build github.com/canonical/hardware-info/cmd/select-stack
+```
+
+To build a snap for these applications, run:
 
 ```bash
 snapcraft -v
@@ -19,16 +27,18 @@ snapcraft -v
 Then install the snap and connect the required interfaces:
 
 ```bash
-sudo snap install --dangerous ./hardware-info_*.snap
-sudo snap connect hardware-info:hardware-observe
+sudo snap install --dangerous ./ml-snap-utils_*.snap
+sudo snap connect ml-snap-utils:hardware-observe 
 ```
 
 ## Usage
 
+### Hardware Info
+
 A help message is printed out when providing the `-h` or `--help` flags.
 
 ```bash
-$ hardware-info -h
+$ ml-snap-utils.hardware-info -h
 Usage of hardware-info:
   -file string
         Output json to this file. Default output is to stdout.
@@ -36,13 +46,36 @@ Usage of hardware-info:
         Output pretty json. Default is compact json.
 ```
 
-By default, the `hardware-info` application will print out a summary of the host system to `STDOUT` in compact JSON format.
+By default, the `hardware-info` application will print out a summary of the host system to `STDOUT` in compact JSON
+format.
 By specifying the `--pretty` flag, the JSON will be formatted for easier readability.
 The `--file` argument allows writing the JSON data to a file, rather than to `STDOUT`.
 
 Errors and warnings are printed to STDERR.
 
-## Detecting NVIDIA GPU
+### Select Stack
+
+The output from `hardware-info` can be piped into `select-stack`.
+You need to provide the location of the stack definitions from which the selection should be made.
+
+The result is written as json to STDOUT, while any other log messages are available on STDERR.
+
+Example:
+
+```bash
+$ ml-snap-utils.hardware-info | ml-snap-utils.select-stack --stacks=test_data/stacks/
+2024/12/10 11:28:03 Vendor specific info for Intel GPU not implemented
+2024/12/10 11:28:03 Stack cpu-f32 not selected: not enough memory
+2024/12/10 11:28:03 Stack fallback-cpu matches. Score = 4.000000
+2024/12/10 11:28:03 Stack fallback-gpu not selected: any: could not find a required device
+2024/12/10 11:28:03 Stack llamacpp-avx2 matches. Score = 3.200000
+2024/12/10 11:28:03 Stack llamacpp-avx512 not selected: any: could not find a required device
+{"name":"fallback-cpu","components":["llamacpp","model-q4-k-m-gguf"],"score":4}
+```
+
+## Notes
+
+### Detecting NVIDIA GPU
 
 On a clean 24.04 installation, you need to install the NVIDIA drivers and utils:
 

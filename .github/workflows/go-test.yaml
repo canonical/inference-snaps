@@ -1,0 +1,27 @@
+name: Run Go tests
+
+on: [ push ]
+
+jobs:
+  test-selector:
+    runs-on: [ self-hosted, linux, amd64 ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+      - name: Hardware info tests
+        run: |
+          go test -v -failfast ./pkg/hardware_info/*
+      - name: Selector tests
+        run: |
+          go test -v -failfast ./pkg/selector
+      - name: Type tests
+        run: |
+          go test -v -failfast ./pkg/types
+      - name: Util tests
+        run: |
+          go test -v -failfast ./pkg/utils
