@@ -51,9 +51,10 @@ func FindStack(hardwareInfo types.HwInfo, stacksDir string) (*types.StackResult,
 
 		if score > 0 {
 			foundStack := types.StackResult{
-				Name:       currentStack.Name,
-				Components: currentStack.Components,
-				Score:      score,
+				Name:           currentStack.Name,
+				Components:     currentStack.Components,
+				Configurations: currentStack.Configurations,
+				Score:          score,
 			}
 			foundStacks = append(foundStacks, foundStack)
 			log.Printf("Stack %s matches. Score = %f", currentStack.Name, score)

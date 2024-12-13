@@ -1,20 +1,21 @@
 package types
 
 type StackResult struct {
-	Name       string   `json:"name"`
-	Components []string `json:"components"`
-	Score      float64  `json:"score"`
+	Name           string    `json:"name"`
+	Components     []string  `json:"components"`
+	Configurations StackConf `json:"configurations,omitempty"`
+	Score          float64   `json:"score"`
 }
 
 type Stack struct {
-	Name           string                 `yaml:"name"`
-	Description    string                 `yaml:"description"`
-	Maintainer     string                 `yaml:"maintainer"`
-	Devices        StackDevices           `yaml:"devices"`
-	Memory         *string                `yaml:"memory"`
-	DiskSpace      *string                `yaml:"disk-space"`
-	Components     []string               `yaml:"components"`
-	Configurations map[string]interface{} `yaml:"configurations"`
+	Name           string       `yaml:"name"`
+	Description    string       `yaml:"description"`
+	Maintainer     string       `yaml:"maintainer"`
+	Devices        StackDevices `yaml:"devices"`
+	Memory         *string      `yaml:"memory"`
+	DiskSpace      *string      `yaml:"disk-space"`
+	Components     []string     `yaml:"components"`
+	Configurations StackConf    `yaml:"configurations"`
 }
 
 type StackDevices struct {
@@ -29,3 +30,5 @@ type StackDevice struct {
 	VRam     *string  `yaml:"vram"`
 	Flags    []string `yaml:"flags"`
 }
+
+type StackConf map[string]interface{}
