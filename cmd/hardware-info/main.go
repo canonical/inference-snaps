@@ -28,25 +28,25 @@ func main() {
 
 	memoryInfo, err := memory.Info()
 	if err != nil {
-		log.Println("Failed to get memory info:", err)
+		log.Fatalf("Failed to get memory info: %s", err)
 	}
 	hwInfo.Memory = memoryInfo
 
 	cpuInfo, err := cpu.Info()
 	if err != nil {
-		log.Println("Failed to get CPU info:", err)
+		log.Fatalf("Failed to get CPU info: %s", err)
 	}
 	hwInfo.Cpu = cpuInfo
 
 	diskInfo, err := disk.Info()
 	if err != nil {
-		log.Println("Failed to get disk info:", err)
+		log.Fatalf("Failed to get disk info: %s", err)
 	}
 	hwInfo.Disk = diskInfo
 
 	gpuInfo, err := gpu.Info(friendlyNames)
 	if err != nil {
-		log.Println("Failed to get GPU info:", err)
+		log.Fatalf("Failed to get GPU info: %s", err)
 	}
 	hwInfo.Gpus = gpuInfo
 
