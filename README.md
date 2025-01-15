@@ -9,13 +9,13 @@ The CLIs included in this repo can be built using the following commands.
 Hardware Info:
 
 ```bash
-go build github.com/canonical/hardware-info/cmd/hardware-info
+go build github.com/canonical/ml-snap-utils/cmd/hardware-info
 ```
 
 Select Stack:
 
 ```bash
-go build github.com/canonical/hardware-info/cmd/select-stack
+go build github.com/canonical/ml-snap-utils/cmd/select-stack
 ```
 
 To build a snap for these applications, run:
