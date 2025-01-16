@@ -9,15 +9,15 @@ import (
 	"github.com/canonical/ml-snap-utils/pkg/utils"
 )
 
-func checkGpus(gpus []gpu.Gpu, stackDevice types.StackDevice) (float64, error) {
-	for _, gpu := range gpus {
-		result, err := gpuMatchesStack(gpu, stackDevice)
+func checkGpus(gpus []gpu.Gpu, stackDevice types.StackDevice) (int, error) {
+	for _, systemGpu := range gpus {
+		result, err := gpuMatchesStack(systemGpu, stackDevice)
 		if err != nil {
 			return 0, err
 		}
 		if result {
 			// At the first matching GPU we stop and return
-			return 1, nil
+			return WeightGpu, nil
 		}
 	}
 	// If we get here, we checked all the GPUs and none were matches

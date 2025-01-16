@@ -1,8 +1,8 @@
 package selector
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"os"
 	"sort"
 	"strings"
@@ -12,8 +12,29 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func FindStack(hardwareInfo types.HwInfo, stacksDir string) (*types.StackResult, error) {
-	var foundStacks []types.StackResult
+func TopStack(scoredStacks []types.StackResult) (*types.StackResult, error) {
+	if len(scoredStacks) == 0 {
+		return nil, errors.New("no stacks found")
+	}
+
+	// Sort by score (high to low) and return highest match
+	sort.Slice(scoredStacks, func(i, j int) bool {
+		return scoredStacks[i].Score > scoredStacks[j].Score
+	})
+
+	// TODO find duplicate scores, use a different metric to choose one of them
+	topStack := scoredStacks[0]
+
+	// If the top stack has a score of 0, it means all of them are 0, and none are compatible
+	if topStack.Score == 0 {
+		return nil, errors.New("no stacks found for this hardware")
+	}
+
+	return &scoredStacks[0], nil
+}
+
+func LoadStacksFromDir(stacksDir string) ([]types.Stack, error) {
+	var stacks []types.Stack
 
 	// Sanitise stack dir path
 	if !strings.HasSuffix(stacksDir, "/") {
@@ -43,41 +64,36 @@ func FindStack(hardwareInfo types.HwInfo, stacksDir string) (*types.StackResult,
 			return nil, fmt.Errorf("%s: %s", stacksDir, err)
 		}
 
-		score, err := checkStack(hardwareInfo, currentStack)
-		if err != nil {
-			log.Printf("Stack %s not selected: %s", currentStack.Name, err)
-			continue
-		}
-
-		if score > 0 {
-			foundStack := types.StackResult{
-				Name:           currentStack.Name,
-				Components:     currentStack.Components,
-				Configurations: currentStack.Configurations,
-				Score:          score,
-			}
-			foundStacks = append(foundStacks, foundStack)
-			log.Printf("Stack %s matches. Score = %f", currentStack.Name, score)
-		}
+		stacks = append(stacks, currentStack)
 	}
-
-	// If none found, return err
-	if len(foundStacks) == 0 {
-		return nil, fmt.Errorf("no stack found matching this hardware")
-	}
-
-	// Sort by score (high to low) and return best match
-	sort.Slice(foundStacks, func(i, j int) bool {
-		return foundStacks[i].Score > foundStacks[j].Score
-	})
-
-	// TODO find duplicate scores, use a different metric to choose one of them
-
-	return &foundStacks[0], nil
+	return stacks, nil
 }
 
-func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (float64, error) {
-	stackScore := 0.0
+func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.StackResult, error) {
+	var scoredStacks []types.StackResult
+
+	for _, currentStack := range stacks {
+		score, err := checkStack(hardwareInfo, currentStack)
+
+		scoredStack := types.StackResult{
+			Name:           currentStack.Name,
+			Components:     currentStack.Components,
+			Configurations: currentStack.Configurations,
+			Score:          score,
+		}
+
+		if err != nil {
+			scoredStack.Comment = err.Error()
+		}
+
+		scoredStacks = append(scoredStacks, scoredStack)
+	}
+
+	return scoredStacks, nil
+}
+
+func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, error) {
+	stackScore := 0
 
 	// Enough memory
 	if stack.Memory != nil {

@@ -40,13 +40,41 @@ func TestFindStack(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			result, err := FindStack(hardwareInfo, "../../test_data/stacks")
+			allStacks, err := LoadStacksFromDir("../../test_data/stacks")
+			if err != nil {
+				t.Fatal(err)
+			}
+			scoredStacks, err := ScoreStacks(hardwareInfo, allStacks)
+			if err != nil {
+				t.Fatal(err)
+			}
+			topStack, err := TopStack(scoredStacks)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			t.Logf("Found stack %s which installs %v", result.Name, result.Components)
+			t.Logf("Found stack %s which installs %v", topStack.Name, topStack.Components)
 		})
+	}
+}
+
+func TestFindStackEmpty(t *testing.T) {
+	hwInfo := types.HwInfo{}
+
+	allStacks, err := LoadStacksFromDir("../../test_data/stacks")
+	if err != nil {
+		t.Fatal(err)
+	}
+	scoredStacks, err := ScoreStacks(hwInfo, allStacks)
+	if err != nil {
+		t.Fatal(err)
+	}
+	topStack, err := TopStack(scoredStacks)
+	if err == nil {
+		t.Fatal("Empty stack dir should return an error for top stack")
+	}
+	if topStack != nil {
+		t.Fatal("No stack should be found in empty stacks dir")
 	}
 }
 
@@ -145,7 +173,7 @@ func TestCpuFlagsAvx2(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("Matching score: %f", result)
+	t.Logf("Matching score: %d", result)
 
 	file, err = os.Open("../../test_data/hardware_info/hp-dl380p-gen8.json")
 	if err != nil {

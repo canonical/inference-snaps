@@ -4,7 +4,8 @@ type StackResult struct {
 	Name           string    `json:"name"`
 	Components     []string  `json:"components"`
 	Configurations StackConf `json:"configurations,omitempty"`
-	Score          float64   `json:"score"`
+	Score          int       `json:"score"`
+	Comment        string    `json:"comment,omitempty"`
 }
 
 type Stack struct {
