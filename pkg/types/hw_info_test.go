@@ -10,9 +10,10 @@ import (
 var hwInfoFiles = []string{
 	"../../test_data/hardware_info/amd-ryzen7-5700g.json",
 	"../../test_data/hardware_info/amd-ryzen9-7900.json",
-	"../../test_data/hardware_info/cbrd-i5-1350pe.json",
+	"../../test_data/hardware_info/dell-r730xd.json",
 	"../../test_data/hardware_info/hp-dl380p-gen8.json",
-	"../../test_data/hardware_info/xeon-6138.json",
+	"../../test_data/hardware_info/i7-2600k.json",
+	"../../test_data/hardware_info/nuc11-i5-1145G7.json",
 	"../../test_data/hardware_info/xps13-gen10.json",
 }
 

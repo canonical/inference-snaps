@@ -5,6 +5,8 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
 func hostLsCpu() ([]byte, error) {
@@ -15,14 +17,17 @@ func hostLsCpu() ([]byte, error) {
 	return out, nil
 }
 
-func parseLsCpu(input []byte) (*CpuInfo, error) {
-	cpuInfo := CpuInfo{}
-
-	var lsCpuJson LsCpuContainer
+func parseLsCpu(input []byte) ([]types.CpuInfo, error) {
+	var lsCpuJson lsCpuContainer
 	err := json.Unmarshal(input, &lsCpuJson)
 	if err != nil {
 		return nil, err
 	}
+
+	var cpus []types.CpuInfo
+	var architecture string
+	var vendor string
+	var modelName string
 
 	for _, lsCpuObject := range lsCpuJson.LsCpu {
 		label := lsCpuObject.Field
@@ -30,73 +35,87 @@ func parseLsCpu(input []byte) (*CpuInfo, error) {
 
 		switch label {
 		case "Architecture:":
-			cpuInfo.Architecture = value
+			architecture = value
 		case "CPU(s):":
-			if cpuCount, err := strconv.Atoi(value); err == nil {
-				cpuInfo.CpuCount = cpuCount
-			}
+			// Not used as we calculate it ourselves per model
 		case "Vendor ID:":
-			cpuInfo.Vendor = value
+			vendor = value
 
 			for _, vendorChild := range lsCpuObject.Children {
 				switch vendorChild.Field {
 
 				case "Model name:":
-					cpuModel := Model{Name: value}
-					cpuModel.Name = vendorChild.Data
+					modelName = vendorChild.Data
+
+					var cpuInfo types.CpuInfo
+
+					// Threads, cores, sockets and clusters are not always reported. Default to 1 of each.
+					var threadsPerCore = 1
+					var coresPerSocket = 1
+					var coresPerCluster = 1
+					var socketCount = 1
+					var clusterCount = 1
 
 					for _, modelNameChild := range vendorChild.Children {
 						switch modelNameChild.Field {
 						case "CPU family:":
 							if familyId, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.Family = &familyId
+								cpuInfo.FamilyId = &familyId
 							}
 						case "Model:":
 							if modelId, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.Id = modelId
+								cpuInfo.ModelId = modelId
 							}
 						case "Thread(s) per core:":
 							if threads, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.ThreadsPerCore = &threads
+								threadsPerCore = threads
 							}
 						case "Core(s) per socket:":
 							if cores, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.CoresPerSocket = &cores
+								coresPerSocket = cores
 							}
 						case "Core(s) per cluster:":
 							if cores, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.CoresPerCluster = &cores
+								coresPerCluster = cores
 							}
 						case "Socket(s):":
 							if sockets, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.Sockets = &sockets
+								socketCount = sockets
 							}
 						case "Cluster(s):":
 							if clusters, err := strconv.Atoi(modelNameChild.Data); err == nil {
-								cpuModel.Clusters = &clusters
+								clusterCount = clusters
 							}
 						case "CPU max MHz:":
 							if maxFreq, err := strconv.ParseFloat(modelNameChild.Data, 64); err == nil {
-								cpuModel.MaxFreq = maxFreq
+								cpuInfo.MaxFrequency = maxFreq
 							}
 						case "CPU min MHz:":
 							if minFreq, err := strconv.ParseFloat(modelNameChild.Data, 64); err == nil {
-								cpuModel.MinFreq = minFreq
+								cpuInfo.MinFrequency = minFreq
 							}
 						case "BogoMIPS:":
-							if bogoMips, err := strconv.ParseFloat(modelNameChild.Data, 64); err == nil {
-								cpuModel.BogoMips = bogoMips
-							}
+							// Not used
 						case "Flags:":
 							flags := strings.Fields(modelNameChild.Data)
-							cpuModel.Flags = flags
+							cpuInfo.Flags = flags
 						}
 					}
-					cpuInfo.Models = append(cpuInfo.Models, cpuModel)
+
+					// Higher level data
+					cpuInfo.Architecture = architecture
+					cpuInfo.VendorId = vendor
+					cpuInfo.ModelName = modelName
+
+					// Calculate physical and logical cores
+					cpuInfo.PhysicalCores = coresPerSocket * socketCount * coresPerCluster * clusterCount
+					cpuInfo.LogicalCores = cpuInfo.PhysicalCores * threadsPerCore
+
+					cpus = append(cpus, cpuInfo)
 				}
 			}
 		}
 	}
 
-	return &cpuInfo, nil
+	return cpus, nil
 }

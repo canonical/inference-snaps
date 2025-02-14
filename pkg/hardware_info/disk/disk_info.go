@@ -1,9 +1,13 @@
 package disk
 
-import "log"
+import (
+	"log"
 
-func Info() (map[string]*DirStats, error) {
-	var info = make(map[string]*DirStats)
+	"github.com/canonical/ml-snap-utils/pkg/types"
+)
+
+func Info() (map[string]*types.DirStats, error) {
+	var info = make(map[string]*types.DirStats)
 
 	directories := []string{
 		"/",

@@ -1,15 +1,13 @@
 package selector
 
 import (
-	"errors"
 	"strings"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/gpu"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 	"github.com/canonical/ml-snap-utils/pkg/utils"
 )
 
-func checkGpus(gpus []gpu.Gpu, stackDevice types.StackDevice) (int, error) {
+func checkGpus(gpus []types.Gpu, stackDevice types.StackDevice) (int, error) {
 	for _, systemGpu := range gpus {
 		result, err := gpuMatchesStack(systemGpu, stackDevice)
 		if err != nil {
@@ -27,7 +25,7 @@ func checkGpus(gpus []gpu.Gpu, stackDevice types.StackDevice) (int, error) {
 // gpuMatchesStack checks if the GPU matches what is required by the stack definition.
 // This is done as a filter, based on the fields in the stack definition.
 // If the GPU from the hardware info passes all these filters, the GPU is a match.
-func gpuMatchesStack(gpu gpu.Gpu, stackDevice types.StackDevice) (bool, error) {
+func gpuMatchesStack(gpu types.Gpu, stackDevice types.StackDevice) (bool, error) {
 
 	// If the stack has a Vendor ID requirement, check if the GPU's vendor matches
 	// Vendor IDs are hex number strings, so do a case-insensitive compare
@@ -41,13 +39,8 @@ func gpuMatchesStack(gpu gpu.Gpu, stackDevice types.StackDevice) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		if vramAvailInterface, ok := gpu.Properties["vram"]; ok {
-			vramAvailUInt, ok := vramAvailInterface.(uint64)
-			if !ok {
-				// hw info should list it as a uint64
-				return false, errors.New("vram property is not uint64")
-			}
-			if vramAvailUInt < vramRequired {
+		if gpu.VRam != nil {
+			if *gpu.VRam < vramRequired {
 				// Not enough vram
 				return false, nil
 			}

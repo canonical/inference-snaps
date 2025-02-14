@@ -3,7 +3,6 @@ package selector
 import (
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/gpu"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
@@ -11,16 +10,17 @@ func TestCheckGpuVendor(t *testing.T) {
 
 	gpuVendorId := "b33f"
 
-	hwInfoGpu := gpu.Gpu{
-		VendorId:      gpuVendorId,
-		VendorName:    nil,
-		DeviceId:      "",
-		DeviceName:    nil,
-		SubvendorId:   nil,
-		SubvendorName: nil,
-		SubdeviceId:   nil,
-		SubdeviceName: nil,
-		Properties:    nil,
+	hwInfoGpu := types.Gpu{
+		VendorId:          gpuVendorId,
+		VendorName:        nil,
+		DeviceId:          "",
+		DeviceName:        nil,
+		SubvendorId:       nil,
+		SubvendorName:     nil,
+		SubdeviceId:       nil,
+		SubdeviceName:     nil,
+		VRam:              nil,
+		ComputeCapability: nil,
 	}
 
 	stackDevice := types.StackDevice{
@@ -61,19 +61,17 @@ func TestCheckGpuVram(t *testing.T) {
 
 	var vram uint64 = 5000000000
 
-	hwInfoGpu := gpu.Gpu{
-		VendorId:      "",
-		VendorName:    nil,
-		DeviceId:      "",
-		DeviceName:    nil,
-		SubvendorId:   nil,
-		SubvendorName: nil,
-		SubdeviceId:   nil,
-		SubdeviceName: nil,
-		Properties:    nil,
-	}
-	hwInfoGpu.Properties = map[string]interface{}{
-		"vram": vram,
+	hwInfoGpu := types.Gpu{
+		VendorId:          "",
+		VendorName:        nil,
+		DeviceId:          "",
+		DeviceName:        nil,
+		SubvendorId:       nil,
+		SubvendorName:     nil,
+		SubdeviceId:       nil,
+		SubdeviceName:     nil,
+		VRam:              &vram,
+		ComputeCapability: nil,
 	}
 
 	stackVram := "4G"

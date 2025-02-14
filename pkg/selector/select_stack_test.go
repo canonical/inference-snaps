@@ -6,8 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/disk"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/memory"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
@@ -15,9 +13,9 @@ import (
 var hwInfoFiles = []string{
 	"../../test_data/hardware_info/amd-ryzen7-5700g.json",
 	"../../test_data/hardware_info/amd-ryzen9-7900.json",
-	"../../test_data/hardware_info/cbrd-i5-1350pe.json",
+	"../../test_data/hardware_info/dell-r730xd.json",
 	"../../test_data/hardware_info/hp-dl380p-gen8.json",
-	"../../test_data/hardware_info/xeon-6138.json",
+	"../../test_data/hardware_info/nuc11-i5-1145G7.json",
 	"../../test_data/hardware_info/xps13-gen10.json",
 }
 
@@ -79,14 +77,12 @@ func TestFindStackEmpty(t *testing.T) {
 }
 
 func TestDiskCheck(t *testing.T) {
-	dirStat := disk.DirStats{
+	dirStat := types.DirStats{
 		Total: 0,
-		Used:  0,
-		Free:  0,
 		Avail: 400000000,
 	}
 	hwInfo := types.HwInfo{}
-	hwInfo.Disk = make(map[string]*disk.DirStats)
+	hwInfo.Disk = make(map[string]*types.DirStats)
 	hwInfo.Disk["/"] = &dirStat
 	hwInfo.Disk["/var/lib/snapd/snaps"] = &dirStat
 
@@ -113,9 +109,9 @@ func TestDiskCheck(t *testing.T) {
 
 func TestMemoryCheck(t *testing.T) {
 	hwInfo := types.HwInfo{
-		Memory: &memory.MemoryInfo{
-			RamTotal:  200000000,
-			SwapTotal: 200000000,
+		Memory: &types.MemoryInfo{
+			TotalRam:  200000000,
+			TotalSwap: 200000000,
 		},
 	}
 
@@ -130,7 +126,7 @@ func TestMemoryCheck(t *testing.T) {
 		t.Fatal("memory should be enough")
 	}
 
-	hwInfo.Memory.RamTotal = 100000000
+	hwInfo.Memory.TotalRam = 100000000
 	result, err = checkStack(hwInfo, stack)
 	if err == nil {
 		t.Fatal("Not enough memory should return err")
@@ -276,9 +272,9 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 	//t.Log(err)
 
-	hwInfo.Memory = &memory.MemoryInfo{
-		RamTotal:  17000000000,
-		SwapTotal: 2000000000,
+	hwInfo.Memory = &types.MemoryInfo{
+		TotalRam:  17000000000,
+		TotalSwap: 2000000000,
 	}
 
 	// No disk space in hardware info
@@ -288,8 +284,8 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 	//t.Log(err)
 
-	hwInfo.Disk = make(map[string]*disk.DirStats)
-	hwInfo.Disk["/"] = &disk.DirStats{
+	hwInfo.Disk = make(map[string]*types.DirStats)
+	hwInfo.Disk["/"] = &types.DirStats{
 		Avail: 6000000000,
 	}
 

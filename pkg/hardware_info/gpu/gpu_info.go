@@ -1,13 +1,16 @@
 package gpu
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
+	"github.com/canonical/ml-snap-utils/pkg/constants"
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci"
+	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
-func Info(friendlyNames bool) ([]Gpu, error) {
+func Info(friendlyNames bool) ([]types.Gpu, error) {
 	pciDevices, err := pci.PciDevices(friendlyNames)
 	if err != nil {
 		return nil, err
@@ -16,14 +19,14 @@ func Info(friendlyNames bool) ([]Gpu, error) {
 	return pciGpus(pciDevices)
 }
 
-func pciGpus(pciDevices []pci.Device) ([]Gpu, error) {
-	var gpus []Gpu
+func pciGpus(pciDevices []pci.PciDevice) ([]types.Gpu, error) {
+	var gpus []types.Gpu
 
 	for _, device := range pciDevices {
 		// 00 01 - legacy VGA devices
 		// 03 xx - display controllers
 		if device.DeviceClass == 0x0001 || device.DeviceClass&0xFF00 == 0x0300 {
-			var gpu Gpu
+			var gpu types.Gpu
 			gpu.VendorId = fmt.Sprintf("0x%04x", device.VendorId)
 			gpu.DeviceId = fmt.Sprintf("0x%04x", device.DeviceId)
 			if device.SubvendorId != nil {
@@ -39,7 +42,18 @@ func pciGpus(pciDevices []pci.Device) ([]Gpu, error) {
 			gpu.DeviceName = device.DeviceName
 			gpu.SubvendorName = device.SubvendorName
 			gpu.SubdeviceName = device.SubdeviceName
-			gpu.Properties = vendorSpecificProperties(device)
+
+			vram, err := getVRam(device)
+			if err != nil {
+				log.Printf("Error getting VRAM info for GPU: %s", err)
+			}
+			gpu.VRam = vram
+
+			computeCapability, err := getComputeCapability(device)
+			if err != nil {
+				log.Printf("Error getting compute capability for GPU: %s", err)
+			}
+			gpu.ComputeCapability = computeCapability
 
 			gpus = append(gpus, gpu)
 		}
@@ -47,40 +61,23 @@ func pciGpus(pciDevices []pci.Device) ([]Gpu, error) {
 	return gpus, nil
 }
 
-func vendorSpecificProperties(pciDevice pci.Device) map[string]interface{} {
-
-	properties := make(map[string]interface{})
-
+func getVRam(pciDevice pci.PciDevice) (*uint64, error) {
 	switch pciDevice.VendorId {
-	case 0x1002: // AMD
-		vram, err := lookUpAmdVram(pciDevice)
-		if err != nil {
-			log.Printf("Error looking up AMD vRAM: %v", err)
-		} else {
-			properties["vram"] = vram
-		}
-
-	case 0x10de: // NVIDIA
-		vram, err := lookUpNvidiaVram(pciDevice)
-		if err != nil {
-			log.Printf("Error looking up NVIDIA vRAM: %v", err)
-		} else {
-			properties["vram"] = vram
-		}
-
-		nvCompCap, err := computeCapability(pciDevice)
-		if err != nil {
-			log.Printf("Error looking up NVIDIA compute capability: %v", err)
-		} else {
-			properties["compute_capability"] = nvCompCap
-		}
-
-	case 0x8086: // Intel
-		log.Println("Vendor specific info for Intel GPU not implemented")
-
+	case constants.PciVendorAmd:
+		return amdVram(pciDevice)
+	case constants.PciVendorNvidia:
+		return nvidiaVram(pciDevice)
+	case constants.PciVendorIntel:
+		return nil, errors.New("vram lookup for Intel GPU not implemented")
 	default:
-		log.Println("Unknown GPU Vendor")
+		return nil, errors.New("unknown GPU, not looking up vram")
 	}
+}
 
-	return properties
+func getComputeCapability(pciDevice pci.PciDevice) (*string, error) {
+	if pciDevice.VendorId == constants.PciVendorNvidia {
+		return nvidiaComputeCapability(pciDevice)
+	}
+	// For other vendors we do not look up the Compute Capability
+	return nil, nil
 }

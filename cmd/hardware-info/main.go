@@ -32,11 +32,11 @@ func main() {
 	}
 	hwInfo.Memory = memoryInfo
 
-	cpuInfo, err := cpu.Info()
+	cpus, err := cpu.Info()
 	if err != nil {
 		log.Fatalf("Failed to get CPU info: %s", err)
 	}
-	hwInfo.Cpu = cpuInfo
+	hwInfo.Cpus = cpus
 
 	diskInfo, err := disk.Info()
 	if err != nil {

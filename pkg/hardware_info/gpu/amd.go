@@ -8,7 +8,7 @@ import (
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci"
 )
 
-func lookUpAmdVram(device pci.Device) (uint64, error) {
+func amdVram(device pci.PciDevice) (*uint64, error) {
 	/*
 		AMD vram is listed under /sys/bus/pci/devices/${pci_slot}/mem_info_vram_total
 
@@ -22,9 +22,13 @@ func lookUpAmdVram(device pci.Device) (uint64, error) {
 	*/
 	data, err := os.ReadFile("/sys/bus/pci/devices/" + device.Slot + "/mem_info_vram_total")
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	dataStr := string(data)
 	dataStr = strings.TrimSpace(dataStr) // value in file ends in \n
-	return strconv.ParseUint(dataStr, 10, 64)
+	vram, err := strconv.ParseUint(dataStr, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	return &vram, nil
 }

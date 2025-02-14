@@ -3,11 +3,10 @@ package selector
 import (
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/cpu"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
-func TestCheckCpu(t *testing.T) {
+func TestCheckCpuVendor(t *testing.T) {
 	vendorId := "GenuineIntel"
 	stackDevice := types.StackDevice{
 		Type:     "cpu",
@@ -15,16 +14,12 @@ func TestCheckCpu(t *testing.T) {
 		VendorId: &vendorId,
 	}
 
-	hwInfoCpu := cpu.CpuInfo{
+	hwInfoCpus := []types.CpuInfo{{
 		Architecture: "",
-		CpuCount:     0,
-		Vendor:       vendorId,
-		Models: []cpu.Model{
-			{},
-		},
-	}
+		VendorId:     vendorId,
+	}}
 
-	result, err := checkCpus(stackDevice, hwInfoCpu)
+	result, err := checkCpus(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
@@ -34,12 +29,47 @@ func TestCheckCpu(t *testing.T) {
 
 	vendorId = "AuthenticAMD"
 
-	result, err = checkCpus(stackDevice, hwInfoCpu)
+	result, err = checkCpus(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
 	if result > 0 {
 		t.Fatal("CPU vendor should NOT match")
+	}
+
+}
+
+func TestCheckCpuFlags(t *testing.T) {
+	vendorId := "GenuineIntel"
+	stackDevice := types.StackDevice{
+		Type:     "cpu",
+		Bus:      nil,
+		VendorId: &vendorId,
+		Flags:    []string{"avx2"},
+	}
+
+	hwInfoCpus := []types.CpuInfo{{
+		Architecture: "",
+		VendorId:     vendorId,
+		Flags:        []string{"avx2"},
+	}}
+
+	result, err := checkCpus(stackDevice, hwInfoCpus)
+	if err != nil {
+		t.Error(err)
+	}
+	if result == 0 {
+		t.Fatal("CPU flags should match")
+	}
+
+	stackDevice.Flags = []string{"avx512"}
+
+	result, err = checkCpus(stackDevice, hwInfoCpus)
+	if err != nil {
+		t.Error(err)
+	}
+	if result > 0 {
+		t.Fatal("CPU flags should NOT match")
 	}
 
 }

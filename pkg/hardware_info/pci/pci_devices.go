@@ -10,7 +10,7 @@ var (
 	pciDb *pcidb.PCIDB
 )
 
-func PciDevices(friendlyNames bool) ([]Device, error) {
+func PciDevices(friendlyNames bool) ([]PciDevice, error) {
 
 	hostLsPci, err := hostLsPci()
 	if err != nil {
@@ -23,7 +23,7 @@ func PciDevices(friendlyNames bool) ([]Device, error) {
 	return devices, nil
 }
 
-func lookupFriendlyNames(device Device) (FriendlyNames, error) {
+func lookupFriendlyNames(device PciDevice) (FriendlyNames, error) {
 	var friendlyNames FriendlyNames
 
 	if pciDb == nil {
