@@ -51,7 +51,7 @@ func TestFindStack(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			t.Logf("Found stack %s which installs %v", topStack.Name, topStack.Components)
+			t.Logf("Found stack %s", topStack.Name)
 		})
 	}
 }
@@ -153,7 +153,7 @@ func TestCpuFlagsAvx2(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data, err = os.ReadFile("../../test_data/stacks/llamacpp-avx2/stack.yaml")
+	data, err = os.ReadFile("../../test_data/stacks/example-cpu/stack.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -210,7 +210,7 @@ func TestCpuFlagsAvx512(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data, err = os.ReadFile("../../test_data/stacks/llamacpp-avx512/stack.yaml")
+	data, err = os.ReadFile("../../test_data/stacks/example-cpu-avx512/stack.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -254,7 +254,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		// All fields are nil or zero
 	}
 
-	data, err := os.ReadFile("../../test_data/stacks/llamacpp-avx512/stack.yaml")
+	data, err := os.ReadFile("../../test_data/stacks/example-cpu-avx512/stack.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}

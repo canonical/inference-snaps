@@ -1,0 +1,17 @@
+name: example-cpu
+description: Example stack for legacy CPUs, offering good accuracy with low footprints
+vendor: Canonical Ltd
+grade: stable
+devices:
+  any:
+    - type: cpu
+      architectures: [amd64]
+      flags: [sse4_2, f16c, fma, avx, avx2]
+memory: 8G
+disk-space: 5G
+components:
+  - llamacpp
+  - model-q4-k-m-gguf
+configurations:
+  engine: llamacpp
+  model: model-q4-k-m-gguf

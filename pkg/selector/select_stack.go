@@ -12,25 +12,26 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func TopStack(scoredStacks []types.StackResult) (*types.StackResult, error) {
-	if len(scoredStacks) == 0 {
-		return nil, errors.New("no stacks found")
+func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
+	var compatibleStacks []types.ScoredStack
+
+	for _, stack := range scoredStacks {
+		if stack.Score > 0 && stack.Grade == "stable" {
+			compatibleStacks = append(compatibleStacks, stack)
+		}
+	}
+
+	if len(compatibleStacks) == 0 {
+		return nil, errors.New("no compatible stacks found")
 	}
 
 	// Sort by score (high to low) and return highest match
-	sort.Slice(scoredStacks, func(i, j int) bool {
-		return scoredStacks[i].Score > scoredStacks[j].Score
+	sort.Slice(compatibleStacks, func(i, j int) bool {
+		return compatibleStacks[i].Score > compatibleStacks[j].Score
 	})
 
-	// TODO find duplicate scores, use a different metric to choose one of them
-	topStack := scoredStacks[0]
-
-	// If the top stack has a score of 0, it means all of them are 0, and none are compatible
-	if topStack.Score == 0 {
-		return nil, errors.New("no stacks found for this hardware")
-	}
-
-	return &scoredStacks[0], nil
+	// Top stack is highest score
+	return &compatibleStacks[0], nil
 }
 
 func LoadStacksFromDir(stacksDir string) ([]types.Stack, error) {
@@ -69,21 +70,25 @@ func LoadStacksFromDir(stacksDir string) ([]types.Stack, error) {
 	return stacks, nil
 }
 
-func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.StackResult, error) {
-	var scoredStacks []types.StackResult
+func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.ScoredStack, error) {
+	var scoredStacks []types.ScoredStack
 
 	for _, currentStack := range stacks {
 		score, err := checkStack(hardwareInfo, currentStack)
 
-		scoredStack := types.StackResult{
-			Name:           currentStack.Name,
-			Components:     currentStack.Components,
-			Configurations: currentStack.Configurations,
-			Score:          score,
+		scoredStack := types.ScoredStack{
+			Name:       currentStack.Name,
+			Score:      score,
+			Grade:      currentStack.Grade,
+			Compatible: true,
+		}
+
+		if score == 0 {
+			scoredStack.Compatible = false
 		}
 
 		if err != nil {
-			scoredStack.Comment = err.Error()
+			scoredStack.Notes = append(scoredStack.Notes, err.Error())
 		}
 
 		scoredStacks = append(scoredStacks, scoredStack)

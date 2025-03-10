@@ -1,0 +1,22 @@
+name: example-gpu
+description: Example stack for NVIDIA GPU use, offering full accuracy
+vendor: Canonical Ltd
+grade: devel
+devices:
+  all:
+    - type: cpu
+      architectures: [amd64]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x10de # Nvidia Corporation
+      # model-ids: [ ]
+      vram: 8G
+      # compute-capability: 7.0
+memory: 16G
+disk-space: 20G
+components:
+  - mistral-inference
+  - model-safetensors
+configurations:
+  engine: mistral-inference
+  model: model-safetensors
