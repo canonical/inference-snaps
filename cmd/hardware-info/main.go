@@ -7,11 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/cpu"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/disk"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/gpu"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/memory"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info"
 )
 
 func main() {
@@ -24,31 +20,10 @@ func main() {
 	flag.StringVar(&fileOutput, "file", "", "Output json to this file. Default output is to stdout.")
 	flag.Parse()
 
-	var hwInfo types.HwInfo
-
-	memoryInfo, err := memory.Info()
+	hwInfo, err := hardware_info.Get(friendlyNames)
 	if err != nil {
-		log.Fatalf("Failed to get memory info: %s", err)
+		log.Fatal(err)
 	}
-	hwInfo.Memory = memoryInfo
-
-	cpus, err := cpu.Info()
-	if err != nil {
-		log.Fatalf("Failed to get CPU info: %s", err)
-	}
-	hwInfo.Cpus = cpus
-
-	diskInfo, err := disk.Info()
-	if err != nil {
-		log.Fatalf("Failed to get disk info: %s", err)
-	}
-	hwInfo.Disk = diskInfo
-
-	gpuInfo, err := gpu.Info(friendlyNames)
-	if err != nil {
-		log.Fatalf("Failed to get GPU info: %s", err)
-	}
-	hwInfo.Gpus = gpuInfo
 
 	var jsonString []byte
 	if prettyOutput {

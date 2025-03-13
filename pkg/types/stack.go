@@ -6,45 +6,44 @@ type StackSelection struct {
 }
 
 type ScoredStack struct {
-	Name       string   `json:"name"`
+	Stack
 	Score      int      `json:"score"`
 	Compatible bool     `json:"compatible"`
-	Grade      string   `json:"grade"`
 	Notes      []string `json:"notes,omitempty"`
 }
 
 type Stack struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-	Vendor      string `yaml:"vendor"`
-	Grade       string `yaml:"grade"`
+	Name        string `yaml:"name" json:"name"`
+	Description string `yaml:"description" json:"description"`
+	Vendor      string `yaml:"vendor" json:"vendor"`
+	Grade       string `yaml:"grade" json:"grade"`
 
-	Devices   StackDevices `yaml:"devices"`
-	Memory    *string      `yaml:"memory"`
-	DiskSpace *string      `yaml:"disk-space"`
+	Devices   StackDevices `yaml:"devices" json:"devices"`
+	Memory    *string      `yaml:"memory" json:"memory"`
+	DiskSpace *string      `yaml:"disk-space" json:"disk-space"`
 
-	Components     []string  `yaml:"components"`
-	Configurations StackConf `yaml:"configurations"`
+	Components     []string  `yaml:"components" json:"components"`
+	Configurations StackConf `yaml:"configurations" json:"configurations"`
 }
 
 type StackDevices struct {
-	Any []StackDevice `yaml:"any"`
-	All []StackDevice `yaml:"all"`
+	Any []StackDevice `yaml:"any" json:"any"`
+	All []StackDevice `yaml:"all" json:"all"`
 }
 
 type StackDevice struct {
-	Type     string  `yaml:"type"`
-	VendorId *string `yaml:"vendor-id"`
+	Type     string  `yaml:"type" json:"type"`
+	VendorId *string `yaml:"vendor-id" json:"vendor-id"`
 
 	// CPUs
-	Architectures []string `yaml:"architectures"`
-	FamilyIds     []string `yaml:"family-ids"`
-	Flags         []string `yaml:"flags"`
+	Architectures []string `yaml:"architectures" json:"architectures"`
+	FamilyIds     []string `yaml:"family-ids" json:"family-ids"`
+	Flags         []string `yaml:"flags" json:"flags"`
 
 	// GPUs
-	Bus               *string `yaml:"bus"`
-	VRam              *string `yaml:"vram"`
-	ComputeCapability *string `yaml:"compute-capability"`
+	Bus               *string `yaml:"bus" json:"bus"`
+	VRam              *string `yaml:"vram" json:"vram"`
+	ComputeCapability *string `yaml:"compute-capability" json:"compute-capability"`
 }
 
 type StackConf map[string]interface{}

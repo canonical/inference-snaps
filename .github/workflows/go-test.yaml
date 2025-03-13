@@ -12,10 +12,10 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.x'
+          go-version: '1.24.x'
       - name: Hardware info tests
         run: |
-          go test -v -failfast ./pkg/hardware_info/*
+          go test -v -failfast ./pkg/hardware_info/...
       - name: Selector tests
         run: |
           go test -v -failfast ./pkg/selector

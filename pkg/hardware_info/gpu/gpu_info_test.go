@@ -25,19 +25,19 @@ func TestDisplayDevices(t *testing.T) {
 		t.Run(lsPciFile, func(t *testing.T) {
 			lsPci, err := os.ReadFile(lsPciFile)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			pciDevices, err := pci.ParseLsPci(lsPci, true)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			displayDevices, err := pciGpus(pciDevices)
 
 			jsonData, err := json.MarshalIndent(displayDevices, "", "  ")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			t.Log(string(jsonData))

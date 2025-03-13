@@ -17,7 +17,7 @@ func TestDirStats(t *testing.T) {
 		t.Run(dir, func(t *testing.T) {
 			diskStats, err := dirStats(dir)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			t.Log("Total:", utils.FmtGigabytes(diskStats.Total))
@@ -29,19 +29,19 @@ func TestDirStats(t *testing.T) {
 func TestDirStatsNonExistentDir(t *testing.T) {
 	_, err := dirStats("/path/that/does/not/exist")
 	if err == nil {
-		t.Fatalf("Non existent dir should return error")
+		t.Fatal("Non existent dir should return error")
 	}
 }
 
 func TestInfo(t *testing.T) {
 	diskInfo, err := Info()
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	jsonData, err := json.MarshalIndent(diskInfo, "", "  ")
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	t.Log(string(jsonData))

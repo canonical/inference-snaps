@@ -11,7 +11,7 @@ import (
 //func TestGetHostLsCpu(t *testing.T) {
 //	hostLsCpu, err := hostLsCpu()
 //	if err != nil {
-//		t.Fatalf(err.Error())
+//		t.Fatal(err)
 //	}
 //	t.Log(string(hostLsCpu))
 //}
@@ -19,17 +19,17 @@ import (
 //func TestParseHostLsCpu(t *testing.T) {
 //	hostLsCpu, err := hostLsCpu()
 //	if err != nil {
-//		t.Fatalf(err.Error())
+//		t.Fatal(err)
 //	}
 //
 //	cpuInfo, err := parseLsCpu(hostLsCpu)
 //	if err != nil {
-//		t.Fatalf(err.Error())
+//		t.Fatal(err)
 //	}
 //
 //	jsonData, err := json.MarshalIndent(cpuInfo, "", "  ")
 //	if err != nil {
-//		t.Fatalf(err.Error())
+//		t.Fatal(err)
 //	}
 //
 //	t.Log(string(jsonData))
@@ -50,17 +50,17 @@ func TestParseLsCpu(t *testing.T) {
 		t.Run(lsCpuFile, func(t *testing.T) {
 			lsCpu, err := os.ReadFile(lsCpuFile)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			cpuInfo, err := parseLsCpu(lsCpu)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			jsonData, err := json.MarshalIndent(cpuInfo, "", "  ")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err)
 			}
 
 			t.Log(string(jsonData))
@@ -73,7 +73,7 @@ func TestUtsName(t *testing.T) {
 	var sysInfo unix.Utsname
 	err := unix.Uname(&sysInfo)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 	t.Log(string(sysInfo.Sysname[:]))    // Linux
 	t.Log(string(sysInfo.Nodename[:]))   // jpmeijers-XP-13-7390
@@ -86,26 +86,26 @@ func TestUtsName(t *testing.T) {
 func TestMultipleModels(t *testing.T) {
 	lsCpu, err := os.ReadFile("../../../test_data/lscpu_cpuinfo/hp-dl380p-gen8-lscpu.json")
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	cpuInfo, err := parseLsCpu(lsCpu)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	if len(cpuInfo) != 4 {
 		// 4 models are reported. See https://github.com/canonical/ml-snap-utils/issues/29
-		t.Fatalf("need to find 4 CPU models")
+		t.Fatal("need to find 4 CPU models")
 	}
 
 	for _, cpu := range cpuInfo {
 		if cpu.PhysicalCores != 8 {
-			t.Fatalf("need to detect 8 physical cores")
+			t.Fatal("need to detect 8 physical cores")
 		}
 
 		if cpu.LogicalCores != 16 {
-			t.Fatalf("need to detect 16 logical cores")
+			t.Fatal("need to detect 16 logical cores")
 		}
 	}
 }

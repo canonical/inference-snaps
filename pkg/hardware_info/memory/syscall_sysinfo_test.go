@@ -8,12 +8,12 @@ import (
 func TestInfo(t *testing.T) {
 	info, err := Info()
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	jsonData, err := json.MarshalIndent(info, "", "  ")
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	t.Log(string(jsonData))
