@@ -1,7 +1,8 @@
 package disk
 
 import (
-	"log"
+	"fmt"
+	"os"
 
 	"github.com/canonical/ml-snap-utils/pkg/types"
 )
@@ -17,7 +18,7 @@ func Info() (map[string]*types.DirStats, error) {
 	for _, dir := range directories {
 		dirInfo, err := dirStats(dir)
 		if err != nil {
-			log.Printf("%s: %s", dir, err.Error())
+			fmt.Fprintf(os.Stderr, "Error getting directory stats for %s: %s\n", dir, err)
 			continue
 		}
 		info[dir] = dirInfo

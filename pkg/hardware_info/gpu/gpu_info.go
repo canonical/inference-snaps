@@ -3,7 +3,7 @@ package gpu
 import (
 	"errors"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/canonical/ml-snap-utils/pkg/constants"
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci"
@@ -45,13 +45,13 @@ func pciGpus(pciDevices []pci.PciDevice) ([]types.Gpu, error) {
 
 			vram, err := getVRam(device)
 			if err != nil {
-				log.Printf("Error getting VRAM info for GPU: %s", err)
+				fmt.Fprintln(os.Stderr, "Error getting VRAM info for GPU:", err)
 			}
 			gpu.VRam = vram
 
 			computeCapability, err := getComputeCapability(device)
 			if err != nil {
-				log.Printf("Error getting compute capability for GPU: %s", err)
+				fmt.Fprintln(os.Stderr, "Error getting compute capability for GPU:", err)
 			}
 			gpu.ComputeCapability = computeCapability
 

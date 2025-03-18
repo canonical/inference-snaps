@@ -1,7 +1,8 @@
 package pci
 
 import (
-	"log"
+	"fmt"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -63,7 +64,7 @@ func ParseLsPci(input []byte, includeFriendlyNames bool) ([]PciDevice, error) {
 			friendlyNames, err := lookupFriendlyNames(device)
 			if err != nil {
 				// This is not a fatal error, so just logging it
-				log.Printf("Error looking up friendly name: %v", err)
+				fmt.Fprintln(os.Stderr, "Error looking up friendly name:", err)
 			} else {
 				device.FriendlyNames = friendlyNames
 			}
