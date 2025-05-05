@@ -1,5 +1,7 @@
 github.com/canonical/go-snapctl v1.0.0-beta.1 h1:BQ71VWpMPsREorFdu/HDQ5A4+U6PUsYFhfsvCtXPeAc=
 github.com/canonical/go-snapctl v1.0.0-beta.1/go.mod h1:c2Kkyh24L/nYD7YSLzoA6n/mI3/86IQekwXvBHL3G+Q=
+github.com/canonical/go-snapctl v1.0.0-beta.2 h1:3M+9+uAg8vu5hIGQN/yOOcG6Esud7/eQgtZbD7DNjco=
+github.com/canonical/go-snapctl v1.0.0-beta.2/go.mod h1:c2Kkyh24L/nYD7YSLzoA6n/mI3/86IQekwXvBHL3G+Q=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/jaypipes/pcidb v1.0.1 h1:WB2zh27T3nwg8AE8ei81sNRb9yWBii3JGNJtT7K9Oic=
