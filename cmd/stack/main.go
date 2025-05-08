@@ -39,13 +39,14 @@ func main() {
 			}
 			autoSelectStacks()
 		} else {
-			// for now falling here is an error, regardless of other arguments
-			selectStack := selectCmd.Args()
-			if len(selectStack) == 0 {
+			stack := selectCmd.Args()
+			if len(stack) == 1 {
+				selectStack(stack[0])
+			} else if len(stack) == 0 {
 				fmt.Println("Error: stack name not specified")
 				os.Exit(1)
 			} else {
-				fmt.Println("Not implemented! Use 'snap <snap> set stack=<stack>' instead")
+				fmt.Println("Error: too many arguments")
 				os.Exit(1)
 			}
 		}

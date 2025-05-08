@@ -7,25 +7,14 @@ import (
 	"strings"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info"
 	"github.com/canonical/ml-snap-utils/pkg/selector"
+	"github.com/canonical/ml-snap-utils/pkg/types"
+	"gopkg.in/yaml.v3"
 )
 
 func autoSelectStacks() {
 	fmt.Println("Automatically selecting a compatible stack ...")
-
-	connected, err := snapctl.IsConnected("hardware-observe").Run()
-	if err != nil {
-		fmt.Println("Error checking hardware-observer connection:", err)
-		os.Exit(1)
-	}
-	if !connected {
-		fmt.Println("Error: hardware-observe interface (https://snapcraft.io/docs/hardware-observe-interface) isn't connected.")
-		fmt.Println("This is required for hardware detection.")
-		fmt.Printf("Please connect and try again: sudo snap connect %s:hardware-observe\n", env.SnapInst)
-		os.Exit(1)
-	}
 
 	allStacks, err := selector.LoadStacksFromDir(stacksDir)
 	if err != nil {
@@ -101,4 +90,48 @@ func autoSelectStacks() {
 	}
 
 	fmt.Println("Selected stack for your hardware configuration:", topStack.Name)
+}
+
+func selectStack(stackName string) {
+
+	stack, err := loadStacksFromDir(stacksDir, stackName)
+	if err != nil {
+		fmt.Println("Error loading stack:", err)
+		os.Exit(1)
+	}
+
+	for confKey, confVal := range stack.Configurations {
+		valJson, err := json.Marshal(confVal)
+		if err != nil {
+			fmt.Printf("Error serializing configuration %s: %v - %v\n", confKey, confVal, err)
+			os.Exit(1)
+		}
+		err = snapctl.Set(confKey, string(valJson)).Document().Run()
+		if err != nil {
+			fmt.Println("Error setting snap option:", err)
+			os.Exit(1)
+		}
+	}
+}
+
+func loadStacksFromDir(stacksDir, stackName string) (*types.Stack, error) {
+
+	// Sanitise stack dir path
+	if !strings.HasSuffix(stacksDir, "/") {
+		stacksDir += "/"
+	}
+
+	stackFilename := stacksDir + stackName + "/stack.yaml"
+	data, err := os.ReadFile(stackFilename)
+	if err != nil {
+		return nil, fmt.Errorf("error reading %s: %s", stackFilename, err)
+	}
+
+	var stack types.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %s", stacksDir, err)
+	}
+
+	return &stack, nil
 }

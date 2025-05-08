@@ -36,14 +36,14 @@ type StackDevice struct {
 	VendorId *string `yaml:"vendor-id" json:"vendor-id"`
 
 	// CPUs
-	Architectures []string `yaml:"architectures" json:"architectures"`
-	FamilyIds     []string `yaml:"family-ids" json:"family-ids"`
-	Flags         []string `yaml:"flags" json:"flags"`
+	Architectures []string `yaml:"architectures" json:"architectures,omitempty"`
+	FamilyIds     []string `yaml:"family-ids" json:"family-ids,omitempty"`
+	Flags         []string `yaml:"flags" json:"flags,omitempty"`
 
 	// GPUs
-	Bus               *string `yaml:"bus" json:"bus"`
-	VRam              *string `yaml:"vram" json:"vram"`
-	ComputeCapability *string `yaml:"compute-capability" json:"compute-capability"`
+	Bus               *string `yaml:"bus" json:"bus,omitempty"`
+	VRam              *string `yaml:"vram" json:"vram,omitempty"`
+	ComputeCapability *string `yaml:"compute-capability" json:"compute-capability,omitempty"`
 }
 
 type StackConf map[string]interface{}
