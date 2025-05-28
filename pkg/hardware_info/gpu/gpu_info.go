@@ -27,6 +27,7 @@ func pciGpus(pciDevices []pci.PciDevice) ([]types.Gpu, error) {
 		// 03 xx - display controllers
 		if device.DeviceClass == 0x0001 || device.DeviceClass&0xFF00 == 0x0300 {
 			var gpu types.Gpu
+			gpu.Bus = "pci"
 			gpu.VendorId = fmt.Sprintf("0x%04x", device.VendorId)
 			gpu.DeviceId = fmt.Sprintf("0x%04x", device.DeviceId)
 			if device.SubvendorId != nil {

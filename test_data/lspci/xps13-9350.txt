@@ -1,0 +1,270 @@
+Slot:	0000:00:00.0
+Class:	0600
+Vendor:	8086
+Device:	6400
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	5
+
+Slot:	0000:00:02.0
+Class:	0300
+Vendor:	8086
+Device:	64a0
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	4
+
+Slot:	0000:00:04.0
+Class:	1180
+Vendor:	8086
+Device:	641d
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	0
+
+Slot:	0000:00:05.0
+Class:	0480
+Vendor:	8086
+Device:	645d
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	1
+
+Slot:	0000:00:07.0
+Class:	0604
+Vendor:	8086
+Device:	a84e
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	6
+
+Slot:	0000:00:07.2
+Class:	0604
+Vendor:	8086
+Device:	a860
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	7
+
+Slot:	0000:00:0a.0
+Class:	1180
+Vendor:	8086
+Device:	647d
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	2
+
+Slot:	0000:00:0b.0
+Class:	1200
+Vendor:	8086
+Device:	643e
+SVendor:	1028
+SDevice:	0cc9
+Rev:	04
+ProgIf:	00
+IOMMUGroup:	3
+
+Slot:	0000:00:0d.0
+Class:	0c03
+Vendor:	8086
+Device:	a831
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	30
+IOMMUGroup:	8
+
+Slot:	0000:00:0d.2
+Class:	0c03
+Vendor:	8086
+Device:	a833
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	40
+IOMMUGroup:	8
+
+Slot:	0000:00:0d.3
+Class:	0c03
+Vendor:	8086
+Device:	a834
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	40
+IOMMUGroup:	8
+
+Slot:	0000:00:12.0
+Class:	0700
+Vendor:	8086
+Device:	a845
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	9
+
+Slot:	0000:00:13.0
+Class:	0780
+Vendor:	8086
+Device:	a862
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	10
+
+Slot:	0000:00:14.0
+Class:	0c03
+Vendor:	8086
+Device:	a87d
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	30
+IOMMUGroup:	11
+
+Slot:	0000:00:14.2
+Class:	0500
+Vendor:	8086
+Device:	a87f
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	11
+
+Slot:	0000:00:14.3
+Class:	0280
+Vendor:	8086
+Device:	a840
+SVendor:	8086
+SDevice:	40e0
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	12
+
+Slot:	0000:00:14.7
+Class:	0d11
+Vendor:	8086
+Device:	a876
+SVendor:	8086
+SDevice:	000e
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	13
+
+Slot:	0000:00:15.0
+Class:	0c80
+Vendor:	8086
+Device:	a878
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:15.2
+Class:	0c80
+Vendor:	8086
+Device:	a87a
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:16.0
+Class:	0780
+Vendor:	8086
+Device:	a870
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	15
+
+Slot:	0000:00:1c.0
+Class:	0604
+Vendor:	8086
+Device:	a83c
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	16
+
+Slot:	0000:00:1e.0
+Class:	0780
+Vendor:	8086
+Device:	a825
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	17
+
+Slot:	0000:00:1f.0
+Class:	0601
+Vendor:	8086
+Device:	a807
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	18
+
+Slot:	0000:00:1f.3
+Class:	0401
+Vendor:	8086
+Device:	a828
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	18
+
+Slot:	0000:00:1f.4
+Class:	0c05
+Vendor:	8086
+Device:	a822
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	18
+
+Slot:	0000:00:1f.5
+Class:	0c80
+Vendor:	8086
+Device:	a823
+SVendor:	1028
+SDevice:	0cc9
+Rev:	10
+ProgIf:	00
+IOMMUGroup:	18
+
+Slot:	0000:71:00.0
+Class:	0108
+Vendor:	1e0f
+Device:	001a
+SVendor:	1e0f
+SDevice:	001a
+Rev:	01
+ProgIf:	02
+IOMMUGroup:	19
+

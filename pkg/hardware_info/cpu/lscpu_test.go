@@ -36,13 +36,16 @@ import (
 //}
 
 var testFiles = []string{
-	"../../../test_data/lscpu_cpuinfo/dell-r430-lscpu.json",
-	"../../../test_data/lscpu_cpuinfo/hp-dl380p-gen8-lscpu.json",
-	"../../../test_data/lscpu_cpuinfo/rpi5-lscpu.json",
-	"../../../test_data/lscpu_cpuinfo/mediatek-genio-1200-lscpu.json",
-	"../../../test_data/lscpu_cpuinfo/mediatek-g350-lscpu.json",
-	"../../../test_data/lscpu_cpuinfo/intel-cbrd-raptor-lake.json",
-	"../../../test_data/lscpu_cpuinfo/intel-core2.json",
+	"../../../test_data/lscpu/dell-r430.json",
+	"../../../test_data/lscpu/hp-dl380p-gen8.json",
+	"../../../test_data/lscpu/intel-cbrd-raptor-lake.json",
+	"../../../test_data/lscpu/intel-core2.json",
+	"../../../test_data/lscpu/mediatek-g350.json",
+	"../../../test_data/lscpu/mediatek-genio-1200.json",
+	"../../../test_data/lscpu/mustang.json",
+	"../../../test_data/lscpu/rpi5.json",
+	"../../../test_data/lscpu/xps13-7390.json",
+	"../../../test_data/lscpu/xps13-9350.json", // has NPU
 }
 
 func TestParseLsCpu(t *testing.T) {
@@ -84,7 +87,7 @@ func TestUtsName(t *testing.T) {
 }
 
 func TestMultipleModels(t *testing.T) {
-	lsCpu, err := os.ReadFile("../../../test_data/lscpu_cpuinfo/hp-dl380p-gen8-lscpu.json")
+	lsCpu, err := os.ReadFile("../../../test_data/lscpu/hp-dl380p-gen8.json")
 	if err != nil {
 		t.Fatal(err)
 	}
