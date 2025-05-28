@@ -30,7 +30,7 @@ parts:
   go-clis:
     plugin: go
     build-snaps:
-      - go/latest/stable
+      - go/1.24/stable
     source: .
     source-type: local
 

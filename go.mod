@@ -1,6 +1,6 @@
 module github.com/canonical/ml-snap-utils
 
-go 1.24.1
+go 1.24
 
 require (
 	github.com/canonical/go-snapctl v1.0.0-beta.2
