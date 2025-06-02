@@ -37,6 +37,7 @@ type StackDevice struct {
 
 	// CPUs
 	Architectures []string `yaml:"architectures" json:"architectures,omitempty"`
+	ModelId       *int     `yaml:"model-id" json:"model-id,omitempty"`
 	FamilyIds     []string `yaml:"family-ids" json:"family-ids,omitempty"`
 	Flags         []string `yaml:"flags" json:"flags,omitempty"`
 

@@ -36,6 +36,8 @@ import (
 //}
 
 var testFiles = []string{
+	"../../../test_data/lscpu/ampere-altra.json",
+	"../../../test_data/lscpu/ampere-one-x.json",
 	"../../../test_data/lscpu/dell-r430.json",
 	"../../../test_data/lscpu/hp-dl380p-gen8.json",
 	"../../../test_data/lscpu/intel-cbrd-raptor-lake.json",

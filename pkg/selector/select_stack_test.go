@@ -339,3 +339,90 @@ func TestIntelDiscreteGpu(t *testing.T) {
 	}
 
 }
+
+func TestAmpere(t *testing.T) {
+	var ampereHwInfos = []string{
+		"../../test_data/hardware_info/ampere-one-x-mocked.json",
+	}
+
+	for _, hwInfoFile := range ampereHwInfos {
+		t.Run(hwInfoFile, func(t *testing.T) {
+			file, err := os.Open(hwInfoFile)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			data, err := io.ReadAll(file)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			var hardwareInfo types.HwInfo
+			err = json.Unmarshal(data, &hardwareInfo)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			data, err = os.ReadFile("../../test_data/stacks/ampere/stack.yaml")
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			var stack types.Stack
+			err = yaml.Unmarshal(data, &stack)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			// Valid hardware for stack
+			result, err := checkStack(hardwareInfo, stack)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result == 0 {
+				t.Fatal("Ampere stack should match ampere hardware")
+			}
+			t.Logf("Matching score: %d", result)
+
+		})
+	}
+}
+
+func TestAmpereNotMatchPi(t *testing.T) {
+	file, err := os.Open("../../test_data/hardware_info/raspberry-pi-5.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var hardwareInfo types.HwInfo
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = os.ReadFile("../../test_data/stacks/ampere/stack.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack types.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Pi hardware should be invalid for ampere stack
+	result, err := checkStack(hardwareInfo, stack)
+	if result != 0 {
+		t.Fatal("Ampere stack should not match Raspberry Pi hardware")
+	}
+	if err != nil {
+		t.Logf("Ampere stack does not match on Pi 5. Reason: %v", err)
+	}
+
+}

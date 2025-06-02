@@ -1,0 +1,17 @@
+name: ampere
+description: Test ampere selection
+vendor: Canonical Ltd
+grade: stable
+devices:
+  any:
+    - type: cpu
+      architectures: [arm64]
+      vendor-id: Ampere
+memory: 4G
+disk-space: 5G
+components:
+  - llamaaio
+  - model-q4-k-m-gguf
+configurations:
+  engine: llamaaio
+  model: model-q4-k-m-gguf

@@ -10,6 +10,7 @@ const (
 	WeightGpuComputeCapability = 10
 
 	WeightCpu       = 10
-	WeightCpuVendor = 2
+	WeightCpuVendor = 3
+	WeightCpuModel  = 2
 	WeightCpuFlag   = 1
 )

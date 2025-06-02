@@ -1,0 +1,64 @@
+{
+  "cpus": [
+    {
+      "architecture": "aarch64",
+      "vendor_id": "ARM",
+      "family_id": null,
+      "model_id": 1,
+      "model_name": "Neoverse-N1",
+      "physical_cores": 128,
+      "logical_cores": 128,
+      "max_frequency": 2600,
+      "min_frequency": 1000,
+      "flags": [
+        "fp",
+        "asimd",
+        "evtstrm",
+        "aes",
+        "pmull",
+        "sha1",
+        "sha2",
+        "crc32",
+        "atomics",
+        "fphp",
+        "asimdhp",
+        "cpuid",
+        "asimdrdm",
+        "lrcpc",
+        "dcpop",
+        "asimddp",
+        "ssbs"
+      ]
+    }
+  ],
+  "memory": {
+    "total_ram": 134316363776,
+    "total_swap": 8589930496
+  },
+  "disk": {
+    "/": {
+      "total": 67158179840,
+      "avail": 67158179840
+    },
+    "/var/lib/snapd/snaps": {
+      "total": 105089261568,
+      "avail": 34900398080
+    }
+  },
+  "gpus": [
+    {
+      "bus": "",
+      "vendor_id": "0x10de",
+      "device_id": "0x27b0",
+      "subvendor_id": "0x10de",
+      "subdevice_id": "0x16fa"
+    },
+    {
+      "bus": "",
+      "vendor_id": "0x1a03",
+      "device_id": "0x2000",
+      "subvendor_id": "0x1849",
+      "subdevice_id": "0x2000"
+    }
+  ]
+}

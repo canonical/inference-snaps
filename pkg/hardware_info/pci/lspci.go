@@ -9,6 +9,7 @@ import (
 )
 
 func hostLsPci() ([]byte, error) {
+	// lspci -vmmnD
 	out, err := exec.Command("lspci", "-vmmnD").Output()
 	if err != nil {
 		return nil, err
@@ -21,6 +22,10 @@ func ParseLsPci(input []byte, includeFriendlyNames bool) ([]PciDevice, error) {
 
 	inputString := string(input)
 	for _, section := range strings.Split(inputString, "\n\n") {
+		// Ignore empty devices, e.g. extra blank line at end
+		if section == "" {
+			continue
+		}
 		var device PciDevice
 		for _, line := range strings.Split(section, "\n") {
 			key, value, _ := strings.Cut(line, ":\t")

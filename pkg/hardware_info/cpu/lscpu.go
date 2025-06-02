@@ -10,6 +10,7 @@ import (
 )
 
 func hostLsCpu() ([]byte, error) {
+	// lscpu --json --hierarchic
 	out, err := exec.Command("lscpu", "--json", "--hierarchic").Output()
 	if err != nil {
 		return nil, err

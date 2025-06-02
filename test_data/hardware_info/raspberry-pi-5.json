@@ -1,0 +1,47 @@
+{
+  "cpus": [
+    {
+      "architecture": "aarch64",
+      "vendor_id": "ARM",
+      "family_id": null,
+      "model_id": 1,
+      "model_name": "Cortex-A76",
+      "physical_cores": 4,
+      "logical_cores": 4,
+      "max_frequency": 2400,
+      "min_frequency": 1500,
+      "flags": [
+        "fp",
+        "asimd",
+        "evtstrm",
+        "aes",
+        "pmull",
+        "sha1",
+        "sha2",
+        "crc32",
+        "atomics",
+        "fphp",
+        "asimdhp",
+        "cpuid",
+        "asimdrdm",
+        "lrcpc",
+        "dcpop",
+        "asimddp"
+      ]
+    }
+  ],
+  "memory": {
+    "total_ram": 8323276800,
+    "total_swap": 0
+  },
+  "disk": {
+    "/": {
+      "total": 4161638400,
+      "avail": 4161638400
+    },
+    "/var/lib/snapd/snaps": {
+      "total": 62270910464,
+      "avail": 51626823680
+    }
+  }
+}
