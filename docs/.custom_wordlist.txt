@@ -18,6 +18,7 @@ lang
 LaTeX
 latexmk
 Multipass
+NDA
 otf
 plantuml
 PNG
