@@ -1,7 +1,7 @@
-AI Model Snap
+AI Model Snaps
 ==========================
 
-The AI model snap allows you to package famous AI models as a snap that can be deployed on all compatible hardware. 
+AI model snaps allow you to package famous AI models as snaps that can be deployed on all compatible hardware. 
 
 It checks the hardware available on the host machine and recommends the stack that is optimised for the available hardware.
 
@@ -23,7 +23,7 @@ In this documentation
       :link: /tutorial/index
       :link-type: doc
 
-      **Get started** - a hands-on introduction to the AI model snap for new users.
+      **Get started** - a hands-on introduction to AI model snaps for new users.
 
    .. grid-item-card:: How-to guides
       :link: /how-to/index
@@ -47,5 +47,5 @@ In this documentation
    
 Project and community
 ---------------------
-The AI model snap is a Canonical product undergoing internal development. 
+AI model snaps is a Canonical product undergoing internal development. 
 Access to this documentation must be covered under Canonical's NDA.

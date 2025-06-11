@@ -2,7 +2,7 @@ Tutorials
 =========
 
 
-Tutorials for using the AI Model snap for developers and end users.
+Tutorials for creating and using AI model snaps for developers and end users.
 
 
 .. toctree::
