@@ -2,6 +2,7 @@ package selector
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"testing"
@@ -10,57 +11,283 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var hwInfoFiles = []string{
-	"../../test_data/hardware_info/amd-ryzen7-5700g.json",
-	"../../test_data/hardware_info/amd-ryzen9-7900.json",
-	"../../test_data/hardware_info/dell-r730xd.json",
-	"../../test_data/hardware_info/hp-dl380p-gen8.json",
-	//"../../test_data/hardware_info/i7-2600k.json", // Old CPU that does not have any of the necessary flags
-	"../../test_data/hardware_info/mustang.json",
-	"../../test_data/hardware_info/nuc11-i5-1145G7.json",
-	"../../test_data/hardware_info/xps13-7390.json",
-	"../../test_data/hardware_info/xps13-9350.json",
+type stackTestSet struct {
+	ValidHw   []string
+	InvalidHw []string
 }
 
-func TestFindStack(t *testing.T) {
-	for _, hwInfoFile := range hwInfoFiles {
-		t.Run(hwInfoFile, func(t *testing.T) {
-			file, err := os.Open(hwInfoFile)
-			if err != nil {
-				t.Fatal(err)
-			}
+var stackTestSets = map[string]stackTestSet{
+	"ampere": {
+		ValidHw: []string{"ampere-one-x-mocked"},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"ampere-altra",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
 
-			data, err := io.ReadAll(file)
-			if err != nil {
-				t.Fatal(err)
-			}
+	"ampere-altra": {
+		ValidHw: []string{
+			"ampere-altra",
+		},
+		InvalidHw: []string{
+			"ampere-one-x-mocked",
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
 
-			var hardwareInfo types.HwInfo
-			err = json.Unmarshal(data, &hardwareInfo)
-			if err != nil {
-				t.Fatal(err)
-			}
+	"example-cpu": {
+		ValidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"dell-r730xd",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"xps13-7390",
+			"xps13-9350",
+		},
+		InvalidHw: []string{
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"raspberry-pi-5",
+		},
+	},
 
-			allStacks, err := LoadStacksFromDir("../../test_data/stacks")
-			if err != nil {
-				t.Fatal(err)
-			}
-			scoredStacks, err := ScoreStacks(hardwareInfo, allStacks)
-			if err != nil {
-				t.Fatal(err)
-			}
-			topStack, err := TopStack(scoredStacks)
-			if err != nil {
-				t.Fatal(err)
-			}
+	"example-cpu-avx512": {
+		ValidHw: []string{
+			"amd-ryzen9-7900",
+			"nuc11-i5-1145G7",
+		},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
 
-			t.Logf("Found stack %s", topStack.Name)
-		})
+	"example-memory": {
+		ValidHw: []string{
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+		},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
+
+	"generic-cuda": {
+		ValidHw: []string{},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
+
+	"intel-dgpu": {
+		ValidHw: []string{
+			"i7-2600k+arc-a580",
+			"mustang",
+		},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
+
+	"intel-npu": {
+		ValidHw: []string{
+			"xps13-9350",
+		},
+		InvalidHw: []string{
+			"amd-ryzen7-5700g",
+			"amd-ryzen9-7900",
+			"ampere-altra",
+			"ampere-one-x-mocked",
+			"dell-r730xd",
+			"hp-dl380p-gen8",
+			"i7-2600k+arc-a580",
+			"i7-2600k",
+			"mustang",
+			"nuc11-i5-1145G7",
+			"raspberry-pi-5",
+			"xps13-7390",
+		},
+	},
+}
+
+func TestStack(t *testing.T) {
+	for stackName, testSet := range stackTestSets {
+		for _, hwName := range testSet.ValidHw {
+			t.Run(stackName+" == "+hwName, func(t *testing.T) {
+				testValidHw(t, stackName, hwName)
+			})
+		}
+
+		for _, hwName := range testSet.InvalidHw {
+			t.Run(stackName+" != "+hwName, func(t *testing.T) {
+				testInvalidHw(t, stackName, hwName)
+			})
+		}
 	}
 }
 
+func testValidHw(t *testing.T, stackName string, hwName string) {
+	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
+	hwInfoFile := fmt.Sprintf("../../test_data/hardware_info/%s.json", hwName)
+
+	file, err := os.Open(hwInfoFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var hardwareInfo types.HwInfo
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = os.ReadFile(stackManifestFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack types.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Valid hardware for stack
+	score, reasons, err := checkStack(hardwareInfo, stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if score == 0 {
+		t.Fatalf("Stack should match: %v", reasons)
+	}
+	t.Logf("Matching score: %d", score)
+
+}
+
+func testInvalidHw(t *testing.T, stackName string, hwName string) {
+	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
+	hwInfoFile := fmt.Sprintf("../../test_data/hardware_info/%s.json", hwName)
+
+	file, err := os.Open(hwInfoFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var hardwareInfo types.HwInfo
+	err = json.Unmarshal(data, &hardwareInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data, err = os.ReadFile(stackManifestFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var stack types.Stack
+	err = yaml.Unmarshal(data, &stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	score, _, err := checkStack(hardwareInfo, stack)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if score != 0 {
+		t.Fatalf("Stack should not match: %s", hwName)
+	}
+	t.Logf("Matching score: %d", score)
+}
+
 func TestFindStackEmpty(t *testing.T) {
-	hwInfo := types.HwInfo{}
+	hwInfo := types.HwInfo{
+		Memory: &types.MemoryInfo{
+			TotalRam:  200000000,
+			TotalSwap: 200000000,
+		},
+		Disk: map[string]*types.DirStats{
+			"/var/lib/snapd/snaps": &types.DirStats{
+				Total: 0,
+				Avail: 400000000,
+			},
+		},
+	}
 
 	allStacks, err := LoadStacksFromDir("../../test_data/stacks")
 	if err != nil {
@@ -92,21 +319,21 @@ func TestDiskCheck(t *testing.T) {
 	stackDisk := "300M"
 	stack := types.Stack{DiskSpace: &stackDisk}
 
-	result, err := checkStack(hwInfo, stack)
+	result, reasons, err := checkStack(hwInfo, stack)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if result == 0 {
-		t.Fatal("disk should be enough")
+		t.Fatalf("disk should be enough: %v", reasons)
 	}
 
 	dirStat.Avail = 100000000
-	result, err = checkStack(hwInfo, stack)
-	if err == nil {
-		t.Fatal("Not enough disk should return err")
+	result, reasons, err = checkStack(hwInfo, stack)
+	if err != nil {
+		t.Fatal(err)
 	}
 	if result > 0 {
-		t.Fatal("disk should NOT be enough")
+		t.Fatalf("disk should NOT be enough: %v", reasons)
 	}
 }
 
@@ -121,134 +348,21 @@ func TestMemoryCheck(t *testing.T) {
 	stackMemory := "300M"
 	stack := types.Stack{Memory: &stackMemory}
 
-	result, err := checkStack(hwInfo, stack)
+	result, reasons, err := checkStack(hwInfo, stack)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if result == 0 {
-		t.Fatal("memory should be enough")
+		t.Fatalf("memory should be enough: %v", reasons)
 	}
 
 	hwInfo.Memory.TotalRam = 100000000
-	result, err = checkStack(hwInfo, stack)
-	if err == nil {
-		t.Fatal("Not enough memory should return err")
+	result, reasons, err = checkStack(hwInfo, stack)
+	if err != nil {
+		t.Fatal(err)
 	}
 	if result > 0 {
 		t.Fatal("memory should NOT be enough")
-	}
-}
-
-func TestCpuFlagsAvx2(t *testing.T) {
-	file, err := os.Open("../../test_data/hardware_info/amd-ryzen7-5700g.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile("../../test_data/stacks/example-cpu/stack.yaml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var stack types.Stack
-	err = yaml.Unmarshal(data, &stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Valid hardware for stack
-	result, err := checkStack(hardwareInfo, stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("Matching score: %d", result)
-
-	file, err = os.Open("../../test_data/hardware_info/hp-dl380p-gen8.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Invalid hardware for stack
-	result, err = checkStack(hardwareInfo, stack)
-	if err == nil {
-		t.Fatal("Stack should not match if avx2 is not available")
-	}
-}
-
-func TestCpuFlagsAvx512(t *testing.T) {
-	file, err := os.Open("../../test_data/hardware_info/amd-ryzen9-7900.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile("../../test_data/stacks/example-cpu-avx512/stack.yaml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var currentStack types.Stack
-	err = yaml.Unmarshal(data, &currentStack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Valid hardware for stack
-	_, err = checkStack(hardwareInfo, currentStack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	file, err = os.Open("../../test_data/hardware_info/hp-dl380p-gen8.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Invalid hardware for stack
-	_, err = checkStack(hardwareInfo, currentStack)
-	if err == nil {
-		t.Fatal("Stack should not match if avx512 is not available")
 	}
 }
 
@@ -269,11 +383,10 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No memory in hardware info
-	_, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkStack(hwInfo, currentStack)
 	if err == nil {
-		t.Fatal("No Memory in hardware_info should return err")
+		t.Fatalf("No Memory in hardware_info should return err")
 	}
-	//t.Log(err)
 
 	hwInfo.Memory = &types.MemoryInfo{
 		TotalRam:  17000000000,
@@ -281,11 +394,10 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No disk space in hardware info
-	_, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkStack(hwInfo, currentStack)
 	if err == nil {
 		t.Fatal("No Disk space in hardware_info should return err")
 	}
-	//t.Log(err)
 
 	hwInfo.Disk = make(map[string]*types.DirStats)
 	hwInfo.Disk["/"] = &types.DirStats{
@@ -293,136 +405,8 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No CPU in hardware info
-	_, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkStack(hwInfo, currentStack)
 	if err == nil {
 		t.Fatal("No CPU in hardware_info should return err")
 	}
-	//t.Log(err)
-}
-
-func TestIntelDiscreteGpu(t *testing.T) {
-	file, err := os.Open("../../test_data/hardware_info/mustang.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile("../../test_data/stacks/intel-gpu/stack.yaml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var currentStack types.Stack
-	err = yaml.Unmarshal(data, &currentStack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Valid hardware for stack
-	result, err := checkStack(hardwareInfo, currentStack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if result == 0 {
-		t.Fatal("Stack should match")
-	}
-
-}
-
-func TestAmpere(t *testing.T) {
-	var ampereHwInfos = []string{
-		"../../test_data/hardware_info/ampere-one-x-mocked.json",
-	}
-
-	for _, hwInfoFile := range ampereHwInfos {
-		t.Run(hwInfoFile, func(t *testing.T) {
-			file, err := os.Open(hwInfoFile)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			data, err := io.ReadAll(file)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			var hardwareInfo types.HwInfo
-			err = json.Unmarshal(data, &hardwareInfo)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			data, err = os.ReadFile("../../test_data/stacks/ampere/stack.yaml")
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			var stack types.Stack
-			err = yaml.Unmarshal(data, &stack)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			// Valid hardware for stack
-			result, err := checkStack(hardwareInfo, stack)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if result == 0 {
-				t.Fatal("Ampere stack should match ampere hardware")
-			}
-			t.Logf("Matching score: %d", result)
-
-		})
-	}
-}
-
-func TestAmpereNotMatchPi(t *testing.T) {
-	file, err := os.Open("../../test_data/hardware_info/raspberry-pi-5.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile("../../test_data/stacks/ampere/stack.yaml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var stack types.Stack
-	err = yaml.Unmarshal(data, &stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Pi hardware should be invalid for ampere stack
-	result, err := checkStack(hardwareInfo, stack)
-	if result != 0 {
-		t.Fatal("Ampere stack should not match Raspberry Pi hardware")
-	}
-	if err != nil {
-		t.Logf("Ampere stack does not match on Pi 5. Reason: %v", err)
-	}
-
 }

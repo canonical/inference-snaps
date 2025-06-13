@@ -1,0 +1,10 @@
+{
+  "platforms": [],
+  "icd_loader": {
+    "CL_ICDL_NAME": "OpenCL ICD Loader",
+    "CL_ICDL_VENDOR": "OCL Icd free software",
+    "CL_ICDL_VERSION": "2.3.2",
+    "CL_ICDL_OCL_VERSION": "OpenCL 3.0",
+    "_detected_version": "3.0"
+  }
+}

@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/canonical/ml-snap-utils/pkg/selector/cpu"
+	"github.com/canonical/ml-snap-utils/pkg/selector/pci"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 	"github.com/canonical/ml-snap-utils/pkg/utils"
 	"gopkg.in/yaml.v3"
@@ -74,7 +76,10 @@ func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.Score
 	var scoredStacks []types.ScoredStack
 
 	for _, currentStack := range stacks {
-		score, err := checkStack(hardwareInfo, currentStack)
+		score, reasons, err := checkStack(hardwareInfo, currentStack)
+		if err != nil {
+			return nil, err
+		}
 
 		scoredStack := types.ScoredStack{
 			Stack:      currentStack,
@@ -85,10 +90,7 @@ func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.Score
 		if score == 0 {
 			scoredStack.Compatible = false
 		}
-
-		if err != nil {
-			scoredStack.Notes = append(scoredStack.Notes, err.Error())
-		}
+		scoredStack.Notes = append(scoredStack.Notes, reasons...)
 
 		scoredStacks = append(scoredStacks, scoredStack)
 	}
@@ -96,23 +98,25 @@ func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.Score
 	return scoredStacks, nil
 }
 
-func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, error) {
+func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, error) {
 	stackScore := 0
+	var reasons []string
 
 	// Enough memory
 	if stack.Memory != nil {
 		requiredMemory, err := utils.StringToBytes(*stack.Memory)
 		if err != nil {
-			return 0, err
+			return 0, reasons, err
 		}
 
 		if hardwareInfo.Memory == nil {
-			return 0, fmt.Errorf("no memory in hardware info")
+			return 0, reasons, fmt.Errorf("no memory in hardware info")
 		}
 
 		// Checking combination of ram and swap
 		if hardwareInfo.Memory.TotalRam+hardwareInfo.Memory.TotalSwap < requiredMemory {
-			return 0, fmt.Errorf("not enough memory")
+			reasons = append(reasons, fmt.Sprintf("memory: system memory too small"))
+			return 0, reasons, nil
 		}
 		stackScore++
 	}
@@ -121,92 +125,164 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, error) {
 	if stack.DiskSpace != nil {
 		requiredDisk, err := utils.StringToBytes(*stack.DiskSpace)
 		if err != nil {
-			return 0, err
+			return 0, reasons, err
 		}
 		if _, ok := hardwareInfo.Disk["/var/lib/snapd/snaps"]; !ok {
-			return 0, fmt.Errorf("disk space not provided by hardware info")
+			return 0, reasons, fmt.Errorf("disk space not reported by hardware info")
 		}
 		if hardwareInfo.Disk["/var/lib/snapd/snaps"].Avail < requiredDisk {
-			return 0, fmt.Errorf("not enough free disk space")
+			reasons = append(reasons, fmt.Sprintf("disk: system disk space too small"))
+			return 0, reasons, nil
 		}
 		stackScore++
 	}
 
 	// Devices
 	// all
-	allOfDevicesFound := 0
-	for _, device := range stack.Devices.All {
-		switch device.Type {
-		case "cpu":
-			if hardwareInfo.Cpus == nil {
-				return 0, fmt.Errorf("cpu device is required but none found")
-			}
-			cpuScore, err := checkCpus(device, hardwareInfo.Cpus)
-			if err != nil {
-				return 0, err
-			}
-			if cpuScore == 0 {
-				return 0, fmt.Errorf("required cpu device not found")
-			}
-			stackScore += cpuScore
-			allOfDevicesFound++
-
-		case "gpu":
-			if len(hardwareInfo.Gpus) == 0 {
-				return 0, fmt.Errorf("gpu device is required but none found")
-			}
-			gpuScore, err := checkGpus(hardwareInfo.Gpus, device)
-			if err != nil {
-				return 0, err
-			}
-			if gpuScore == 0 {
-				return 0, fmt.Errorf("required gpu device not found")
-			}
-			stackScore += gpuScore
-			allOfDevicesFound++
+	if len(stack.Devices.All) > 0 {
+		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, stack.Devices.All)
+		for _, reason := range reasonsAll {
+			reasons = append(reasons, "all: "+reason)
 		}
-	}
-
-	if len(stack.Devices.All) > 0 && allOfDevicesFound != len(stack.Devices.All) {
-		return 0, fmt.Errorf("all: could not find a required device")
+		if err != nil {
+			return 0, reasons, err
+		}
+		if extraScore == 0 {
+			return 0, reasons, nil
+		}
+		stackScore += extraScore
 	}
 
 	// any
-	anyOfDevicesFound := 0
-	for _, device := range stack.Devices.Any {
-		switch device.Type {
-		case "cpu":
+	if len(stack.Devices.Any) > 0 {
+		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, stack.Devices.Any)
+		for _, reason := range reasonsAny {
+			reasons = append(reasons, "any: "+reason)
+		}
+		if err != nil {
+			return 0, reasons, err
+		}
+		if extraScore == 0 {
+			return 0, reasons, nil
+		}
+		stackScore += extraScore
+	}
+
+	return stackScore, reasons, nil
+}
+
+func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice) (int, []string, error) {
+	devicesFound := 0
+	extraScore := 0
+	var reasons []string
+
+	for _, device := range stackDevices {
+
+		if device.Type == "cpu" {
+			if hardwareInfo.Cpus == nil {
+				reasons = append(reasons, "cpu device is required but host reported none")
+				return 0, reasons, nil
+			}
+			cpuScore, cpuReasons, err := cpu.Match(device, hardwareInfo.Cpus)
+			if err != nil {
+				return 0, reasons, fmt.Errorf("cpu: %v", err)
+			}
+			if cpuScore == 0 {
+				for _, reason := range cpuReasons {
+					reasons = append(reasons, "cpu: "+reason)
+				}
+				reasons = append(reasons, "required cpu device not found")
+				return 0, reasons, nil
+			}
+			extraScore += cpuScore
+			devicesFound++
+
+		} else if device.Bus == "usb" {
+			// Not implemented
+
+		} else if device.Bus == "" || device.Bus == "pci" {
+			// Fallback to PCI as default bus
+			if len(hardwareInfo.PciDevices) == 0 {
+				reasons = append(reasons, "pci device is required but none found")
+				return 0, reasons, nil
+			}
+			pciScore, pciReasons, err := pci.Match(device, hardwareInfo.PciDevices)
+			if err != nil {
+				return 0, reasons, fmt.Errorf("pci: %v", err)
+			}
+			if pciScore == 0 {
+				for _, reason := range pciReasons {
+					reasons = append(reasons, "pci: "+reason)
+				}
+				reasons = append(reasons, "required pci device not found")
+				return 0, reasons, nil
+			}
+			extraScore += pciScore
+			devicesFound++
+		}
+	}
+
+	if len(stackDevices) > 0 && devicesFound != len(stackDevices) {
+		reasons = append(reasons, "could not find a required device")
+		return 0, reasons, nil
+	}
+
+	return extraScore, reasons, nil
+}
+
+func checkDevicesAny(hardwareInfo types.HwInfo, stackDevices []types.StackDevice) (int, []string, error) {
+	devicesFound := 0
+	extraScore := 0
+	var reasons []string
+
+	for _, device := range stackDevices {
+
+		if device.Type == "cpu" {
 			if hardwareInfo.Cpus == nil {
 				continue
 			}
-			cpuScore, err := checkCpus(device, hardwareInfo.Cpus)
+			cpuScore, cpuReasons, err := cpu.Match(device, hardwareInfo.Cpus)
 			if err != nil {
-				return 0, err
+				return 0, reasons, err
 			}
 			if cpuScore > 0 {
-				anyOfDevicesFound++
+				devicesFound++
+				extraScore += cpuScore
+			} else {
+				for _, reason := range cpuReasons {
+					reasons = append(reasons, "cpu: "+reason)
+				}
 			}
-			stackScore += cpuScore
 
-		case "gpu":
-			if hardwareInfo.Gpus == nil {
+		} else if device.Bus == "usb" {
+			reasons = append(reasons, "usb: not implemented")
+			return 0, reasons, nil
+
+		} else if device.Bus == "" || device.Bus == "pci" {
+			// Fallback to PCI as default bus
+			if hardwareInfo.PciDevices == nil {
 				continue
 			}
-			gpuScore, err := checkGpus(hardwareInfo.Gpus, device)
+			pciScore, pciReasons, err := pci.Match(device, hardwareInfo.PciDevices)
 			if err != nil {
-				return 0, err
+				return 0, reasons, err
 			}
-			if gpuScore > 0 {
-				anyOfDevicesFound++
+			if pciScore > 0 {
+				devicesFound++
+				extraScore += pciScore
+			} else {
+				for _, reason := range pciReasons {
+					reasons = append(reasons, "pci: "+reason)
+				}
 			}
-			stackScore += gpuScore
 		}
 	}
 
 	// If any-of devices are defined, we need to find at least one
-	if len(stack.Devices.Any) > 0 && anyOfDevicesFound == 0 {
-		return 0, fmt.Errorf("any: could not find a required device")
+	if len(stackDevices) > 0 && devicesFound == 0 {
+		reasons = append(reasons, "could not find a required device")
+		return 0, reasons, nil
 	}
 
-	return stackScore, nil
+	return extraScore, reasons, nil
 }

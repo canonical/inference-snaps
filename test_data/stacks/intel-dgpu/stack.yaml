@@ -1,0 +1,55 @@
+name: intel-gpu
+description: Stack for inferencing on Intel Battlemage discrete GPUs
+vendor: Intel Corporation
+grade: stable
+devices:
+  all:
+    - type: cpu
+      architecture: amd64
+
+  any:
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0x56a2 # DG2 [Arc A580]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe202 # Battlemage G21 [Intel Graphics]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe20b # Battlemage G21 [Arc B580]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe20c # Battlemage G21 [Arc B570]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe20d # Battlemage G21 [Intel Graphics]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe210 # Battlemage G21 [Intel Graphics]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe212 # Battlemage G21 [Intel Graphics]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe215 # Battlemage G21 [Intel Graphics]
+    - type: gpu
+      bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 0xe216 # Battlemage G21 [Intel Graphics]
+
+memory: 4G
+disk-space: 8G
+components:
+  - &engine openvino-model-server
+  - &model model-distill-qwen-7b-gpu-openvino
+configurations:
+  engine: *engine
+  model: *model

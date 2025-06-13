@@ -12,6 +12,8 @@ confinement: strict
 layout:
   /usr/share/misc/pci.ids:
     bind-file: $SNAP/pci.ids
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl:
+    bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl
 
 parts:
   system-utilities:
@@ -19,6 +21,11 @@ parts:
     stage-packages:
       - pciutils
       - nvidia-utils
+      - clinfo
+      - mesa-opencl-icd
+      - ocl-icd-libopencl1
+      - on amd64:
+        - intel-opencl-icd
 
   # To use `version: git` in this file, we require git as a build dependency.
   # This is fixed but not published yet. See https://github.com/canonical/snapcraft/issues/4944
@@ -41,6 +48,8 @@ parts:
 
 apps:
   hardware-info:
+    environment:
+      OCL_ICD_VENDORS: "$SNAP/etc/OpenCL/vendors"
     plugs:
       - hardware-observe
       - opengl

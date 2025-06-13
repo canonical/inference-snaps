@@ -3,8 +3,8 @@ package hardware_info
 import (
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/cpu"
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/disk"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/gpu"
 	"github.com/canonical/ml-snap-utils/pkg/hardware_info/memory"
+	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci"
 	"github.com/canonical/ml-snap-utils/pkg/types"
 )
 
@@ -29,11 +29,11 @@ func Get(friendlyNames bool) (types.HwInfo, error) {
 	}
 	hwInfo.Disk = diskInfo
 
-	gpuInfo, err := gpu.Info(friendlyNames)
+	pciDevices, err := pci.Devices(friendlyNames)
 	if err != nil {
 		return hwInfo, err
 	}
-	hwInfo.Gpus = gpuInfo
+	hwInfo.PciDevices = pciDevices
 
 	return hwInfo, nil
 }

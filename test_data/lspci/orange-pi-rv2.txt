@@ -1,0 +1,24 @@
+Slot:   0001:00:00.0
+Class:  0604
+Vendor: 201f
+Device: 0001
+Rev:    01
+ProgIf: 00
+DTNode: /sys/firmware/devicetree/base/soc/pcie@ca400000/interrupt-controller@0
+
+Slot:   0001:01:00.0
+Class:  0108
+Vendor: 15b7
+Device: 5041
+SVendor:        15b7
+SDevice:        5041
+Rev:    01
+ProgIf: 02
+
+Slot:   0002:00:00.0
+Class:  0604
+Vendor: 201f
+Device: 0001
+Rev:    01
+ProgIf: 00
+DTNode: /sys/firmware/devicetree/base/soc/pcie@ca800000/interrupt-controller@0

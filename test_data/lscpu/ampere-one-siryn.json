@@ -1,0 +1,155 @@
+{
+  "lscpu": [
+    {
+      "field": "Architecture:",
+      "data": "aarch64",
+      "children": [
+        {
+          "field": "CPU op-mode(s):",
+          "data": "64-bit"
+        },{
+          "field": "Byte Order:",
+          "data": "Little Endian"
+        }
+      ]
+    },{
+      "field": "CPU(s):",
+      "data": "160",
+      "children": [
+        {
+          "field": "On-line CPU(s) list:",
+          "data": "0-159"
+        }
+      ]
+    },{
+      "field": "Vendor ID:",
+      "data": "Ampere",
+      "children": [
+        {
+          "field": "BIOS Vendor ID:",
+          "data": "Ampere(R)"
+        },{
+          "field": "Model name:",
+          "data": "Ampere-1",
+          "children": [
+            {
+              "field": "BIOS Model name:",
+              "data": "AmpereOne(R) Processor AC-31604001S1P CPU @ 3.0GHz"
+            },{
+              "field": "BIOS CPU family:",
+              "data": "257"
+            },{
+              "field": "Model:",
+              "data": "1"
+            },{
+              "field": "Thread(s) per core:",
+              "data": "1"
+            },{
+              "field": "Core(s) per socket:",
+              "data": "160"
+            },{
+              "field": "Socket(s):",
+              "data": "1"
+            },{
+              "field": "Stepping:",
+              "data": "0x0"
+            },{
+              "field": "Frequency boost:",
+              "data": "disabled"
+            },{
+              "field": "CPU(s) scaling MHz:",
+              "data": "100%"
+            },{
+              "field": "CPU max MHz:",
+              "data": "3000.0000"
+            },{
+              "field": "CPU min MHz:",
+              "data": "1000.0000"
+            },{
+              "field": "BogoMIPS:",
+              "data": "2000.00"
+            },{
+              "field": "Flags:",
+              "data": "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv"
+            }
+          ]
+        }
+      ]
+    },{
+      "field": "Caches (sum of all):",
+      "data": null,
+      "children": [
+        {
+          "field": "L1d:",
+          "data": "10 MiB (160 instances)"
+        },{
+          "field": "L1i:",
+          "data": "2.5 MiB (160 instances)"
+        },{
+          "field": "L2:",
+          "data": "320 MiB (160 instances)"
+        }
+      ]
+    },{
+      "field": "NUMA:",
+      "data": null,
+      "children": [
+        {
+          "field": "NUMA node(s):",
+          "data": "1"
+        },{
+          "field": "NUMA node0 CPU(s):",
+          "data": "0-159"
+        }
+      ]
+    },{
+      "field": "Vulnerabilities:",
+      "data": null,
+      "children": [
+        {
+          "field": "Gather data sampling:",
+          "data": "Not affected"
+        },{
+          "field": "Itlb multihit:",
+          "data": "Not affected"
+        },{
+          "field": "L1tf:",
+          "data": "Not affected"
+        },{
+          "field": "Mds:",
+          "data": "Not affected"
+        },{
+          "field": "Meltdown:",
+          "data": "Not affected"
+        },{
+          "field": "Mmio stale data:",
+          "data": "Not affected"
+        },{
+          "field": "Reg file data sampling:",
+          "data": "Not affected"
+        },{
+          "field": "Retbleed:",
+          "data": "Not affected"
+        },{
+          "field": "Spec rstack overflow:",
+          "data": "Not affected"
+        },{
+          "field": "Spec store bypass:",
+          "data": "Mitigation; Speculative Store Bypass disabled via prctl"
+        },{
+          "field": "Spectre v1:",
+          "data": "Mitigation; __user pointer sanitization"
+        },{
+          "field": "Spectre v2:",
+          "data": "Mitigation; CSV2, BHB"
+        },{
+          "field": "Srbds:",
+          "data": "Not affected"
+        },{
+          "field": "Tsx async abort:",
+          "data": "Not affected"
+        }
+      ]
+    }
+  ]
+}

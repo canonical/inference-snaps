@@ -1,0 +1,19 @@
+name: intel-gpu
+description: Stack for inferencing on Intel NPUs
+vendor: Intel Corporation
+grade: stable
+devices:
+  all:
+    - type: cpu
+      architecture: amd64
+    - bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 643e # Lunar Lake NPU
+memory: 4G
+disk-space: 8G
+components:
+  - &engine openvino-model-server
+  - &model model-distill-qwen-7b-gpu-openvino
+configurations:
+  engine: *engine
+  model: *model

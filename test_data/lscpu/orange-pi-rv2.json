@@ -1,0 +1,62 @@
+{
+  "lscpu": [
+    {
+      "field": "Architecture:",
+      "data": "riscv64",
+      "children": [
+        {
+          "field": "Byte Order:",
+          "data": "Little Endian"
+        }
+      ]
+    },{
+      "field": "CPU(s):",
+      "data": "8",
+      "children": [
+        {
+          "field": "On-line CPU(s) list:",
+          "data": "0-7"
+        }
+      ]
+    },{
+      "field": "Model name:",
+      "data": "Ky(R) X1",
+      "children": [
+        {
+          "field": "Thread(s) per core:",
+          "data": "1"
+        },{
+          "field": "Core(s) per socket:",
+          "data": "8"
+        },{
+          "field": "Socket(s):",
+          "data": "1"
+        },{
+          "field": "CPU(s) scaling MHz:",
+          "data": "100%"
+        },{
+          "field": "CPU max MHz:",
+          "data": "1600.0000"
+        },{
+          "field": "CPU min MHz:",
+          "data": "614.4000"
+        }
+      ]
+    },{
+      "field": "Caches (sum of all):",
+      "data": null,
+      "children": [
+        {
+          "field": "L1d:",
+          "data": "256 KiB (8 instances)"
+        },{
+          "field": "L1i:",
+          "data": "256 KiB (8 instances)"
+        },{
+          "field": "L2:",
+          "data": "1 MiB (2 instances)"
+        }
+      ]
+    }
+  ]
+}

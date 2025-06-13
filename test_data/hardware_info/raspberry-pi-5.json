@@ -41,7 +41,27 @@
     },
     "/var/lib/snapd/snaps": {
       "total": 62270910464,
-      "avail": 51626823680
+      "avail": 49504157696
     }
-  }
+  },
+  "pci": [
+    {
+      "slot": "0000:00:00.0",
+      "device_class": 1540,
+      "programming_interface": 0,
+      "vendor_id": 5348,
+      "device_id": 10002,
+      "vendor_name": "Broadcom Inc. and subsidiaries",
+      "device_name": "BCM2712 PCIe Bridge"
+    },
+    {
+      "slot": "0000:01:00.0",
+      "device_class": 512,
+      "programming_interface": 0,
+      "vendor_id": 7652,
+      "device_id": 1,
+      "vendor_name": "Raspberry Pi Ltd",
+      "device_name": "RP1 PCIe 2.0 South Bridge"
+    }
+  ]
 }

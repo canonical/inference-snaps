@@ -1,34 +1,9 @@
 {
   "cpus": [
     {
-      "architecture": "aarch64",
-      "vendor_id": "ARM",
-      "family_id": null,
-      "model_id": 1,
-      "model_name": "Neoverse-N1",
-      "physical_cores": 128,
-      "logical_cores": 128,
-      "max_frequency": 2600,
-      "min_frequency": 1000,
-      "flags": [
-        "fp",
-        "asimd",
-        "evtstrm",
-        "aes",
-        "pmull",
-        "sha1",
-        "sha2",
-        "crc32",
-        "atomics",
-        "fphp",
-        "asimdhp",
-        "cpuid",
-        "asimdrdm",
-        "lrcpc",
-        "dcpop",
-        "asimddp",
-        "ssbs"
-      ]
+      "architecture": "arm64",
+      "implementer_id": "0x41",
+      "part_number": "0xd0c"
     }
   ],
   "memory": {
@@ -45,20 +20,33 @@
       "avail": 34900398080
     }
   },
-  "gpus": [
+  "pci": [
     {
-      "bus": "",
+      "slot": "0001:01:00.0",
+      "bus": "pci",
+      "device_class": "0300",
       "vendor_id": "0x10de",
       "device_id": "0x27b0",
       "subvendor_id": "0x10de",
       "subdevice_id": "0x16fa"
     },
     {
-      "bus": "",
+      "slot": "0003:02:00.0",
+      "bus": "pci",
+      "device_class": "0300",
       "vendor_id": "0x1a03",
       "device_id": "0x2000",
       "subvendor_id": "0x1849",
       "subdevice_id": "0x2000"
+    },
+    {
+      "slot": "0001:00:00.0",
+      "device_class": "0600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "subvendor_id": "1849",
+      "subdevice_id": "e100"
     }
   ]
 }

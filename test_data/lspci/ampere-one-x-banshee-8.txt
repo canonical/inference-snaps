@@ -1,0 +1,386 @@
+Slot:	0000:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e208
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0000:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0120
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	27
+
+Slot:	0000:01:00.0
+Class:	0200
+Vendor:	15b3
+Device:	1019
+SVendor:	15b3
+SDevice:	0008
+PhySlot:	0-15
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	33
+
+Slot:	0000:01:00.1
+Class:	0200
+Vendor:	15b3
+Device:	1019
+SVendor:	15b3
+SDevice:	0008
+PhySlot:	0-15
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	34
+
+Slot:	0001:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e209
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0001:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0124
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	4
+
+Slot:	0001:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	0125
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	5
+
+Slot:	0001:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	0126
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	6
+
+Slot:	0001:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	0127
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	7
+
+Slot:	0001:01:00.0
+Class:	0108
+Vendor:	144d
+Device:	a80a
+SVendor:	144d
+SDevice:	a812
+PhySlot:	0-4
+ProgIf:	02
+NUMANode:	0
+IOMMUGroup:	29
+
+Slot:	0001:02:00.0
+Class:	0108
+Vendor:	144d
+Device:	a80a
+SVendor:	144d
+SDevice:	a812
+PhySlot:	0-5
+ProgIf:	02
+NUMANode:	0
+IOMMUGroup:	30
+
+Slot:	0002:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20a
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0002:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0128
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	8
+
+Slot:	0002:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	0129
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	9
+
+Slot:	0002:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	012a
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	10
+
+Slot:	0002:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	012b
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	11
+
+Slot:	0003:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20b
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0003:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	012c
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	12
+
+Slot:	0003:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	012d
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	13
+
+Slot:	0003:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	012e
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	14
+
+Slot:	0003:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	012f
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	15
+
+Slot:	0004:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20c
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0004:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0130
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	16
+
+Slot:	0004:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	0131
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	17
+
+Slot:	0004:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	0132
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	18
+
+Slot:	0004:02:00.0
+Class:	0604
+Vendor:	1a03
+Device:	1150
+SVendor:	1a03
+SDevice:	1150
+PhySlot:	0-8
+Rev:	06
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	19
+
+Slot:	0004:03:00.0
+Class:	0300
+Vendor:	1a03
+Device:	2000
+SVendor:	1a03
+SDevice:	2000
+Rev:	52
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0004:04:00.0
+Class:	0c03
+Vendor:	1912
+Device:	0014
+PhySlot:	0-9
+Rev:	03
+ProgIf:	30
+NUMANode:	0
+IOMMUGroup:	28
+
+Slot:	0005:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20d
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0005:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0134
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	20
+
+Slot:	0005:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	0135
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	21
+
+Slot:	0005:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	0136
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	22
+
+Slot:	0005:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	0137
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	23
+
+Slot:	0006:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20e
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0006:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	0138
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	24
+
+Slot:	0006:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	0139
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	25
+
+Slot:	0006:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	013a
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	26
+
+Slot:	0006:01:00.0
+Class:	0200
+Vendor:	15b3
+Device:	101f
+SVendor:	15b3
+SDevice:	0004
+PhySlot:	0-14
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	31
+
+Slot:	0006:01:00.1
+Class:	0200
+Vendor:	15b3
+Device:	101f
+SVendor:	15b3
+SDevice:	0004
+PhySlot:	0-14
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	32
+
+Slot:	0007:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e20f
+SVendor:	1def
+SDevice:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0007:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	013c
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	0
+
+Slot:	0007:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	013d
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	1
+
+Slot:	0007:00:05.0
+Class:	0604
+Vendor:	1def
+Device:	013e
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	2
+
+Slot:	0007:00:07.0
+Class:	0604
+Vendor:	1def
+Device:	013f
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	3
+

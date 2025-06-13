@@ -5,9 +5,9 @@ grade: stable
 devices:
   any:
     - type: cpu
-      vendor-id: AuthenticAMD
+      manufacturer-id: AuthenticAMD
     - type: cpu
-      vendor-id: GenuineIntel
+      manufacturer-id: GenuineIntel
 memory: 35G
 disk-space: 29G
 components:

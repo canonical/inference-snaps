@@ -1,0 +1,21 @@
+name: ampere
+description: Test ampere selection
+vendor: Canonical Ltd
+grade: stable
+devices:
+  any:
+    - type: cpu
+      architecture: arm64
+      implementer-id: 0x41
+      part-number: 0xd0c
+    - bus: pci
+      vendor-id: 1def # Ampere Computing, LLC
+      device-id: e100 # Altra PCI Express Root Complex A
+memory: 4G
+disk-space: 5G
+components:
+  - llamaaio
+  - model-q4-k-m-ggu
+configurations:
+  engine: llamaaio
+  model: model-q4-k-m-gguf

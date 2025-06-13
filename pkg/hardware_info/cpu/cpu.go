@@ -1,0 +1,60 @@
+package cpu
+
+import (
+	"fmt"
+	"reflect"
+	"slices"
+
+	"github.com/canonical/ml-snap-utils/pkg/types"
+)
+
+func Info() ([]types.CpuInfo, error) {
+
+	hostProcCpuInfo, err := procCpuInfo()
+	if err != nil {
+		return nil, err
+	}
+
+	cpus, err := uniqueCpuInfo(hostProcCpuInfo)
+
+	return cpus, nil
+}
+
+func uniqueCpuInfo(procCpus []ProcCpuInfo) ([]types.CpuInfo, error) {
+	// Set processor index to 0 to only check other fields for uniqueness
+	for i := range procCpus {
+		procCpus[i].Processor = 0
+	}
+
+	procCpus = slices.CompactFunc(procCpus, isDuplicate)
+
+	cpuInfos, err := cpuInfoFromProc(procCpus)
+	if err != nil {
+		return nil, err
+	}
+	return cpuInfos, nil
+}
+
+func isDuplicate(a ProcCpuInfo, b ProcCpuInfo) bool {
+	return reflect.DeepEqual(a, b)
+}
+
+func cpuInfoFromProc(procCpus []ProcCpuInfo) ([]types.CpuInfo, error) {
+	var cpuInfos []types.CpuInfo
+	for _, procCpu := range procCpus {
+		var cpuInfo types.CpuInfo
+		if procCpu.Architecture == amd64 {
+			cpuInfo.Architecture = procCpu.Architecture
+			cpuInfo.ManufacturerId = procCpu.ManufacturerId
+			cpuInfo.Flags = procCpu.Flags
+		} else if procCpu.Architecture == arm64 {
+			cpuInfo.Architecture = procCpu.Architecture
+			cpuInfo.ImplementerId = types.HexInt(procCpu.ImplementerId)
+			cpuInfo.PartNumber = types.HexInt(procCpu.PartNumber)
+		} else {
+			return nil, fmt.Errorf("unsupported architecture: %s", procCpu.Architecture)
+		}
+		cpuInfos = append(cpuInfos, cpuInfo)
+	}
+	return cpuInfos, nil
+}
