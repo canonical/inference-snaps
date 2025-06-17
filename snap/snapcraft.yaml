@@ -1,9 +1,9 @@
-name: ml-snap-utils
+name: stack-utils
 base: core24
 version: git
-summary: Utilities for snapping ML workloads
+summary: Utilities for selecting hardware optimised stacks
 description: |
-  These utilities helps decide which components should be installed on a particular system.
+  These utilities help decide which components should be installed on a particular system.
 
 grade: devel
 confinement: strict
