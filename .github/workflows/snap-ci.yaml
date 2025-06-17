@@ -9,18 +9,42 @@ on:
   workflow_dispatch:
 
 env:
-  SNAP_NAME: ml-snap-utils
+  SNAP_NAME: stack-utils
 
 jobs:
+  test:
+    runs-on: [ self-hosted, amd64, Linux, noble, medium ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+      - name: Hardware info tests
+        run: |
+          go test -v -count 1 ./pkg/hardware_info/...
+      - name: Selector tests
+        run: |
+          go test -v -count 1 ./pkg/selector
+      - name: Type tests
+        run: |
+          go test -v -count 1 ./pkg/types
+      - name: Util tests
+        run: |
+          go test -v -count 1 ./pkg/utils
+
   build:
     name: Build
+    needs: [ test ]
     strategy:
       matrix:
         runs:
           - architecture: amd64
-            runner: [ self-hosted, amd64, Linux ]
+            runner: [ self-hosted, amd64, Linux, noble, medium ]
           - architecture: arm64
-            runner: [ self-hosted, ARM64, Linux ]
+            runner: [ self-hosted, ARM64, Linux, noble, medium ]
     runs-on: ${{ matrix.runs.runner }}
 
     steps:
@@ -37,3 +61,12 @@ jobs:
           name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{matrix.runs.architecture}}
           path: ${{ steps.snapcraft.outputs.snap }}
           if-no-files-found: error
+
+      - name: Publish snap
+        uses: snapcore/action-publish@v1
+        if: github.ref == 'refs/heads/main'
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ${{ steps.snapcraft.outputs.snap }}
+          release: latest/edge/ci
