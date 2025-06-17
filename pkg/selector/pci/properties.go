@@ -1,9 +1,9 @@
 package pci
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/selector/weights"
-	"github.com/canonical/ml-snap-utils/pkg/types"
-	"github.com/canonical/ml-snap-utils/pkg/utils"
+	"github.com/canonical/stack-utils/pkg/selector/weights"
+	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/utils"
 )
 
 func hasAdditionalProperties(stackDevice types.StackDevice) bool {
@@ -13,7 +13,7 @@ func hasAdditionalProperties(stackDevice types.StackDevice) bool {
 	if stackDevice.ComputeCapability != nil {
 		return true
 	}
-	
+
 	return false
 }
 

@@ -3,11 +3,11 @@ package pci
 import (
 	"fmt"
 
-	"github.com/canonical/ml-snap-utils/pkg/constants"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci/amd"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci/intel"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci/nvidia"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/constants"
+	"github.com/canonical/stack-utils/pkg/hardware_info/pci/amd"
+	"github.com/canonical/stack-utils/pkg/hardware_info/pci/intel"
+	"github.com/canonical/stack-utils/pkg/hardware_info/pci/nvidia"
+	"github.com/canonical/stack-utils/pkg/types"
 	"github.com/jaypipes/pcidb"
 )
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func downloadRequiredComponents() {

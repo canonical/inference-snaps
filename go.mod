@@ -1,4 +1,4 @@
-module github.com/canonical/ml-snap-utils
+module github.com/canonical/stack-utils
 
 go 1.24
 

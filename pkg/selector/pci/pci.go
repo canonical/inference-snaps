@@ -1,8 +1,8 @@
 package pci
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/selector/weights"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/selector/weights"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func Match(stackDevice types.StackDevice, pcis []types.PciDevice) (int, []string, error) {

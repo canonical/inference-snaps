@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/canonical/ml-snap-utils/pkg/selector/weights"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/selector/weights"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 /*

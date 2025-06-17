@@ -3,7 +3,7 @@ package cpu
 import (
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func TestCheckCpuVendor(t *testing.T) {

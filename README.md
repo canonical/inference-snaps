@@ -1,6 +1,6 @@
-# ML Snap Utils
+# Stack Utils
 
-This repo contains utilities used in snapping machine learning (AI) workloads.
+This repo contains utilities used in snapping and selecting hardware specific workloads.
 
 ## Development
 

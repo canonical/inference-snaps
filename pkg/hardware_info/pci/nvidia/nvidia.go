@@ -1,7 +1,7 @@
 package nvidia
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 /*

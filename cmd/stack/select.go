@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info"
-	"github.com/canonical/ml-snap-utils/pkg/selector"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/hardware_info"
+	"github.com/canonical/stack-utils/pkg/selector"
+	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 

@@ -1,7 +1,7 @@
 package memory
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func Info() (*types.MemoryInfo, error) {

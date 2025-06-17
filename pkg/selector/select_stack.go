@@ -7,10 +7,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/canonical/ml-snap-utils/pkg/selector/cpu"
-	"github.com/canonical/ml-snap-utils/pkg/selector/pci"
-	"github.com/canonical/ml-snap-utils/pkg/types"
-	"github.com/canonical/ml-snap-utils/pkg/utils"
+	"github.com/canonical/stack-utils/pkg/selector/cpu"
+	"github.com/canonical/stack-utils/pkg/selector/pci"
+	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 

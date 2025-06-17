@@ -1,11 +1,11 @@
 package hardware_info
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/cpu"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/disk"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/memory"
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info/pci"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/hardware_info/cpu"
+	"github.com/canonical/stack-utils/pkg/hardware_info/disk"
+	"github.com/canonical/stack-utils/pkg/hardware_info/memory"
+	"github.com/canonical/stack-utils/pkg/hardware_info/pci"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func Get(friendlyNames bool) (types.HwInfo, error) {

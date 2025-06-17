@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/canonical/ml-snap-utils/pkg/hardware_info"
+	"github.com/canonical/stack-utils/pkg/hardware_info"
 )
 
 func main() {

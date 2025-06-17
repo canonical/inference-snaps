@@ -1,7 +1,7 @@
 package disk
 
 import (
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 	"golang.org/x/sys/unix"
 )
 

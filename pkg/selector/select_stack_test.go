@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 

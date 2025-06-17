@@ -3,7 +3,7 @@ package pci
 import (
 	"testing"
 
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func TestCheckGpuVendor(t *testing.T) {

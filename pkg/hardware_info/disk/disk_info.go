@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func Info() (map[string]*types.DirStats, error) {

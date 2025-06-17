@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/ml-snap-utils/pkg/selector"
-	"github.com/canonical/ml-snap-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/selector"
+	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func main() {

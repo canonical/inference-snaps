@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/ml-snap-utils/pkg/selector"
+	"github.com/canonical/stack-utils/pkg/selector"
 )
 
 func loadStacksToSnapOptions() {
