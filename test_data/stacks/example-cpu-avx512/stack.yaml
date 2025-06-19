@@ -3,7 +3,7 @@ description: Example stack for modern CPUs, offering good accuracy with low foot
 vendor: Canonical Ltd
 grade: stable
 devices:
-  any:
+  all:
     - type: cpu
       architecture: amd64
       flags: [sse4_2, f16c, fma, avx, avx2, avx512f, avx512dq, avx512bw]

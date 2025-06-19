@@ -16,7 +16,7 @@ func gpuProperties(pciDevice types.PciDevice) map[string]string {
 
 	vRamVal, err := vRam(pciDevice)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Intel: error looking up vRAM: %v", err)
+		fmt.Fprintf(os.Stderr, "Intel: error looking up vRAM: %v\n", err)
 	}
 	if vRamVal != nil {
 		properties["vram"] = strconv.FormatUint(*vRamVal, 10)

@@ -32,7 +32,7 @@ func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
 		return compatibleStacks[i].Score > compatibleStacks[j].Score
 	})
 
-	// Top stack is highest score
+	// Top stack is the highest score
 	return &compatibleStacks[0], nil
 }
 
@@ -142,7 +142,7 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 	if len(stack.Devices.All) > 0 {
 		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, stack.Devices.All)
 		for _, reason := range reasonsAll {
-			reasons = append(reasons, "all: "+reason)
+			reasons = append(reasons, "devices all: "+reason)
 		}
 		if err != nil {
 			return 0, reasons, err
@@ -157,7 +157,7 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 	if len(stack.Devices.Any) > 0 {
 		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, stack.Devices.Any)
 		for _, reason := range reasonsAny {
-			reasons = append(reasons, "any: "+reason)
+			reasons = append(reasons, "devices any: "+reason)
 		}
 		if err != nil {
 			return 0, reasons, err
@@ -183,14 +183,11 @@ func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 				reasons = append(reasons, "cpu device is required but host reported none")
 				return 0, reasons, nil
 			}
-			cpuScore, cpuReasons, err := cpu.Match(device, hardwareInfo.Cpus)
+			cpuScore, _, err := cpu.Match(device, hardwareInfo.Cpus)
 			if err != nil {
 				return 0, reasons, fmt.Errorf("cpu: %v", err)
 			}
 			if cpuScore == 0 {
-				for _, reason := range cpuReasons {
-					reasons = append(reasons, "cpu: "+reason)
-				}
 				reasons = append(reasons, "required cpu device not found")
 				return 0, reasons, nil
 			}
@@ -206,14 +203,11 @@ func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 				reasons = append(reasons, "pci device is required but none found")
 				return 0, reasons, nil
 			}
-			pciScore, pciReasons, err := pci.Match(device, hardwareInfo.PciDevices)
+			pciScore, _, err := pci.Match(device, hardwareInfo.PciDevices)
 			if err != nil {
 				return 0, reasons, fmt.Errorf("pci: %v", err)
 			}
 			if pciScore == 0 {
-				for _, reason := range pciReasons {
-					reasons = append(reasons, "pci: "+reason)
-				}
 				reasons = append(reasons, "required pci device not found")
 				return 0, reasons, nil
 			}
@@ -223,7 +217,7 @@ func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 	}
 
 	if len(stackDevices) > 0 && devicesFound != len(stackDevices) {
-		reasons = append(reasons, "could not find a required device")
+		reasons = append(reasons, "required device not found")
 		return 0, reasons, nil
 	}
 
@@ -241,17 +235,13 @@ func checkDevicesAny(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 			if hardwareInfo.Cpus == nil {
 				continue
 			}
-			cpuScore, cpuReasons, err := cpu.Match(device, hardwareInfo.Cpus)
+			cpuScore, _, err := cpu.Match(device, hardwareInfo.Cpus)
 			if err != nil {
 				return 0, reasons, err
 			}
 			if cpuScore > 0 {
 				devicesFound++
 				extraScore += cpuScore
-			} else {
-				for _, reason := range cpuReasons {
-					reasons = append(reasons, "cpu: "+reason)
-				}
 			}
 
 		} else if device.Bus == "usb" {
@@ -263,24 +253,20 @@ func checkDevicesAny(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 			if hardwareInfo.PciDevices == nil {
 				continue
 			}
-			pciScore, pciReasons, err := pci.Match(device, hardwareInfo.PciDevices)
+			pciScore, _, err := pci.Match(device, hardwareInfo.PciDevices)
 			if err != nil {
 				return 0, reasons, err
 			}
 			if pciScore > 0 {
 				devicesFound++
 				extraScore += pciScore
-			} else {
-				for _, reason := range pciReasons {
-					reasons = append(reasons, "pci: "+reason)
-				}
 			}
 		}
 	}
 
 	// If any-of devices are defined, we need to find at least one
 	if len(stackDevices) > 0 && devicesFound == 0 {
-		reasons = append(reasons, "could not find a required device")
+		reasons = append(reasons, "required device not found")
 		return 0, reasons, nil
 	}
 

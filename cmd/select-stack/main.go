@@ -10,6 +10,8 @@ import (
 
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/types"
+
+	"github.com/fatih/color"
 )
 
 func main() {
@@ -46,9 +48,9 @@ func main() {
 	for _, stack := range scoredStacks {
 		stackSelection.Stacks = append(stackSelection.Stacks, stack)
 		if stack.Score == 0 {
-			log.Printf("Stack %s not selected: %s", stack.Name, strings.Join(stack.Notes, ", "))
+			log.Printf(color.RedString("x %s - %s"), stack.Name, strings.Join(stack.Notes, ", "))
 		} else {
-			log.Printf("Stack %s matches. Score = %d", stack.Name, stack.Score)
+			log.Printf(color.GreenString("✓ %s - score = %d"), stack.Name, stack.Score)
 		}
 	}
 
@@ -57,7 +59,7 @@ func main() {
 		log.Fatal(err)
 	}
 	stackSelection.TopStack = topStack.Name
-	log.Printf("Top stack: %s. Score = %d", topStack.Name, topStack.Score)
+	log.Printf(color.GreenString("Top stack: %s - score = %d"), topStack.Name, topStack.Score)
 
 	var resultStr []byte
 	if prettyOutput {

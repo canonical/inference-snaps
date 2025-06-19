@@ -51,7 +51,7 @@ iterateCpus:
 		// Flags
 		for _, flag := range stackDevice.Flags {
 			if !slices.Contains(cpu.Flags, flag) {
-				reasons = append(reasons, "Required flag not found: %s", flag)
+				reasons = append(reasons, fmt.Sprintf("Required flag not found: %s", flag))
 				continue iterateCpus
 			}
 			cpuScore += weights.CpuFlag

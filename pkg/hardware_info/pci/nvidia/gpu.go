@@ -15,7 +15,7 @@ func gpuProperties(pciDevice types.PciDevice) map[string]string {
 
 	vRamVal, err := vRam(pciDevice)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "NVIDIA: error looking up vRAM: %v", err)
+		fmt.Fprintf(os.Stderr, "NVIDIA: error looking up vRAM: %v\n", err)
 	}
 	if vRamVal != nil {
 		properties["vram"] = strconv.FormatUint(*vRamVal, 10)
@@ -23,7 +23,7 @@ func gpuProperties(pciDevice types.PciDevice) map[string]string {
 
 	ccVal, err := computeCapability(pciDevice)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "NVIDIA: error looking up compute capability: %v", err)
+		fmt.Fprintf(os.Stderr, "NVIDIA: error looking up compute capability: %v\n", err)
 	}
 	if ccVal != nil {
 		properties["computeCapability"] = *ccVal
