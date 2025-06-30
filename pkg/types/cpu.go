@@ -8,6 +8,7 @@ type CpuInfo struct {
 	Flags          []string `json:"flags,omitempty"`
 
 	// arm64
-	ImplementerId HexInt `json:"implementer_id,omitempty"`
-	PartNumber    HexInt `json:"part_number,omitempty"`
+	ImplementerId HexInt   `json:"implementer_id,omitempty"`
+	PartNumber    HexInt   `json:"part_number,omitempty"`
+	Features      []string `json:"features,omitempty"`
 }

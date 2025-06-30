@@ -3,21 +3,40 @@
     {
       "architecture": "arm64",
       "implementer_id": "41",
-      "part_number": "d0c"
+      "part_number": "d0c",
+      "features": [
+        "fp",
+        "asimd",
+        "evtstrm",
+        "aes",
+        "pmull",
+        "sha1",
+        "sha2",
+        "crc32",
+        "atomics",
+        "fphp",
+        "asimdhp",
+        "cpuid",
+        "asimdrdm",
+        "lrcpc",
+        "dcpop",
+        "asimddp",
+        "ssbs"
+      ]
     }
   ],
   "memory": {
-    "total_ram": 66839531520,
+    "total_ram": 66839527424,
     "total_swap": 8589930496
   },
   "disk": {
     "/": {
-      "total": 33419759616,
-      "avail": 33419759616
+      "total": 33419763712,
+      "avail": 33419763712
     },
     "/var/lib/snapd/snaps": {
       "total": 470888099840,
-      "avail": 435295649792
+      "avail": 425825845248
     }
   },
   "pci": [

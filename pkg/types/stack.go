@@ -36,15 +36,16 @@ type StackDevice struct {
 	Bus  string `yaml:"bus" json:"bus,omitempty"` // pci, usb or nil
 
 	// CPUs
-	Architecture *string `yaml:"architectures" json:"architectures,omitempty"`
+	Architecture *string `yaml:"architecture" json:"architecture,omitempty"`
 
 	// CPU x86
 	ManufacturerId *string  `yaml:"manufacturer-id" json:"manufacturer-id,omitempty"`
 	Flags          []string `yaml:"flags" json:"flags,omitempty"`
 
 	// CPU arm64
-	ImplementerId *HexInt `yaml:"implementer-id" json:"implementer-id,omitempty"`
-	PartNumber    *HexInt `yaml:"part-number" json:"part-number,omitempty"`
+	ImplementerId *HexInt  `yaml:"implementer-id" json:"implementer-id,omitempty"`
+	PartNumber    *HexInt  `yaml:"part-number" json:"part-number,omitempty"`
+	Features      []string `yaml:"features" json:"features,omitempty"`
 
 	// PCI
 	VendorId *HexInt `yaml:"vendor-id" json:"vendor-id,omitempty"`

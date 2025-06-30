@@ -1,0 +1,20 @@
+name: arm-neon
+description: Example stack for ARM CPUs with NEON instruction set
+vendor: Canonical Ltd
+grade: stable
+devices:
+  any:
+    - type: cpu
+      architecture: armhf
+      features: [neon] # for ARMv7
+    - type: cpu
+      architecture: arm64
+      features: [asimd] # for ARMv8 ASIMD includes NEON instruction set
+memory: 2G
+disk-space: 4G
+components:
+  - llamacpp
+  - model-distill-qwen-1-5b-q8-0-gguf
+configurations:
+  engine: llamacpp
+  model: model-distill-qwen-1-5b-q8-0-gguf

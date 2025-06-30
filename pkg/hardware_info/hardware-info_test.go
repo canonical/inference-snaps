@@ -39,6 +39,16 @@ func TestGetFromFiles(t *testing.T) {
 				t.Fatal(err)
 			}
 
+			// Ignore the disk info for / as it's always different inside a snap than what the raw commands on the host reports
+			hwInfo.Disk["/"] = types.DirStats{
+				Total: 0,
+				Avail: 0,
+			}
+			hardwareInfo.Disk["/"] = types.DirStats{
+				Total: 0,
+				Avail: 0,
+			}
+
 			// Ignore friendly names during deep equal, as it depends on the version of the pci-id database
 			for i := range hwInfo.PciDevices {
 				hwInfo.PciDevices[i].VendorName = nil

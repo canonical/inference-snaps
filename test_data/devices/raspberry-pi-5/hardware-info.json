@@ -3,7 +3,25 @@
     {
       "architecture": "arm64",
       "implementer_id": "41",
-      "part_number": "d0b"
+      "part_number": "d0b",
+      "features": [
+        "fp",
+        "asimd",
+        "evtstrm",
+        "aes",
+        "pmull",
+        "sha1",
+        "sha2",
+        "crc32",
+        "atomics",
+        "fphp",
+        "asimdhp",
+        "cpuid",
+        "asimdrdm",
+        "lrcpc",
+        "dcpop",
+        "asimddp"
+      ]
     }
   ],
   "memory": {
@@ -17,7 +35,7 @@
     },
     "/var/lib/snapd/snaps": {
       "total": 62270910464,
-      "avail": 48009973760
+      "avail": 40666140672
     }
   },
   "pci": [

@@ -57,6 +57,15 @@ iterateCpus:
 			cpuScore += weights.CpuFlag
 		}
 
+		// ARM Features
+		for _, feature := range stackDevice.Features {
+			if !slices.Contains(cpu.Features, feature) {
+				reasons = append(reasons, fmt.Sprintf("Required feature not found: %s", feature))
+				continue iterateCpus
+			}
+			cpuScore += weights.CpuFlag
+		}
+
 		// Only add this CPU's score if it passed all the filters
 		cpusScore += cpuScore
 	}

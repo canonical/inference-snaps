@@ -56,6 +56,26 @@ var stackTestSets = map[string]stackTestSet{
 		},
 	},
 
+	"arm-neon": {
+		ValidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+		},
+		InvalidDevices: []string{
+			"i7-2600k+arc-a580",
+			"i7-10510U",
+			"mustang",
+			//"orange-pi-rv2",
+			"xps13-7390",
+			"xps13-9350",
+		},
+	},
+
 	"example-cpu": {
 		ValidDevices: []string{
 			"i7-10510U",
