@@ -109,8 +109,8 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 			return 0, reasons, err
 		}
 
-		if hardwareInfo.Memory == nil {
-			return 0, reasons, fmt.Errorf("no memory in hardware info")
+		if hardwareInfo.Memory.TotalRam == 0 {
+			return 0, reasons, fmt.Errorf("system can't have zero ram")
 		}
 
 		// Checking combination of ram and swap

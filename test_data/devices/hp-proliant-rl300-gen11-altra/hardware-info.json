@@ -1,0 +1,409 @@
+{
+  "cpus": [
+    {
+      "architecture": "arm64",
+      "implementer_id": "41",
+      "part_number": "d0c"
+    }
+  ],
+  "memory": {
+    "total_ram": 33134252032,
+    "total_swap": 8589930496
+  },
+  "disk": {
+    "/": {
+      "total": 16567123968,
+      "avail": 16567123968
+    },
+    "/var/lib/snapd/snaps": {
+      "total": 470888099840,
+      "avail": 435367202816
+    }
+  },
+  "pci": [
+    {
+      "slot": "0000:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0000:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0000:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0000:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    },
+    {
+      "slot": "0001:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0001:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0001:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0001:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    },
+    {
+      "slot": "0002:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0002:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0002:01:00.0",
+      "device_class": "200",
+      "programming_interface": 0,
+      "vendor_id": "15b3",
+      "device_id": "101f",
+      "subvendor_id": "15b3",
+      "subdevice_id": "12",
+      "vendor_name": "Mellanox Technologies",
+      "device_name": "MT2894 Family [ConnectX-6 Lx]",
+      "subvendor_name": "Mellanox Technologies"
+    },
+    {
+      "slot": "0002:01:00.1",
+      "device_class": "200",
+      "programming_interface": 0,
+      "vendor_id": "15b3",
+      "device_id": "101f",
+      "subvendor_id": "15b3",
+      "subdevice_id": "12",
+      "vendor_name": "Mellanox Technologies",
+      "device_name": "MT2894 Family [ConnectX-6 Lx]",
+      "subvendor_name": "Mellanox Technologies"
+    },
+    {
+      "slot": "0003:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0003:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0004:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0004:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0004:00:02.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e102",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a1"
+    },
+    {
+      "slot": "0004:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0004:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    },
+    {
+      "slot": "0005:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0005:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0005:00:02.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e102",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a1"
+    },
+    {
+      "slot": "0005:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0005:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    },
+    {
+      "slot": "0006:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0006:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0006:00:02.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e102",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a1"
+    },
+    {
+      "slot": "0006:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0006:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    },
+    {
+      "slot": "0006:01:00.0",
+      "device_class": "880",
+      "programming_interface": 0,
+      "vendor_id": "103c",
+      "device_id": "3306",
+      "subvendor_id": "1590",
+      "subdevice_id": "e4",
+      "vendor_name": "Hewlett-Packard Company",
+      "device_name": "Integrated Lights-Out Standard Slave Instrumentation \u0026 System Support",
+      "subvendor_name": "Hewlett Packard Enterprise",
+      "subdevice_name": "iLO5"
+    },
+    {
+      "slot": "0006:01:00.1",
+      "device_class": "300",
+      "programming_interface": 0,
+      "vendor_id": "102b",
+      "device_id": "538",
+      "subvendor_id": "1590",
+      "subdevice_id": "e4",
+      "vendor_name": "Matrox Electronics Systems Ltd.",
+      "device_name": "MGA G200eH3",
+      "subvendor_name": "Hewlett Packard Enterprise",
+      "subdevice_name": "iLO5 VGA"
+    },
+    {
+      "slot": "0006:01:00.2",
+      "device_class": "880",
+      "programming_interface": 0,
+      "vendor_id": "103c",
+      "device_id": "3307",
+      "subvendor_id": "1590",
+      "subdevice_id": "e4",
+      "vendor_name": "Hewlett-Packard Company",
+      "device_name": "Integrated Lights-Out Standard Management Processor Support and Messaging",
+      "subvendor_name": "Hewlett Packard Enterprise"
+    },
+    {
+      "slot": "0006:01:00.4",
+      "device_class": "c03",
+      "programming_interface": 32,
+      "vendor_id": "103c",
+      "device_id": "22f6",
+      "subvendor_id": "1590",
+      "subdevice_id": "e4",
+      "vendor_name": "Hewlett-Packard Company",
+      "device_name": "iLO5 Virtual USB Controller",
+      "subvendor_name": "Hewlett Packard Enterprise",
+      "subdevice_name": "iLO5 Standard Virtual USB Controller"
+    },
+    {
+      "slot": "0006:02:00.0",
+      "device_class": "c03",
+      "programming_interface": 48,
+      "vendor_id": "1912",
+      "device_id": "14",
+      "vendor_name": "Renesas Electronics Corp.",
+      "device_name": "uPD720201 USB 3.0 Host Controller"
+    },
+    {
+      "slot": "0006:03:00.0",
+      "device_class": "108",
+      "programming_interface": 2,
+      "vendor_id": "1c5c",
+      "device_id": "2427",
+      "subvendor_id": "1c5c",
+      "subdevice_id": "2f3",
+      "vendor_name": "SK hynix",
+      "device_name": "PE6010 NVMe Solid State Drive",
+      "subvendor_name": "SK hynix"
+    },
+    {
+      "slot": "0007:00:00.0",
+      "device_class": "600",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e100",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Complex A"
+    },
+    {
+      "slot": "0007:00:01.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e101",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a0"
+    },
+    {
+      "slot": "0007:00:02.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e102",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a1"
+    },
+    {
+      "slot": "0007:00:03.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e103",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a2"
+    },
+    {
+      "slot": "0007:00:04.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "1def",
+      "device_id": "e104",
+      "vendor_name": "Ampere Computing, LLC",
+      "device_name": "Altra PCI Express Root Port a3"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "cpus": [
+    {
+      "architecture": "arm64",
+      "implementer_id": "41",
+      "part_number": "d0b"
+    }
+  ],
+  "memory": {
+    "total_ram": 8317198336,
+    "total_swap": 1073737728
+  },
+  "disk": {
+    "/": {
+      "total": 4158599168,
+      "avail": 4158599168
+    },
+    "/var/lib/snapd/snaps": {
+      "total": 30777720832,
+      "avail": 17295187968
+    }
+  },
+  "pci": [
+    {
+      "slot": "0001:00:00.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "14e4",
+      "device_id": "2712",
+      "vendor_name": "Broadcom Inc. and subsidiaries",
+      "device_name": "BCM2712 PCIe Bridge"
+    },
+    {
+      "slot": "0001:01:00.0",
+      "device_class": "b40",
+      "programming_interface": 0,
+      "vendor_id": "1e60",
+      "device_id": "2864",
+      "subvendor_id": "1e60",
+      "subdevice_id": "2864",
+      "vendor_name": "Hailo Technologies Ltd.",
+      "device_name": "Hailo-8 AI Processor",
+      "subvendor_name": "Hailo Technologies Ltd."
+    },
+    {
+      "slot": "0002:00:00.0",
+      "device_class": "604",
+      "programming_interface": 0,
+      "vendor_id": "14e4",
+      "device_id": "2712",
+      "vendor_name": "Broadcom Inc. and subsidiaries",
+      "device_name": "BCM2712 PCIe Bridge"
+    },
+    {
+      "slot": "0002:01:00.0",
+      "device_class": "200",
+      "programming_interface": 0,
+      "vendor_id": "1de4",
+      "device_id": "1",
+      "vendor_name": "Raspberry Pi Ltd",
+      "device_name": "RP1 PCIe 2.0 South Bridge"
+    }
+  ]
+}

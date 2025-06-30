@@ -20,16 +20,26 @@ Devices returns a slice of PciDevices that is detected on the current system and
 */
 func Devices(friendlyNames bool) ([]types.PciDevice, error) {
 
-	hostLsPci, err := hostLsPci()
+	hostLsPciData, err := hostLsPci()
 	if err != nil {
 		return nil, err
 	}
-	devices, err := ParseLsPci(hostLsPci, friendlyNames)
+	devices, err := DevicesFromRawData(hostLsPciData, friendlyNames)
 	if err != nil {
 		return nil, err
 	}
 
+	// Additional properties are obtained by running vendor specific tools on the host
 	devices = additionalProperties(devices)
+
+	return devices, nil
+}
+
+func DevicesFromRawData(lspciData string, friendlyNames bool) ([]types.PciDevice, error) {
+	devices, err := ParseLsPci(lspciData, friendlyNames)
+	if err != nil {
+		return nil, err
+	}
 
 	return devices, nil
 }

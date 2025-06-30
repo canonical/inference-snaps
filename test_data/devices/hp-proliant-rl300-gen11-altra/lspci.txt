@@ -1,0 +1,355 @@
+Slot:	0000:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0000:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	1
+
+Slot:	0000:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	2
+
+Slot:	0000:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	3
+
+Slot:	0001:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0001:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	4
+
+Slot:	0001:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	5
+
+Slot:	0001:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	6
+
+Slot:	0002:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0002:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	7
+
+Slot:	0002:01:00.0
+Class:	0200
+Vendor:	15b3
+Device:	101f
+SVendor:	15b3
+SDevice:	0012
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	27
+
+Slot:	0002:01:00.1
+Class:	0200
+Vendor:	15b3
+Device:	101f
+SVendor:	15b3
+SDevice:	0012
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	28
+
+Slot:	0003:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0003:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	8
+
+Slot:	0004:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0004:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	9
+
+Slot:	0004:00:02.0
+Class:	0604
+Vendor:	1def
+Device:	e102
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	10
+
+Slot:	0004:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	11
+
+Slot:	0004:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	12
+
+Slot:	0005:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0005:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	13
+
+Slot:	0005:00:02.0
+Class:	0604
+Vendor:	1def
+Device:	e102
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	14
+
+Slot:	0005:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	15
+
+Slot:	0005:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	16
+
+Slot:	0006:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0006:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	17
+
+Slot:	0006:00:02.0
+Class:	0604
+Vendor:	1def
+Device:	e102
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	18
+
+Slot:	0006:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	19
+
+Slot:	0006:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	20
+
+Slot:	0006:01:00.0
+Class:	0880
+Vendor:	103c
+Device:	3306
+SVendor:	1590
+SDevice:	00e4
+Rev:	08
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0006:01:00.1
+Class:	0300
+Vendor:	102b
+Device:	0538
+SVendor:	1590
+SDevice:	00e4
+Rev:	03
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	0
+
+Slot:	0006:01:00.2
+Class:	0880
+Vendor:	103c
+Device:	3307
+SVendor:	1590
+SDevice:	00e4
+Rev:	08
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	0
+
+Slot:	0006:01:00.4
+Class:	0c03
+Vendor:	103c
+Device:	22f6
+SVendor:	1590
+SDevice:	00e4
+Rev:	01
+ProgIf:	20
+NUMANode:	0
+IOMMUGroup:	0
+
+Slot:	0006:02:00.0
+Class:	0c03
+Vendor:	1912
+Device:	0014
+Rev:	03
+ProgIf:	30
+NUMANode:	0
+IOMMUGroup:	25
+
+Slot:	0006:03:00.0
+Class:	0108
+Vendor:	1c5c
+Device:	2427
+SVendor:	1c5c
+SDevice:	02f3
+Rev:	01
+ProgIf:	02
+NUMANode:	0
+IOMMUGroup:	26
+
+Slot:	0007:00:00.0
+Class:	0600
+Vendor:	1def
+Device:	e100
+ProgIf:	00
+NUMANode:	0
+
+Slot:	0007:00:01.0
+Class:	0604
+Vendor:	1def
+Device:	e101
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	21
+
+Slot:	0007:00:02.0
+Class:	0604
+Vendor:	1def
+Device:	e102
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	22
+
+Slot:	0007:00:03.0
+Class:	0604
+Vendor:	1def
+Device:	e103
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	23
+
+Slot:	0007:00:04.0
+Class:	0604
+Vendor:	1def
+Device:	e104
+Rev:	04
+ProgIf:	00
+NUMANode:	0
+IOMMUGroup:	24
+

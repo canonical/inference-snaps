@@ -1,0 +1,13 @@
+Slot:	0000:00:00.0
+Class:	0604
+Vendor:	14e4
+Device:	2712
+Rev:	21
+ProgIf:	00
+
+Slot:	0000:01:00.0
+Class:	0200
+Vendor:	1de4
+Device:	0001
+ProgIf:	00
+

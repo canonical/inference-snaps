@@ -5,17 +5,17 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// dirStats returns a struct with the total, used, free and available bytes for a given directory.
-func dirStats(path string) (*types.DirStats, error) {
-	var dirStats types.DirStats
+// statFs returns a struct with the total, used, free and available bytes for a given directory.
+func statFs(path string) (types.DirStats, error) {
+	var pathStats types.DirStats
 
 	var fs unix.Statfs_t
 	err := unix.Statfs(path, &fs)
 	if err != nil {
-		return nil, err
+		return pathStats, err
 	}
 
-	dirStats.Total = fs.Blocks * uint64(fs.Bsize)
-	dirStats.Avail = fs.Bavail * uint64(fs.Bsize)
-	return &dirStats, nil
+	pathStats.Total = fs.Blocks * uint64(fs.Bsize)
+	pathStats.Avail = fs.Bavail * uint64(fs.Bsize)
+	return pathStats, nil
 }

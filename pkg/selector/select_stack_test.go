@@ -1,175 +1,175 @@
 package selector
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"testing"
 
+	"github.com/canonical/stack-utils/pkg/hardware_info"
 	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
 type stackTestSet struct {
-	ValidHw   []string
-	InvalidHw []string
+	ValidDevices   []string
+	InvalidDevices []string
 }
 
 var stackTestSets = map[string]stackTestSet{
 	"ampere": {
-		ValidHw: []string{"ampere-one-x-mocked"},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"ampere-altra",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
+		ValidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+		},
+		InvalidDevices: []string{
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			"i7-10510U",
 			"mustang",
-			"nuc11-i5-1145G7",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"ampere-altra": {
-		ValidHw: []string{
-			"ampere-altra",
+		ValidDevices: []string{
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 		},
-		InvalidHw: []string{
-			"ampere-one-x-mocked",
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			"i7-10510U",
 			"mustang",
-			"nuc11-i5-1145G7",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"example-cpu": {
-		ValidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"dell-r730xd",
+		ValidDevices: []string{
+			"i7-10510U",
 			"mustang",
-			"nuc11-i5-1145G7",
 			"xps13-7390",
 			"xps13-9350",
 		},
-		InvalidHw: []string{
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"hp-dl380p-gen8",
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 		},
 	},
 
 	"example-cpu-avx512": {
-		ValidHw: []string{
-			"amd-ryzen9-7900",
-			"nuc11-i5-1145G7",
-		},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
+		ValidDevices: []string{},
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			"i7-10510U",
 			"mustang",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"example-memory": {
-		ValidHw: []string{
-			"dell-r730xd",
-			"hp-dl380p-gen8",
-		},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"i7-2600k+arc-a580",
-			"i7-2600k",
+		ValidDevices: []string{
 			"mustang",
-			"nuc11-i5-1145G7",
-			"raspberry-pi-5",
-			"xps13-7390",
 			"xps13-9350",
+		},
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+			"i7-2600k+arc-a580",
+			"i7-10510U",
+			//"orange-pi-rv2",
+			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
+			"xps13-7390",
 		},
 	},
 
 	"generic-cuda": {
-		ValidHw: []string{},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
+		ValidDevices: []string{},
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			"i7-10510U",
 			"mustang",
-			"nuc11-i5-1145G7",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"intel-dgpu": {
-		ValidHw: []string{
+		ValidDevices: []string{
 			"i7-2600k+arc-a580",
 			"mustang",
 		},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
-			"i7-2600k",
-			"nuc11-i5-1145G7",
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+			"i7-10510U",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"intel-npu": {
-		ValidHw: []string{
+		ValidDevices: []string{
 			"xps13-9350",
 		},
-		InvalidHw: []string{
-			"amd-ryzen7-5700g",
-			"amd-ryzen9-7900",
-			"ampere-altra",
-			"ampere-one-x-mocked",
-			"dell-r730xd",
-			"hp-dl380p-gen8",
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
-			"i7-2600k",
+			"i7-10510U",
 			"mustang",
-			"nuc11-i5-1145G7",
+			//"orange-pi-rv2",
 			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 		},
 	},
@@ -177,13 +177,13 @@ var stackTestSets = map[string]stackTestSet{
 
 func TestStack(t *testing.T) {
 	for stackName, testSet := range stackTestSets {
-		for _, hwName := range testSet.ValidHw {
+		for _, hwName := range testSet.ValidDevices {
 			t.Run(stackName+" == "+hwName, func(t *testing.T) {
 				testValidHw(t, stackName, hwName)
 			})
 		}
 
-		for _, hwName := range testSet.InvalidHw {
+		for _, hwName := range testSet.InvalidDevices {
 			t.Run(stackName+" != "+hwName, func(t *testing.T) {
 				testInvalidHw(t, stackName, hwName)
 			})
@@ -193,25 +193,13 @@ func TestStack(t *testing.T) {
 
 func testValidHw(t *testing.T, stackName string, hwName string) {
 	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
-	hwInfoFile := fmt.Sprintf("../../test_data/hardware_info/%s.json", hwName)
 
-	file, err := os.Open(hwInfoFile)
+	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile(stackManifestFile)
+	data, err := os.ReadFile(stackManifestFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -236,25 +224,13 @@ func testValidHw(t *testing.T, stackName string, hwName string) {
 
 func testInvalidHw(t *testing.T, stackName string, hwName string) {
 	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
-	hwInfoFile := fmt.Sprintf("../../test_data/hardware_info/%s.json", hwName)
 
-	file, err := os.Open(hwInfoFile)
+	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	data, err := io.ReadAll(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var hardwareInfo types.HwInfo
-	err = json.Unmarshal(data, &hardwareInfo)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	data, err = os.ReadFile(stackManifestFile)
+	data, err := os.ReadFile(stackManifestFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -277,12 +253,12 @@ func testInvalidHw(t *testing.T, stackName string, hwName string) {
 
 func TestFindStackEmpty(t *testing.T) {
 	hwInfo := types.HwInfo{
-		Memory: &types.MemoryInfo{
+		Memory: types.MemoryInfo{
 			TotalRam:  200000000,
 			TotalSwap: 200000000,
 		},
-		Disk: map[string]*types.DirStats{
-			"/var/lib/snapd/snaps": &types.DirStats{
+		Disk: map[string]types.DirStats{
+			"/var/lib/snapd/snaps": {
 				Total: 0,
 				Avail: 400000000,
 			},
@@ -312,9 +288,9 @@ func TestDiskCheck(t *testing.T) {
 		Avail: 400000000,
 	}
 	hwInfo := types.HwInfo{}
-	hwInfo.Disk = make(map[string]*types.DirStats)
-	hwInfo.Disk["/"] = &dirStat
-	hwInfo.Disk["/var/lib/snapd/snaps"] = &dirStat
+	hwInfo.Disk = make(map[string]types.DirStats)
+	hwInfo.Disk["/"] = dirStat
+	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
 
 	stackDisk := "300M"
 	stack := types.Stack{DiskSpace: &stackDisk}
@@ -327,7 +303,11 @@ func TestDiskCheck(t *testing.T) {
 		t.Fatalf("disk should be enough: %v", reasons)
 	}
 
-	dirStat.Avail = 100000000
+	dirStat = types.DirStats{
+		Total: 0,
+		Avail: 100000000,
+	}
+	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
 	result, reasons, err = checkStack(hwInfo, stack)
 	if err != nil {
 		t.Fatal(err)
@@ -339,7 +319,7 @@ func TestDiskCheck(t *testing.T) {
 
 func TestMemoryCheck(t *testing.T) {
 	hwInfo := types.HwInfo{
-		Memory: &types.MemoryInfo{
+		Memory: types.MemoryInfo{
 			TotalRam:  200000000,
 			TotalSwap: 200000000,
 		},
@@ -388,7 +368,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		t.Fatalf("No Memory in hardware_info should return err")
 	}
 
-	hwInfo.Memory = &types.MemoryInfo{
+	hwInfo.Memory = types.MemoryInfo{
 		TotalRam:  17000000000,
 		TotalSwap: 2000000000,
 	}
@@ -399,8 +379,8 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		t.Fatal("No Disk space in hardware_info should return err")
 	}
 
-	hwInfo.Disk = make(map[string]*types.DirStats)
-	hwInfo.Disk["/"] = &types.DirStats{
+	hwInfo.Disk = make(map[string]types.DirStats)
+	hwInfo.Disk["/"] = types.DirStats{
 		Avail: 6000000000,
 	}
 

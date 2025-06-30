@@ -26,7 +26,7 @@ func gpuProperties(pciDevice types.PciDevice) map[string]string {
 		fmt.Fprintf(os.Stderr, "NVIDIA: error looking up compute capability: %v\n", err)
 	}
 	if ccVal != nil {
-		properties["computeCapability"] = *ccVal
+		properties["compute_capability"] = *ccVal
 	}
 
 	return properties

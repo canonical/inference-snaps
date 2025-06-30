@@ -10,19 +10,18 @@ import (
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func hostLsPci() ([]byte, error) {
+func hostLsPci() (string, error) {
 	// lspci -vmmnD
 	out, err := exec.Command("lspci", "-vmmnD").Output()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return out, nil
+	return string(out), nil
 }
 
-func ParseLsPci(input []byte, includeFriendlyNames bool) ([]types.PciDevice, error) {
+func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevice, error) {
 	var devices []types.PciDevice
 
-	inputString := string(input)
 	for _, section := range strings.Split(inputString, "\n\n") {
 		// Ignore empty devices, e.g. extra blank line at end
 		if section == "" {

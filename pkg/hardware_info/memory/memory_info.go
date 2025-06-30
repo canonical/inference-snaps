@@ -1,19 +1,23 @@
 package memory
 
 import (
+	"fmt"
+
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func Info() (*types.MemoryInfo, error) {
-	var memoryInfo types.MemoryInfo
-
-	sysInfo, err := sysInfo()
+func Info() (types.MemoryInfo, error) {
+	hostProcMemInfoData, err := hostProcMemInfo()
 	if err != nil {
-		return nil, err
+		return types.MemoryInfo{}, fmt.Errorf("failed to look up host /proc/meminfo: %v", err)
 	}
+	return InfoFromRawData(hostProcMemInfoData)
+}
 
-	// The memory size fields need to be multiplied by the unit to get to bytes
-	memoryInfo.TotalRam = sysInfo.Totalram * uint64(sysInfo.Unit)
-	memoryInfo.TotalSwap = sysInfo.Totalswap * uint64(sysInfo.Unit)
-	return &memoryInfo, nil
+func InfoFromRawData(procMemInfoData string) (types.MemoryInfo, error) {
+	machineMemInfo, err := parseProcMemInfo(procMemInfoData)
+	if err != nil {
+		return types.MemoryInfo{}, fmt.Errorf("failed to parse /proc/meminfo data: %v", err)
+	}
+	return machineMemInfo, nil
 }

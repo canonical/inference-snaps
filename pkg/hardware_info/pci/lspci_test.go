@@ -7,21 +7,19 @@ import (
 )
 
 var testFiles = []string{
-	"../../../test_data/lspci/amd-cezanne.txt",
-	"../../../test_data/lspci/ampere-altra.txt",
-	"../../../test_data/lspci/ampere-one-m-banshee-12.txt",
-	"../../../test_data/lspci/ampere-one-siryn.txt",
-	"../../../test_data/lspci/ampere-one-x-banshee-8.txt",
-	"../../../test_data/lspci/dell-precision-3660-c29399.txt",
-	"../../../test_data/lspci/dell-vostro153535-c30942.txt",
-	"../../../test_data/lspci/hp-elitebook845-g8-notebook-pc-c30368.txt",
-	"../../../test_data/lspci/intel-arc-a580.txt",
-	"../../../test_data/lspci/matrox_g200er2.txt",
-	"../../../test_data/lspci/mustang.txt",
-	"../../../test_data/lspci/radeon_hd7450+tesla_k20xm.txt",
-	"../../../test_data/lspci/rpi5.txt",
-	"../../../test_data/lspci/xps13-7390.txt",
-	"../../../test_data/lspci/xps13-9350.txt",
+	"../../../test_data/devices/ampere-one-m-banshee-12/lspci.txt",
+	"../../../test_data/devices/ampere-one-siryn/lspci.txt",
+	"../../../test_data/devices/ampere-one-x-banshee-8/lspci.txt",
+	"../../../test_data/devices/hp-proliant-rl300-gen11-altra/lspci.txt",
+	"../../../test_data/devices/hp-proliant-rl300-gen11-altra-max/lspci.txt",
+	"../../../test_data/devices/i7-2600k+arc-a580/lspci.txt",
+	"../../../test_data/devices/i7-10510U/lspci.txt",
+	"../../../test_data/devices/mustang/lspci.txt",
+	"../../../test_data/devices/orange-pi-rv2/lspci.txt",
+	"../../../test_data/devices/raspberry-pi-5/lspci.txt",
+	"../../../test_data/devices/raspberry-pi-5+hailo-8/lspci.txt",
+	"../../../test_data/devices/xps13-7390/lspci.txt",
+	"../../../test_data/devices/xps13-9350/lspci.txt",
 }
 
 func TestParseLsCpu(t *testing.T) {
@@ -32,7 +30,7 @@ func TestParseLsCpu(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			pciDevices, err := ParseLsPci(lsPci, true)
+			pciDevices, err := ParseLsPci(string(lsPci), true)
 			if err != nil {
 				t.Fatal(err)
 			}

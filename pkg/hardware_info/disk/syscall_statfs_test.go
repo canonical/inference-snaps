@@ -15,7 +15,7 @@ var testDirs = []string{
 func TestDirStats(t *testing.T) {
 	for _, dir := range testDirs {
 		t.Run(dir, func(t *testing.T) {
-			diskStats, err := dirStats(dir)
+			diskStats, err := statFs(dir)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -27,7 +27,7 @@ func TestDirStats(t *testing.T) {
 }
 
 func TestDirStatsNonExistentDir(t *testing.T) {
-	_, err := dirStats("/path/that/does/not/exist")
+	_, err := statFs("/path/that/does/not/exist")
 	if err == nil {
 		t.Fatal("Non existent dir should return error")
 	}

@@ -9,13 +9,30 @@ import (
 )
 
 func Info() ([]types.CpuInfo, error) {
-
-	hostProcCpuInfo, err := procCpuInfo()
+	hostProcCpu, err := hostProcCpuInfo()
 	if err != nil {
 		return nil, err
 	}
 
-	cpus, err := uniqueCpuInfo(hostProcCpuInfo)
+	hostUname, err := hostUnameMachine()
+	if err != nil {
+		return []types.CpuInfo{}, err
+	}
+
+	cpus, err := InfoFromRawData(hostProcCpu, hostUname)
+
+	return cpus, nil
+}
+
+func InfoFromRawData(procCpuInfoData string, uname string) ([]types.CpuInfo, error) {
+	architecture, err := debianArchitecture(uname)
+
+	machineProcCpuInfo, err := parseProcCpuInfo(procCpuInfoData, architecture)
+	if err != nil {
+		return nil, err
+	}
+
+	cpus, err := uniqueCpuInfo(machineProcCpuInfo)
 
 	return cpus, nil
 }

@@ -28,17 +28,12 @@ func hostUnameMachine() (string, error) {
 	return strings.TrimSpace(architecture), nil
 }
 
-func hostArchitecture() (string, error) {
-	kernelArch, err := hostUnameMachine()
-	if err != nil {
-		return "", err
-	}
-	return debianArchitecture(string(kernelArch))
-}
-
 // debianArchitecture translates the kernel architecture as reported by uname() to the debian architecture
 // Based on lookup table from snapd: https://github.com/canonical/snapd/blob/master/arch/arch.go
 func debianArchitecture(unameArch string) (string, error) {
+	// Trim whitespace
+	unameArch = strings.TrimSpace(unameArch)
+
 	lookupTable := map[string]string{
 		// uname:  debian
 		"aarch64": arm64,

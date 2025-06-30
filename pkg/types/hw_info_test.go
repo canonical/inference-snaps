@@ -8,15 +8,19 @@ import (
 )
 
 var hwInfoFiles = []string{
-	"../../test_data/hardware_info/amd-ryzen7-5700g.json",
-	"../../test_data/hardware_info/amd-ryzen9-7900.json",
-	"../../test_data/hardware_info/dell-r730xd.json",
-	"../../test_data/hardware_info/hp-dl380p-gen8.json",
-	"../../test_data/hardware_info/i7-2600k.json",
-	"../../test_data/hardware_info/mustang.json",
-	"../../test_data/hardware_info/nuc11-i5-1145G7.json",
-	"../../test_data/hardware_info/xps13-7390.json",
-	"../../test_data/hardware_info/xps13-9350.json",
+	//"../../test_data/devices/ampere-one-m-banshee-12/hardware-info.json",
+	//"../../test_data/devices/ampere-one-siryn/hardware-info.json",
+	//"../../test_data/devices/ampere-one-x-banshee-8/hardware-info.json",
+	"../../test_data/devices/hp-proliant-rl300-gen11-altra/hardware-info.json",
+	"../../test_data/devices/hp-proliant-rl300-gen11-altra-max/hardware-info.json",
+	"../../test_data/devices/i7-2600k+arc-a580/hardware-info.json",
+	"../../test_data/devices/i7-10510U/hardware-info.json",
+	"../../test_data/devices/mustang/hardware-info.json",
+	//"../../test_data/devices/orange-pi-rv2/hardware-info.json",
+	"../../test_data/devices/raspberry-pi-5/hardware-info.json",
+	"../../test_data/devices/raspberry-pi-5+hailo-8/hardware-info.json",
+	"../../test_data/devices/xps13-7390/hardware-info.json",
+	//"../../test_data/devices/xps13-9350/hardware-info.json",
 }
 
 func TestParseHwInfo(t *testing.T) {

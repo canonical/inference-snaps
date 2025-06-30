@@ -1,0 +1,1 @@
+Machine in Canonical locker with Battlemage dGPU.
