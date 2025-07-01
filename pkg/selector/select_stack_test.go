@@ -31,6 +31,7 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
@@ -51,6 +52,7 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
@@ -71,6 +73,7 @@ var stackTestSets = map[string]stackTestSet{
 			"i7-10510U",
 			"mustang",
 			//"orange-pi-rv2",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
@@ -80,6 +83,7 @@ var stackTestSets = map[string]stackTestSet{
 		ValidDevices: []string{
 			"i7-10510U",
 			"mustang",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
@@ -110,6 +114,7 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
@@ -118,6 +123,7 @@ var stackTestSets = map[string]stackTestSet{
 	"example-memory": {
 		ValidDevices: []string{
 			"mustang",
+			"system76-addw4",
 			"xps13-9350",
 		},
 		InvalidDevices: []string{
@@ -149,15 +155,18 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
-	"intel-dgpu": {
+	"intel-gpu": {
 		ValidDevices: []string{
 			"i7-2600k+arc-a580",
 			"mustang",
+			"system76-addw4",
+			"xps13-9350",
 		},
 		InvalidDevices: []string{
 			"ampere-one-m-banshee-12",
@@ -170,7 +179,6 @@ var stackTestSets = map[string]stackTestSet{
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
-			"xps13-9350",
 		},
 	},
 
@@ -190,6 +198,7 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
 			"xps13-7390",
 		},
 	},

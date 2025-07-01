@@ -17,6 +17,7 @@ var devices = []string{
 	"mustang",
 	"raspberry-pi-5",
 	"raspberry-pi-5+hailo-8",
+	"system76-addw4",
 	"xps13-7390",
 }
 
