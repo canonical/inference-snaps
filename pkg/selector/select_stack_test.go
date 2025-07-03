@@ -23,6 +23,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-x-banshee-8",
 		},
 		InvalidDevices: []string{
+			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
@@ -46,6 +47,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -69,6 +71,7 @@ var stackTestSets = map[string]stackTestSet{
 			"hp-proliant-rl300-gen11-altra-max",
 		},
 		InvalidDevices: []string{
+			"asus-ux301l",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -79,8 +82,31 @@ var stackTestSets = map[string]stackTestSet{
 		},
 	},
 
-	"example-cpu": {
+	"cpu-avx1": {
 		ValidDevices: []string{
+			"asus-ux301l",
+			"i7-2600k+arc-a580",
+			"i7-10510U",
+			"mustang",
+			"system76-addw4",
+			"xps13-7390",
+			"xps13-9350",
+		},
+		InvalidDevices: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+			//"orange-pi-rv2",
+			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
+		},
+	},
+
+	"cpu-avx2": {
+		ValidDevices: []string{
+			"asus-ux301l",
 			"i7-10510U",
 			"mustang",
 			"system76-addw4",
@@ -100,12 +126,13 @@ var stackTestSets = map[string]stackTestSet{
 		},
 	},
 
-	"example-cpu-avx512": {
+	"cpu-avx512": {
 		ValidDevices: []string{},
 		InvalidDevices: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
@@ -130,6 +157,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
@@ -147,6 +175,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
@@ -172,6 +201,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l", // has intel gpu, but clinfo not working
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-10510U",
@@ -190,6 +220,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
+			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 			"i7-2600k+arc-a580",
@@ -380,7 +411,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		// All fields are nil or zero
 	}
 
-	data, err := os.ReadFile("../../test_data/stacks/example-cpu-avx512/stack.yaml")
+	data, err := os.ReadFile("../../test_data/stacks/cpu-avx512/stack.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}

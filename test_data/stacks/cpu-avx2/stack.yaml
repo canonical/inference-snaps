@@ -1,5 +1,5 @@
-name: example-cpu
-description: Example stack for legacy CPUs, offering good accuracy with low footprints
+name: cpu-avx2
+description: Example stack for CPUs, offering good accuracy with low footprints
 vendor: Canonical Ltd
 grade: stable
 devices:

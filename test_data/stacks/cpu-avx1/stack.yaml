@@ -1,0 +1,18 @@
+name: cpu-avx1
+description: Example stack for legacy CPUs with only SSE4.2 (2008) and AVX (2011) support
+vendor: Canonical Ltd
+grade: stable
+devices:
+  any:
+    - type: cpu
+      architecture: amd64
+      flags: [sse4_2, avx]
+memory: 4G
+disk-space: 8G
+components:
+  - &engine llamacpp-legacy
+  - &model model-distill-qwen-7b-q4-k-m-gguf
+configurations:
+  engine: *engine
+  model: *model
+  http.base-path: v1

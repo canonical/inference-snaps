@@ -11,6 +11,7 @@ import (
 )
 
 var devices = []string{
+	"asus-ux301l",
 	"hp-proliant-rl300-gen11-altra",
 	"hp-proliant-rl300-gen11-altra-max",
 	"i7-2600k+arc-a580",
