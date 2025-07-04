@@ -68,6 +68,7 @@ field is  mandatory. The remaining fields are architecture specific.
   * `part-number` - from Main ID register  
   * `features` - not used
 
+(pci-peripherals)=
 ### PCI peripherals
 
 * `bus`: `pci`  
@@ -86,13 +87,13 @@ field is  mandatory. The remaining fields are architecture specific.
 of MAJOR.MINOR version strings prefixed with a comparison operator (==, \<=, \>=, \>, \<[^1]). 
 MAJOR and MINOR must both be integers.
 
-When bus is set to PCI, this object inherits all [PCI peripheral](#pci-peripherals) fields. 
+When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-peripherals>` fields. 
 
 ### NPUs
 
 * `bus` - the bus or protocol used by the device (supported values: `pci`, default: `pci`)
 
-When bus is set to PCI, this object inherits all [PCI peripheral](#pci-peripherals) fields.
+When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-peripherals>` fields.
 
 ## Example YAML {spellexception}`serialization` of a stack manifest
 
