@@ -1,0 +1,173 @@
+Slot:	0000:00:00.0
+Class:	0600
+Vendor:	8086
+Device:	9a14
+SVendor:	1028
+SDevice:	0b20
+Rev:	01
+
+Slot:	0000:00:02.0
+Class:	0300
+Vendor:	8086
+Device:	9a49
+SVendor:	1028
+SDevice:	0b20
+Rev:	01
+
+Slot:	0000:00:04.0
+Class:	1180
+Vendor:	8086
+Device:	9a03
+SVendor:	1028
+SDevice:	0b20
+Rev:	01
+
+Slot:	0000:00:07.0
+Class:	0604
+Vendor:	8086
+Device:	9a23
+Rev:	01
+
+Slot:	0000:00:0d.0
+Class:	0c03
+Vendor:	8086
+Device:	9a13
+SVendor:	1028
+SDevice:	0b20
+Rev:	01
+ProgIf:	30
+
+Slot:	0000:00:0d.2
+Class:	0c03
+Vendor:	8086
+Device:	9a1b
+SVendor:	1028
+SDevice:	0b20
+Rev:	01
+ProgIf:	40
+
+Slot:	0000:00:12.0
+Class:	0700
+Vendor:	8086
+Device:	a0fc
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:14.0
+Class:	0c03
+Vendor:	8086
+Device:	a0ed
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+ProgIf:	30
+
+Slot:	0000:00:14.2
+Class:	0500
+Vendor:	8086
+Device:	a0ef
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:14.3
+Class:	0280
+Vendor:	8086
+Device:	a0f0
+SVendor:	8086
+SDevice:	4070
+Rev:	20
+
+Slot:	0000:00:15.0
+Class:	0c80
+Vendor:	8086
+Device:	a0e8
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:15.1
+Class:	0c80
+Vendor:	8086
+Device:	a0e9
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:16.0
+Class:	0780
+Vendor:	8086
+Device:	a0e0
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:17.0
+Class:	0106
+Vendor:	8086
+Device:	a0d3
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+ProgIf:	01
+
+Slot:	0000:00:1c.0
+Class:	0604
+Vendor:	8086
+Device:	a0bc
+Rev:	20
+
+Slot:	0000:00:1d.0
+Class:	0604
+Vendor:	8086
+Device:	a0b3
+Rev:	20
+
+Slot:	0000:00:1f.0
+Class:	0601
+Vendor:	8086
+Device:	a082
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:1f.3
+Class:	0401
+Vendor:	8086
+Device:	a0c8
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:1f.4
+Class:	0c05
+Vendor:	8086
+Device:	a0a3
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:00:1f.5
+Class:	0c80
+Vendor:	8086
+Device:	a0a4
+SVendor:	1028
+SDevice:	0b20
+Rev:	20
+
+Slot:	0000:2b:00.0
+Class:	0108
+Vendor:	1c5c
+Device:	174a
+SVendor:	1c5c
+SDevice:	174a
+ProgIf:	02
+
+Slot:	0000:2c:00.0
+Class:	0200
+Vendor:	10ec
+Device:	8168
+SVendor:	1028
+SDevice:	0b20
+Rev:	15

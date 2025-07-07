@@ -26,6 +26,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -48,6 +49,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
 			"asus-ux301l",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -72,6 +74,7 @@ var stackTestSets = map[string]stackTestSet{
 		},
 		InvalidDevices: []string{
 			"asus-ux301l",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -85,6 +88,7 @@ var stackTestSets = map[string]stackTestSet{
 	"cpu-avx1": {
 		ValidDevices: []string{
 			"asus-ux301l",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -107,6 +111,7 @@ var stackTestSets = map[string]stackTestSet{
 	"cpu-avx2": {
 		ValidDevices: []string{
 			"asus-ux301l",
+			"i7-1165G7",
 			"i7-10510U",
 			"mustang",
 			"system76-addw4",
@@ -127,7 +132,9 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"cpu-avx512": {
-		ValidDevices: []string{},
+		ValidDevices: []string{
+			"i7-1165G7",
+		},
 		InvalidDevices: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
@@ -160,6 +167,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			//"orange-pi-rv2",
@@ -178,6 +186,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -204,6 +213,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l", // has intel gpu, but clinfo not working
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"i7-1165G7", // 9a49 TigerLake-LP GT2 [Iris Xe Graphics]
 			"i7-10510U",
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
@@ -223,6 +233,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
