@@ -221,6 +221,7 @@ redirects = {}
 
 linkcheck_ignore = [
     "http://127.0.0.1:8000",
+    r'http://localhost:\d+/',
     "https://github.com/canonical/ACME/*"
     ]
 
