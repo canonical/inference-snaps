@@ -4,7 +4,7 @@
 The Deepseek R1 snap installs a hardware-optimized runtime for inference with the Deepseek R1 LLM.
 It supports a range of hardware, in many cases with the help of drivers installed on the host.
 
-This snap works with amd64 and arm64 CPU architectures and has been tested on Intel, AMD, and Ampere CPUs.
+This snap works with amd64 and some arm64 CPU architectures and has been tested on Intel, AMD, and Ampere CPUs.
 It is also compatible with Intel and Nvidia GPUs, as well as Intel NPUs.
 
 ```{note}
@@ -14,8 +14,7 @@ It is also compatible with Intel and Nvidia GPUs, as well as Intel NPUs.
 ```
 ## Installation
 
-Open a terminal.
-Set the right channel and install the model snap by executing:
+Open a terminal then set the right channel and install the snap by executing:
 
 ```bash
     sudo snap install deepseek-r1 --channel=<channel>
@@ -60,7 +59,7 @@ Once changed, restart the server:
 ```bash
     sudo snap restart deepseek-r1
 ```
-Check out the configuration page for details on config options.
+Check out the {ref}`configuration section <configure-the-snap>` for details on configuring the snap.
 
 To debug possible issues, you can query the server logs:
 
@@ -78,4 +77,59 @@ To run the built-in chat application:
 
 ```bash
     deepseek-r1.chat
+```
+(configure-the-snap)=
+## Configure the snap
+
+The Deepseek R1 snap can be configured in a few ways. 
+Configurations can be explored and changed using the `snap get` and `snap set` commands.
+
+For example, to query the top level config:
+
+```bash
+    sudo snap get deepseek-r1
+```
+
+To query the available stacks:
+
+```bash
+    snap get deepseek-r1 stacks
+```
+
+To change the stack(only possible if the snap was installed from the store):
+
+```bash
+    sudo snap set deepseek-r1 stack=<stack>
+```
+
+For CUDA-based stacks, the number of layers that are loaded on to the GPU can be configured as well.
+By default, all layers are loaded into VRAM. 
+This requires enough VRAM to fit the entire model. 
+To only load a limited number of layers onto the GPU use the n-gpu-layers snap option:
+
+```bash
+    sudo snap set deepseek-r1 n-gpu-layers=20
+```
+This is useful if your GPU does not have enough VRAM to fit the entire model.
+The remaining layers will run on the CPU.
+
+To reset to the default option, which is to load the entire model onto the GPU, unset the value:
+
+```bash
+    sudo snap unset deepseek-r1 n-gpu-layers
+```
+
+## Manage components
+
+This snap uses snap components to deploy optional artifacts.
+You can check the installed components with:
+
+```bash
+    sudo snap components deepseek-r1
+```
+
+To remove a component, use:
+
+```bash
+    sudo snap remove <snap+component>
 ```
