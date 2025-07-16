@@ -1,9 +1,9 @@
 # Install NVIDIA GPU drivers
 
-To use these snaps with an NVIDIA GPU, you require a working CUDA setup on the host machine.
+You need a working CUDA setup on the host machine to use these snaps with an NVIDIA GPU.
 
 The version of the driver and utilities might be different depending on your setup.
-On Ubuntu Server 24.04 the following commands install the appropriate packages.
+On Ubuntu Server 24.04, the following commands install the appropriate packages:
 
 ```
 sudo apt update
