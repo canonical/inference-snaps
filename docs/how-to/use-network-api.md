@@ -1,7 +1,9 @@
-# Use the AI model snap via its network API
+# Use an AI model snap via its OpenAI API
 
-The AI model snaps expose a standard network API.
-In most cases this API conforms to the [OpenAI API specification](https://github.com/openai/openai-openapi).
+The following AI model snaps expose an [OpenAI API](https://github.com/openai/openai-openapi) complaint network API:
+* xxx
+* xxx
+
 
 Depending on which stack is currently selected, the base path of this API might be different.
 Look up the HTTP port and base path via snap option:
@@ -19,7 +21,7 @@ The URL for the API should be built up using these, in the format: `http://local
 Which in this example would be http://localhost:8080/v1/.
 
 If the `http.host` value is set to `127.0.0.1`, the model can only be accessed from the local device.
-If it is however set to `0.0.0.0`, any other device on the network can use it, as long as your firewall allows it.
+Set it to `0.0.0.0` if you want to access it from other device on the network.
 
 From any other computer, the full URL will be similar to above, but with `localhost` replaced by the IP address or hostname of the device.
 
