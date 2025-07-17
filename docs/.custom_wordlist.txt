@@ -58,6 +58,7 @@ toctree
 TPUs
 txt
 uncommenting
+userspace
 utils
 VMs
 vRAM
