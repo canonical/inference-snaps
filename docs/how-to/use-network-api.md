@@ -1,12 +1,12 @@
 # Use an AI model snap via its OpenAI API
 
-The following AI model snaps expose an [OpenAI API](https://github.com/openai/openai-openapi) complaint network API:
-* xxx
-* xxx
+Some AI model snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
+This guide shows how to find the configurations needed to access this API.
 
+## API URL
 
-Depending on which stack is currently selected, the base path of this API might be different.
-Look up the HTTP port and base path via snap option:
+The model server binds to the host interface and port that are configured as snap options.
+These snap options can be viewed as follows:
 
 ```{terminal}
 :input: sudo snap get <ai-snap> http
@@ -16,14 +16,16 @@ http.host       127.0.0.1
 http.port       8080
 ```
 
-From your local computer, the API can be accessed using these values.
-The URL for the API should be built up using these, in the format: `http://localhost:<http.port>/<http.base-path>/`.
-Which in this example would be http://localhost:8080/v1/.
+The base path of the OpenAI compliant API might be different between stacks.
+This is also reported here as a snap configuration option.
+
+The URL for the API should be built up using these options, in the format: `http://localhost:<http.port>/<http.base-path>/`.
+In this example that would be http://localhost:8080/v1/.
+The API can be accessed from your local computer using this URL.
 
 If the `http.host` value is set to `127.0.0.1`, the model can only be accessed from the local device.
-Set it to `0.0.0.0` if you want to access it from other device on the network.
-
-From any other computer, the full URL will be similar to above, but with `localhost` replaced by the IP address or hostname of the device.
+Set it to `0.0.0.0` if you want to access it from other devices on the network.
+From other devices, the full URL will be similar to above, but with `localhost` replaced by the IP address or hostname of the device where the model is running.
 
 ## Model name
 
@@ -41,7 +43,8 @@ model-name     <model-name>
 
 ## Test with `curl`
 
-If your installed model supports chat completions, you can use its API URL to make a test prompt:
+If your installed model supports chat completions, you can use its API URL to make a test prompt.
+In this example, replace the URL and `<model-name>` fields with the values you obtained previously.
 
 ```sh
 curl http://localhost:8080/v1/chat/completions \
@@ -53,7 +56,7 @@ curl http://localhost:8080/v1/chat/completions \
 }' | jq
 ```
 
-This should return a JSON response looking similar to this: 
+This should return a JSON response looking similar to this:
 ```json
 {
   "choices": [
@@ -92,4 +95,4 @@ This should return a JSON response looking similar to this:
 ## Using other clients
 
 Other OpenAI API compatible clients can also make use of these snaps.
-Configure the clients with the API URL and the model name obtained above.
+Configure these clients with the API URL and the model name obtained above.
