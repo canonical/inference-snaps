@@ -1,3 +1,4 @@
+(install-intel-gpu-drivers)=
 # Install Intel GPU drivers
 
 The userspace drivers for Intel GPUs (integrated and discrete) are included in the snaps.

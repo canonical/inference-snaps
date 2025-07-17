@@ -1,3 +1,4 @@
+(install-nvidia-gpu-drivers)=
 # Install NVIDIA GPU drivers
 
 You need a working CUDA setup on the host machine to use these snaps with an NVIDIA GPU.

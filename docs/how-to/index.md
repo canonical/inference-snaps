@@ -7,6 +7,7 @@ Install required drivers:
 
 ```{toctree}
 :maxdepth: 1
+install-deepseek-r1-snap
 install-intel-gpu-drivers
 install-intel-npu-drivers
 install-nvidia-gpu-drivers

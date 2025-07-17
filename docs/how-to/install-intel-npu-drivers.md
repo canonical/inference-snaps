@@ -1,3 +1,4 @@
+(install-intel-npu-drivers)=
 # Install Intel NPU drivers
 
 If your system has an Intel NPU, and you want to make use of it, you need to install the userspace driver for it.
