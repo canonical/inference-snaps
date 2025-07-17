@@ -22,7 +22,7 @@ Open a terminal, then set the right channel and install the snap:
 sudo snap install deepseek-r1 --channel=<channel>
 ```
 
-## Run server
+## Run the server
 
 Each stack installed consists of an inference engine and a model.
 The inference engine is a server application.
