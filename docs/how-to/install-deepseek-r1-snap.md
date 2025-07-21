@@ -26,7 +26,7 @@ sudo snap install deepseek-r1 --channel=<channel>
 ```
 
 During installation, the most appropriate combination of inference engine and model is selected for your system.
-The combination of engine and model, along with any required utilities or configs is called a *stack*.
+The combination of engine and model, along with any required utilities or configurations is called a *stack*.
 
 ## Run the server
 
