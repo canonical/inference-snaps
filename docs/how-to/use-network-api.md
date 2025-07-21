@@ -3,7 +3,7 @@
 Some AI model snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
 This guide shows how to find the configurations needed to access this API.
 
-## API URL
+## Identify API URL
 
 The model server binds to the host interface and port that are configured as snap options.
 These snap options can be viewed as follows:
@@ -27,7 +27,7 @@ If the `http.host` value is set to `127.0.0.1`, the model can only be accessed f
 Set it to `0.0.0.0` if you want to access it from other devices on the network.
 From other devices, the full URL will be similar to above, but with `localhost` replaced by the IP address or hostname of the device where the model is running.
 
-## Model name
+## Look up model name
 
 Some servers require you to specify the exact model name when querying it via the API.
 An OpenAI compliant API lists available models under `<api-url>/models`.
@@ -41,7 +41,7 @@ model-name     <model-name>
 ...
 ```
 
-## Test with `curl`
+## Test API access with `curl`
 
 If your installed model supports chat completions, you can use its API URL to make a test prompt.
 In this example, replace the URL and `<model-name>` fields with the values you obtained previously.
@@ -92,7 +92,7 @@ This should return a JSON response looking similar to this:
 }
 ```
 
-## Using other clients
+## Use other clients
 
 Other OpenAI API compatible clients can also make use of these snaps.
 Configure these clients with the API URL and the model name obtained above.
