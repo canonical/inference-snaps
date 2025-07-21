@@ -1,12 +1,16 @@
 # Leave a blank line at the end of this file to support concatenation
+artifacts
 backend
 backends
 Battlemage
 Charmcraft
 cjk
+config
 cpu
 CPUs
+CUDA
 cryptographically
+Deepseek
 CUDA
 dvipng
 fonts
@@ -24,12 +28,15 @@ lang
 LaTeX
 latexmk
 llamafile
+LLM
 Multipass
 NDA
 npu
 npm's
 NPUs
 Nvidia
+OpenAI
+optimized
 otf
 PCI
 plantuml
@@ -51,6 +58,7 @@ toctree
 TPUs
 txt
 uncommenting
+userspace
 utils
 VMs
 vRAM
