@@ -102,7 +102,7 @@ For example, to query the top level config:
 sudo snap get deepseek-r1
 ```
 
-Not all configs can be changed, as they are defined by the selected stack.
+Not all configurations can be changed, as they are defined by the selected stack.
 
 ### HTTP server configurations
 
