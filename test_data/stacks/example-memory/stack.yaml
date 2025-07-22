@@ -5,8 +5,10 @@ grade: stable
 devices:
   any:
     - type: cpu
+      architecture: amd64
       manufacturer-id: AuthenticAMD
     - type: cpu
+      architecture: amd64
       manufacturer-id: GenuineIntel
 memory: 35G
 disk-space: 29G

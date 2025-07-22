@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/canonical/stack-utils/pkg/constants"
 )
 
 func hostProcCpuInfo() (string, error) {
@@ -15,9 +17,9 @@ func hostProcCpuInfo() (string, error) {
 
 func parseProcCpuInfo(cpuInfoString string, architecture string) ([]ProcCpuInfo, error) {
 	switch architecture {
-	case amd64:
+	case constants.Amd64:
 		return parseProcCpuInfoAmd64(cpuInfoString)
-	case arm64:
+	case constants.Arm64:
 		return parseProcCpuInfoArm64(cpuInfoString)
 	default:
 		return nil, fmt.Errorf("can't parse /proc/cpuinfo. unsupported architecture: %s", architecture)
@@ -42,7 +44,7 @@ func parseProcCpuInfoAmd64(cpuInfoString string) ([]ProcCpuInfo, error) {
 		// New cpu block
 		if key == "processor" {
 			newCpu := ProcCpuInfo{}
-			newCpu.Architecture = amd64
+			newCpu.Architecture = constants.Amd64
 			parsedCpus = append(parsedCpus, newCpu)
 			cpuIndex = len(parsedCpus) - 1
 		}
@@ -87,7 +89,7 @@ func parseProcCpuInfoArm64(cpuInfoString string) ([]ProcCpuInfo, error) {
 		// New cpu block
 		if key == "processor" {
 			newCpu := ProcCpuInfo{}
-			newCpu.Architecture = arm64
+			newCpu.Architecture = constants.Arm64
 			parsedCpus = append(parsedCpus, newCpu)
 			cpuIndex = len(parsedCpus) - 1
 		}
@@ -135,7 +137,7 @@ func parseProcCpuInfoArm64(cpuInfoString string) ([]ProcCpuInfo, error) {
 			//if err != nil {
 			//	return nil, err
 			//}
-			parsedCpus[cpuIndex].Architecture = arm64
+			parsedCpus[cpuIndex].Architecture = constants.Arm64
 
 		// "CPU variant\t: 0x%x\n"
 		case "CPU variant":

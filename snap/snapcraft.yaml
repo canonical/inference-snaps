@@ -59,3 +59,8 @@ apps:
     plugs:
       - home
     command: bin/select-stack
+
+  stack:
+    plugs:
+      - home
+    command: bin/stack

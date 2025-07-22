@@ -4,9 +4,9 @@ vendor: Canonical Ltd
 grade: stable
 devices:
   any:
-    - type: cpu
-      architecture: armhf
-      features: [neon] # for ARMv7
+#    - type: cpu
+#      architecture: armhf
+#      features: [neon] # for ARMv7
     - type: cpu
       architecture: arm64
       features: [asimd] # for ARMv8 ASIMD includes NEON instruction set

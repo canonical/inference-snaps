@@ -22,6 +22,9 @@ func main() {
 	// stack download
 	downloadCmd := flag.NewFlagSet("download", flag.ExitOnError)
 
+	// stack validate
+	validateCmd := flag.NewFlagSet("validate", flag.ExitOnError)
+
 	if len(os.Args) < 2 {
 		fmt.Println("expected a subcommands")
 		os.Exit(1)
@@ -58,6 +61,17 @@ func main() {
 	case "download":
 		downloadCmd.Parse(os.Args[2:])
 		downloadRequiredComponents()
+
+	// stack validate stacks/*/stack.yaml
+	case "validate":
+		validateCmd.Parse(os.Args[2:])
+		stackFiles := validateCmd.Args()
+		if len(stackFiles) == 0 {
+			fmt.Println("Error: no stack manifest specified")
+			os.Exit(1)
+		}
+
+		validateStackManifests(stackFiles...)
 
 	default:
 		fmt.Println("unexpected subcommands")

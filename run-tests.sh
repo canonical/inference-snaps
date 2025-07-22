@@ -4,3 +4,4 @@ go test -count 1 -failfast ./pkg/hardware_info/...
 go test -count 1 -failfast ./pkg/selector
 go test -count 1 -failfast ./pkg/types
 go test -count 1 -failfast ./pkg/utils
+go test -count 1 -failfast ./pkg/validate

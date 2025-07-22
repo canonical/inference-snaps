@@ -4,22 +4,24 @@ import (
 	"log"
 	"os"
 	"testing"
+
+	"github.com/canonical/stack-utils/pkg/constants"
 )
 
 var procCpuInfoTestFiles = map[string]string{
-	"../../../test_data/devices/ampere-one-m-banshee-12/cpuinfo.txt":           arm64,
-	"../../../test_data/devices/ampere-one-siryn/cpuinfo.txt":                  arm64,
-	"../../../test_data/devices/ampere-one-x-banshee-8/cpuinfo.txt":            arm64,
-	"../../../test_data/devices/hp-proliant-rl300-gen11-altra/cpuinfo.txt":     arm64,
-	"../../../test_data/devices/hp-proliant-rl300-gen11-altra-max/cpuinfo.txt": arm64,
-	"../../../test_data/devices/i7-2600k+arc-a580/cpuinfo.txt":                 amd64,
-	"../../../test_data/devices/i7-10510U/cpuinfo.txt":                         amd64,
-	"../../../test_data/devices/mustang/cpuinfo.txt":                           amd64,
-	//"../../../test_data/devices/orange-pi-rv2/cpuinfo.txt":                     riscv64,
-	"../../../test_data/devices/raspberry-pi-5/cpuinfo.txt":         arm64,
-	"../../../test_data/devices/raspberry-pi-5+hailo-8/cpuinfo.txt": arm64,
-	"../../../test_data/devices/xps13-7390/cpuinfo.txt":             amd64,
-	"../../../test_data/devices/xps13-9350/cpuinfo.txt":             amd64,
+	"../../../test_data/devices/ampere-one-m-banshee-12/cpuinfo.txt":           constants.Arm64,
+	"../../../test_data/devices/ampere-one-siryn/cpuinfo.txt":                  constants.Arm64,
+	"../../../test_data/devices/ampere-one-x-banshee-8/cpuinfo.txt":            constants.Arm64,
+	"../../../test_data/devices/hp-proliant-rl300-gen11-altra/cpuinfo.txt":     constants.Arm64,
+	"../../../test_data/devices/hp-proliant-rl300-gen11-altra-max/cpuinfo.txt": constants.Arm64,
+	"../../../test_data/devices/i7-2600k+arc-a580/cpuinfo.txt":                 constants.Amd64,
+	"../../../test_data/devices/i7-10510U/cpuinfo.txt":                         constants.Amd64,
+	"../../../test_data/devices/mustang/cpuinfo.txt":                           constants.Amd64,
+	//"../../../test_data/devices/orange-pi-rv2/cpuinfo.txt":                     constants.Riscv64,
+	"../../../test_data/devices/raspberry-pi-5/cpuinfo.txt":         constants.Arm64,
+	"../../../test_data/devices/raspberry-pi-5+hailo-8/cpuinfo.txt": constants.Arm64,
+	"../../../test_data/devices/xps13-7390/cpuinfo.txt":             constants.Amd64,
+	"../../../test_data/devices/xps13-9350/cpuinfo.txt":             constants.Amd64,
 }
 
 func TestParseProcCpuInfo(t *testing.T) {

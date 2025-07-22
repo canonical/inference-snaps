@@ -34,6 +34,9 @@ jobs:
       - name: Util tests
         run: |
           go test -v -count 1 ./pkg/utils
+      - name: Stack validation tests
+        run: |
+          go test -v -count 1 ./pkg/validate
 
   build:
     name: Build

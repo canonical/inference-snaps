@@ -4,18 +4,8 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
-)
 
-const (
-	arm64   = "arm64"
-	amd64   = "amd64"
-	armhf   = "armhf"
-	i386    = "i386"
-	powerpc = "powerpc"
-	ppc64   = "ppc64"
-	ppc64el = "ppc64el"
-	riscv64 = "riscv64"
-	s390x   = "s390x"
+	"github.com/canonical/stack-utils/pkg/constants"
 )
 
 func hostUnameMachine() (string, error) {
@@ -36,16 +26,16 @@ func debianArchitecture(unameArch string) (string, error) {
 
 	lookupTable := map[string]string{
 		// uname:  debian
-		"aarch64": arm64,
-		"armv7l":  armhf,
-		"armv8l":  arm64,
-		"i686":    i386,
-		"ppc":     powerpc,
-		"ppc64":   ppc64,
-		"ppc64le": ppc64el,
-		"riscv64": riscv64,
-		"s390x":   s390x,
-		"x86_64":  amd64,
+		"aarch64": constants.Arm64,
+		"armv7l":  constants.Armhf,
+		"armv8l":  constants.Arm64,
+		"i686":    constants.I386,
+		"ppc":     constants.Powerpc,
+		"ppc64":   constants.Ppc64,
+		"ppc64le": constants.Ppc64el,
+		"riscv64": constants.Riscv64,
+		"s390x":   constants.S390x,
+		"x86_64":  constants.Amd64,
 	}
 
 	if debArch, ok := lookupTable[unameArch]; !ok {

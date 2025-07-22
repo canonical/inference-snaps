@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"slices"
 
+	"github.com/canonical/stack-utils/pkg/constants"
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
@@ -60,11 +61,11 @@ func cpuInfoFromProc(procCpus []ProcCpuInfo) ([]types.CpuInfo, error) {
 	var cpuInfos []types.CpuInfo
 	for _, procCpu := range procCpus {
 		var cpuInfo types.CpuInfo
-		if procCpu.Architecture == amd64 {
+		if procCpu.Architecture == constants.Amd64 {
 			cpuInfo.Architecture = procCpu.Architecture
 			cpuInfo.ManufacturerId = procCpu.ManufacturerId
 			cpuInfo.Flags = procCpu.Flags
-		} else if procCpu.Architecture == arm64 {
+		} else if procCpu.Architecture == constants.Arm64 {
 			cpuInfo.Architecture = procCpu.Architecture
 			cpuInfo.ImplementerId = types.HexInt(procCpu.ImplementerId)
 			cpuInfo.PartNumber = types.HexInt(procCpu.PartNumber)
