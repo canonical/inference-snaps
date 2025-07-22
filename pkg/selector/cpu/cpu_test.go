@@ -1,35 +1,36 @@
 package cpu
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func TestCheckCpuVendor(t *testing.T) {
-	vendorId := "GenuineIntel"
+	manufacturerId := "GenuineIntel"
 	stackDevice := types.StackDevice{
-		Type:     "cpu",
-		Bus:      nil,
-		VendorId: &vendorId,
+		Type:           "cpu",
+		Bus:            "",
+		ManufacturerId: &manufacturerId,
 	}
 
 	hwInfoCpus := []types.CpuInfo{{
-		Architecture: "",
-		VendorId:     vendorId,
+		Architecture:   "",
+		ManufacturerId: manufacturerId,
 	}}
 
-	result, err := checkCpus(stackDevice, hwInfoCpus)
+	result, reasons, err := Match(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
 	if result == 0 {
-		t.Fatal("CPU vendor should match")
+		t.Fatalf("CPU vendor should match: %s", strings.Join(reasons, ","))
 	}
 
-	vendorId = "AuthenticAMD"
+	manufacturerId = "AuthenticAMD"
 
-	result, err = checkCpus(stackDevice, hwInfoCpus)
+	result, reasons, err = Match(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
@@ -40,31 +41,31 @@ func TestCheckCpuVendor(t *testing.T) {
 }
 
 func TestCheckCpuFlags(t *testing.T) {
-	vendorId := "GenuineIntel"
+	manufacturerId := "GenuineIntel"
 	stackDevice := types.StackDevice{
-		Type:     "cpu",
-		Bus:      nil,
-		VendorId: &vendorId,
-		Flags:    []string{"avx2"},
+		Type:           "cpu",
+		Bus:            "",
+		ManufacturerId: &manufacturerId,
+		Flags:          []string{"avx2"},
 	}
 
 	hwInfoCpus := []types.CpuInfo{{
-		Architecture: "",
-		VendorId:     vendorId,
-		Flags:        []string{"avx2"},
+		Architecture:   "",
+		ManufacturerId: manufacturerId,
+		Flags:          []string{"avx2"},
 	}}
 
-	result, err := checkCpus(stackDevice, hwInfoCpus)
+	result, reasons, err := Match(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
 	if result == 0 {
-		t.Fatal("CPU flags should match")
+		t.Fatalf("CPU flags should match: %s", strings.Join(reasons, ","))
 	}
 
 	stackDevice.Flags = []string{"avx512"}
 
-	result, err = checkCpus(stackDevice, hwInfoCpus)
+	result, reasons, err = Match(stackDevice, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}

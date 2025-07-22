@@ -7,11 +7,11 @@ import (
 )
 
 func TestCheckGpuVendor(t *testing.T) {
-	gpuVendorId := "0xb33f" // test lower case string
+	gpuVendorId := types.HexInt(0xb33f)
 
 	hwInfoGpu := types.PciDevice{
 		DeviceClass:          0x0300,
-		VendorId:             0xb33f,
+		VendorId:             gpuVendorId,
 		DeviceId:             0,
 		SubvendorId:          nil,
 		SubdeviceId:          nil,
@@ -22,9 +22,9 @@ func TestCheckGpuVendor(t *testing.T) {
 	}
 
 	stackDevice := types.StackDevice{
-		Type:        "gpu",
-		Bus:         "pci",
-		PciVendorId: &gpuVendorId,
+		Type:     "gpu",
+		Bus:      "pci",
+		VendorId: &gpuVendorId,
 	}
 
 	score, reasons, err := checkPciDevice(stackDevice, hwInfoGpu)
@@ -36,7 +36,7 @@ func TestCheckGpuVendor(t *testing.T) {
 	}
 
 	// Same value, upper case string
-	gpuVendorId = "0xB33F"
+	gpuVendorId = types.HexInt(0xB33F)
 	score, reasons, err = checkPciDevice(stackDevice, hwInfoGpu)
 	if err != nil {
 		t.Error(err)
@@ -45,7 +45,7 @@ func TestCheckGpuVendor(t *testing.T) {
 		t.Fatalf("GPU vendor should match: %v", reasons)
 	}
 
-	gpuVendorId = "0x1337"
+	gpuVendorId = types.HexInt(0x1337)
 	score, reasons, err = checkPciDevice(stackDevice, hwInfoGpu)
 	if err != nil {
 		t.Error(err)
@@ -58,6 +58,7 @@ func TestCheckGpuVendor(t *testing.T) {
 func TestCheckGpuVram(t *testing.T) {
 
 	hwInfoGpu := types.PciDevice{
+		DeviceClass: 0x0300,
 		VendorId:    0x0,
 		DeviceId:    0x0,
 		SubvendorId: nil,
@@ -69,10 +70,10 @@ func TestCheckGpuVram(t *testing.T) {
 
 	stackVram := "4G"
 	stackDevice := types.StackDevice{
-		Type:        "gpu",
-		Bus:         "pci",
-		PciVendorId: nil,
-		VRam:        &stackVram,
+		Type:     "gpu",
+		Bus:      "pci",
+		VendorId: nil,
+		VRam:     &stackVram,
 	}
 
 	score, reasons, err := checkPciDevice(stackDevice, hwInfoGpu)

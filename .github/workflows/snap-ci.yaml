@@ -27,16 +27,16 @@ jobs:
           go test -v -count 1 ./pkg/hardware_info/...
       - name: Selector tests
         run: |
-          go test -v -count 1 ./pkg/selector
+          go test -v -count 1 ./pkg/selector/...
       - name: Type tests
         run: |
-          go test -v -count 1 ./pkg/types
+          go test -v -count 1 ./pkg/types/...
       - name: Util tests
         run: |
-          go test -v -count 1 ./pkg/utils
+          go test -v -count 1 ./pkg/utils/...
       - name: Stack validation tests
         run: |
-          go test -v -count 1 ./pkg/validate
+          go test -v -count 1 ./pkg/validate/...
 
   build:
     name: Build
