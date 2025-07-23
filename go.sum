@@ -2,6 +2,8 @@ github.com/briandowns/spinner v1.23.2 h1:Zc6ecUnI+YzLmJniCfDNaMbW0Wid1d5+qcTq4L2
 github.com/briandowns/spinner v1.23.2/go.mod h1:LaZeM4wm2Ywy6vO571mvhQNRcWfRUnXOs0RcKV0wYKM=
 github.com/canonical/go-snapctl v1.0.0-beta.2 h1:3M+9+uAg8vu5hIGQN/yOOcG6Esud7/eQgtZbD7DNjco=
 github.com/canonical/go-snapctl v1.0.0-beta.2/go.mod h1:c2Kkyh24L/nYD7YSLzoA6n/mI3/86IQekwXvBHL3G+Q=
+github.com/canonical/go-snapctl v1.0.0-beta.3 h1:lVfhh+7aRndPABZIVfDV19tdsxaSNKFWi3tkQ71XjEY=
+github.com/canonical/go-snapctl v1.0.0-beta.3/go.mod h1:c2Kkyh24L/nYD7YSLzoA6n/mI3/86IQekwXvBHL3G+Q=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=

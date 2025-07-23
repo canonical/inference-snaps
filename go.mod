@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	github.com/briandowns/spinner v1.23.2
-	github.com/canonical/go-snapctl v1.0.0-beta.2
+	github.com/canonical/go-snapctl v1.0.0-beta.3
 	github.com/fatih/color v1.18.0
 	github.com/go-test/deep v1.1.1
 	github.com/jaypipes/pcidb v1.0.1
