@@ -11,10 +11,11 @@ import (
 var stacksDir = env.Snap() + "/stacks"
 
 func main() {
-	// stack select [--auto]
-	// stack select [<stack>]
-	selectCmd := flag.NewFlagSet("select", flag.ExitOnError)
-	selectAuto := selectCmd.Bool("auto", false, "Automatically select a compatible stack")
+	// stack use [--assume-yes] [--auto]
+	// stack use [--assume-yes] [<stack>]
+	useCmd := flag.NewFlagSet("use", flag.ExitOnError)
+	useAuto := useCmd.Bool("auto", false, "Automatically select a compatible stack")
+	useAssumeYes := useCmd.Bool("assume-yes", false, "Assume yes for downloading new components")
 
 	// stack get
 	getCmd := flag.NewFlagSet("get", flag.ExitOnError)
@@ -46,19 +47,27 @@ func main() {
 
 	switch os.Args[1] {
 
-	case "select":
-		selectCmd.Parse(os.Args[2:])
+	case "use":
+		useCmd.Parse(os.Args[2:])
 
-		if *selectAuto {
-			if len(selectCmd.Args()) != 0 {
+		if *useAuto {
+			if len(useCmd.Args()) != 0 {
 				fmt.Println("Error: cannot specify stack with --auto flag")
 				os.Exit(1)
 			}
-			autoSelectStacks()
+			err := autoSelectStacks(*useAssumeYes)
+			if err != nil {
+				fmt.Println("Error: failed to automatically set used stack:", err)
+				os.Exit(1)
+			}
 		} else {
-			stack := selectCmd.Args()
+			stack := useCmd.Args()
 			if len(stack) == 1 {
-				selectStack(stack[0])
+				err := useStack(stack[0], *useAssumeYes)
+				if err != nil {
+					fmt.Println("Error: failed use stack:", err)
+					os.Exit(1)
+				}
 			} else if len(stack) == 0 {
 				fmt.Println("Error: stack name not specified")
 				os.Exit(1)

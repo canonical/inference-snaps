@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"maps"
@@ -30,18 +29,6 @@ func listStacks(includeIncompatible bool) {
 	if err != nil {
 		log.Fatalf("Error printing list: %v\n", err)
 	}
-}
-
-func parseStacksJson(stacksJson string) (map[string]types.ScoredStack, error) {
-	var stacksOption map[string]map[string]types.ScoredStack
-	err := json.Unmarshal([]byte(stacksJson), &stacksOption)
-	if err != nil {
-		return nil, fmt.Errorf("error unmarshalling json: %v\n", err)
-	}
-	if stacks, ok := stacksOption["stacks"]; ok {
-		return stacks, nil
-	}
-	return nil, fmt.Errorf("no stacks found")
 }
 
 func printStacks(stacks map[string]types.ScoredStack, includeIncompatible bool) error {

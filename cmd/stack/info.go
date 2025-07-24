@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -28,35 +27,12 @@ func stackInfo(stackName string) {
 	}
 }
 
-func parseStackJson(stackJson string) (types.ScoredStack, error) {
-	var stackOption map[string]types.ScoredStack
-
-	err := json.Unmarshal([]byte(stackJson), &stackOption)
-	if err != nil {
-		return types.ScoredStack{}, fmt.Errorf("error parsing json: %v", err)
-	}
-
-	if len(stackOption) == 0 {
-		return types.ScoredStack{}, fmt.Errorf("stack not found")
-	}
-
-	if len(stackOption) > 1 {
-		return types.ScoredStack{}, fmt.Errorf("only one stack expected in json")
-	}
-
-	for _, stack := range stackOption {
-		return stack, nil
-	}
-
-	return types.ScoredStack{}, fmt.Errorf("unexpected error occurred")
-}
-
 func printStackInfo(stack types.ScoredStack) error {
 	stackYaml, err := yaml.Marshal(stack)
 	if err != nil {
 		return fmt.Errorf("error converting stack to yaml: %v", err)
 	}
-	
+
 	err = quick.Highlight(os.Stdout, string(stackYaml), "yaml", "terminal", "colorful")
 	if err != nil {
 		return fmt.Errorf("error formatting yaml: %v", err)
