@@ -32,6 +32,13 @@ func main() {
 	// stack validate
 	validateCmd := flag.NewFlagSet("validate", flag.ExitOnError)
 
+	// stack list [--all]
+	listCmd := flag.NewFlagSet("list", flag.ExitOnError)
+	listAll := listCmd.Bool("all", false, "Also list incompatible stacks")
+
+	// stack info <stack>
+	infoCmd := flag.NewFlagSet("info", flag.ExitOnError)
+
 	if len(os.Args) < 2 {
 		fmt.Println("expected a subcommands")
 		os.Exit(1)
@@ -103,6 +110,22 @@ func main() {
 		}
 
 		validateStackManifests(stackFiles...)
+
+	case "list":
+		listCmd.Parse(os.Args[2:])
+		listStacks(*listAll)
+
+	case "info":
+		infoCmd.Parse(os.Args[2:])
+		if len(infoCmd.Args()) < 1 {
+			fmt.Println("Error: a stack name is required")
+			os.Exit(1)
+		}
+		if len(infoCmd.Args()) != 1 {
+			fmt.Println("Error: only one stack name can be specified")
+			os.Exit(1)
+		}
+		stackInfo(infoCmd.Args()[0])
 
 	default:
 		fmt.Println("unexpected subcommands")

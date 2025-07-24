@@ -1,0 +1,43 @@
+{
+  "stacks.cpu": {
+    "compatible": true,
+    "components": [
+      "llamacpp",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "engine": "llamacpp",
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf"
+    },
+    "description": "Example stack for CPUs, offering good accuracy with low footprints",
+    "devices": {
+      "any": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "f16c",
+            "fma",
+            "avx",
+            "avx2"
+          ],
+          "type": "cpu"
+        },
+        {
+          "architecture": "arm64",
+          "features": [
+            "asimd"
+          ],
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "cpu",
+    "score": 17,
+    "vendor": "Canonical Ltd"
+  }
+}

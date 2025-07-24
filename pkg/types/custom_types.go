@@ -35,6 +35,10 @@ func (hi *HexInt) UnmarshalYAML(value *yaml.Node) error {
 	return nil
 }
 
+func (hi HexInt) MarshalYAML() (interface{}, error) {
+	return fmt.Sprintf("0x%x", hi), nil
+}
+
 func (hi *HexInt) UnmarshalJSON(data []byte) error {
 	// Remove quotes
 	hexString := strings.Trim(string(data), "\"")
