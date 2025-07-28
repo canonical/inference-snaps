@@ -18,3 +18,10 @@ Use the snap:
 :maxdepth: 1
 use-network-api
 ```
+
+Use the snap with your IDE:
+
+```{toctree}
+:maxdepth: 1
+use-snap-from-vs-code
+```
