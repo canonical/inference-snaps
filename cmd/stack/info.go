@@ -2,29 +2,45 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
-func stackInfo(stackName string) {
+func init() {
+	cmd := &cobra.Command{
+		Use:   "info <stack>",
+		Short: "Print information about a stack",
+		// Long:  "",
+		Args: cobra.ExactArgs(1),
+		RunE: info,
+	}
+	rootCmd.AddCommand(cmd)
+}
+
+func info(_ *cobra.Command, args []string) error {
+	return stackInfo(args[0])
+}
+func stackInfo(stackName string) error {
 	stackJson, err := snapctl.Get("stacks." + stackName).Document().Run()
 	if err != nil {
-		log.Fatalf("Error loading stack: %v\n", err)
+		return fmt.Errorf("error loading stack: %v", err)
 	}
 
 	stack, err := parseStackJson(stackJson)
 	if err != nil {
-		log.Fatalf("Error parsing stack: %v\n", err)
+		return fmt.Errorf("error parsing stack: %v", err)
 	}
+
 	err = printStackInfo(stack)
 	if err != nil {
-		log.Fatalf("Error printing stack info: %v\n", err)
+		return fmt.Errorf("error printing stack info: %v", err)
 	}
+	return nil
 }
 
 func printStackInfo(stack types.ScoredStack) error {

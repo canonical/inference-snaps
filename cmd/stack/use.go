@@ -12,8 +12,53 @@ import (
 	"github.com/canonical/stack-utils/pkg/hardware_info"
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
+
+var (
+	useAuto      bool
+	useAssumeYes bool
+)
+
+func init() {
+	cmd := &cobra.Command{
+		Use:   "use [<stack>]",
+		Short: "Select a stack",
+		// Long:  "",
+		Args: cobra.ExactArgs(1),
+		RunE: use,
+	}
+
+	// flags
+	cmd.PersistentFlags().BoolVar(&useAuto, "auto", false, "automatically select a compatible stack")
+	cmd.PersistentFlags().BoolVar(&useAssumeYes, "assume-yes", false, "assume yes for downloading new components")
+
+	rootCmd.AddCommand(cmd)
+}
+
+func use(_ *cobra.Command, args []string) error {
+
+	if useAuto {
+		if len(args) != 0 {
+			return fmt.Errorf("cannot specify stack with --auto flag")
+		}
+		err := autoSelectStacks(useAssumeYes)
+		if err != nil {
+			return fmt.Errorf("failed to automatically set used stack: %s", err)
+		}
+	} else {
+		if len(args) == 1 {
+			err := useStack(args[0], useAssumeYes)
+			if err != nil {
+				return fmt.Errorf("failed to use stack: %s", err)
+			}
+		} else {
+			return fmt.Errorf("stack name not specified")
+		}
+	}
+	return nil
+}
 
 func autoSelectStacks(assumeYes bool) error {
 	fmt.Println("Automatically selecting a compatible stack ...")
@@ -73,7 +118,6 @@ func autoSelectStacks(assumeYes bool) error {
 useStack changes the stack that is used by the snap
 */
 func useStack(stackName string, assumeYes bool) error {
-
 	stackJson, err := snapctl.Get("stacks." + stackName).Document().Run()
 	if err != nil {
 		return fmt.Errorf("error loading stack: %v", err)
@@ -149,13 +193,13 @@ func componentInstalled(component string) (bool, error) {
 		if os.IsNotExist(err) {
 			return false, nil
 		} else {
-			return false, fmt.Errorf(`error checking component directory "%s": %v\n`, component, err)
+			return false, fmt.Errorf("error checking component directory %q: %v", component, err)
 		}
 	} else {
 		if info.IsDir() {
 			return true, nil
 		} else {
-			return false, fmt.Errorf(`component "%s" exists but is not a directory`, component)
+			return false, fmt.Errorf("component %q exists but is not a directory", component)
 		}
 	}
 }
@@ -172,11 +216,11 @@ func setStackOptions(stack types.ScoredStack) error {
 	for confKey, confVal := range stack.Configurations {
 		valJson, err := json.Marshal(confVal)
 		if err != nil {
-			return fmt.Errorf(`error serializing configuration "%s": %v - %v\n`, confKey, confVal, err)
+			return fmt.Errorf("error serializing configuration %q: %v - %v", confKey, confVal, err)
 		}
 		err = snapctl.Set(confKey, string(valJson)).Document().Run()
 		if err != nil {
-			return fmt.Errorf(`error setting snap option "%s": %v`, confKey, err)
+			return fmt.Errorf("error setting snap option %q: %v", confKey, err)
 		}
 	}
 

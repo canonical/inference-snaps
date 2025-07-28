@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"maps"
 	"os"
 	"slices"
@@ -13,22 +12,49 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"
 	"github.com/olekukonko/tablewriter/tw"
+	"github.com/spf13/cobra"
 )
 
-func listStacks(includeIncompatible bool) {
+var (
+	listAll bool
+)
+
+func init() {
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: "List available stacks",
+		// Long:  "",
+		Args: cobra.NoArgs,
+		RunE: list,
+	}
+
+	// flags
+	cmd.PersistentFlags().BoolVar(&listAll, "all", false, "include incompatible stacks")
+
+	rootCmd.AddCommand(cmd)
+}
+
+func list(_ *cobra.Command, _ []string) error {
+	return listStacks(listAll)
+}
+
+func listStacks(includeIncompatible bool) error {
 	stacksJson, err := snapctl.Get("stacks").Document().Run()
 	if err != nil {
-		log.Fatalf("Error loading stacks: %v\n", err)
+		return fmt.Errorf("error loading stacks: %v", err)
 	}
 
 	stacks, err := parseStacksJson(stacksJson)
 	if err != nil {
-		log.Fatalf("Error parsing stacks: %v\n", err)
+		return fmt.Errorf("error parsing stacks: %v", err)
 	}
+
 	err = printStacks(stacks, includeIncompatible)
 	if err != nil {
-		log.Fatalf("Error printing list: %v\n", err)
+		return fmt.Errorf("error printing list: %v", err)
 	}
+
+	return nil
 }
 
 func printStacks(stacks map[string]types.ScoredStack, includeIncompatible bool) error {
