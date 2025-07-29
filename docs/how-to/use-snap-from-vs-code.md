@@ -41,10 +41,10 @@ See the [Continue extension reference][continue-ref] for additional configuratio
 
 ## Use Deepseek-r1 snap with Continue
 
-Once the models is configured, it can be selected on the Continue's panel and be used.
+Once the models is configured, it can be selected on the Continue panel and be used.
 
 ```{tip}
-Explore the [Continue documentaion][continue-docs] to learn more.
+Explore the [Continue documentation][continue-docs] to learn more.
 ```
 
 <!-- links -->

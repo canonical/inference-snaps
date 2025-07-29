@@ -6,6 +6,7 @@ Battlemage
 Charmcraft
 cjk
 config
+Continue
 cpu
 CPUs
 CUDA
@@ -73,3 +74,4 @@ wordlist
 xetex
 xindy
 xml
+YAML
