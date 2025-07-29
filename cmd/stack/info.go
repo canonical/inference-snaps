@@ -16,8 +16,9 @@ func init() {
 		Use:   "info <stack>",
 		Short: "Print information about a stack",
 		// Long:  "",
-		Args: cobra.ExactArgs(1),
-		RunE: info,
+		GroupID: "stacks",
+		Args:    cobra.ExactArgs(1),
+		RunE:    info,
 	}
 	rootCmd.AddCommand(cmd)
 }

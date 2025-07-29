@@ -26,5 +26,13 @@ func main() {
 		rootCmd.Use = "app"
 	}
 
+	// Define groups for subcommands - used in usage help text
+	rootCmd.AddGroup(
+		&cobra.Group{ID: "stacks", Title: "Stack Management Commands:"},
+		&cobra.Group{ID: "config", Title: "Configuration Commands:"},
+	)
+	// Hide the 'completion' command from help text
+	rootCmd.CompletionOptions.HiddenDefaultCmd = true
+
 	rootCmd.Execute()
 }

@@ -13,8 +13,9 @@ func init() {
 		Use:   "set <key>",
 		Short: "Set configuration option",
 		// Long:  "",
-		Args: cobra.ExactArgs(1),
-		RunE: set,
+		GroupID: "config",
+		Args:    cobra.ExactArgs(1),
+		RunE:    set,
 	}
 	rootCmd.AddCommand(cmd)
 }
