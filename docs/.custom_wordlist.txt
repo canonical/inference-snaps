@@ -75,3 +75,4 @@ xetex
 xindy
 xml
 YAML
+yaml
