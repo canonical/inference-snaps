@@ -1,8 +1,8 @@
 (use-deepseek-r1-snap-with-vs-code)=
-# Use Deepseek-R1 snap with VS Code
+# Use an AI model snap with VS Code
 
-The Deepseek-R1 snap provides an API that can be integrated with other software.
-This guide explains how to integrate the Deepseek-R1 snap with the Visual Studio Code (VS Code) IDE.
+The AI model snas provides an API that can be integrated with other software.
+This guide explains how to integrate the an AI model snap with the Visual Studio Code (VS Code) IDE.
 It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
 
 ## Install the Continue extension
@@ -16,10 +16,11 @@ Next, open the configuration file `config.yaml`.
 The [config.yaml reference][continue-ref] describes the possible locations for this file.
 It’s usually located at `~/.continue/config.yaml`.
 
-You can also open it from the extension.
- - In the extensions menu: select the Continue logo
- - Click: **Select model**
- - In the new window, click the configuration icon (⚙️)
+You can also open it from the extension:
+
+- In the extensions menu: select the Continue logo
+- Click: **Select model**
+- In the new window, click the configuration icon (⚙️)
 
 A YAML file will open. In the `models` list, add:
 
@@ -33,13 +34,15 @@ A YAML file will open. In the `models` list, add:
       - edit
 ```
 
-Adjust the `apiBase` according to your Deepseek-R1 snap configuration.
+The values above are examples based on the Deepseek-R1 snap.
+Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
+To identify the correct `apiBase` and `model` name, refer to [this document](use-an-ai-model-snap-via-its-openai-api).
 
 ```{tip}
 See the [Continue extension reference][continue-ref] for additional configuration options.
 ```
 
-## Use Deepseek-r1 snap with Continue
+## Use the AI snap with Continue
 
 Once the models is configured, it can be selected on the Continue panel and be used.
 
