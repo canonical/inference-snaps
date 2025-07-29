@@ -3,7 +3,7 @@
 
 The Deepseek-R1 snap provides an API that can be integrated with other software.
 This guide explains how to integrate the Deepseek-R1 snap with the Visual Studio Code (VS Code) IDE.
-It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap).
+It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
 
 ## Install the Continue extension
 
