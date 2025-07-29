@@ -7,14 +7,18 @@ import (
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func parseStacksJson(stacksJson string) (map[string]types.ScoredStack, error) {
+func parseStacksJson(stacksJson string) ([]types.ScoredStack, error) {
 	var stacksOption map[string]map[string]types.ScoredStack
 	err := json.Unmarshal([]byte(stacksJson), &stacksOption)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing json: %v", err)
 	}
-	if stacks, ok := stacksOption["stacks"]; ok {
-		return stacks, nil
+	if stacksMap, ok := stacksOption["stacks"]; ok {
+		var stacksSlice []types.ScoredStack
+		for _, stack := range stacksMap {
+			stacksSlice = append(stacksSlice, stack)
+		}
+		return stacksSlice, nil
 	}
 	return nil, fmt.Errorf("no stacks found")
 }

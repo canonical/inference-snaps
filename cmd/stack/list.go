@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"maps"
 	"os"
-	"slices"
+	"sort"
 	"strings"
 
 	"github.com/canonical/go-snapctl"
@@ -58,7 +57,7 @@ func listStacks(includeIncompatible bool) error {
 	return nil
 }
 
-func printStacks(stacks map[string]types.ScoredStack, includeIncompatible bool) error {
+func printStacks(stacks []types.ScoredStack, includeIncompatible bool) error {
 
 	var headers []string
 	if includeIncompatible {
@@ -68,25 +67,31 @@ func printStacks(stacks map[string]types.ScoredStack, includeIncompatible bool) 
 	}
 	data := [][]string{headers}
 
-	// Iterate map in alphabetical order
-	keys := slices.Collect(maps.Keys(stacks))
-	slices.Sort(keys)
+	// Sort by Score in descending order
+	sort.Slice(stacks, func(i, j int) bool {
+		// Stable stacks with equal score should be listed first
+		if stacks[i].Score == stacks[j].Score {
+			return stacks[i].Grade == "stable"
+		}
+		return stacks[i].Score > stacks[j].Score
+	})
 
-	for _, stackName := range keys {
-		stack := stacks[stackName]
+	for _, stack := range stacks {
 		stackInfo := []string{stack.Name, stack.Vendor, stack.Description}
+
 		if includeIncompatible {
-			if stack.Compatible {
-				stackInfo = append(stackInfo, "Yes", strings.Join(stack.Notes, ", "))
-				data = append(data, stackInfo)
+			// Compatible column is: yes|no|grade
+			if stack.Compatible && stack.Grade == "stable" {
+				stackInfo = append(stackInfo, "yes")
+			} else if stack.Compatible {
+				stackInfo = append(stackInfo, stack.Grade)
 			} else {
-				stackInfo = append(stackInfo, "No", strings.Join(stack.Notes, ", "))
-				data = append(data, stackInfo)
+				stackInfo = append(stackInfo, "no")
 			}
-		} else {
-			if stack.Compatible {
-				data = append(data, stackInfo)
-			}
+			stackInfo = append(stackInfo, strings.Join(stack.Notes, ", "))
+			data = append(data, stackInfo)
+		} else if stack.Compatible && stack.Grade == "stable" {
+			data = append(data, stackInfo)
 		}
 	}
 
