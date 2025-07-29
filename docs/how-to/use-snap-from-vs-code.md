@@ -1,7 +1,7 @@
 (use-deepseek-r1-snap-with-vs-code)=
 # Use an AI model snap with VS Code
 
-The AI model snas provides an API that can be integrated with other software.
+The AI model snaps provides an API that can be integrated with other software.
 This guide explains how to integrate the an AI model snap with the Visual Studio Code (VS Code) IDE.
 It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
 
