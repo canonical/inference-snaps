@@ -39,8 +39,16 @@ Adjust the `apiBase` according to your Deepseek-R1 snap configuration.
 See the [Continue extension reference][continue-ref] for additional configuration options.
 ```
 
-<!-- links -->
+## Use Deepseek-r1 snap with Continue
 
+Once the models is configured, it can be selected on the Continue's panel and be used.
+
+```{tip}
+Explore the [Continue documentaion][continue-docs] to learn more.
+```
+
+<!-- links -->
 [continue-ext]: https://marketplace.visualstudio.com/items?itemName=Continue.continue
 [continue-ref]: https://docs.continue.dev/reference
+[continue-docs]: https://docs.continue.dev/
 [vs-code-extensions]: https://code.visualstudio.com/docs/getstarted/extensions
