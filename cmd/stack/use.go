@@ -45,10 +45,41 @@ func use(_ *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("cannot specify stack with --auto flag")
 		}
-		err := autoSelectStacks(useAssumeYes)
+
+		scoredStacks, err := scoreStacks()
 		if err != nil {
-			return fmt.Errorf("failed to automatically set used stack: %s", err)
+			return fmt.Errorf("error scoring stacks: %v", err)
 		}
+
+		for _, stack := range scoredStacks {
+			if stack.Score == 0 {
+				fmt.Printf("❌ %s - not compatible: %s\n", stack.Name, strings.Join(stack.Notes, ", "))
+			} else if stack.Grade != "stable" {
+				fmt.Printf("⏺️ %s - score = %d, grade = %s\n", stack.Name, stack.Score, stack.Grade)
+			} else {
+				fmt.Printf("✅ %s - compatible, score = %d\n", stack.Name, stack.Score)
+			}
+		}
+
+		err = stacksToSnapOptions(scoredStacks)
+		if err != nil {
+			return fmt.Errorf("error saving scored stacks: %v", err)
+		}
+
+		fmt.Println("Automatically selecting a compatible stack ...")
+
+		selectedStack, err := selector.TopStack(scoredStacks)
+		if err != nil {
+			return fmt.Errorf("error finding top stack: %v", err)
+		}
+
+		fmt.Printf("Selected stack for your hardware configuration: %s\n\n", selectedStack.Name)
+
+		err = useStack(selectedStack.Name, useAssumeYes)
+		if err != nil {
+			return fmt.Errorf("failed to use stack: %s", err)
+		}
+
 	} else {
 		if len(args) == 1 {
 			err := useStack(args[0], useAssumeYes)
@@ -62,36 +93,28 @@ func use(_ *cobra.Command, args []string) error {
 	return nil
 }
 
-func autoSelectStacks(assumeYes bool) error {
-	fmt.Println("Automatically selecting a compatible stack ...")
-
+func scoreStacks() ([]types.ScoredStack, error) {
 	allStacks, err := selector.LoadStacksFromDir(stacksDir)
 	if err != nil {
-		return fmt.Errorf("error loading stacks: %v", err)
+		return nil, fmt.Errorf("error loading stacks: %v", err)
 	}
 
 	// get hardware info
 	hardwareInfo, err := hardware_info.Get(false)
 	if err != nil {
-		return fmt.Errorf("error getting hardware info: %v", err)
+		return nil, fmt.Errorf("error getting hardware info: %v", err)
 	}
 
 	// score stacks
 	scoredStacks, err := selector.ScoreStacks(hardwareInfo, allStacks)
 	if err != nil {
-		return fmt.Errorf("error scoring stacks: %v", err)
+		return nil, fmt.Errorf("error scoring stacks: %v", err)
 	}
 
-	for _, stack := range scoredStacks {
-		if stack.Score == 0 {
-			fmt.Printf("❌ %s - not compatible: %s\n", stack.Name, strings.Join(stack.Notes, ", "))
-		} else if stack.Grade != "stable" {
-			fmt.Printf("⏺️ %s - score = %d, grade = %s\n", stack.Name, stack.Score, stack.Grade)
-		} else {
-			fmt.Printf("✅ %s - compatible, score = %d\n", stack.Name, stack.Score)
-		}
-	}
+	return scoredStacks, nil
+}
 
+func stacksToSnapOptions(scoredStacks []types.ScoredStack) error {
 	// set all scored stacks as snap options
 	for _, stack := range scoredStacks {
 		stackJson, err := json.Marshal(stack)
@@ -104,16 +127,7 @@ func autoSelectStacks(assumeYes bool) error {
 			return fmt.Errorf("error setting stacks option: %v", err)
 		}
 	}
-
-	// find top stack
-	topStack, err := selector.TopStack(scoredStacks)
-	if err != nil {
-		return fmt.Errorf("error selecting a stack: %v", err)
-	}
-
-	fmt.Printf("Selected stack for your hardware configuration: %s\n\n", topStack.Name)
-
-	return useStack(topStack.Name, assumeYes)
+	return nil
 }
 
 /*
@@ -163,7 +177,10 @@ func useStack(stackName string, assumeYes bool) error {
 
 	if len(components) > 0 {
 		// This is blocking, but there is a timeout
-		downloadComponents(stack.Components)
+		err = downloadComponents(stack.Components)
+		if err != nil {
+			return fmt.Errorf("error downloading components: %v", err)
+		}
 	}
 
 	// TODO restart service

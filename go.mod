@@ -12,7 +12,7 @@ require (
 	github.com/olekukonko/tablewriter v1.0.8
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/sys v0.34.0
-	golang.org/x/term v0.1.0
+	golang.org/x/term v0.33.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

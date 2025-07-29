@@ -14,6 +14,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var ErrorNoCompatibleStacks = errors.New("no compatible stacks found")
+
 func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
 	var compatibleStacks []types.ScoredStack
 
@@ -24,7 +26,7 @@ func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
 	}
 
 	if len(compatibleStacks) == 0 {
-		return nil, errors.New("no compatible stacks found")
+		return nil, ErrorNoCompatibleStacks
 	}
 
 	// Sort by score (high to low) and return highest match
