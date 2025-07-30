@@ -3,7 +3,7 @@ AI Model Snaps
 
 AI model snaps allow you to package famous AI models as snaps that can be deployed on all compatible hardware. 
 
-It checks the hardware available on the host machine and recommends the stack that is optimised for the available hardware.
+It checks the hardware available on the host machine and recommends the stack that is optimized for the available hardware.
 
 .. toctree::
    :hidden:
