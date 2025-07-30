@@ -23,5 +23,5 @@ Use the snap with your IDE:
 
 ```{toctree}
 :maxdepth: 1
-use-ai-model-snap-in-vs-code
+use-ai-model-snap-with-ide
 ```
