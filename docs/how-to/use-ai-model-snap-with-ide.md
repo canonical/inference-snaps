@@ -1,11 +1,25 @@
-(use-ai-model-snap-in-vs-code)=
-# Use an AI model snap in VS Code
+(use-ai-model-snap-with-ide)=
+# Use an AI model snap in your favorite IDE
 
 The AI model snaps provide an API that can be integrated with other software.
-This guide explains how to integrate an AI model snap with the Visual Studio Code (VS Code) IDE.
+This guide explains how to integrate an AI model snap with your favorite IDE.
 It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
 
-## Install the Continue extension
+## Install the Continue
+
+
+````{tabs}
+
+```{group-tab} VS Code
+
+```
+
+```{group-tab} JetBrains IDEs
+
+```
+
+````
+
 
 The [Continue extension][continue-ext] enables integration of locally running models with the IDE.
 Install the Continue extension by searching for **Continue - open-source AI code assistant** in the VS Code [Extensions view][vs-code-extensions].
