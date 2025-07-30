@@ -15,7 +15,9 @@ Install the Continue extension by searching for **Continue - open-source AI code
 Open the configuration file `config.yaml`.
 The [config.yaml reference][continue-ref] describes the possible locations for this file.
 It’s usually located at `~/.continue/config.yaml`.
-
+```{note}
+If you find a config.json file instead of the YAML file, refer to this [YAML migration guide](https://docs.continue.dev/reference/yaml-migration). 
+```
 You can also open it from the extension as follows:
 
 - In the [Activity Bar][activity-bar], select the Continue logo
