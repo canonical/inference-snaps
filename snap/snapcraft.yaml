@@ -8,10 +8,7 @@ description: |
 grade: devel
 confinement: strict
 
-# We require access to the pci ids database file to look up vendor and product names. We download and include this file in a part.
 layout:
-  /usr/share/misc/pci.ids:
-    bind-file: $SNAP/pci.ids
   /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl:
     bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl
 
@@ -41,11 +38,6 @@ parts:
     source: .
     source-type: local
 
-  pci-ids:
-    plugin: dump
-    source: https://pci-ids.ucw.cz/v2.2/pci.ids
-    source-type: file
-
 apps:
   hardware-info:
     environment:
@@ -53,6 +45,7 @@ apps:
     plugs:
       - hardware-observe
       - opengl
+      - network
     command: bin/hardware-info
 
   select-stack:

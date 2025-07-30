@@ -53,7 +53,7 @@ func friendlyNames(device types.PciDevice) (types.PciFriendlyNames, error) {
 	if pciDb == nil {
 		// Load pci.ids database if needed
 		var err error
-		pciDb, err = pcidb.New()
+		pciDb, err = pcidb.New(pcidb.WithEnableNetworkFetch())
 		if err != nil {
 			return friendlyNames, err
 		}
