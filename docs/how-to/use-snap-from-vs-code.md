@@ -1,5 +1,5 @@
 (use-ai-model-snap-in-vs-code)=
-# Use an AI model snap with VS Code
+# Use an AI model snap in VS Code
 
 The AI model snaps provide an API that can be integrated with other software.
 This guide explains how to integrate an AI model snap with the Visual Studio Code (VS Code) IDE.
