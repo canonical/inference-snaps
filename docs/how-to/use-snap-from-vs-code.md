@@ -22,7 +22,7 @@ You can also open it from the extension as follows:
 - Click on the **Select model** drop down menu
 - In the new window, click the configuration icon (⚙️) to open `config.yaml`
 
-A YAML file will open. In the `models` list, add:
+Find the `models` list in the YAML file and add: 
 
 ```yaml
   - name: Deepseek-R1
