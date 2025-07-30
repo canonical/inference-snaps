@@ -27,6 +27,8 @@ html
 http
 io
 Intersphinx
+JSON
+json
 lang
 LaTeX
 latexmk
