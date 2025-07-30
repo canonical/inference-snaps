@@ -20,7 +20,7 @@ You can also open it from the extension as follows:
 
 - In the [Activity Bar][activity-bar], select the Continue logo
 - Click on the **Select model** drop down menu
-- In the new window, click the configuration icon (⚙️)
+- In the new window, click the configuration icon (⚙️) to open `config.yaml`
 
 A YAML file will open. In the `models` list, add:
 
