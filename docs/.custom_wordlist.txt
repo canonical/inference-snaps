@@ -26,7 +26,10 @@ https
 html
 http
 io
+IDE
+IDEs
 Intersphinx
+JetBrains
 JSON
 json
 lang
