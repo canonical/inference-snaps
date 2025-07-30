@@ -41,7 +41,7 @@ You can also open it from the extension as follows:
 ```
 
 ```{group-tab} JetBrains IDEs
-You can also open it from the pluging as follows:
+You can also open it from the plugin as follows:
  - In the right [tool window bar][tool-window-bar], select the Continue logo
 ```
 ````
