@@ -16,7 +16,7 @@ Open the configuration file `config.yaml`.
 The [config.yaml reference][continue-ref] describes the possible locations for this file.
 It’s usually located at `~/.continue/config.yaml`.
 
-You can also open it from the extension:
+You can also open it from the extension as follows:
 
 - In the [Activity Bar][activity-bar], select the Continue logo
 - Click on the **Select model** drop down menu
