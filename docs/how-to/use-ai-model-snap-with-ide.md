@@ -73,7 +73,7 @@ Once the model is configured, it can be selected from the Select Model drop down
 Any requests in the chat box will be sent to the selected model.
 
 ```{tip}
-Explore the [Continue documentation][continue-docs] to learn how to use the extension for coding, chat and more.
+Explore the [Continue documentation][continue-docs] to learn how to use it for coding, chat and more.
 ```
 
 <!-- links -->
