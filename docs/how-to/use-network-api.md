@@ -1,4 +1,4 @@
-(use-an-ai-model-snap-via-its-openai-api)=
+(use-openai-api)=
 # Use an AI model snap via its OpenAI API
 
 Some AI model snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
