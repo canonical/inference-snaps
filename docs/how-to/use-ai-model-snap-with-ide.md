@@ -69,7 +69,7 @@ For additional configuration options, visit the [Continue reference page][contin
 
 ## Use the AI snap with Continue
 
-Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue extension's chat box.
+Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue chat box.
 Any requests in the chat box will be sent to the selected model.
 
 ```{tip}
