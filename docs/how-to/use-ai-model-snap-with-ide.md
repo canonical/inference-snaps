@@ -65,7 +65,7 @@ The values above are examples based on the Deepseek-R1 snap.
 Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
 To identify the correct `apiBase` and `model` name, check out this guide on [using the snap via its OpenAI API](use-openai-api).
 
-For additional configuration options, visit the [Continue extension reference page][continue-ref].
+For additional configuration options, visit the [Continue reference page][continue-ref].
 
 ## Use the AI snap with Continue
 
