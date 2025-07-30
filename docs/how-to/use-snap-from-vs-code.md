@@ -12,7 +12,7 @@ Install the Continue extension by searching for **Continue - open-source AI code
 
 ## Configure Continue
 
-Next, open the configuration file `config.yaml`.
+Open the configuration file `config.yaml`.
 The [config.yaml reference][continue-ref] describes the possible locations for this file.
 It’s usually located at `~/.continue/config.yaml`.
 
