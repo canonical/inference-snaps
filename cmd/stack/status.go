@@ -14,11 +14,12 @@ import (
 
 func init() {
 	cmd := &cobra.Command{
-		Use:   "status",
-		Short: "Show the status",
-		Long:  "Show the status of the model snap",
-		Args:  cobra.NoArgs,
-		RunE:  status,
+		Use:     "status",
+		Short:   "Show the status",
+		Long:    "Show the status of the model snap",
+		GroupID: "basics",
+		Args:    cobra.NoArgs,
+		RunE:    status,
 	}
 
 	rootCmd.AddCommand(cmd)

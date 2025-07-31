@@ -28,6 +28,7 @@ func main() {
 
 	// Define groups for subcommands - used in usage help text
 	rootCmd.AddGroup(
+		&cobra.Group{ID: "basics", Title: "Basic Commands:"},
 		&cobra.Group{ID: "stacks", Title: "Stack Management Commands:"},
 		&cobra.Group{ID: "config", Title: "Configuration Commands:"},
 	)
