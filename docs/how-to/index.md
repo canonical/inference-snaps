@@ -19,7 +19,7 @@ Use the snap:
 use-network-api
 ```
 
-Use the snap with Open WebUI:
+Use the snap with web clients:
 ```{toctree}
 :maxdepth: 1
 use-ai-model-snap-with-webui
