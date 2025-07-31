@@ -10,8 +10,6 @@ If not, see the [Open WebUI installation guide][open-webui-install] and the [AI 
 
 First open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
-When accessing for the first time, you will be prompted to create an admin account.
-Create an account and proceed as instructed.
 After logging in:
 
 - Click on your account user icon (usually in the top right corner).
