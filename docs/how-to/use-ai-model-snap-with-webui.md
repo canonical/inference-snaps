@@ -12,16 +12,16 @@ First open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
 After logging in:
 
-- Click on your account user icon (usually in the top right corner).
-- Select **Settings** from the dropdown menu.
-- Select **connections** from the left sidebar.
-- Click on the `+` button to add a new connection.
-- On the **URL** field, enter the URL of the AI model snap you want to use.
+1. Click on your account user icon (usually in the top right corner).
+2. Select **Settings** from the dropdown menu.
+3. Select **connections** from the left sidebar.
+4. Click on the `+` button to add a new connection.
+5. On the **URL** field, enter the URL of the AI model snap you want to use.
   For example, if you installed the Deepseek R1 model snap, the URL would be `http://localhost:8080/v1`.
   To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
-- The API key field is demanded by the tool, although it is not used by the AI model snaps.
+6. The API key field is demanded by the tool, although it is not used by the AI model snaps.
   You can enter any value here, such as `dummy-key`.
-- Click on **Save** to save the connection, and **Save** again to save the settings.
+7. Click on **Save** to save the connection, and **Save** again to save the settings.
 
 On the left top corner, click on the **Select a model** and select the one described as `/snap/<ai-model-name>/components...`.
 
