@@ -12,10 +12,10 @@ First open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
 After logging in:
 
-1. Click on your account user icon (usually in the top right corner).
+1. Click on your account user icon.
 2. Select **Settings** from the dropdown menu.
-3. Select **connections** from the left sidebar.
-4. Click on the `+` button to add a new connection.
+3. Select **Connections** from the left sidebar.
+4. Click on the **+** button to add a new connection.
 5. On the **URL** field, enter the URL of the AI model snap you want to use.
   For example, if you installed the Deepseek R1 model snap, the URL would be `http://localhost:8080/v1`.
   To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
@@ -23,9 +23,20 @@ After logging in:
   You can enter any value here, such as `dummy-key`.
 7. Click on **Save** to save the connection, and **Save** again to save the settings.
 
+```{note}
+If you have Ollama installed, a few addtional steps are required after configuring the connection:
+
+1. Go to the **Admin Panel** > **Settings** > **Connections**.
+2. Then disable Ollama API.
+
+In case you're using [OpenVINO™ Model Server][open-vino-model-server] also disable OpenAI API option.
+```
+
+
 On the left top corner, click on the **Select a model** and select the one described as `/snap/<ai-model-name>/components...`.
 
 The model is now ready to be used.
 
 <!-- links -->
 [open-webui-install]: https://github.com/open-webui/open-webui?tab=readme-ov-file#how-to-install-
+[open-vino-model-server]: https://docs.openvino.ai/2025/model-server/ovms_what_is_openvino_model_server.html
