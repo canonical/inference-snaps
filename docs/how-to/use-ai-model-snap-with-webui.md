@@ -20,7 +20,7 @@ After logging in:
 - Click on the `+` button to add a new connection.
 - On the **URL** field, enter the URL of the AI model snap you want to use.
   For example, if you installed the Deepseek R1 model snap, the URL would be `http://localhost:8080/v1`.
-  To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-openai-api.md) guide.
+  To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
 - The API key field is demanded by the tool, although it is not used by the AI model snaps.
   You can enter any value here, such as `dummy-key`.
 - Click on **Save** to save the connection, and **Save** again to save the settings.
