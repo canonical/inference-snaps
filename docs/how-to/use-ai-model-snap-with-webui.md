@@ -1,0 +1,33 @@
+(use-ai-model-snap-with-open-webui)=
+# Use an AI model snap with Open WebUI
+
+Open WebUI provides a convenient web interface that can be used for interact with AI models packaged as snaps.
+This guide will help you set up and use an AI model snap with Open WebUI.
+This guide assumes Open WebUI and an AI model snap are installed.
+If not, see the [Open WebUI installation guide][open-webui-install] and the [AI model snap installation guide](install-deepseek-r1-snap.md).
+
+## Configure Open WebUI
+
+First open the Open WebUI interface on your browser.
+The default address is `http://localhost:8081`.
+When accessing for the first time, you will be prompted to create an admin account.
+Create an account and proceed as instructed.
+After logging in:
+
+- Click on your account user icon (usually in the top right corner).
+- Select **Settings** from the dropdown menu.
+- Select **connections** from the left sidebar.
+- Click on the `+` button to add a new connection.
+- On the **URL** field, enter the URL of the AI model snap you want to use.
+  For example, if you installed the Deepseek R1 model snap, the URL would be `http://localhost:8080/v1`.
+  To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-openai-api.md) guide.
+- The API key field is demanded by the tool, although it is not used by the AI model snaps.
+  You can enter any value here, such as `dummy-key`.
+- Click on **Save** to save the connection, and **Save** again to save the settings.
+
+On the left top corner, click on the **Select a model** and select the one described as `/snap/<ai-model-name>/components...`.
+
+The model is now ready to be used.
+
+<!-- links -->
+[open-webui-install]: https://github.com/open-webui/open-webui?tab=readme-ov-file#how-to-install-
