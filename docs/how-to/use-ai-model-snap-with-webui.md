@@ -12,17 +12,16 @@ Open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
 After logging in:
 
-1. Click on your user account icon.
-2. Select **Settings** from the dropdown menu.
-3. Select **Connections** from the left sidebar.
-4. Click on the **+** button to add a new connection.
-5. In the **URL** field, enter the URL of the AI model snap you want to use.
-  To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
-6. The API key field is required, but it is not used by the AI model snaps.
-  You can enter any value here, such as `dummy-key`.
-7. On the **Model IDs** field add the model name.
-  Refer to the same guide mentioned in step 5 to identify the correct model name.
-8. Click on **Save** to save the connection, and **Save** again to save the settings.
+1. Click on your user account icon and select **Settings** from the dropdown menu.
+2. Select **Connections** from the left sidebar.
+3. Click on the **+** button to add a new connection.
+4. In the **URL** field, enter the URL of the AI model snap you want to use.
+  To identify the URL of the AI model snap, checkout this guide on [using an AI model snap via its OpenAI API](use-network-api.md).
+5. The API key field is required but it's not used by the AI model snaps.
+  You can enter any value here, such as, `dummy-key`.
+6. Add the model name in the **Model IDs** field.
+  Refer to the guide mentioned in step 4 to identify the correct model name.
+7. Save the connection, and click **Save** again to save the settings.
 
 ```{note}
 By default, Open WebUI will first try to use a locally installed Ollama instance, before it sends the prompt to the selected model.
