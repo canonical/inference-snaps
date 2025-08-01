@@ -24,7 +24,7 @@ Install the Continue plugin by searching for **Continue** in the plugins menu on
 ## Configure Continue
 
 Open the configuration file `config.yaml`.
-The [config.yaml reference][continue-ref] describes the possible locations for this file.
+The [config.yaml reference page][continue-ref] describes the possible locations of this file.
 It’s usually located at `~/.continue/config.yaml`.
 
 
