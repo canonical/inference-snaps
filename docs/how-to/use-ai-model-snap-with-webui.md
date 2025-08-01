@@ -26,7 +26,7 @@ After logging in:
 ```{tip}
 By default, Open WebUI will first try to use a locally installed Ollama instance before it sends the prompt to the selected model.
 This can cause an unnecessary delay.
-We recommend that you disable the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
+We recommend disabling the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
 1. Click on your user account icon, then select **Settings** and choose **Admin Settings**.
 2. The **Admin Panel** will open. Go to **Settings** > **Connections**.
 3. Then disable **OpenAI API** and **Ollama API**. Click **Save**.
