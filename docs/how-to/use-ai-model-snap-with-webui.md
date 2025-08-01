@@ -25,14 +25,12 @@ After logging in:
 8. Click on **Save** to save the connection, and **Save** again to save the settings.
 
 ```{note}
-If you have Ollama installed, a few additional steps are required after configuring the connection:
-
-1. Go to the **Admin Panel** > **Settings** > **Connections**.
-2. Then disable Ollama API.
-
-In case you're using [OpenVINO™ Model Server][open-vino-model-server] also disable OpenAI API option.
-Also, for OpenVINO™ Model Server, model ID needs to be set.
-Check out [Use an AI model snap via its OpenAI API](use-network-api.md) to know how to get the model ID.
+By default, Open WebUI will first try to use a locally installed Ollama instance, before it sends the prompt to the selected model.
+This can cause an unnecessary delay.
+We recommend that you disable the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
+1. Click on your user account icon, then select **Settings** and choose **Admin Settings**.
+2. The **Admin Panel** will open. Go to **Settings** > **Connections**.
+3. Then disable **OpenAI API** and **Ollama API**. Click **Save**.
 ```
 
 
