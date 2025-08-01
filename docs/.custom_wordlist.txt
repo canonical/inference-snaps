@@ -38,7 +38,9 @@ npu
 npm's
 NPUs
 Nvidia
+Ollama
 OpenAI
+OpenVINO
 optimized
 otf
 PCI
