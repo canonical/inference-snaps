@@ -1,4 +1,4 @@
-(use-ai-model-snap-with-ide)=
+(use-ai-model-snap-in-ide)=
 # Use an AI model snap in your favorite IDE
 
 The AI model snaps provide an API that can be integrated with other software.
