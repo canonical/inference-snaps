@@ -28,7 +28,7 @@ By default, Open WebUI will first try to use a locally installed Ollama instance
 This can cause an unnecessary delay.
 We recommend disabling the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
 1. Open settings in Open WebUI and choose **Admin Settings**.
-2. The **Admin Panel** will open. Go to **Settings** > **Connections**.
+2. In the **Admin Panel**, go to **Settings** > **Connections**.
 3. Then disable **OpenAI API** and **Ollama API**. Click **Save**.
 ```
 
