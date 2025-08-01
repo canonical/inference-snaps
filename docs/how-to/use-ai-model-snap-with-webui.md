@@ -36,8 +36,12 @@ We recommend disabling the Ollama and OpenAI connections in the Open WebUI admin
 On the left top corner, click on the **Select a model**.
 Select the model name you configured under connections.
 
+## Use the model
+
 The model is now ready to be used.
+Refer to the [Open WebUI documentation][open-webui-install] to learn more about how to use it.
 
 <!-- links -->
 [open-webui-install]: https://github.com/open-webui/open-webui?tab=readme-ov-file#how-to-install-
 [open-vino-model-server]: https://docs.openvino.ai/2025/model-server/ovms_what_is_openvino_model_server.html
+[open-webui-docs]: https://docs.openwebui.com/
