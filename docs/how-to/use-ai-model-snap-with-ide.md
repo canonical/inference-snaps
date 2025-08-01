@@ -37,17 +37,19 @@ If you find a config.json file instead of the YAML file, refer to this [YAML mig
 ```{group-tab} VS Code
 You can also open it from the extension as follows:
 
-- In the [Activity Bar][activity-bar], select the Continue logo
+1. In the [Activity Bar][activity-bar], select the Continue logo
+2. Click on the **Select model** drop down menu
+3. In the new window, click the configuration icon (⚙️) to open `config.yaml`
 ```
 
 ```{group-tab} JetBrains IDEs
 You can also open it from the plugin as follows:
- - In the right [tool window bar][tool-window-bar], select the Continue logo
+1. In the right [tool window bar][tool-window-bar], select the Continue logo
+2. Click on the **Select model** drop down menu
+3. In the new window, click the configuration icon (⚙️) to open `config.yaml`
 ```
 ````
 
-- Click on the **Select model** drop down menu
-- In the new window, click the configuration icon (⚙️) to open `config.yaml`
 
 Find the `models` list in the YAML file and add:
 
