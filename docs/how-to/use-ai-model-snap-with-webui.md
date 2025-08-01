@@ -24,7 +24,7 @@ After logging in:
 7. Click on **Save** to save the connection, and **Save** again to save the settings.
 
 ```{note}
-If you have Ollama installed, a few addtional steps are required after configuring the connection:
+If you have Ollama installed, a few additional steps are required after configuring the connection:
 
 1. Go to the **Admin Panel** > **Settings** > **Connections**.
 2. Then disable Ollama API.
