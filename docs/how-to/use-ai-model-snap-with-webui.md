@@ -34,7 +34,8 @@ We recommend that you disable the Ollama and OpenAI connections in the Open WebU
 ```
 
 
-On the left top corner, click on the **Select a model** and select the one described as `/snap/<ai-model-name>/components...`.
+On the left top corner, click on the **Select a model**.
+Select the model name you configured under connections.
 
 The model is now ready to be used.
 
