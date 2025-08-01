@@ -12,15 +12,18 @@ import (
 func Info() ([]types.CpuInfo, error) {
 	hostProcCpu, err := hostProcCpuInfo()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to look up host /proc/cpuinfo: %v", err)
 	}
 
 	hostUname, err := hostUnameMachine()
 	if err != nil {
-		return []types.CpuInfo{}, err
+		return []types.CpuInfo{}, fmt.Errorf("error getting host uname: %v", err)
 	}
 
 	cpus, err := InfoFromRawData(hostProcCpu, hostUname)
+	if err != nil {
+		return []types.CpuInfo{}, fmt.Errorf("error parsing cpu data: %v", err)
+	}
 
 	return cpus, nil
 }
@@ -30,10 +33,13 @@ func InfoFromRawData(procCpuInfoData string, uname string) ([]types.CpuInfo, err
 
 	machineProcCpuInfo, err := parseProcCpuInfo(procCpuInfoData, architecture)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error parsing /proc/cpuinfo: %v", err)
 	}
 
 	cpus, err := uniqueCpuInfo(machineProcCpuInfo)
+	if err != nil {
+		return nil, fmt.Errorf("error filtering cpu info: %v", err)
+	}
 
 	return cpus, nil
 }
@@ -48,7 +54,7 @@ func uniqueCpuInfo(procCpus []ProcCpuInfo) ([]types.CpuInfo, error) {
 
 	cpuInfos, err := cpuInfoFromProc(procCpus)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error converting cpu info: %v", err)
 	}
 	return cpuInfos, nil
 }

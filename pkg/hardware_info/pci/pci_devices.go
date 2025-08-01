@@ -1,7 +1,9 @@
 package pci
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/canonical/stack-utils/pkg/constants"
 	"github.com/canonical/stack-utils/pkg/hardware_info/pci/amd"
@@ -12,7 +14,8 @@ import (
 )
 
 var (
-	pciDb *pcidb.PCIDB
+	pciDb                   *pcidb.PCIDB
+	ErrorVendorNotSupported = errors.New("vendor not supported")
 )
 
 /*
@@ -22,15 +25,16 @@ func Devices(friendlyNames bool) ([]types.PciDevice, error) {
 
 	hostLsPciData, err := hostLsPci()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting host lspci data: %v", err)
 	}
-	devices, err := DevicesFromRawData(hostLsPciData, friendlyNames)
+	devices, err := ParseLsPci(hostLsPciData, friendlyNames)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error parsing lspci data: %v", err)
 	}
 
 	// Additional properties are obtained by running vendor specific tools on the host
-	devices = additionalProperties(devices)
+	// Errors are not fatal, and are printed to stderr
+	devices = addAdditionalProperties(devices)
 
 	return devices, nil
 }
@@ -38,7 +42,7 @@ func Devices(friendlyNames bool) ([]types.PciDevice, error) {
 func DevicesFromRawData(lspciData string, friendlyNames bool) ([]types.PciDevice, error) {
 	devices, err := ParseLsPci(lspciData, friendlyNames)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error parsing lspci data: %v", err)
 	}
 
 	return devices, nil
@@ -55,7 +59,7 @@ func friendlyNames(device types.PciDevice) (types.PciFriendlyNames, error) {
 		var err error
 		pciDb, err = pcidb.New(pcidb.WithEnableNetworkFetch())
 		if err != nil {
-			return friendlyNames, err
+			return friendlyNames, fmt.Errorf("error opening pci database: %v", err)
 		}
 	}
 
@@ -106,29 +110,50 @@ func friendlyNames(device types.PciDevice) (types.PciFriendlyNames, error) {
 }
 
 /*
-additionalProperties returns devices with their AdditionalProperties field populated with device specific properties.
+addAdditionalProperties returns devices with their AdditionalProperties field populated with device specific properties.
+Additional properties are obtained by running vendor specific tools on the host system.
 No error is returned as a failure to look up properties is considered non-fatal, and likely due to missing drivers.
 Errors are instead logged to STDERR.
-Additional properties are obtained by running vendor specific tools on the host system.
 */
-func additionalProperties(devices []types.PciDevice) []types.PciDevice {
-
+func addAdditionalProperties(devices []types.PciDevice) []types.PciDevice {
 	for i, device := range devices {
-		var properties map[string]string
-
-		switch device.VendorId {
-		case constants.PciVendorAmd:
-			properties = amd.AdditionalProperties(device)
-		case constants.PciVendorNvidia:
-			properties = nvidia.AdditionalProperties(device)
-		case constants.PciVendorIntel:
-			properties = intel.AdditionalProperties(device)
-		default:
-			// Unhandled vendor
+		properties, err := deviceAdditionalProperties(device)
+		if err != nil {
+			if errors.Is(err, ErrorVendorNotSupported) {
+				// We do not log unsupported vendors, as that would be the majority of PCI devices
+			} else {
+				fmt.Fprintf(os.Stderr, "Error getting additional properties for pci device: %v\n", err)
+			}
 		}
-
 		devices[i].AdditionalProperties = properties
 	}
 
 	return devices
+}
+
+func deviceAdditionalProperties(device types.PciDevice) (map[string]string, error) {
+	var properties map[string]string
+	var err error
+
+	switch device.VendorId {
+	case constants.PciVendorAmd:
+		properties, err = amd.AdditionalProperties(device)
+		if err != nil {
+			return nil, fmt.Errorf("AMD: %v", err)
+		}
+	case constants.PciVendorNvidia:
+		properties, err = nvidia.AdditionalProperties(device)
+		if err != nil {
+			return nil, fmt.Errorf("NVIDIA: %v", err)
+		}
+	case constants.PciVendorIntel:
+		properties, err = intel.AdditionalProperties(device)
+		if err != nil {
+			return nil, fmt.Errorf("Intel: %v", err)
+		}
+	default:
+		return nil, ErrorVendorNotSupported
+	}
+
+	return properties, nil
 }

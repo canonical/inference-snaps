@@ -12,7 +12,10 @@ import (
 func hostProcCpuInfo() (string, error) {
 	// cat /proc/cpuinfo
 	cpuInfoBytes, err := os.ReadFile("/proc/cpuinfo")
-	return string(cpuInfoBytes), err
+	if err != nil {
+		return "", fmt.Errorf("error reading /proc/cpuinfo: %v", err)
+	}
+	return string(cpuInfoBytes), nil
 }
 
 func parseProcCpuInfo(cpuInfoString string, architecture string) ([]ProcCpuInfo, error) {

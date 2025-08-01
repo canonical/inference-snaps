@@ -9,18 +9,18 @@ import (
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func gpuProperties(pciDevice types.PciDevice) map[string]string {
+func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {
 	properties := make(map[string]string)
 
 	vRamVal, err := vRam(pciDevice)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "AMD: error looking up vRAM: %v\n", err)
+		return nil, fmt.Errorf("error looking up vRAM: %v", err)
 	}
 	if vRamVal != nil {
 		properties["vram"] = strconv.FormatUint(*vRamVal, 10)
 	}
 
-	return properties
+	return properties, nil
 }
 
 func vRam(device types.PciDevice) (*uint64, error) {

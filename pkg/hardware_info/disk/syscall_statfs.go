@@ -1,6 +1,8 @@
 package disk
 
 import (
+	"fmt"
+
 	"github.com/canonical/stack-utils/pkg/types"
 	"golang.org/x/sys/unix"
 )
@@ -12,7 +14,7 @@ func statFs(path string) (types.DirStats, error) {
 	var fs unix.Statfs_t
 	err := unix.Statfs(path, &fs)
 	if err != nil {
-		return pathStats, err
+		return pathStats, fmt.Errorf("statfs failed: %v", err)
 	}
 
 	pathStats.Total = fs.Blocks * uint64(fs.Bsize)
