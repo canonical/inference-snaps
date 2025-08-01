@@ -20,7 +20,9 @@ After logging in:
   To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
 6. The API key field is required, but it is not used by the AI model snaps.
   You can enter any value here, such as `dummy-key`.
-7. Click on **Save** to save the connection, and **Save** again to save the settings.
+7. On the **Model IDs** field add the model name.
+  Refer to the same guide mentioned in step 5 to identify the correct model name.
+8. Click on **Save** to save the connection, and **Save** again to save the settings.
 
 ```{note}
 If you have Ollama installed, a few additional steps are required after configuring the connection:
