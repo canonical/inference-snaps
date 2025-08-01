@@ -3,7 +3,7 @@
 
 Open WebUI provides a convenient web interface for interacting with AI models packaged as snaps.
 This guide will help you set up and use an AI model snap with Open WebUI.
-This guide assumes Open WebUI and an AI model snap are installed.
+It is assumed that Open WebUI and an AI model snap are already installed.
 If not, see the [Open WebUI installation guide][open-webui-install] and the [AI model snap installation guide](install-deepseek-r1-snap.md).
 
 ## Configure Open WebUI
