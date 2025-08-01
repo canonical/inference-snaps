@@ -8,7 +8,7 @@ If you don't, check out the [Open WebUI installation guide][open-webui-install] 
 
 ## Configure Open WebUI
 
-First open the Open WebUI interface on your browser.
+Open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
 After logging in:
 
