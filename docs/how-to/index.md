@@ -25,3 +25,8 @@ Use the snap with web clients:
 use-ai-model-snap-with-webui
 ```
 
+Use the snap with your IDE:
+```{toctree}
+:maxdepth: 1
+use-ai-model-snap-in-ide
+```

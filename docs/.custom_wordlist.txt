@@ -6,6 +6,7 @@ Battlemage
 Charmcraft
 cjk
 config
+Continue
 cpu
 CPUs
 CUDA
@@ -25,7 +26,12 @@ https
 html
 http
 io
+IDE
+IDEs
 Intersphinx
+JetBrains
+JSON
+json
 lang
 LaTeX
 latexmk
@@ -76,3 +82,5 @@ wordlist
 xetex
 xindy
 xml
+YAML
+yaml
