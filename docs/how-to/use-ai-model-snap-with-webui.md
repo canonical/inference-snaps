@@ -29,7 +29,7 @@ This can cause an unnecessary delay.
 We recommend disabling the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
 1. Open settings in Open WebUI and choose **Admin Settings**.
 2. In the **Admin Panel**, go to **Settings** > **Connections**.
-3. Then disable **OpenAI API** and **Ollama API**. Click **Save**.
+3. Disable **OpenAI API** and **Ollama API** and save the changes.
 ```
 
 
