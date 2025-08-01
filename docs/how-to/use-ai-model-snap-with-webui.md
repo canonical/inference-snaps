@@ -12,7 +12,7 @@ First open the Open WebUI interface on your browser.
 The default address is `http://localhost:8081`.
 After logging in:
 
-1. Click on your account user icon.
+1. Click on your user account icon.
 2. Select **Settings** from the dropdown menu.
 3. Select **Connections** from the left sidebar.
 4. Click on the **+** button to add a new connection.
