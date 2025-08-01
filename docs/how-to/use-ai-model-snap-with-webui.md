@@ -30,6 +30,8 @@ If you have Ollama installed, a few addtional steps are required after configuri
 2. Then disable Ollama API.
 
 In case you're using [OpenVINO™ Model Server][open-vino-model-server] also disable OpenAI API option.
+Also, for OpenVINO™ Model Server, model ID needs to be set.
+Check out [Use an AI model snap via its OpenAI API](use-network-api.md) to know how to get the model ID.
 ```
 
 
