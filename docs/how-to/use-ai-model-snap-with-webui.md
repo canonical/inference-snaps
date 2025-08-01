@@ -18,7 +18,7 @@ After logging in:
 4. Click on the **+** button to add a new connection.
 5. In the **URL** field, enter the URL of the AI model snap you want to use.
   To identify the URL of the AI model snap, see the [Use an AI model snap via its OpenAI API](use-network-api.md) guide.
-6. The API key field is demanded by the tool, although it is not used by the AI model snaps.
+6. The API key field is required, but it is not used by the AI model snaps.
   You can enter any value here, such as `dummy-key`.
 7. Click on **Save** to save the connection, and **Save** again to save the settings.
 
