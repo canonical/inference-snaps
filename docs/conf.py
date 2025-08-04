@@ -220,8 +220,8 @@ redirects = {}
 # TODO: Remove or adjust the ACME entry after you update the contributing guide
 
 linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    r'http://localhost:\d+/',
+    "http://127.0.0.1:*",
+    "http://localhost:*",
     "https://github.com/canonical/ACME/*"
     ]
 

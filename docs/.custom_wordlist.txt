@@ -44,7 +44,9 @@ npu
 npm's
 NPUs
 Nvidia
+Ollama
 OpenAI
+OpenVINO
 optimized
 otf
 PCI
@@ -73,6 +75,7 @@ userspace
 VMs
 vRAM
 WCAG
+WebUI
 whitespace
 whitespaces
 wordlist

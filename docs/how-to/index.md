@@ -19,8 +19,13 @@ Use the snap:
 use-network-api
 ```
 
-Use the snap with your IDE:
+Use the snap with web clients:
+```{toctree}
+:maxdepth: 1
+use-ai-model-snap-with-webui
+```
 
+Use the snap with your IDE:
 ```{toctree}
 :maxdepth: 1
 use-ai-model-snap-in-ide
