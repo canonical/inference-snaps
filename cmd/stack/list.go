@@ -6,8 +6,12 @@ import (
 	"sort"
 	"strings"
 
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"
 	"github.com/olekukonko/tablewriter/tw"
@@ -61,7 +65,7 @@ func printStacks(stacks []types.ScoredStack, includeIncompatible bool) error {
 
 	var headers []string
 	if includeIncompatible {
-		headers = []string{"Stack Name", "Vendor", "Description", "Compatible", "Notes"}
+		headers = []string{"Stack Name", "Vendor", "Description", "Compatible"}
 	} else {
 		headers = []string{"Stack Name", "Vendor", "Description"}
 	}
@@ -81,14 +85,18 @@ func printStacks(stacks []types.ScoredStack, includeIncompatible bool) error {
 
 		if includeIncompatible {
 			// Compatible column is: yes|no|grade
+			compatibleStr := ""
 			if stack.Compatible && stack.Grade == "stable" {
-				stackInfo = append(stackInfo, "yes")
+				compatibleStr = "Yes"
 			} else if stack.Compatible {
-				stackInfo = append(stackInfo, stack.Grade)
+				compatibleStr = cases.Title(language.Und).String(stack.Grade)
 			} else {
-				stackInfo = append(stackInfo, "no")
+				compatibleStr = "No"
 			}
-			stackInfo = append(stackInfo, strings.Join(stack.Notes, ", "))
+			if len(stack.Notes) > 0 {
+				compatibleStr = compatibleStr + "\n" + strings.Join(stack.Notes, ", ")
+			}
+			stackInfo = append(stackInfo, compatibleStr)
 			data = append(data, stackInfo)
 		} else if stack.Compatible && stack.Grade == "stable" {
 			data = append(data, stackInfo)
@@ -97,18 +105,88 @@ func printStacks(stacks []types.ScoredStack, includeIncompatible bool) error {
 
 	if len(data) == 1 {
 		if includeIncompatible {
-			return fmt.Errorf("no stacks found")
+			_, err := fmt.Fprintln(os.Stderr, "No stacks found.")
+			return err
 		} else {
-			return fmt.Errorf("no compatible stacks found")
+			_, err := fmt.Fprintln(os.Stderr, "No compatible stacks found.")
+			return err
 		}
 	}
 
+	// Configure colors: green headers, cyan/magenta rows, yellow footer
+	colorCfg := renderer.ColorizedConfig{
+		Header: renderer.Tint{
+			FG: renderer.Colors{color.Bold}, // Green bold headers
+			BG: renderer.Colors{},
+		},
+		Column: renderer.Tint{
+			FG: renderer.Colors{color.Reset},
+			BG: renderer.Colors{color.Reset},
+		},
+		Footer: renderer.Tint{
+			FG: renderer.Colors{color.Reset, color.Bold},
+			BG: renderer.Colors{color.Reset},
+		},
+		//Border:    renderer.Tint{FG: renderer.Colors{color.Reset}}, // White borders
+		//Separator: renderer.Tint{FG: renderer.Colors{color.Reset}}, // White separators
+		Borders: tw.BorderNone,
+		Settings: tw.Settings{
+			Separators: tw.Separators{ShowHeader: tw.Off, ShowFooter: tw.Off, BetweenRows: tw.Off, BetweenColumns: tw.Off},
+			Lines: tw.Lines{
+				ShowTop:        tw.Off,
+				ShowBottom:     tw.Off,
+				ShowHeaderLine: tw.Off,
+				ShowFooterLine: tw.Off,
+			},
+			CompactMode: tw.On,
+		},
+	}
+
+	tableMaxWidth := 80
+	if includeIncompatible {
+		tableMaxWidth = 120
+	}
+
 	table := tablewriter.NewTable(os.Stdout,
-		tablewriter.WithRenderer(renderer.NewBlueprint(tw.Rendition{
-			Settings: tw.Settings{Separators: tw.Separators{BetweenRows: tw.On}},
-		})),
-		tablewriter.WithMaxWidth(80),
+		tablewriter.WithRenderer(renderer.NewColorized(colorCfg)),
+		tablewriter.WithConfig(tablewriter.Config{
+			MaxWidth: tableMaxWidth,
+			Header: tw.CellConfig{
+				Alignment: tw.CellAlignment{Global: tw.AlignLeft},
+				Formatting: tw.CellFormatting{
+					AutoWrap:   tw.WrapNone,
+					MergeMode:  tw.MergeNone,
+					AutoFormat: tw.On,
+				},
+				Padding: tw.CellPadding{
+					Global: tw.Padding{
+						Left:      tw.Space, // Bug: making this empty causes the last char in a field to be cut off
+						Right:     tw.Space,
+						Top:       tw.Empty,
+						Bottom:    tw.Empty,
+						Overwrite: true,
+					},
+				},
+			},
+			Row: tw.CellConfig{
+				Formatting: tw.CellFormatting{AutoWrap: tw.WrapNormal}, // Wrap long content
+				Alignment:  tw.CellAlignment{Global: tw.AlignLeft},     // Left-align rows
+				Padding: tw.CellPadding{
+					Global: tw.Padding{
+						Left:      tw.Space, // Bug: making this empty causes the last char in a field to be cut off
+						Right:     tw.Space,
+						Top:       tw.Empty,
+						Bottom:    tw.Space,
+						Overwrite: true,
+					},
+				},
+			},
+			Footer: tw.CellConfig{
+				Alignment: tw.CellAlignment{Global: tw.AlignRight},
+			},
+		}),
 	)
+
 	table.Header(data[0])
 	err := table.Bulk(data[1:])
 	if err != nil {
