@@ -14,9 +14,9 @@ func init() {
 		Use:   "load",
 		Short: "Initialize snap configurations",
 		// Long:  "",
-		GroupID: "stacks",
-		Args:    cobra.NoArgs,
-		RunE:    load,
+		Hidden: true, // command for internal use
+		Args:   cobra.NoArgs,
+		RunE:   load,
 	}
 	rootCmd.AddCommand(cmd)
 }
