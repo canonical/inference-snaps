@@ -1,0 +1,3 @@
+Filesystem                                                1-blocks         Used   Available Capacity Mounted on
+/dev/mapper/luks-410a243a-191a-4db7-b6b6-ef920085fd64 498347700224 411863101440 61093965824      88% /
+/dev/mapper/luks-410a243a-191a-4db7-b6b6-ef920085fd64 498347700224 411863101440 61093965824      88% /
