@@ -15,6 +15,7 @@ var devices = []string{
 	"hp-pavilion-15-cs-3037nl",
 	"hp-proliant-rl300-gen11-altra",
 	"hp-proliant-rl300-gen11-altra-max",
+	"hp-zbook-power-16-inch-g11",
 	"i7-2600k+arc-a580",
 	"mustang",
 	"raspberry-pi-5",

@@ -27,6 +27,7 @@ var stackTestSets = map[string]stackTestSet{
 			"hp-pavilion-15-cs-3037nl",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"hp-zbook-power-16-inch-g11",
 			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
@@ -51,6 +52,7 @@ var stackTestSets = map[string]stackTestSet{
 			"ampere-one-x-banshee-8",
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
+			"hp-zbook-power-16-inch-g11",
 			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
@@ -77,6 +79,7 @@ var stackTestSets = map[string]stackTestSet{
 		InvalidDevices: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
+			"hp-zbook-power-16-inch-g11",
 			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
@@ -92,6 +95,7 @@ var stackTestSets = map[string]stackTestSet{
 		ValidDevices: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
+			"hp-zbook-power-16-inch-g11",
 			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
@@ -116,6 +120,7 @@ var stackTestSets = map[string]stackTestSet{
 		ValidDevices: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
+			"hp-zbook-power-16-inch-g11",
 			"i7-1165G7",
 			"i7-10510U",
 			"mustang",
@@ -148,6 +153,7 @@ var stackTestSets = map[string]stackTestSet{
 			"asus-ux301l",
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"hp-zbook-power-16-inch-g11",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
 			"mustang",
@@ -162,6 +168,7 @@ var stackTestSets = map[string]stackTestSet{
 
 	"example-memory": {
 		ValidDevices: []string{
+			"hp-zbook-power-16-inch-g11",
 			"mustang",
 			"system76-addw4",
 			"xps13-9350",
@@ -194,6 +201,7 @@ var stackTestSets = map[string]stackTestSet{
 			"hp-pavilion-15-cs-3037nl", // Not enough vram
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
+			"hp-zbook-power-16-inch-g11", // nvidia drivers not installed
 			"i7-1165G7",
 			"i7-2600k+arc-a580",
 			"i7-10510U",
@@ -209,6 +217,7 @@ var stackTestSets = map[string]stackTestSet{
 
 	"intel-gpu": {
 		ValidDevices: []string{
+			"hp-zbook-power-16-inch-g11",
 			"i7-2600k+arc-a580",
 			"mustang",
 			"system76-addw4",
@@ -233,6 +242,7 @@ var stackTestSets = map[string]stackTestSet{
 
 	"intel-npu": {
 		ValidDevices: []string{
+			"hp-zbook-power-16-inch-g11",
 			"xps13-9350",
 		},
 		InvalidDevices: []string{

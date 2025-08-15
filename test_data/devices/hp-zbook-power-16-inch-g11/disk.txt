@@ -1,0 +1,3 @@
+Filesystem                             1-blocks        Used    Available Capacity Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 1003736440832 76574400512 876099534848       9% /
+/dev/mapper/ubuntu--vg-ubuntu--lv 1003736440832 76574400512 876099534848       9% /
