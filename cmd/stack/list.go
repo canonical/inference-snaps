@@ -23,9 +23,10 @@ func init() {
 		Use:   "list",
 		Short: "List available stacks",
 		// Long:  "",
-		GroupID: "stacks",
-		Args:    cobra.NoArgs,
-		RunE:    list,
+		GroupID:           "stacks",
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              list,
 	}
 
 	// flags

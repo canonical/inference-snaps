@@ -14,9 +14,10 @@ func init() {
 		Use:   "load",
 		Short: "Initialize snap configurations",
 		// Long:  "",
-		Hidden: true, // command for internal use
-		Args:   cobra.NoArgs,
-		RunE:   load,
+		Hidden:            true, // command for internal use
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              load,
 	}
 	rootCmd.AddCommand(cmd)
 }

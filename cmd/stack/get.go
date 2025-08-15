@@ -12,9 +12,10 @@ func init() {
 		Use:   "get <key>",
 		Short: "Print configuration option",
 		// Long:  "",
-		GroupID: "config",
-		Args:    cobra.ExactArgs(1),
-		RunE:    get,
+		GroupID:           "config",
+		Args:              cobra.ExactArgs(1),
+		ValidArgsFunction: cobra.NoFileCompletions, // To do
+		RunE:              get,
 	}
 	rootCmd.AddCommand(cmd)
 }

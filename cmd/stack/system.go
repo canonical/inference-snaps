@@ -10,11 +10,12 @@ import (
 
 func init() {
 	cmd := &cobra.Command{
-		Use:   "system",
-		Short: "Query system info",
-		Long:  "Query information about the hardware and available resources",
-		Args:  cobra.NoArgs,
-		RunE:  system,
+		Use:               "system",
+		Short:             "Query system info",
+		Long:              "Query information about the hardware and available resources",
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              system,
 	}
 
 	rootCmd.AddCommand(cmd)

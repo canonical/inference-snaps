@@ -10,12 +10,13 @@ import (
 
 func init() {
 	cmd := &cobra.Command{
-		Use:     "chat",
-		Short:   "Start the chat CLI",
-		Long:    "Start the chat CLI for interacting with the server",
-		GroupID: "basics",
-		Args:    cobra.NoArgs,
-		RunE:    chat,
+		Use:               "chat",
+		Short:             "Start the chat CLI",
+		Long:              "Start the chat CLI for interacting with the server",
+		GroupID:           "basics",
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              chat,
 	}
 	rootCmd.AddCommand(cmd)
 }

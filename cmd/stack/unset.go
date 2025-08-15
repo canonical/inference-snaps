@@ -12,9 +12,10 @@ func init() {
 		Use:   "unset <key>",
 		Short: "Unset configuration option",
 		// Long:  "",
-		GroupID: "config",
-		Args:    cobra.ExactArgs(1),
-		RunE:    unset,
+		GroupID:           "config",
+		Args:              cobra.ExactArgs(1),
+		ValidArgsFunction: cobra.NoFileCompletions, // To do
+		RunE:              unset,
 	}
 	rootCmd.AddCommand(cmd)
 }

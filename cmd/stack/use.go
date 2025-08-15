@@ -29,8 +29,9 @@ func init() {
 		GroupID: "stacks",
 		// stack use <stack> requires 1 argument
 		// stack use --auto does not support any arguments
-		Args: cobra.MaximumNArgs(1),
-		RunE: use,
+		Args:              cobra.MaximumNArgs(1),
+		ValidArgsFunction: useValidArgs,
+		RunE:              use,
 	}
 
 	// flags
@@ -38,6 +39,33 @@ func init() {
 	cmd.PersistentFlags().BoolVar(&useAssumeYes, "assume-yes", false, "assume yes for downloading new components")
 
 	rootCmd.AddCommand(cmd)
+}
+
+func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	stacksJson, err := snapctl.Get("stacks").Document().Run()
+	if err != nil {
+		fmt.Printf("Error loading stacks: %v", err)
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	stacks, err := parseStacksJson(stacksJson)
+	if err != nil {
+		fmt.Printf("Error parsing stacks: %v", err)
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	var stackNames []cobra.Completion
+	for i := range stacks {
+		if stacks[i].Compatible {
+			stackNames = append(stackNames, stacks[i].Name)
+		}
+	}
+	if len(stackNames) == 0 {
+		// No stacks flagged as compatible
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	return stackNames, cobra.ShellCompDirectiveNoFileComp
 }
 
 func use(_ *cobra.Command, args []string) error {

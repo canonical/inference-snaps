@@ -16,9 +16,10 @@ func init() {
 		Use:   "info <stack>",
 		Short: "Print information about a stack",
 		// Long:  "",
-		GroupID: "stacks",
-		Args:    cobra.ExactArgs(1),
-		RunE:    info,
+		GroupID:           "stacks",
+		Args:              cobra.ExactArgs(1),
+		ValidArgsFunction: infoValidArgs,
+		RunE:              info,
 	}
 	rootCmd.AddCommand(cmd)
 }
@@ -26,6 +27,28 @@ func init() {
 func info(_ *cobra.Command, args []string) error {
 	return stackInfo(args[0])
 }
+
+func infoValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	stacksJson, err := snapctl.Get("stacks").Document().Run()
+	if err != nil {
+		fmt.Printf("Error loading stacks: %v", err)
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	stacks, err := parseStacksJson(stacksJson)
+	if err != nil {
+		fmt.Printf("Error parsing stacks: %v", err)
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	var stackNames []cobra.Completion
+	for i := range stacks {
+		stackNames = append(stackNames, stacks[i].Name)
+	}
+
+	return stackNames, cobra.ShellCompDirectiveNoSpace
+}
+
 func stackInfo(stackName string) error {
 	stackJson, err := snapctl.Get("stacks." + stackName).Document().Run()
 	if err != nil {
