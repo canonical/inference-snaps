@@ -13,7 +13,7 @@ env:
 
 jobs:
   test:
-    runs-on: [ self-hosted, amd64, Linux, noble, medium ]
+    runs-on: [ self-hosted, linux, amd64, medium, noble ]
 
     steps:
       - name: Checkout code
@@ -45,9 +45,9 @@ jobs:
       matrix:
         runs:
           - architecture: amd64
-            runner: [ self-hosted, amd64, Linux, noble, medium ]
+            runner: [ self-hosted, linux, amd64, medium, noble ]
           - architecture: arm64
-            runner: [ self-hosted, ARM64, Linux, noble, medium ]
+            runner: [ self-hosted, linux, arm64, medium, noble ]
     runs-on: ${{ matrix.runs.runner }}
 
     steps:
