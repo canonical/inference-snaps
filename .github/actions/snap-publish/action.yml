@@ -1,0 +1,43 @@
+name: Publish snap
+description: >
+  Publish a snap and its components to a channel in the Snap Store.
+  When triggered from a PR, the channel is set to `latest/edge/pr-<pr-num>`,
+  otherwise, it is set to `latest/edge/<short-git-hash>`.
+
+inputs:
+  store-credentials:
+    description: >
+      The Snapcraft store credentials to use
+
+      This parameter is required to publish a snap and
+      its components to Snap Store.
+    default: ''
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # Requires store crendentials secret set.
+    # Check README.md for steps on how to generate it and use it in workflows.
+    - name: Publish snap
+      shell: bash
+      env:
+        SNAPCRAFT_STORE_CREDENTIALS: ${{ inputs.store-credentials }}
+      run: |
+        if [ -z "$SNAPCRAFT_STORE_CREDENTIALS" ]; then
+          echo "SNAPCRAFT_STORE_CREDENTIALS is not set."
+          exit 1
+        fi
+
+        channel="latest/edge/$(git rev-parse --short HEAD)"
+        echo "Branch name: ${{ github.ref_name }}"
+        echo "Event number: ${{ github.event.number }}"
+
+        if [ -n "${{ github.event.number }}" ]; then
+          echo "Triggered from a PR"
+          channel="latest/edge/pr-${{ github.event.number }}"
+        fi
+
+        echo "Uploading to channel: $channel"
+
+        "${{ github.action_path }}/upload.sh" "$channel"
