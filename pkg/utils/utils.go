@@ -23,6 +23,20 @@ func FmtGigabytes(bytes uint64) string {
 	return fmt.Sprintf("%.0fGB", float64(bytes)/1024/1024/1024)
 }
 
+// FmtBytes converts bytes to a printable string with unit
+func FmtBytes(bytes uint64) string {
+	if bytes > 1024*1024*1024*1024 {
+		return fmt.Sprintf("%.1fTB", float64(bytes)/1024/1024/1024/1024)
+	} else if bytes > 1024*1024*1024 {
+		return fmt.Sprintf("%.1fGB", float64(bytes)/1024/1024/1024)
+	} else if bytes > 1024*1024 {
+		return fmt.Sprintf("%.1fMB", float64(bytes)/1024/1024)
+	} else if bytes > 1024 {
+		return fmt.Sprintf("%.1fKB", float64(bytes)/1024)
+	}
+	return fmt.Sprintf("%d", bytes)
+}
+
 func StringToBytes(sizeString string) (uint64, error) {
 	var sizeBytes uint64
 	var scaling uint64 = 1

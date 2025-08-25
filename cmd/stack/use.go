@@ -11,7 +11,9 @@ import (
 	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/stack-utils/pkg/hardware_info"
 	"github.com/canonical/stack-utils/pkg/selector"
+	"github.com/canonical/stack-utils/pkg/snap_store"
 	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
@@ -178,10 +180,26 @@ func useStack(stackName string, assumeYes bool) error {
 		return fmt.Errorf("error checking installed components: %v", err)
 	}
 	if len(components) > 0 {
-		// ask user if they want to continue
+		// Look up component sizes from the snap store
+		componentSizes, err := snap_store.ComponentSizes()
+		if err != nil {
+			// If component size lookup failed, continue but log the error
+			fmt.Fprintf(os.Stderr, "Error getting component sizes: %v\n", err)
+		}
+
+		// Format list of components, adding size if it is known
+		var componentList []string
+		for _, componentName := range components {
+			line := fmt.Sprintf("\t%s", componentName)
+			if size, ok := componentSizes[componentName]; ok {
+				line += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
+			}
+			componentList = append(componentList, line)
+		}
+
 		fmt.Println("Need to download and install the following components:")
-		for _, component := range components {
-			fmt.Printf("\t%s\n", component)
+		for _, component := range componentList {
+			fmt.Println(component)
 		}
 		fmt.Println("This can take a long time to complete.")
 
