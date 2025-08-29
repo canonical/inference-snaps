@@ -36,7 +36,7 @@ func (hi *HexInt) UnmarshalYAML(value *yaml.Node) error {
 }
 
 func (hi HexInt) MarshalYAML() (interface{}, error) {
-	return fmt.Sprintf("0x%x", hi), nil
+	return fmt.Sprintf("0x%X", hi), nil
 }
 
 func (hi *HexInt) UnmarshalJSON(data []byte) error {
@@ -61,6 +61,6 @@ func (hi *HexInt) UnmarshalJSON(data []byte) error {
 }
 
 func (hi HexInt) MarshalJSON() ([]byte, error) {
-	hexString := fmt.Sprintf("\"%x\"", int(hi))
+	hexString := fmt.Sprintf("\"0x%0X\"", int(hi))
 	return []byte(hexString), nil
 }

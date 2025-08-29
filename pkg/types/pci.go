@@ -2,6 +2,7 @@ package types
 
 type PciDevice struct {
 	Slot                 string  `json:"slot"`
+	BusNumber            HexInt  `json:"bus_number"`
 	DeviceClass          HexInt  `json:"device_class"`
 	ProgrammingInterface *uint8  `json:"programming_interface,omitempty"`
 	VendorId             HexInt  `json:"vendor_id"`

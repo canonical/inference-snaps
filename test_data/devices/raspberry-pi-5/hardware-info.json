@@ -2,8 +2,8 @@
   "cpus": [
     {
       "architecture": "arm64",
-      "implementer_id": "41",
-      "part_number": "d0b",
+      "implementer_id": "0x41",
+      "part_number": "0xD0B",
       "features": [
         "fp",
         "asimd",
@@ -30,8 +30,8 @@
   },
   "disk": {
     "/": {
-      "total": 4161638400,
-      "avail": 4161638400
+      "total": 62270910464,
+      "avail": 40666140672
     },
     "/var/lib/snapd/snaps": {
       "total": 62270910464,
@@ -41,19 +41,21 @@
   "pci": [
     {
       "slot": "0000:00:00.0",
-      "device_class": "604",
+      "bus_number": "0x0",
+      "device_class": "0x604",
       "programming_interface": 0,
-      "vendor_id": "14e4",
-      "device_id": "2712",
+      "vendor_id": "0x14E4",
+      "device_id": "0x2712",
       "vendor_name": "Broadcom Inc. and subsidiaries",
       "device_name": "BCM2712 PCIe Bridge"
     },
     {
       "slot": "0000:01:00.0",
-      "device_class": "200",
+      "bus_number": "0x1",
+      "device_class": "0x200",
       "programming_interface": 0,
-      "vendor_id": "1de4",
-      "device_id": "1",
+      "vendor_id": "0x1DE4",
+      "device_id": "0x1",
       "vendor_name": "Raspberry Pi Ltd",
       "device_name": "RP1 PCIe 2.0 South Bridge"
     }

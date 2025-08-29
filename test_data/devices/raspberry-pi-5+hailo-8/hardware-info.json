@@ -2,8 +2,8 @@
   "cpus": [
     {
       "architecture": "arm64",
-      "implementer_id": "41",
-      "part_number": "d0b",
+      "implementer_id": "0x41",
+      "part_number": "0xD0B",
       "features": [
         "fp",
         "asimd",
@@ -30,8 +30,8 @@
   },
   "disk": {
     "/": {
-      "total": 4158599168,
-      "avail": 4158599168
+      "total": 30777720832,
+      "avail": 16953257984
     },
     "/var/lib/snapd/snaps": {
       "total": 30777720832,
@@ -41,40 +41,44 @@
   "pci": [
     {
       "slot": "0001:00:00.0",
-      "device_class": "604",
+      "bus_number": "0x0",
+      "device_class": "0x604",
       "programming_interface": 0,
-      "vendor_id": "14e4",
-      "device_id": "2712",
+      "vendor_id": "0x14E4",
+      "device_id": "0x2712",
       "vendor_name": "Broadcom Inc. and subsidiaries",
       "device_name": "BCM2712 PCIe Bridge"
     },
     {
       "slot": "0001:01:00.0",
-      "device_class": "b40",
+      "bus_number": "0x1",
+      "device_class": "0xB40",
       "programming_interface": 0,
-      "vendor_id": "1e60",
-      "device_id": "2864",
-      "subvendor_id": "1e60",
-      "subdevice_id": "2864",
+      "vendor_id": "0x1E60",
+      "device_id": "0x2864",
+      "subvendor_id": "0x1E60",
+      "subdevice_id": "0x2864",
       "vendor_name": "Hailo Technologies Ltd.",
       "device_name": "Hailo-8 AI Processor",
       "subvendor_name": "Hailo Technologies Ltd."
     },
     {
       "slot": "0002:00:00.0",
-      "device_class": "604",
+      "bus_number": "0x0",
+      "device_class": "0x604",
       "programming_interface": 0,
-      "vendor_id": "14e4",
-      "device_id": "2712",
+      "vendor_id": "0x14E4",
+      "device_id": "0x2712",
       "vendor_name": "Broadcom Inc. and subsidiaries",
       "device_name": "BCM2712 PCIe Bridge"
     },
     {
       "slot": "0002:01:00.0",
-      "device_class": "200",
+      "bus_number": "0x1",
+      "device_class": "0x200",
       "programming_interface": 0,
-      "vendor_id": "1de4",
-      "device_id": "1",
+      "vendor_id": "0x1DE4",
+      "device_id": "0x1",
       "vendor_name": "Raspberry Pi Ltd",
       "device_name": "RP1 PCIe 2.0 South Bridge"
     }

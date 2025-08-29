@@ -34,6 +34,16 @@ func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevic
 			switch key {
 			case "Slot":
 				device.Slot = value
+				// Parse slot value into bus number: 0000:3b:00.0 -> 3B
+				parts := strings.Split(value, ":")
+				if len(parts) != 3 {
+					return nil, fmt.Errorf("unexpected format for pci slot: %s", value)
+				}
+				busNumber, err := strconv.ParseUint(parts[1], 16, 8)
+				if err != nil {
+					return nil, fmt.Errorf("cannot parse pci bus number: %s", parts[1])
+				}
+				device.BusNumber = types.HexInt(busNumber)
 			case "Class":
 				// e.g. 0x0300 for VGA controller
 				if class, err := strconv.ParseUint(value, 16, 16); err == nil {
