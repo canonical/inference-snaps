@@ -25,7 +25,7 @@ func TestGetFromFiles(t *testing.T) {
 			}
 
 			var hardwareInfo types.HwInfo
-			devicePath := "../../test_data/devices/" + device + "/"
+			devicePath := "../../test_data/machines/" + device + "/"
 			hardwareInfoData, err := os.ReadFile(devicePath + "hardware-info.json")
 			if err != nil {
 				t.Fatal(err)
@@ -64,4 +64,17 @@ func TestGetFromFiles(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDumpHwInfoFromFiles(t *testing.T) {
+	machine := "i5-3570k+arc-a580+gtx1080ti"
+	hwInfo, err := GetFromRawData(t, machine, true)
+	if err != nil {
+		t.Error(err)
+	}
+	jsonData, err := json.MarshalIndent(hwInfo, "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(string(jsonData))
 }

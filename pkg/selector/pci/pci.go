@@ -1,6 +1,8 @@
 package pci
 
 import (
+	"fmt"
+
 	"github.com/canonical/stack-utils/pkg/selector/weights"
 	"github.com/canonical/stack-utils/pkg/types"
 )
@@ -36,16 +38,22 @@ func checkPciDevice(stackDevice types.StackDevice, pciDevice types.PciDevice) (i
 		if match {
 			currentDeviceScore += weights.PciDeviceType
 		} else {
-			reasons = append(reasons, "pci device type mismatch")
+			reasons = append(reasons, fmt.Sprintf("pci device type mismatch: %s", stackDevice.Type))
 			return 0, reasons, nil
 		}
+	}
+
+	// Prefer dGPU above iGPU
+	// PCI devices on bus 0 are considered internal, and anything else external/discrete
+	if pciDevice.BusNumber > 0 {
+		currentDeviceScore += weights.PciDeviceExternal
 	}
 
 	if stackDevice.VendorId != nil {
 		if *stackDevice.VendorId == pciDevice.VendorId {
 			currentDeviceScore += weights.PciVendorId
 		} else {
-			reasons = append(reasons, "pci vendor id mismatch")
+			reasons = append(reasons, fmt.Sprintf("pci vendor id mismatch: %04x", *stackDevice.VendorId))
 			return 0, reasons, nil
 		}
 
@@ -54,7 +62,7 @@ func checkPciDevice(stackDevice types.StackDevice, pciDevice types.PciDevice) (i
 			if *stackDevice.DeviceId == pciDevice.DeviceId {
 				currentDeviceScore += weights.PciDeviceId
 			} else {
-				reasons = append(reasons, "no device with matching device id found")
+				reasons = append(reasons, fmt.Sprintf("pci device id mismatch: %04x", *stackDevice.DeviceId))
 				return 0, reasons, nil
 			}
 		}

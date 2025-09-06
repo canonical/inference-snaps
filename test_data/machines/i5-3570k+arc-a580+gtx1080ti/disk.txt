@@ -1,0 +1,3 @@
+Filesystem          1-blocks        Used    Available Capacity Mounted on
+/dev/sda2      1005867986944 92621611008 862075604992      10% /
+/dev/sda2      1005867986944 92621611008 862075604992      10% /

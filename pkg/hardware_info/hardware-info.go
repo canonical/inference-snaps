@@ -47,7 +47,7 @@ func Get(friendlyNames bool) (types.HwInfo, error) {
 func GetFromRawData(t *testing.T, device string, friendlyNames bool) (types.HwInfo, error) {
 	var hwInfo types.HwInfo
 
-	devicePath := "../../test_data/devices/" + device + "/"
+	devicePath := "../../test_data/machines/" + device + "/"
 
 	// memory
 	procMemInfo, err := os.ReadFile(devicePath + "meminfo.txt")

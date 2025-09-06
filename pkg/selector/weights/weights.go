@@ -5,6 +5,7 @@ const (
 	TpuVendor = 200
 
 	PciDevice            = 100
+	PciDeviceExternal    = 50
 	PciDeviceId          = 30
 	PciVendorId          = 20
 	PciDeviceType        = 10
@@ -12,7 +13,7 @@ const (
 	GpuComputeCapability = 10
 
 	CpuDevice = 10
-	CpuModel  = 3
-	CpuVendor = 2
+	CpuModel  = 8
+	CpuVendor = 6
 	CpuFlag   = 1
 )

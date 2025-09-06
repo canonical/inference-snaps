@@ -8,14 +8,14 @@ import (
 )
 
 func TestParseLsCpu(t *testing.T) {
-	devices, err := utils.SubDirectories("../../../test_data/devices")
+	machines, err := utils.SubDirectories("../../../test_data/machines")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	for _, device := range devices {
-		lsPciFile := "../../../test_data/devices/" + device + "/lspci.txt"
-		t.Run(device, func(t *testing.T) {
+	for _, machine := range machines {
+		lsPciFile := "../../../test_data/machines/" + machine + "/lspci.txt"
+		t.Run(machine, func(t *testing.T) {
 			_, err := os.Stat(lsPciFile)
 			if err != nil {
 				if os.IsNotExist(err) {

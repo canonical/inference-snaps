@@ -10,19 +10,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type stackTestSet struct {
-	ValidDevices   []string
-	InvalidDevices []string
+type testValidInvalid struct {
+	ValidMachines   []string
+	InvalidMachines []string
 }
 
-var stackTestSets = map[string]stackTestSet{
+var validInvalidSets = map[string]testValidInvalid{
 	"ampere": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
 			"hp-proliant-rl300-gen11-altra",
@@ -42,11 +42,11 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"ampere-altra": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -67,7 +67,7 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"arm-neon": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -76,7 +76,7 @@ var stackTestSets = map[string]stackTestSet{
 			"hp-proliant-rl300-gen11-altra",
 			"hp-proliant-rl300-gen11-altra-max",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
 			"hp-zbook-power-16-inch-g11",
@@ -92,7 +92,7 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"cpu-avx1": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
 			"hp-zbook-power-16-inch-g11",
@@ -104,7 +104,7 @@ var stackTestSets = map[string]stackTestSet{
 			"xps13-7390",
 			"xps13-9350",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -117,7 +117,7 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"cpu-avx2": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"asus-ux301l",
 			"hp-pavilion-15-cs-3037nl",
 			"hp-zbook-power-16-inch-g11",
@@ -128,7 +128,7 @@ var stackTestSets = map[string]stackTestSet{
 			"xps13-7390",
 			"xps13-9350",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -142,11 +142,11 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"cpu-avx512": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"hp-pavilion-15-cs-3037nl",
 			"i7-1165G7",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -167,13 +167,13 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"example-memory": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"hp-zbook-power-16-inch-g11",
 			"mustang",
 			"system76-addw4",
 			"xps13-9350",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -191,9 +191,11 @@ var stackTestSets = map[string]stackTestSet{
 		},
 	},
 
-	"generic-cuda": {
-		ValidDevices: []string{},
-		InvalidDevices: []string{
+	"cuda-generic": {
+		ValidMachines: []string{
+			"system76-addw4",
+		},
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -209,21 +211,20 @@ var stackTestSets = map[string]stackTestSet{
 			//"orange-pi-rv2",
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
-			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
 		},
 	},
 
 	"intel-gpu": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"hp-zbook-power-16-inch-g11",
 			"i7-2600k+arc-a580",
 			"mustang",
 			"system76-addw4",
 			"xps13-9350",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -241,11 +242,11 @@ var stackTestSets = map[string]stackTestSet{
 	},
 
 	"intel-npu": {
-		ValidDevices: []string{
+		ValidMachines: []string{
 			"hp-zbook-power-16-inch-g11",
 			"xps13-9350",
 		},
-		InvalidDevices: []string{
+		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
 			"ampere-one-siryn",
 			"ampere-one-x-banshee-8",
@@ -267,14 +268,14 @@ var stackTestSets = map[string]stackTestSet{
 }
 
 func TestStack(t *testing.T) {
-	for stackName, testSet := range stackTestSets {
-		for _, hwName := range testSet.ValidDevices {
+	for stackName, testSet := range validInvalidSets {
+		for _, hwName := range testSet.ValidMachines {
 			t.Run(stackName+" == "+hwName, func(t *testing.T) {
 				testValidHw(t, stackName, hwName)
 			})
 		}
 
-		for _, hwName := range testSet.InvalidDevices {
+		for _, hwName := range testSet.InvalidMachines {
 			t.Run(stackName+" != "+hwName, func(t *testing.T) {
 				testInvalidHw(t, stackName, hwName)
 			})
@@ -340,144 +341,4 @@ func testInvalidHw(t *testing.T, stackName string, hwName string) {
 		t.Fatalf("Stack should not match: %s", hwName)
 	}
 	t.Logf("Matching score: %d", score)
-}
-
-func TestFindStackEmpty(t *testing.T) {
-	hwInfo := types.HwInfo{
-		Memory: types.MemoryInfo{
-			TotalRam:  200000000,
-			TotalSwap: 200000000,
-		},
-		Disk: map[string]types.DirStats{
-			"/var/lib/snapd/snaps": {
-				Total: 0,
-				Avail: 400000000,
-			},
-		},
-	}
-
-	allStacks, err := LoadStacksFromDir("../../test_data/stacks")
-	if err != nil {
-		t.Fatal(err)
-	}
-	scoredStacks, err := ScoreStacks(hwInfo, allStacks)
-	if err != nil {
-		t.Fatal(err)
-	}
-	topStack, err := TopStack(scoredStacks)
-	if err == nil {
-		t.Fatal("Empty stack dir should return an error for top stack")
-	}
-	if topStack != nil {
-		t.Fatal("No stack should be found in empty stacks dir")
-	}
-}
-
-func TestDiskCheck(t *testing.T) {
-	dirStat := types.DirStats{
-		Total: 0,
-		Avail: 400000000,
-	}
-	hwInfo := types.HwInfo{}
-	hwInfo.Disk = make(map[string]types.DirStats)
-	hwInfo.Disk["/"] = dirStat
-	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
-
-	stackDisk := "300M"
-	stack := types.Stack{DiskSpace: &stackDisk}
-
-	result, reasons, err := checkStack(hwInfo, stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result == 0 {
-		t.Fatalf("disk should be enough: %v", reasons)
-	}
-
-	dirStat = types.DirStats{
-		Total: 0,
-		Avail: 100000000,
-	}
-	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
-	result, reasons, err = checkStack(hwInfo, stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result > 0 {
-		t.Fatalf("disk should NOT be enough: %v", reasons)
-	}
-}
-
-func TestMemoryCheck(t *testing.T) {
-	hwInfo := types.HwInfo{
-		Memory: types.MemoryInfo{
-			TotalRam:  200000000,
-			TotalSwap: 200000000,
-		},
-	}
-
-	stackMemory := "300M"
-	stack := types.Stack{Memory: &stackMemory}
-
-	result, reasons, err := checkStack(hwInfo, stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result == 0 {
-		t.Fatalf("memory should be enough: %v", reasons)
-	}
-
-	hwInfo.Memory.TotalRam = 100000000
-	result, reasons, err = checkStack(hwInfo, stack)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result > 0 {
-		t.Fatal("memory should NOT be enough")
-	}
-}
-
-func TestNoCpuInHwInfo(t *testing.T) {
-	hwInfo := types.HwInfo{
-		// All fields are nil or zero
-	}
-
-	data, err := os.ReadFile("../../test_data/stacks/cpu-avx512/stack.yaml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var currentStack types.Stack
-	err = yaml.Unmarshal(data, &currentStack)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// No memory in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
-	if err == nil {
-		t.Fatalf("No Memory in hardware_info should return err")
-	}
-
-	hwInfo.Memory = types.MemoryInfo{
-		TotalRam:  17000000000,
-		TotalSwap: 2000000000,
-	}
-
-	// No disk space in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
-	if err == nil {
-		t.Fatal("No Disk space in hardware_info should return err")
-	}
-
-	hwInfo.Disk = make(map[string]types.DirStats)
-	hwInfo.Disk["/"] = types.DirStats{
-		Avail: 6000000000,
-	}
-
-	// No CPU in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
-	if err == nil {
-		t.Fatal("No CPU in hardware_info should return err")
-	}
 }

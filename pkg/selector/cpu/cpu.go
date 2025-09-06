@@ -21,46 +21,67 @@ iterateCpus:
 	for _, cpu := range cpus {
 		cpuScore := weights.CpuDevice
 
-		// amd64 manufacturer ID
-		if stackDevice.ManufacturerId != nil {
-			if *stackDevice.ManufacturerId == cpu.ManufacturerId {
-				cpuScore += weights.CpuVendor // vendor matched
+		// architecture
+		if stackDevice.Architecture != nil {
+			if *stackDevice.Architecture == cpu.Architecture {
+				// architecture matches - no additional weight
 			} else {
-				reasons = append(reasons, fmt.Sprintf("Manufacturer ID does not match: %s = %s", *stackDevice.ManufacturerId, cpu.ManufacturerId))
+				reasons = append(reasons, fmt.Sprintf("cpu architecture mismatch: %s", *stackDevice.Architecture))
 				continue
 			}
 		}
+
+		/*
+			amd64
+		*/
+
+		// amd64 manufacturer ID
+		if stackDevice.ManufacturerId != nil {
+			if *stackDevice.ManufacturerId == cpu.ManufacturerId {
+				cpuScore += weights.CpuVendor
+			} else {
+				reasons = append(reasons, fmt.Sprintf("cpu manufacturer id mismatch: %s", *stackDevice.ManufacturerId))
+				continue
+			}
+		}
+
+		// amd64 flags
+		for _, flag := range stackDevice.Flags {
+			if !slices.Contains(cpu.Flags, flag) {
+				reasons = append(reasons, fmt.Sprintf("cpu flag not found: %s", flag))
+				continue iterateCpus
+			}
+			cpuScore += weights.CpuFlag
+		}
+
+		/*
+			arm64
+		*/
 
 		// arm64 implementer ID
 		if stackDevice.ImplementerId != nil {
 			if *stackDevice.ImplementerId == cpu.ImplementerId {
 				cpuScore += weights.CpuVendor
 			} else {
-				reasons = append(reasons, fmt.Sprintf("Implementer ID does not match: %x = %x", *stackDevice.ImplementerId, cpu.ImplementerId))
+				reasons = append(reasons, fmt.Sprintf("cpu implementer id mismatch: %x", *stackDevice.ImplementerId))
 				continue
 			}
 		}
 
-		// TODO
-		// architecture
-		// cpu count
-		// Family list
-		// CpuModel list
-		// TODO stackDevice.ModelName - see #48
-
-		// Flags
-		for _, flag := range stackDevice.Flags {
-			if !slices.Contains(cpu.Flags, flag) {
-				reasons = append(reasons, fmt.Sprintf("Required flag not found: %s", flag))
-				continue iterateCpus
+		// arm64 part number
+		if stackDevice.PartNumber != nil {
+			if *stackDevice.PartNumber == cpu.PartNumber {
+				cpusScore += weights.CpuModel
+			} else {
+				reasons = append(reasons, fmt.Sprintf("cpu part number mismatch: %x", *stackDevice.PartNumber))
+				continue
 			}
-			cpuScore += weights.CpuFlag
 		}
 
-		// ARM Features
+		// arm64 features
 		for _, feature := range stackDevice.Features {
 			if !slices.Contains(cpu.Features, feature) {
-				reasons = append(reasons, fmt.Sprintf("Required feature not found: %s", feature))
+				reasons = append(reasons, fmt.Sprintf("cpu feature not found: %s", feature))
 				continue iterateCpus
 			}
 			cpuScore += weights.CpuFlag
