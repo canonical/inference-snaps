@@ -1,5 +1,5 @@
 {
-  "stacks.intel-gpu": {
+  "engines.intel-gpu": {
     "compatible": false,
     "components": [
       "openvino-model-server",

@@ -15,9 +15,4 @@ devices:
       # compute-capability: 5.0
 memory: 2G
 disk-space: 5G
-components:
-  - llamacpp-cuda
-  - model-q4-k-m-gguf
-configurations:
-  engine: llamacpp-cuda
-  model: model-q4-k-m-gguf
+

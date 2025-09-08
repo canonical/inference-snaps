@@ -1,5 +1,5 @@
 {
-  "stacks": {
+  "engines": {
     "ampere-altra": {
       "compatible": false,
       "components": [

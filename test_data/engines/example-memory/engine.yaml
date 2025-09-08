@@ -12,9 +12,4 @@ devices:
       manufacturer-id: GenuineIntel
 memory: 35G
 disk-space: 29G
-components:
-  - llamacpp
-  - model-f32-gguf
-configurations:
-  engine: llamacpp
-  model: model-f32-gguf
+

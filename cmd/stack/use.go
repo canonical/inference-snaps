@@ -23,12 +23,12 @@ var (
 	useAssumeYes bool
 )
 
-func init() {
+func addUseCommand() {
 	cmd := &cobra.Command{
-		Use:   "use [<stack>]",
-		Short: "Select a stack",
+		Use:   "use-engine [<engine>]",
+		Short: "Select an engine",
 		// Long:  "",
-		GroupID: "stacks",
+		GroupID: "engines",
 		// stack use <stack> requires 1 argument
 		// stack use --auto does not support any arguments
 		Args:              cobra.MaximumNArgs(1),
@@ -37,22 +37,22 @@ func init() {
 	}
 
 	// flags
-	cmd.PersistentFlags().BoolVar(&useAuto, "auto", false, "automatically select a compatible stack")
+	cmd.PersistentFlags().BoolVar(&useAuto, "auto", false, "automatically select a compatible engine")
 	cmd.PersistentFlags().BoolVar(&useAssumeYes, "assume-yes", false, "assume yes for downloading new components")
 
 	rootCmd.AddCommand(cmd)
 }
 
 func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	stacksJson, err := snapctl.Get("stacks").Document().Run()
+	stacksJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
-		fmt.Printf("Error loading stacks: %v", err)
+		fmt.Printf("Error loading engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
 	stacks, err := parseStacksJson(stacksJson)
 	if err != nil {
-		fmt.Printf("Error parsing stacks: %v", err)
+		fmt.Printf("Error parsing engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
@@ -74,19 +74,19 @@ func use(_ *cobra.Command, args []string) error {
 
 	if useAuto {
 		if len(args) != 0 {
-			return fmt.Errorf("cannot specify stack with --auto flag")
+			return fmt.Errorf("cannot specify both engine name and --auto flag")
 		}
 
 		scoredStacks, err := scoreStacks()
 		if err != nil {
-			return fmt.Errorf("error scoring stacks: %v", err)
+			return fmt.Errorf("error scoring engines: %v", err)
 		}
 
 		for _, stack := range scoredStacks {
 			if stack.Score == 0 {
 				fmt.Printf("❌ %s - not compatible: %s\n", stack.Name, strings.Join(stack.Notes, ", "))
 			} else if stack.Grade != "stable" {
-				fmt.Printf("⏺️ %s - score = %d, grade = %s\n", stack.Name, stack.Score, stack.Grade)
+				fmt.Printf("🟠 %s - score = %d, grade = %s\n", stack.Name, stack.Score, stack.Grade)
 			} else {
 				fmt.Printf("✅ %s - compatible, score = %d\n", stack.Name, stack.Score)
 			}
@@ -94,40 +94,40 @@ func use(_ *cobra.Command, args []string) error {
 
 		err = stacksToSnapOptions(scoredStacks)
 		if err != nil {
-			return fmt.Errorf("error saving scored stacks: %v", err)
+			return fmt.Errorf("error saving scored engines: %v", err)
 		}
 
-		fmt.Println("Automatically selecting a compatible stack ...")
+		fmt.Println("Automatically selecting a compatible engine ...")
 
 		selectedStack, err := selector.TopStack(scoredStacks)
 		if err != nil {
-			return fmt.Errorf("error finding top stack: %v", err)
+			return fmt.Errorf("error finding top engine: %v", err)
 		}
 
-		fmt.Printf("Selected stack for your hardware configuration: %s\n\n", selectedStack.Name)
+		fmt.Printf("Selected engine for your hardware configuration: %s\n\n", selectedStack.Name)
 
 		err = useStack(selectedStack.Name, useAssumeYes)
 		if err != nil {
-			return fmt.Errorf("failed to use stack: %s", err)
+			return fmt.Errorf("failed to use engine: %s", err)
 		}
 
 	} else {
 		if len(args) == 1 {
 			err := useStack(args[0], useAssumeYes)
 			if err != nil {
-				return fmt.Errorf("failed to use stack: %s", err)
+				return fmt.Errorf("failed to use engine: %s", err)
 			}
 		} else {
-			return fmt.Errorf("stack name not specified")
+			return fmt.Errorf("engine name not specified")
 		}
 	}
 	return nil
 }
 
 func scoreStacks() ([]types.ScoredStack, error) {
-	allStacks, err := selector.LoadStacksFromDir(stacksDir)
+	allStacks, err := selector.LoadManifestsFromDir(enginesDir)
 	if err != nil {
-		return nil, fmt.Errorf("error loading stacks: %v", err)
+		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
 
 	// get hardware info
@@ -139,7 +139,7 @@ func scoreStacks() ([]types.ScoredStack, error) {
 	// score stacks
 	scoredStacks, err := selector.ScoreStacks(hardwareInfo, allStacks)
 	if err != nil {
-		return nil, fmt.Errorf("error scoring stacks: %v", err)
+		return nil, fmt.Errorf("error scoring engines: %v", err)
 	}
 
 	return scoredStacks, nil
@@ -150,12 +150,12 @@ func stacksToSnapOptions(scoredStacks []types.ScoredStack) error {
 	for _, stack := range scoredStacks {
 		stackJson, err := json.Marshal(stack)
 		if err != nil {
-			return fmt.Errorf("error serializing stacks: %v", err)
+			return fmt.Errorf("error serializing engines: %v", err)
 		}
 
-		err = snapctl.Set("stacks."+stack.Name, string(stackJson)).Document().Run()
+		err = snapctl.Set("engines."+stack.Name, string(stackJson)).Document().Run()
 		if err != nil {
-			return fmt.Errorf("error setting stacks option: %v", err)
+			return fmt.Errorf("error setting engine option: %v", err)
 		}
 	}
 	return nil
@@ -165,14 +165,14 @@ func stacksToSnapOptions(scoredStacks []types.ScoredStack) error {
 useStack changes the stack that is used by the snap
 */
 func useStack(stackName string, assumeYes bool) error {
-	stackJson, err := snapctl.Get("stacks." + stackName).Document().Run()
+	stackJson, err := snapctl.Get("engines." + stackName).Document().Run()
 	if err != nil {
-		return fmt.Errorf("error loading stack: %v", err)
+		return fmt.Errorf("error loading engine: %v", err)
 	}
 
 	stack, err := parseStackJson(stackJson)
 	if err != nil {
-		return fmt.Errorf("error parsing stack: %v", err)
+		return fmt.Errorf("error parsing engine: %v", err)
 	}
 
 	components, err := missingComponents(stack.Components)
@@ -190,22 +190,22 @@ func useStack(stackName string, assumeYes bool) error {
 		// Format list of components, adding size if it is known
 		var componentList []string
 		for _, componentName := range components {
-			line := fmt.Sprintf("\t%s", componentName)
+			line := fmt.Sprintf("- %s", componentName)
 			if size, ok := componentSizes[componentName]; ok {
 				line += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
 			}
 			componentList = append(componentList, line)
 		}
 
-		fmt.Println("Need to download and install the following components:")
+		fmt.Println("Need to install the following components:")
 		for _, component := range componentList {
 			fmt.Println(component)
 		}
-		fmt.Println("This can take a long time to complete.")
 
 		// Only ask for confirmation of download if it is an interactive terminal
 		if !assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
-			if !confirmationPrompt("Are you sure you want to continue?") {
+			fmt.Println()
+			if !confirmationPrompt("Do you want to continue?") {
 				fmt.Println("Exiting. No changes applied.")
 				return nil
 			}
@@ -219,7 +219,7 @@ func useStack(stackName string, assumeYes bool) error {
 	// Even if a timeout occurs, the download is expected to complete in the background.
 	err = setStackOptions(stack)
 	if err != nil {
-		return fmt.Errorf("error setting stack options: %v", err)
+		return fmt.Errorf("error setting engine options: %v", err)
 	}
 
 	if len(components) > 0 {
@@ -272,9 +272,9 @@ func componentInstalled(component string) (bool, error) {
 
 func setStackOptions(stack types.ScoredStack) error {
 	// set stack config option
-	err := snapctl.Set("stack", stack.Name).Run()
+	err := snapctl.Set("engine", stack.Name).Run()
 	if err != nil {
-		return fmt.Errorf(`error setting snap option "stack": %v`, err)
+		return fmt.Errorf(`error setting snap option "engine": %v`, err)
 	}
 
 	// set other config options

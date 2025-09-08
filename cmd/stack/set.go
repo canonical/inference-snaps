@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+func addSetCommand() {
 	cmd := &cobra.Command{
 		Use:   "set <key>",
 		Short: "Set configuration option",

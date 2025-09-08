@@ -25,7 +25,7 @@ func TestFindStackEmpty(t *testing.T) {
 		},
 	}
 
-	allStacks, err := LoadStacksFromDir("../../test_data/stacks")
+	allStacks, err := LoadManifestsFromDir("../../test_data/engines")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		// All fields are nil or zero
 	}
 
-	data, err := os.ReadFile("../../test_data/stacks/cpu-avx512/stack.yaml")
+	data, err := os.ReadFile("../../test_data/engines/cpu-avx512/engine.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}

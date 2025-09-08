@@ -33,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	allStacks, err := selector.LoadStacksFromDir(stacksDir)
+	allStacks, err := selector.LoadManifestsFromDir(stacksDir)
 	if err != nil {
 		log.Fatal(err)
 	}

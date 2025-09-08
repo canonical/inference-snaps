@@ -13,14 +13,14 @@ func parseStacksJson(stacksJson string) ([]types.ScoredStack, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error parsing json: %v", err)
 	}
-	if stacksMap, ok := stacksOption["stacks"]; ok {
+	if stacksMap, ok := stacksOption["engines"]; ok {
 		var stacksSlice []types.ScoredStack
 		for _, stack := range stacksMap {
 			stacksSlice = append(stacksSlice, stack)
 		}
 		return stacksSlice, nil
 	}
-	return nil, fmt.Errorf("no stacks found")
+	return nil, fmt.Errorf("no engines found")
 }
 
 func parseStackJson(stackJson string) (types.ScoredStack, error) {
@@ -32,11 +32,11 @@ func parseStackJson(stackJson string) (types.ScoredStack, error) {
 	}
 
 	if len(stackOption) == 0 {
-		return types.ScoredStack{}, fmt.Errorf("stack not found")
+		return types.ScoredStack{}, fmt.Errorf("engine not found")
 	}
 
 	if len(stackOption) > 1 {
-		return types.ScoredStack{}, fmt.Errorf("only one stack expected in json")
+		return types.ScoredStack{}, fmt.Errorf("only one engine expected in json")
 	}
 
 	for _, stack := range stackOption {

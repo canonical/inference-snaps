@@ -38,18 +38,18 @@ func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
 	return &compatibleStacks[0], nil
 }
 
-func LoadStacksFromDir(stacksDir string) ([]types.Stack, error) {
-	var stacks []types.Stack
+func LoadManifestsFromDir(manifestsDir string) ([]types.Stack, error) {
+	var manifests []types.Stack
 
-	// Sanitise stack dir path
-	if !strings.HasSuffix(stacksDir, "/") {
-		stacksDir += "/"
+	// Sanitize dir path
+	if !strings.HasSuffix(manifestsDir, "/") {
+		manifestsDir += "/"
 	}
 
 	// Iterate stacks
-	files, err := os.ReadDir(stacksDir)
+	files, err := os.ReadDir(manifestsDir)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %s", stacksDir, err)
+		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 	}
 
 	for _, file := range files {
@@ -58,20 +58,20 @@ func LoadStacksFromDir(stacksDir string) ([]types.Stack, error) {
 			continue
 		}
 
-		data, err := os.ReadFile(stacksDir + file.Name() + "/stack.yaml")
+		data, err := os.ReadFile(manifestsDir + file.Name() + "/engine.yaml")
 		if err != nil {
-			return nil, fmt.Errorf("%s: %s", stacksDir+file.Name(), err)
+			return nil, fmt.Errorf("%s: %s", manifestsDir+file.Name(), err)
 		}
 
-		var currentStack types.Stack
-		err = yaml.Unmarshal(data, &currentStack)
+		var manifest types.Stack
+		err = yaml.Unmarshal(data, &manifest)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %s", stacksDir, err)
+			return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 		}
 
-		stacks = append(stacks, currentStack)
+		manifests = append(manifests, manifest)
 	}
-	return stacks, nil
+	return manifests, nil
 }
 
 func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.ScoredStack, error) {

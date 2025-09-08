@@ -280,9 +280,4 @@ devices:
 
 memory: 4G
 disk-space: 8G
-components:
-  - &engine openvino-model-server
-  - &model model-distill-qwen-7b-gpu-openvino
-configurations:
-  engine: *engine
-  model: *model
+

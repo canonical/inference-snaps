@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+func addChatCommand() {
 	cmd := &cobra.Command{
 		Use:               "chat",
 		Short:             "Start the chat CLI",

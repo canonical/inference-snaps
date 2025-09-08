@@ -29,7 +29,7 @@ func templateManifest() types.Stack {
 }
 
 func TestManifestFiles(t *testing.T) {
-	stacksDir := "../../test_data/stacks"
+	stacksDir := "../../test_data/engines"
 
 	entries, err := os.ReadDir(stacksDir)
 	if err != nil {
@@ -39,7 +39,7 @@ func TestManifestFiles(t *testing.T) {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			stack := entry.Name()
-			stackPath := filepath.Join(stacksDir, stack, "stack.yaml")
+			stackPath := filepath.Join(stacksDir, stack, "engine.yaml")
 			t.Run(stack, func(t *testing.T) {
 				err = Stack(stackPath)
 				if err != nil {

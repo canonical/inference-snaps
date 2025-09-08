@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	stacksDir = env.Snap() + "/stacks"
+	enginesDir = env.Snap() + "/engines"
 	// rootCmd is the base command
 	// It gets populated with subcommands via init functions
 	rootCmd = &cobra.Command{
@@ -18,6 +18,25 @@ var (
 )
 
 func main() {
+	cobra.EnableCommandSorting = false
+
+	rootCmd.AddGroup(&cobra.Group{ID: "basics", Title: "Basic Commands:"})
+	addStatusCommand()
+	addChatCommand()
+
+	rootCmd.AddGroup(&cobra.Group{ID: "config", Title: "Configuration Commands:"})
+	addGetCommand()
+	addSetCommand()
+	addUnsetCommand()
+
+	rootCmd.AddGroup(&cobra.Group{ID: "engines", Title: "Management Commands:"})
+	addListCommand()
+	addInfoCommand()
+	addUseCommand()
+
+	// other commands (help is added by default)
+	addDebugCommand()
+
 	// disable logging timestamps
 	log.SetFlags(0)
 
@@ -26,12 +45,6 @@ func main() {
 		rootCmd.Use = "app"
 	}
 
-	// Define groups for subcommands - used in usage help text
-	rootCmd.AddGroup(
-		&cobra.Group{ID: "basics", Title: "Basic Commands:"},
-		&cobra.Group{ID: "stacks", Title: "Stack Management Commands:"},
-		&cobra.Group{ID: "config", Title: "Configuration Commands:"},
-	)
 	// Hide the 'completion' command from help text
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 

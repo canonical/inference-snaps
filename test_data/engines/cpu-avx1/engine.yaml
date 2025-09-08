@@ -9,10 +9,4 @@ devices:
       flags: [sse4_2, avx]
 memory: 4G
 disk-space: 8G
-components:
-  - &engine llamacpp-legacy
-  - &model model-distill-qwen-7b-q4-k-m-gguf
-configurations:
-  engine: *engine
-  model: *model
-  http.base-path: v1
+

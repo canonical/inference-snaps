@@ -70,7 +70,7 @@ func TestTopStack(t *testing.T) {
 		t.Run(testSet.machine+"/"+testSet.topStack, func(t *testing.T) {
 			var stacks []types.Stack
 			for _, stackName := range testSet.stacks {
-				stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
+				stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
 				data, err := os.ReadFile(stackManifestFile)
 				if err != nil {
 					t.Fatal(err)

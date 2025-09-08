@@ -9,9 +9,4 @@ devices:
       flags: [sse4_2, f16c, fma, avx, avx2]
 memory: 8G
 disk-space: 5G
-components:
-  - llamacpp
-  - model-q4-k-m-gguf
-configurations:
-  engine: llamacpp
-  model: model-q4-k-m-gguf
+

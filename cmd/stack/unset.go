@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+func addUnsetCommand() {
 	cmd := &cobra.Command{
 		Use:   "unset <key>",
 		Short: "Unset configuration option",

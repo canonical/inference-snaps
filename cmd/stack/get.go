@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+func addGetCommand() {
 	cmd := &cobra.Command{
 		Use:   "get <key>",
 		Short: "Print configuration option",

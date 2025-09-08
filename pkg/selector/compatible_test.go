@@ -284,7 +284,7 @@ func TestStack(t *testing.T) {
 }
 
 func testValidHw(t *testing.T, stackName string, hwName string) {
-	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
+	stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
 
 	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {
@@ -315,7 +315,7 @@ func testValidHw(t *testing.T, stackName string, hwName string) {
 }
 
 func testInvalidHw(t *testing.T, stackName string, hwName string) {
-	stackManifestFile := fmt.Sprintf("../../test_data/stacks/%s/stack.yaml", stackName)
+	stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
 
 	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {

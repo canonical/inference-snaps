@@ -11,12 +11,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func init() {
+func addInfoCommand() {
 	cmd := &cobra.Command{
-		Use:   "info <stack>",
-		Short: "Print information about a stack",
+		Use:   "show-engine <engine>",
+		Short: "Print information about an engine",
 		// Long:  "",
-		GroupID:           "stacks",
+		GroupID:           "engines",
 		Args:              cobra.ExactArgs(1),
 		ValidArgsFunction: infoValidArgs,
 		RunE:              info,
@@ -29,15 +29,15 @@ func info(_ *cobra.Command, args []string) error {
 }
 
 func infoValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	stacksJson, err := snapctl.Get("stacks").Document().Run()
+	stacksJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
-		fmt.Printf("Error loading stacks: %v", err)
+		fmt.Printf("Error loading engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
 	stacks, err := parseStacksJson(stacksJson)
 	if err != nil {
-		fmt.Printf("Error parsing stacks: %v", err)
+		fmt.Printf("Error parsing engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
@@ -50,19 +50,19 @@ func infoValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobr
 }
 
 func stackInfo(stackName string) error {
-	stackJson, err := snapctl.Get("stacks." + stackName).Document().Run()
+	stackJson, err := snapctl.Get("engines." + stackName).Document().Run()
 	if err != nil {
-		return fmt.Errorf("error loading stack: %v", err)
+		return fmt.Errorf("error loading engine: %v", err)
 	}
 
 	stack, err := parseStackJson(stackJson)
 	if err != nil {
-		return fmt.Errorf("error parsing stack: %v", err)
+		return fmt.Errorf("error parsing engine: %v", err)
 	}
 
 	err = printStackInfo(stack)
 	if err != nil {
-		return fmt.Errorf("error printing stack info: %v", err)
+		return fmt.Errorf("error printing engine info: %v", err)
 	}
 	return nil
 }
@@ -70,7 +70,7 @@ func stackInfo(stackName string) error {
 func printStackInfo(stack types.ScoredStack) error {
 	stackYaml, err := yaml.Marshal(stack)
 	if err != nil {
-		return fmt.Errorf("error converting stack to yaml: %v", err)
+		return fmt.Errorf("error converting engine to yaml: %v", err)
 	}
 
 	err = quick.Highlight(os.Stdout, string(stackYaml), "yaml", "terminal", "colorful")

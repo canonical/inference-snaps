@@ -6,7 +6,7 @@ import (
 )
 
 func TestListCompatible(t *testing.T) {
-	data, err := os.ReadFile("../../test_data/snap-options/stacks.json")
+	data, err := os.ReadFile("../../test_data/snap-options/engines.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,7 +23,7 @@ func TestListCompatible(t *testing.T) {
 }
 
 func TestListAll(t *testing.T) {
-	data, err := os.ReadFile("../../test_data/snap-options/stacks.json")
+	data, err := os.ReadFile("../../test_data/snap-options/engines.json")
 	if err != nil {
 		t.Fatal(err)
 	}
