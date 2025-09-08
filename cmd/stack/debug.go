@@ -77,14 +77,19 @@ func validateStackManifests(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("no engine manifest specified")
 	}
 
+	allManifestsValid := true
 	for _, manifestPath := range args {
 		err := validate.Stack(manifestPath)
 		if err != nil {
+			allManifestsValid = false
 			fmt.Printf("❌ %s: %s\n", manifestPath, err)
 		} else {
 			fmt.Printf("✅ %s\n", manifestPath)
 		}
 	}
 
+	if !allManifestsValid {
+		return fmt.Errorf("not all manifests are valid")
+	}
 	return nil
 }

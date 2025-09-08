@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/canonical/go-snapctl/env"
 	"github.com/spf13/cobra"
@@ -48,5 +49,8 @@ func main() {
 	// Hide the 'completion' command from help text
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 
-	rootCmd.Execute()
+	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
 }
