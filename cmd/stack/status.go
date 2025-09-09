@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/types"
@@ -132,9 +131,9 @@ func statusHumanStack(stack types.ScoredStack, auto bool) string {
 
 func statusHumanServer(stack types.ScoredStack) (string, error) {
 	// Start, stop, log commands
-	startCmd := fmt.Sprintf(`Run "sudo snap start %s" to start the server.`, os.Getenv("SNAP_INSTANCE_NAME"))
-	stopCmd := fmt.Sprintf(`Run "sudo snap stop %s" to stop the server.`, os.Getenv("SNAP_INSTANCE_NAME"))
-	logsCmd := fmt.Sprintf(`Run "sudo snap logs %s" to view the server logs.`, os.Getenv("SNAP_INSTANCE_NAME"))
+	startCmd := fmt.Sprintf(`Run "sudo snap start %s" to start the server.`, snapInstanceName)
+	stopCmd := fmt.Sprintf(`Run "sudo snap stop %s" to stop the server.`, snapInstanceName)
+	logsCmd := fmt.Sprintf(`Run "sudo snap logs %s" to view the server logs.`, snapInstanceName)
 
 	apiUrls, err := serverApiUrls(stack)
 	if err != nil {

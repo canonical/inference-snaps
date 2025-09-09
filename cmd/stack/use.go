@@ -213,24 +213,41 @@ func useStack(stackName string, assumeYes bool) error {
 
 		// Leave a blank line after printing component list and optional confirmation, before printing component installation progress
 		fmt.Println()
+
+		// This is blocking, but there is a timeout bug:
+		// https://github.com/canonical/stack-utils/issues/122
+		err = installComponents(stack.Components)
+		if err != nil {
+			return fmt.Errorf("error installing components: %v", err)
+		}
 	}
 
-	// First change the stack, then download the components.
-	// Even if a timeout occurs, the download is expected to complete in the background.
+	currentEngine, err := snapctl.Get("engine").Run()
+	if err != nil {
+		return fmt.Errorf("error getting current engine: %v", err)
+	}
+	if currentEngine == stackName {
+		// Nothing left to do
+		return nil
+	}
+
+	if len(components) > 0 {
+		// Leave a blank line if components were installed, before continuing
+		fmt.Println()
+	}
+
 	err = setStackOptions(stack)
 	if err != nil {
 		return fmt.Errorf("error setting engine options: %v", err)
 	}
 
-	if len(components) > 0 {
-		// This is blocking, but there is a timeout
-		err = downloadComponents(stack.Components)
-		if err != nil {
-			return fmt.Errorf("error downloading components: %v", err)
-		}
+	fmt.Println("Restarting the snap service ...")
+	err = snapctl.Restart(snapInstanceName).Run()
+	if err != nil {
+		return fmt.Errorf("error restarting snap service: %v", err)
 	}
 
-	// TODO restart service
+	fmt.Printf("Engine successfully changed to %q\n", stackName)
 
 	return nil
 }

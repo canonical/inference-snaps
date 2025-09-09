@@ -14,36 +14,35 @@ const (
 	snapdTimeoutError     = "timeout exceeded while waiting for response"
 )
 
-func downloadComponents(components []string) error {
-	// install components
-	// Messages presented to the user should use the term "download" for snapctl install +component.
+func installComponents(components []string) error {
 	for _, component := range components {
-		stopProgress := startProgressDots("Downloading " + component + " ")
+		stopProgress := startProgressSpinner("Installing " + component + " ")
 		err := snapctl.InstallComponents(component).Run()
 		stopProgress()
 		if err != nil {
 			if strings.Contains(err.Error(), snapdUnknownSnapError) {
-				fmt.Printf("Error: snap not known to the store. Install a local build of component: %s\n", component)
-				continue
+				return fmt.Errorf("snap not known to the store:"+
+					"\nRerun this command after manually installing %q",
+					component)
 			} else if strings.Contains(err.Error(), snapdTimeoutError) {
-				msg := "timeout exceeded while waiting for download of: %s" +
-					"\nPlease monitor the progress using the 'snap changes' command and continue when the component installation is complete."
-				return fmt.Errorf(msg, component)
+				return fmt.Errorf("timed out while installing %q:"+
+					"\nMonitor the installation progress with \"snap changes\""+
+					"\nRerun this command once the installation is complete",
+					component)
 			} else if strings.Contains(err.Error(), "already installed") {
 				continue
 			} else {
-				return fmt.Errorf("error downloading component: %s: %s", component, err)
+				return fmt.Errorf("error installing %q: %s", component, err)
 			}
 		}
-		fmt.Println("Downloaded " + component)
+		fmt.Println("Installed " + component)
 	}
 
 	return nil
 }
 
-func startProgressDots(prefix string) (stop func()) {
-	dots := []string{".", "..", "..."}
-	s := spinner.New(dots, time.Second)
+func startProgressSpinner(prefix string) (stop func()) {
+	s := spinner.New(spinner.CharSets[9], time.Millisecond*200)
 	s.Prefix = prefix
 	s.Start()
 

@@ -9,11 +9,12 @@ import (
 )
 
 var (
-	enginesDir = env.Snap() + "/engines"
+	enginesDir       = env.Snap() + "/engines"
+	snapInstanceName = env.SnapInstanceName()
 	// rootCmd is the base command
 	// It gets populated with subcommands via init functions
 	rootCmd = &cobra.Command{
-		Use:          env.SnapInstanceName(),
+		Use:          snapInstanceName,
 		SilenceUsage: true,
 	}
 )
