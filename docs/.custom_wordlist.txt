@@ -15,6 +15,7 @@ Deepseek
 CUDA
 dvipng
 fonts
+Fosstodon
 freefont
 github
 GPG
@@ -35,10 +36,12 @@ json
 lang
 LaTeX
 latexmk
+linkcheck
 llamafile
 localhost
 LLM
 Multipass
+MyST
 NDA
 npu
 npm's
@@ -59,6 +62,7 @@ readthedocs
 rst
 sitemapindex
 Snapcraft's
+starterpack
 subproject
 subprojects
 SVG
@@ -68,6 +72,7 @@ TOC
 toctree
 TPUs
 txt
+ubuntu
 uncommenting
 userspace
 utils

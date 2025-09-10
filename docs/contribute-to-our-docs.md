@@ -19,7 +19,7 @@ The AI Snaps documentation is hosted on GitHub, built with [Sphinx](https://www.
 To contribute to these docs, you'll need a GitHub account.
 
 The documentation is organized according to the [Diátaxis](https://diataxis.fr/) framework.
-It is written in Markdown with [MySt](https://myst-parser.readthedocs.io/en/latest/) extensions. 
+It is written in Markdown with [MyST](https://myst-parser.readthedocs.io/en/latest/) extensions. 
 
 You can build the documentation locally by following the build instructions for the sphinx starterpack.
 
