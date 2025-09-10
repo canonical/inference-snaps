@@ -43,7 +43,7 @@ AI model snaps is a member of the Ubuntu family.
 It's an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
 
 - `Code of conduct <https://ubuntu.com/community/docs/ethos/code-of-conduct>`__
-- `Contribute to our code <https://github.com/canonical/deepseek-r1-snap>`__ 
+- :ref:`Contribute to our code <contribute-to-our-code>` 
 - :ref:`Contribute to our documentation <contribute-to-our-docs>`
 - :ref:`Release notes<release-notes>`
 
@@ -56,5 +56,5 @@ It's an open source project that warmly welcomes community projects, contributio
    How-to guides </how-to/index>
    Reference </reference/index>
    Explanations </explanations/index>
-   contribute-to-our-docs
+   contributing
    release-notes
