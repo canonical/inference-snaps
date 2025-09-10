@@ -24,7 +24,7 @@ You can help improve our code by:
 
 (contribute-to-our-docs)=
 
-## Contributing to our docs
+## Contribute to our docs
 You can help improve this documentation by:
 
 - Documenting new features or improvements you contribute to the code.
