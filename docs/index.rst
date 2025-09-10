@@ -5,15 +5,6 @@ AI model snaps allow you to package famous AI models as snaps that can be deploy
 
 It checks the hardware available on the host machine and recommends the stack that is optimized for the available hardware.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-
-   Tutorials </tutorial/index>
-   How-to guides </how-to/index>
-   Reference </reference/index>
-   Explanations </explanations/index>
-
 In this documentation
 ---------------------
 
@@ -47,5 +38,23 @@ In this documentation
    
 Project and community
 ---------------------
-AI model snaps is a Canonical product undergoing internal development. 
-Access to this documentation must be covered under Canonical's NDA.
+
+AI model snaps is a member of the Ubuntu family. 
+It's an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
+
+- `Code of conduct <https://ubuntu.com/community/docs/ethos/code-of-conduct>`__
+- `Contribute to our code <https://github.com/canonical/deepseek-r1-snap>`__ 
+- :ref:`Contribute to our documentation <contribute-to-our-docs>`
+- :ref:`Release notes<release-notes>`
+
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   Tutorials </tutorial/index>
+   How-to guides </how-to/index>
+   Reference </reference/index>
+   Explanations </explanations/index>
+   contribute-to-our-docs
+   release-notes
