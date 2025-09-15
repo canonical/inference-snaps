@@ -58,6 +58,7 @@ Rockcraft
 readthedocs
 rst
 sitemapindex
+snapd
 Snapcraft's
 subproject
 subprojects
