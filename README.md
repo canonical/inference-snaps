@@ -9,9 +9,7 @@ This repo contains utilities used in snapping and selecting hardware specific wo
 The CLIs included in this repo can be built using the following commands:
 
 ```bash
-go build ./cmd/hardware-info
-go build ./cmd/select-stack
-go build ./cmd/stack
+go build ./cmd/cli
 ```
 
 ### Build snap
@@ -39,44 +37,46 @@ To build and install from source, refer to [here](#build-snap).
 
 ## Usage
 
-### Hardware Info
+### Machine Info
 
-A help message is printed out when providing the `-h` or `--help` flags.
+A summary of the current host machine can be obtained by running:
 
-```bash
-$ stack-utils.hardware-info -h
-Usage of hardware-info:
-  -file string
-        Output json to this file. Default output is to stdout.
-  -pretty
-        Output pretty json. Default is compact json.
+```
+stack-utils debug machine-info
 ```
 
-By default, the `hardware-info` application will print out a summary of the host system to `STDOUT` in compact JSON
-format.
-By specifying the `--pretty` flag, the JSON will be formatted for easier readability.
-The `--file` argument allows writing the JSON data to a file, rather than to `STDOUT`.
+This will print out a summary of the host system to `STDOUT` in JSON format.
+The output format can be changed to yaml by addign `--format yaml` to the command.
 
 Errors and warnings are printed to STDERR.
+This allows piping the output to another application.
 
-### Select Stack
+### Select Engine
 
-The output from `hardware-info` can be piped into `select-stack`.
-You need to provide the location of the stack definitions from which the selection should be made.
+The machine info can be piped into `select-engine`.
+You need to provide the location of the engine definitions from which the selection should be made.
 
 The result is written as json to STDOUT, while any other log messages are available on STDERR.
 
 Example:
 
 ```bash
-$ stack-utils.hardware-info | stack-utils.select-stack --stacks=test_data/engines/
-2024/12/10 11:28:03 Vendor specific info for Intel GPU not implemented
-2024/12/10 11:28:03 Stack cpu-f32 not selected: not enough memory
-2024/12/10 11:28:03 Stack fallback-cpu matches. Score = 4.000000
-2024/12/10 11:28:03 Stack fallback-gpu not selected: any: could not find a required device
-2024/12/10 11:28:03 Stack llamacpp-avx2 matches. Score = 3.200000
-2024/12/10 11:28:03 Stack llamacpp-avx512 not selected: any: could not find a required device
-{"name":"fallback-cpu","components":["llamacpp","model-q4-k-m-gguf"],"score":4}
+$  stack-utils debug machine-info | stack-utils debug select-engine --engines test_data/engines/
+❌ ampere - not compatible: devices all: required cpu device not found
+❌ ampere-altra - not compatible: devices all: required cpu device not found
+❌ arm-neon - not compatible: devices any: required device not found
+✅ cpu-avx1 - compatible, score = 14
+✅ cpu-avx2 - compatible, score = 17
+❌ cpu-avx512 - not compatible: devices all: required cpu device not found
+🟠 cpu-devel - score = 12, grade = devel
+❌ cuda-generic - not compatible: devices all: required pci device not found
+✅ example-memory - compatible, score = 18
+✅ intel-cpu - compatible, score = 18
+❌ intel-gpu - not compatible: devices any: required device not found
+❌ intel-npu - not compatible: devices any: required device not found
+Selected engine for your hardware configuration: example-memory
+
+{"engines":[{"name":"ampere","description":"Test ampere selection" ...
 ```
 
 ## Notes

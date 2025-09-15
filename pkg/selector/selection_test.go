@@ -6,83 +6,83 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/hardware_info"
-	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
-// Test that the expected stack is chosen from a list of stacks
-// device, stacks, expected stack
+// Test that the expected engine is chosen from a list of engines
+// device, engines, expected engine
 
-type machineTopStack struct {
-	machine  string
-	stacks   []string
-	topStack string
+type machineTopEngine struct {
+	machine   string
+	engines   []string
+	topEngine string
 }
 
-var topStackSets = []machineTopStack{
+var topEngineSets = []machineTopEngine{
 	{
-		// Ampere One machine should use ampere stack, not generic arm neon stack
-		machine:  "ampere-one-m-banshee-12",
-		stacks:   []string{"ampere", "arm-neon"},
-		topStack: "ampere",
+		// Ampere One machine should use ampere engine, not generic arm neon engine
+		machine:   "ampere-one-m-banshee-12",
+		engines:   []string{"ampere", "arm-neon"},
+		topEngine: "ampere",
 	},
 	{
-		// Ampere Altra machine should use ampere-altra stack, not generic arm neon stack
-		machine:  "hp-proliant-rl300-gen11-altra",
-		stacks:   []string{"ampere-altra", "arm-neon"},
-		topStack: "ampere-altra",
+		// Ampere Altra machine should use ampere-altra engine, not generic arm neon engine
+		machine:   "hp-proliant-rl300-gen11-altra",
+		engines:   []string{"ampere-altra", "arm-neon"},
+		topEngine: "ampere-altra",
 	},
 	{
 		// Old CPU with Intel dGPU and NVIDIA dGPU - using intel-gpu because nvidia requires newer CPU flags
-		machine:  "i5-3570k+arc-a580+gtx1080ti",
-		stacks:   []string{"cpu-avx1", "cuda-generic", "intel-cpu", "intel-gpu"},
-		topStack: "intel-gpu",
+		machine:   "i5-3570k+arc-a580+gtx1080ti",
+		engines:   []string{"cpu-avx1", "cuda-generic", "intel-cpu", "intel-gpu"},
+		topEngine: "intel-gpu",
 	},
 	{
 		// Machine with Intel CPU and Intel GPU should use GPU
-		machine:  "mustang",
-		stacks:   []string{"cpu-avx1", "cpu-avx2", "cpu-avx512", "intel-cpu", "intel-gpu"},
-		topStack: "intel-gpu",
+		machine:   "mustang",
+		engines:   []string{"cpu-avx1", "cpu-avx2", "cpu-avx512", "intel-cpu", "intel-gpu"},
+		topEngine: "intel-gpu",
 	},
 	{
 		// Machine with Intel iGPU and NVIDIA dGPU - always try and offload to dGPU if possible
-		machine:  "system76-addw4",
-		stacks:   []string{"cpu-avx1", "cpu-avx2", "cuda-generic", "intel-cpu", "intel-gpu"},
-		topStack: "cuda-generic",
+		machine:   "system76-addw4",
+		engines:   []string{"cpu-avx1", "cpu-avx2", "cuda-generic", "intel-cpu", "intel-gpu"},
+		topEngine: "cuda-generic",
 	},
 	{
-		// Machine with avx2 should prefer avx2 stack
-		machine:  "xps13-7390",
-		stacks:   []string{"cpu-avx1", "cpu-avx2"},
-		topStack: "cpu-avx2",
+		// Machine with avx2 should prefer avx2 engine
+		machine:   "xps13-7390",
+		engines:   []string{"cpu-avx1", "cpu-avx2"},
+		topEngine: "cpu-avx2",
 	},
 	{
-		// Machine with Intel CPU should prefer intel-cpu stack above generic cpu stacks
-		machine:  "xps13-7390",
-		stacks:   []string{"cpu-avx1", "cpu-avx2", "intel-cpu"},
-		topStack: "intel-cpu",
+		// Machine with Intel CPU should prefer intel-cpu engine above generic cpu engines
+		machine:   "xps13-7390",
+		engines:   []string{"cpu-avx1", "cpu-avx2", "intel-cpu"},
+		topEngine: "intel-cpu",
 	},
 }
 
-func TestTopStack(t *testing.T) {
-	for _, testSet := range topStackSets {
-		t.Run(testSet.machine+"/"+testSet.topStack, func(t *testing.T) {
-			var stacks []types.Stack
-			for _, stackName := range testSet.stacks {
-				stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
-				data, err := os.ReadFile(stackManifestFile)
+func TestTopEngine(t *testing.T) {
+	for _, testSet := range topEngineSets {
+		t.Run(testSet.machine+"/"+testSet.topEngine, func(t *testing.T) {
+			var manifests []engines.Manifest
+			for _, engineName := range testSet.engines {
+				manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
+				data, err := os.ReadFile(manifestFile)
 				if err != nil {
 					t.Fatal(err)
 				}
 
-				var stack types.Stack
-				err = yaml.Unmarshal(data, &stack)
+				var manifest engines.Manifest
+				err = yaml.Unmarshal(data, &manifest)
 				if err != nil {
 					t.Fatal(err)
 				}
 
-				stacks = append(stacks, stack)
+				manifests = append(manifests, manifest)
 			}
 
 			hardwareInfo, err := hardware_info.GetFromRawData(t, testSet.machine, true)
@@ -90,21 +90,21 @@ func TestTopStack(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			scoredStacks, err := ScoreStacks(hardwareInfo, stacks)
+			scoredEngines, err := ScoreEngines(hardwareInfo, manifests)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			topStack, err := TopStack(scoredStacks)
+			topEngine, err := TopEngine(scoredEngines)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			if topStack.Name != testSet.topStack {
-				for _, stack := range scoredStacks {
-					t.Logf("%s=%d %s", stack.Name, stack.Score, strings.Join(stack.Notes, ", "))
+			if topEngine.Name != testSet.topEngine {
+				for _, engine := range scoredEngines {
+					t.Logf("%s=%d %s", engine.Name, engine.Score, strings.Join(engine.Notes, ", "))
 				}
-				t.Errorf("Top stack name: %s, expected: %s", topStack.Name, testSet.topStack)
+				t.Errorf("Top engine name: %s, expected: %s", topEngine.Name, testSet.topEngine)
 			}
 		})
 	}

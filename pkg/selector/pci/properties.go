@@ -1,23 +1,24 @@
 package pci
 
 import (
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/selector/weights"
 	"github.com/canonical/stack-utils/pkg/types"
 	"github.com/canonical/stack-utils/pkg/utils"
 )
 
-func hasAdditionalProperties(stackDevice types.StackDevice) bool {
-	if stackDevice.VRam != nil {
+func hasAdditionalProperties(device engines.Device) bool {
+	if device.VRam != nil {
 		return true
 	}
-	if stackDevice.ComputeCapability != nil {
+	if device.ComputeCapability != nil {
 		return true
 	}
 
 	return false
 }
 
-func checkProperties(device types.StackDevice, pciDevice types.PciDevice) (int, []string, error) {
+func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, []string, error) {
 	var reasons []string
 	extraScore := 0
 
@@ -40,7 +41,7 @@ func checkProperties(device types.StackDevice, pciDevice types.PciDevice) (int, 
 	return extraScore, reasons, nil
 }
 
-func checkVram(device types.StackDevice, pciDevice types.PciDevice) (int, []string, error) {
+func checkVram(device engines.Device, pciDevice types.PciDevice) (int, []string, error) {
 	var reasons []string
 
 	vramRequired, err := utils.StringToBytes(*device.VRam)

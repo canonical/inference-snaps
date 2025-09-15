@@ -1,5 +1,5 @@
 name: example-memory
-description: Example stack for legacy CPUs, offering full accuracy but very high memory use
+description: Legacy CPUs, offering full accuracy but very high memory usage
 vendor: Canonical Ltd
 grade: stable
 devices:

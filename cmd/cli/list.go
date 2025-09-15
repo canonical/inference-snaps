@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"
@@ -36,21 +36,21 @@ func addListCommand() {
 }
 
 func list(_ *cobra.Command, _ []string) error {
-	return listStacks(listAll)
+	return listEngines(listAll)
 }
 
-func listStacks(all bool) error {
-	stacksJson, err := snapctl.Get("engines").Document().Run()
+func listEngines(all bool) error {
+	enginesJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
 		return fmt.Errorf("error loading engines: %v", err)
 	}
 
-	stacks, err := parseStacksJson(stacksJson)
+	engines, err := parseEnginesJson(enginesJson)
 	if err != nil {
 		return fmt.Errorf("error parsing engines: %v", err)
 	}
 
-	err = printStacks(stacks, all)
+	err = printEngines(engines, all)
 	if err != nil {
 		return fmt.Errorf("error printing list: %v", err)
 	}
@@ -58,7 +58,7 @@ func listStacks(all bool) error {
 	return nil
 }
 
-func printStacks(stacks []types.ScoredStack, all bool) error {
+func printEngines(engines []engines.ScoredManifest, all bool) error {
 
 	var headerRow = []string{"engine", "vendor", "description"}
 	if all {
@@ -67,29 +67,29 @@ func printStacks(stacks []types.ScoredStack, all bool) error {
 	tableRows := [][]string{headerRow}
 
 	// Sort by Score in descending order
-	sort.Slice(stacks, func(i, j int) bool {
-		// Stable stacks with equal score should be listed first
-		if stacks[i].Score == stacks[j].Score {
-			return stacks[i].Grade == "stable"
+	sort.Slice(engines, func(i, j int) bool {
+		// Stable engines with equal score should be listed first
+		if engines[i].Score == engines[j].Score {
+			return engines[i].Grade == "stable"
 		}
-		return stacks[i].Score > stacks[j].Score
+		return engines[i].Score > engines[j].Score
 	})
 
-	var stackNameMaxLen, stackVendorMaxLen int
-	for _, stack := range stacks {
-		row := []string{stack.Name, stack.Vendor, stack.Description}
+	var engineNameMaxLen, engineVendorMaxLen int
+	for _, engine := range engines {
+		row := []string{engine.Name, engine.Vendor, engine.Description}
 
-		// Only for stacks that will be printed, find max name and vendor lengths
-		if all || (stack.Compatible && stack.Grade == "stable") {
-			stackNameMaxLen = max(stackNameMaxLen, len(stack.Name))
-			stackVendorMaxLen = max(stackVendorMaxLen, len(stack.Vendor))
+		// Only for engines that will be printed, find max name and vendor lengths
+		if all || (engine.Compatible && engine.Grade == "stable") {
+			engineNameMaxLen = max(engineNameMaxLen, len(engine.Name))
+			engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor))
 		}
 
 		if all {
 			compatibleStr := ""
-			if stack.Compatible && stack.Grade == "stable" {
+			if engine.Compatible && engine.Grade == "stable" {
 				compatibleStr = "yes"
-			} else if stack.Compatible {
+			} else if engine.Compatible {
 				compatibleStr = "beta"
 			} else {
 				compatibleStr = "no"
@@ -97,7 +97,7 @@ func printStacks(stacks []types.ScoredStack, all bool) error {
 
 			row = append(row, compatibleStr)
 			tableRows = append(tableRows, row)
-		} else if stack.Compatible && stack.Grade == "stable" {
+		} else if engine.Compatible && engine.Grade == "stable" {
 			tableRows = append(tableRows, row)
 		}
 	}
@@ -115,13 +115,13 @@ func printStacks(stacks []types.ScoredStack, all bool) error {
 	tableMaxWidth := 80
 
 	// Increase column widths to account for paddings
-	stackNameMaxLen += 2
-	stackVendorMaxLen += 2
+	engineNameMaxLen += 2
+	engineVendorMaxLen += 2
 	// Description column fills the remaining space
-	stackDescriptionMaxLen := tableMaxWidth - (stackNameMaxLen + stackVendorMaxLen)
+	engineDescriptionMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
 	if all {
 		// Reserve space for Compatible column if included
-		stackDescriptionMaxLen -= len(headerRow[3]) + 2
+		engineDescriptionMaxLen -= len(headerRow[3]) + 2
 	}
 
 	options := []tablewriter.Option{
@@ -149,9 +149,9 @@ func printStacks(stacks []types.ScoredStack, all bool) error {
 			MaxWidth: tableMaxWidth,
 			Widths: tw.CellWidth{
 				PerColumn: tw.Mapper[int, int]{
-					0: stackNameMaxLen,        // Stack name
-					1: stackVendorMaxLen,      // Vendor
-					2: stackDescriptionMaxLen, // Description
+					0: engineNameMaxLen,        // Engine name
+					1: engineVendorMaxLen,      // Vendor
+					2: engineDescriptionMaxLen, // Description
 					// 3:  0, // Compatible, not set because cell value is shorter than min width
 				},
 			},

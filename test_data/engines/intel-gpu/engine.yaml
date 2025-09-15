@@ -1,5 +1,5 @@
 name: intel-gpu
-description: Stack for inferencing on modern (>=gen 13) Intel GPUs
+description: Modern Intel GPUs (>=gen 13)
 vendor: Intel Corporation
 grade: stable
 devices:

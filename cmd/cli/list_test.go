@@ -11,12 +11,12 @@ func TestListCompatible(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stacks, err := parseStacksJson(string(data))
+	engines, err := parseEnginesJson(string(data))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = printStacks(stacks, false)
+	err = printEngines(engines, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -28,12 +28,12 @@ func TestListAll(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stacks, err := parseStacksJson(string(data))
+	engines, err := parseEnginesJson(string(data))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = printStacks(stacks, true)
+	err = printEngines(engines, true)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,4 +1,4 @@
-package validate
+package engines
 
 import (
 	"testing"
@@ -8,13 +8,13 @@ import (
 )
 
 func TestCpuArchitecture(t *testing.T) {
-	device := types.StackDevice{Type: "cpu"}
+	device := Device{Type: "cpu"}
 
 	t.Run("cpu arch amd64", func(t *testing.T) {
 		architecture := constants.Amd64
 		device.Architecture = &architecture
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -24,7 +24,7 @@ func TestCpuArchitecture(t *testing.T) {
 		architecture := constants.Arm64
 		device.Architecture = &architecture
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -34,7 +34,7 @@ func TestCpuArchitecture(t *testing.T) {
 		architecture := "invalid-arch"
 		device.Architecture = &architecture
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err == nil {
 			t.Fatal("CPU architecture should be invalid")
 		}
@@ -44,14 +44,14 @@ func TestCpuArchitecture(t *testing.T) {
 
 func TestCpuAmd64Fields(t *testing.T) {
 	architecture := constants.Amd64
-	device := types.StackDevice{Type: "cpu", Architecture: &architecture}
+	device := Device{Type: "cpu", Architecture: &architecture}
 	manufacturer := "My Manufacturer"
 	device.ManufacturerId = &manufacturer
 
 	t.Run("cpu amd64 valid fields", func(t *testing.T) {
 		device.Flags = []string{"one", "two"}
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err != nil {
 			t.Fatalf("amd64 cpu fields should be valid: %v", err)
 		}
@@ -60,7 +60,7 @@ func TestCpuAmd64Fields(t *testing.T) {
 	t.Run("cpu amd64 invalid fields", func(t *testing.T) {
 		device.Features = []string{"one", "two"}
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err == nil {
 			t.Fatal("amd64 cpu should not have features")
 		}
@@ -70,14 +70,14 @@ func TestCpuAmd64Fields(t *testing.T) {
 
 func TestCpuArm64Fields(t *testing.T) {
 	architecture := constants.Arm64
-	device := types.StackDevice{Type: "cpu", Architecture: &architecture}
+	device := Device{Type: "cpu", Architecture: &architecture}
 	implementer := types.HexInt(0x41)
 	device.ImplementerId = &implementer
 
 	t.Run("cpu arm64 valid fields", func(t *testing.T) {
 		device.Features = []string{"one", "two"}
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err != nil {
 			t.Fatalf("arm64 cpu fields should be valid: %v", err)
 		}
@@ -86,7 +86,7 @@ func TestCpuArm64Fields(t *testing.T) {
 	t.Run("cpu arm64 invalid fields", func(t *testing.T) {
 		device.Flags = []string{"one", "two"}
 
-		err := cpu(device)
+		err := device.validateCpu()
 		if err == nil {
 			t.Fatal("arm64 cpu should not have flags")
 		}

@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/hardware_info"
-	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
@@ -267,78 +267,78 @@ var validInvalidSets = map[string]testValidInvalid{
 	},
 }
 
-func TestStack(t *testing.T) {
-	for stackName, testSet := range validInvalidSets {
+func TestEngine(t *testing.T) {
+	for engineName, testSet := range validInvalidSets {
 		for _, hwName := range testSet.ValidMachines {
-			t.Run(stackName+" == "+hwName, func(t *testing.T) {
-				testValidHw(t, stackName, hwName)
+			t.Run(engineName+" == "+hwName, func(t *testing.T) {
+				testValidHw(t, engineName, hwName)
 			})
 		}
 
 		for _, hwName := range testSet.InvalidMachines {
-			t.Run(stackName+" != "+hwName, func(t *testing.T) {
-				testInvalidHw(t, stackName, hwName)
+			t.Run(engineName+" != "+hwName, func(t *testing.T) {
+				testInvalidHw(t, engineName, hwName)
 			})
 		}
 	}
 }
 
-func testValidHw(t *testing.T, stackName string, hwName string) {
-	stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
+func testValidHw(t *testing.T, engineName string, hwName string) {
+	manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
 
 	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	data, err := os.ReadFile(stackManifestFile)
+	data, err := os.ReadFile(manifestFile)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var stack types.Stack
-	err = yaml.Unmarshal(data, &stack)
+	var manifest engines.Manifest
+	err = yaml.Unmarshal(data, &manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Valid hardware for stack
-	score, reasons, err := checkStack(hardwareInfo, stack)
+	// Valid hardware for engine
+	score, reasons, err := checkEngine(hardwareInfo, manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if score == 0 {
-		t.Fatalf("Stack should match: %v", reasons)
+		t.Fatalf("Engine should match: %v", reasons)
 	}
 	t.Logf("Matching score: %d", score)
 
 }
 
-func testInvalidHw(t *testing.T, stackName string, hwName string) {
-	stackManifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", stackName)
+func testInvalidHw(t *testing.T, engineName string, hwName string) {
+	manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
 
 	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	data, err := os.ReadFile(stackManifestFile)
+	data, err := os.ReadFile(manifestFile)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var stack types.Stack
-	err = yaml.Unmarshal(data, &stack)
+	var manifest engines.Manifest
+	err = yaml.Unmarshal(data, &manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	score, _, err := checkStack(hardwareInfo, stack)
+	score, _, err := checkEngine(hardwareInfo, manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if score != 0 {
-		t.Fatalf("Stack should not match: %s", hwName)
+		t.Fatalf("Engine should not match: %s", hwName)
 	}
 	t.Logf("Matching score: %d", score)
 }

@@ -11,12 +11,12 @@ func TestInfoLong(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stack, err := parseStackJson(string(data))
+	engine, err := parseEngineJson(string(data))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = printStackInfo(stack)
+	err = printEngineInfo(engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -28,12 +28,12 @@ func TestInfoShort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stack, err := parseStackJson(string(data))
+	engine, err := parseEngineJson(string(data))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = printStackInfo(stack)
+	err = printEngineInfo(engine)
 	if err != nil {
 		t.Fatal(err)
 	}

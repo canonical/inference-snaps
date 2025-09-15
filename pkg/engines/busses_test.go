@@ -1,18 +1,16 @@
-package validate
+package engines
 
 import (
 	"testing"
-
-	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func TestDeviceBus(t *testing.T) {
-	device := types.StackDevice{}
+	device := Device{}
 	device.Type = "gpu"
 
 	t.Run("PCI Bus", func(t *testing.T) {
 		device.Bus = "pci"
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("PCI Bus should be valid: %v", err)
 		}
@@ -20,7 +18,7 @@ func TestDeviceBus(t *testing.T) {
 
 	t.Run("USB Bus", func(t *testing.T) {
 		device.Bus = "usb"
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			//t.Fatalf("USB Bus should be valid: %v", err)
 			// USB bus not implemented
@@ -30,7 +28,7 @@ func TestDeviceBus(t *testing.T) {
 
 	t.Run("Empty Bus", func(t *testing.T) {
 		device.Bus = ""
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("Empty Bus should be valid: %v", err)
 		}
@@ -38,7 +36,7 @@ func TestDeviceBus(t *testing.T) {
 
 	t.Run("Invalid Bus", func(t *testing.T) {
 		device.Bus = "invalid-bus"
-		err := stackDevice(device)
+		err := device.validate()
 		if err == nil {
 			t.Fatalf("Invalid bus should not validate")
 		}

@@ -6,11 +6,11 @@
       "model-distill-qwen-7b-q4-k-m-gguf"
     ],
     "configurations": {
-      "engine": "llamacpp",
       "http.base-path": "v1",
-      "model": "model-distill-qwen-7b-q4-k-m-gguf"
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llamacpp"
     },
-    "description": "Example stack for CPUs, offering good accuracy with low footprints",
+    "description": "Use CPU, good accuracy with low footprints",
     "devices": {
       "any": [
         {

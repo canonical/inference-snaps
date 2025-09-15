@@ -1,4 +1,4 @@
-package validate
+package engines
 
 import (
 	"testing"
@@ -11,44 +11,44 @@ func TestDeviceType(t *testing.T) {
 
 	t.Run("Type CPU", func(t *testing.T) {
 		arch := constants.Amd64
-		device := types.StackDevice{
+		device := Device{
 			Type:         "cpu",
 			Architecture: &arch,
 		}
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("Type cpu should be valid: %v", err)
 		}
 	})
 	t.Run("Type GPU", func(t *testing.T) {
-		device := types.StackDevice{Type: "gpu"}
+		device := Device{Type: "gpu"}
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("Type gpu should be valid: %v", err)
 		}
 	})
 	t.Run("Type NPU", func(t *testing.T) {
-		device := types.StackDevice{Type: "npu"}
+		device := Device{Type: "npu"}
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("Type npu should be valid: %v", err)
 		}
 	})
 	t.Run("Type empty", func(t *testing.T) {
-		device := types.StackDevice{Type: ""}
+		device := Device{Type: ""}
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("Empty type should be valid: %v", err)
 		}
 	})
 	t.Run("Type invalid", func(t *testing.T) {
-		device := types.StackDevice{Type: "test"}
+		device := Device{Type: "test"}
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err == nil {
 			t.Fatalf("Invalid type should be invalid: %v", err)
 		}
@@ -57,7 +57,7 @@ func TestDeviceType(t *testing.T) {
 }
 
 func TestDeviceGpu(t *testing.T) {
-	device := types.StackDevice{}
+	device := Device{}
 	device.Type = "gpu"
 	device.Bus = ""
 
@@ -72,7 +72,7 @@ func TestDeviceGpu(t *testing.T) {
 		computeCap := "12.4"
 		device.ComputeCapability = &computeCap
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("GPU fields should be valid: %v", err)
 		}
@@ -89,7 +89,7 @@ func TestDeviceGpu(t *testing.T) {
 		manufacturer := "test"
 		device.ManufacturerId = &manufacturer
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err == nil {
 			t.Fatal("GPU fields should be invalid")
 		}
@@ -98,7 +98,7 @@ func TestDeviceGpu(t *testing.T) {
 }
 
 func TestDeviceNpu(t *testing.T) {
-	device := types.StackDevice{}
+	device := Device{}
 	device.Type = "npu"
 	device.Bus = ""
 
@@ -107,7 +107,7 @@ func TestDeviceNpu(t *testing.T) {
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("NPU fields should be valid: %v", err)
 		}
@@ -124,7 +124,7 @@ func TestDeviceNpu(t *testing.T) {
 		computeCap := "12.4"
 		device.ComputeCapability = &computeCap
 
-		err := stackDevice(device)
+		err := device.validate()
 		if err == nil {
 			t.Fatal("NPU fields should be invalid")
 		}
@@ -133,7 +133,7 @@ func TestDeviceNpu(t *testing.T) {
 }
 
 func TestDeviceTypeless(t *testing.T) {
-	device := types.StackDevice{}
+	device := Device{}
 	device.Type = ""
 	device.Bus = "pci"
 
@@ -141,7 +141,7 @@ func TestDeviceTypeless(t *testing.T) {
 		hexValue := types.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			t.Fatalf("PCI device fields should be valid: %v", err)
 		}
@@ -152,7 +152,7 @@ func TestDeviceTypeless(t *testing.T) {
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 		device.Features = []string{"one", "two"}
-		err := stackDevice(device)
+		err := device.validate()
 		if err == nil {
 			t.Fatal("PCI device fields should be invalid")
 		}

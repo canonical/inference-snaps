@@ -1,4 +1,4 @@
-package validate
+package engines
 
 import (
 	"fmt"
@@ -6,25 +6,24 @@ import (
 	"slices"
 
 	"github.com/canonical/stack-utils/pkg/constants"
-	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func cpu(device types.StackDevice) error {
+func (device Device) validateCpu() error {
 	if device.Architecture == nil {
 		return fmt.Errorf("architecture field required")
 	}
 
 	switch *device.Architecture {
 	case constants.Amd64:
-		return cpuAmd64(device)
+		return device.validateAmd64()
 	case constants.Arm64:
-		return cpuArm64(device)
+		return device.validateArm64()
 	default:
 		return fmt.Errorf("invalid architecture: %v", *device.Architecture)
 	}
 }
 
-func cpuAmd64(device types.StackDevice) error {
+func (device Device) validateAmd64() error {
 	validFields := []string{
 		"Type",
 		"Architecture",
@@ -49,7 +48,7 @@ func cpuAmd64(device types.StackDevice) error {
 	return nil
 }
 
-func cpuArm64(device types.StackDevice) error {
+func (device Device) validateArm64() error {
 	validFields := []string{
 		"Type",
 		"Architecture",

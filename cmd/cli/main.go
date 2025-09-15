@@ -44,7 +44,7 @@ func main() {
 
 	// set a dummy root command if not in a snap
 	if rootCmd.Use == "" {
-		rootCmd.Use = "app"
+		rootCmd.Use = "cli"
 	}
 
 	// Hide the 'completion' command from help text

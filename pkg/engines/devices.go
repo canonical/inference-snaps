@@ -1,21 +1,19 @@
-package validate
+package engines
 
 import (
 	"fmt"
-
-	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func stackDevices(devices types.StackDevices) error {
+func (devices Devices) validate() error {
 	for i, device := range devices.All {
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			return fmt.Errorf("invalid device: all %d/%d: %v", i+1, len(devices.All), err)
 		}
 	}
 
 	for i, device := range devices.Any {
-		err := stackDevice(device)
+		err := device.validate()
 		if err != nil {
 			return fmt.Errorf("invalid device: any %d/%d: %v", i+1, len(devices.Any), err)
 		}
@@ -24,25 +22,25 @@ func stackDevices(devices types.StackDevices) error {
 	return nil
 }
 
-func stackDevice(device types.StackDevice) error {
+func (device Device) validate() error {
 	switch device.Type {
 	case "cpu":
-		err := cpu(device)
+		err := device.validateCpu()
 		if err != nil {
 			return fmt.Errorf("cpu: %v", err)
 		}
 	case "gpu":
-		err := gpu(device)
+		err := device.validateGpu()
 		if err != nil {
 			return fmt.Errorf("gpu: %v", err)
 		}
 	case "npu":
-		err := npu(device)
+		err := device.validateNpu()
 		if err != nil {
 			return fmt.Errorf("npu: %v", err)
 		}
 	case "":
-		err := typelessDevice(device)
+		err := device.validateTypelessDevice()
 		if err != nil {
 			return fmt.Errorf("typeless: %v", err)
 		}
@@ -52,33 +50,31 @@ func stackDevice(device types.StackDevice) error {
 	return nil
 }
 
-func gpu(device types.StackDevice) error {
+func (device Device) validateGpu() error {
 	extraFields := []string{
 		"VRam",
 		"ComputeCapability",
 	}
 
-	err := bus(device, extraFields)
+	err := device.validateBus(extraFields)
 	if err != nil {
 		return fmt.Errorf("gpu: %v", err)
 	}
-
 	return nil
 }
 
-func npu(device types.StackDevice) error {
-	err := bus(device, nil)
+func (device Device) validateNpu() error {
+	err := device.validateBus(nil)
 	if err != nil {
 		return fmt.Errorf("npu: %v", err)
 	}
 	return nil
 }
 
-func typelessDevice(device types.StackDevice) error {
-	err := bus(device, nil)
+func (device Device) validateTypelessDevice() error {
+	err := device.validateBus(nil)
 	if err != nil {
 		return fmt.Errorf("typeless device: %v", err)
 	}
-
 	return nil
 }

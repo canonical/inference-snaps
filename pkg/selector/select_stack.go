@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/selector/cpu"
 	"github.com/canonical/stack-utils/pkg/selector/pci"
 	"github.com/canonical/stack-utils/pkg/types"
@@ -14,46 +15,46 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var ErrorNoCompatibleStacks = errors.New("no compatible stacks found")
+var ErrorNoCompatibleEngine = errors.New("no compatible engines found")
 
-func TopStack(scoredStacks []types.ScoredStack) (*types.ScoredStack, error) {
-	var compatibleStacks []types.ScoredStack
+func TopEngine(scoredEngines []engines.ScoredManifest) (*engines.ScoredManifest, error) {
+	var compatibleEngines []engines.ScoredManifest
 
-	for _, stack := range scoredStacks {
-		if stack.Score > 0 && stack.Grade == "stable" {
-			compatibleStacks = append(compatibleStacks, stack)
+	for _, engine := range scoredEngines {
+		if engine.Score > 0 && engine.Grade == "stable" {
+			compatibleEngines = append(compatibleEngines, engine)
 		}
 	}
 
-	if len(compatibleStacks) == 0 {
-		return nil, ErrorNoCompatibleStacks
+	if len(compatibleEngines) == 0 {
+		return nil, ErrorNoCompatibleEngine
 	}
 
 	// Sort by score (high to low) and return highest match
-	sort.Slice(compatibleStacks, func(i, j int) bool {
-		return compatibleStacks[i].Score > compatibleStacks[j].Score
+	sort.Slice(compatibleEngines, func(i, j int) bool {
+		return compatibleEngines[i].Score > compatibleEngines[j].Score
 	})
 
-	// Top stack is the highest score
-	return &compatibleStacks[0], nil
+	// Top engine is the highest score
+	return &compatibleEngines[0], nil
 }
 
-func LoadManifestsFromDir(manifestsDir string) ([]types.Stack, error) {
-	var manifests []types.Stack
+func LoadManifestsFromDir(manifestsDir string) ([]engines.Manifest, error) {
+	var manifests []engines.Manifest
 
 	// Sanitize dir path
 	if !strings.HasSuffix(manifestsDir, "/") {
 		manifestsDir += "/"
 	}
 
-	// Iterate stacks
+	// Iterate engines
 	files, err := os.ReadDir(manifestsDir)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 	}
 
 	for _, file := range files {
-		// Stacks dir should contain a dir per stack
+		// Engines dir should contain a dir per engine
 		if !file.IsDir() {
 			continue
 		}
@@ -63,7 +64,7 @@ func LoadManifestsFromDir(manifestsDir string) ([]types.Stack, error) {
 			return nil, fmt.Errorf("%s: %s", manifestsDir+file.Name(), err)
 		}
 
-		var manifest types.Stack
+		var manifest engines.Manifest
 		err = yaml.Unmarshal(data, &manifest)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %s", manifestsDir, err)
@@ -74,39 +75,39 @@ func LoadManifestsFromDir(manifestsDir string) ([]types.Stack, error) {
 	return manifests, nil
 }
 
-func ScoreStacks(hardwareInfo types.HwInfo, stacks []types.Stack) ([]types.ScoredStack, error) {
-	var scoredStacks []types.ScoredStack
+func ScoreEngines(hardwareInfo types.HwInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
+	var scoredEngines []engines.ScoredManifest
 
-	for _, currentStack := range stacks {
-		score, reasons, err := checkStack(hardwareInfo, currentStack)
+	for _, currentManifest := range manifests {
+		score, reasons, err := checkEngine(hardwareInfo, currentManifest)
 		if err != nil {
 			return nil, err
 		}
 
-		scoredStack := types.ScoredStack{
-			Stack:      currentStack,
+		scoredEngine := engines.ScoredManifest{
+			Manifest:   currentManifest,
 			Score:      score,
 			Compatible: true,
 		}
 
 		if score == 0 {
-			scoredStack.Compatible = false
+			scoredEngine.Compatible = false
 		}
-		scoredStack.Notes = append(scoredStack.Notes, reasons...)
+		scoredEngine.Notes = append(scoredEngine.Notes, reasons...)
 
-		scoredStacks = append(scoredStacks, scoredStack)
+		scoredEngines = append(scoredEngines, scoredEngine)
 	}
 
-	return scoredStacks, nil
+	return scoredEngines, nil
 }
 
-func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, error) {
-	stackScore := 0
+func checkEngine(hardwareInfo types.HwInfo, manifest engines.Manifest) (int, []string, error) {
+	engineScore := 0
 	var reasons []string
 
 	// Enough memory
-	if stack.Memory != nil {
-		requiredMemory, err := utils.StringToBytes(*stack.Memory)
+	if manifest.Memory != nil {
+		requiredMemory, err := utils.StringToBytes(*manifest.Memory)
 		if err != nil {
 			return 0, reasons, err
 		}
@@ -120,12 +121,12 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 			reasons = append(reasons, fmt.Sprintf("memory: system memory too small"))
 			return 0, reasons, nil
 		}
-		stackScore++
+		engineScore++
 	}
 
 	// Enough disk space
-	if stack.DiskSpace != nil {
-		requiredDisk, err := utils.StringToBytes(*stack.DiskSpace)
+	if manifest.DiskSpace != nil {
+		requiredDisk, err := utils.StringToBytes(*manifest.DiskSpace)
 		if err != nil {
 			return 0, reasons, err
 		}
@@ -136,13 +137,13 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 			reasons = append(reasons, fmt.Sprintf("disk: system disk space too small"))
 			return 0, reasons, nil
 		}
-		stackScore++
+		engineScore++
 	}
 
 	// Devices
 	// all
-	if len(stack.Devices.All) > 0 {
-		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, stack.Devices.All)
+	if len(manifest.Devices.All) > 0 {
+		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, manifest.Devices.All)
 		for _, reason := range reasonsAll {
 			reasons = append(reasons, "devices all: "+reason)
 		}
@@ -152,12 +153,12 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 		if extraScore == 0 {
 			return 0, reasons, nil
 		}
-		stackScore += extraScore
+		engineScore += extraScore
 	}
 
 	// any
-	if len(stack.Devices.Any) > 0 {
-		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, stack.Devices.Any)
+	if len(manifest.Devices.Any) > 0 {
+		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, manifest.Devices.Any)
 		for _, reason := range reasonsAny {
 			reasons = append(reasons, "devices any: "+reason)
 		}
@@ -167,18 +168,18 @@ func checkStack(hardwareInfo types.HwInfo, stack types.Stack) (int, []string, er
 		if extraScore == 0 {
 			return 0, reasons, nil
 		}
-		stackScore += extraScore
+		engineScore += extraScore
 	}
 
-	return stackScore, reasons, nil
+	return engineScore, reasons, nil
 }
 
-func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice) (int, []string, error) {
+func checkDevicesAll(hardwareInfo types.HwInfo, devices []engines.Device) (int, []string, error) {
 	devicesFound := 0
 	extraScore := 0
 	var reasons []string
 
-	for _, device := range stackDevices {
+	for _, device := range devices {
 
 		if device.Type == "cpu" {
 			if hardwareInfo.Cpus == nil {
@@ -218,7 +219,7 @@ func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 		}
 	}
 
-	if len(stackDevices) > 0 && devicesFound != len(stackDevices) {
+	if len(devices) > 0 && devicesFound != len(devices) {
 		reasons = append(reasons, "required device not found")
 		return 0, reasons, nil
 	}
@@ -226,12 +227,12 @@ func checkDevicesAll(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 	return extraScore, reasons, nil
 }
 
-func checkDevicesAny(hardwareInfo types.HwInfo, stackDevices []types.StackDevice) (int, []string, error) {
+func checkDevicesAny(hardwareInfo types.HwInfo, devices []engines.Device) (int, []string, error) {
 	devicesFound := 0
 	extraScore := 0
 	var reasons []string
 
-	for _, device := range stackDevices {
+	for _, device := range devices {
 
 		if device.Type == "cpu" {
 			if hardwareInfo.Cpus == nil {
@@ -267,7 +268,7 @@ func checkDevicesAny(hardwareInfo types.HwInfo, stackDevices []types.StackDevice
 	}
 
 	// If any-of devices are defined, we need to find at least one
-	if len(stackDevices) > 0 && devicesFound == 0 {
+	if len(devices) > 0 && devicesFound == 0 {
 		reasons = append(reasons, "required device not found")
 		return 0, reasons, nil
 	}

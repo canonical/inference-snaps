@@ -1,0 +1,12 @@
+name: cpu-devel
+description: Requires any CPU but is grade devel
+vendor: Canonical Ltd
+grade: devel
+devices:
+  any:
+    - type: cpu
+      architecture: amd64
+    - type: cpu
+      architecture: arm64
+memory: 1G
+disk-space: 2G

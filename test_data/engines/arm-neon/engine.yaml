@@ -1,5 +1,5 @@
 name: arm-neon
-description: Example stack for ARM CPUs with NEON instruction set
+description: ARM CPUs with NEON instruction set
 vendor: Canonical Ltd
 grade: stable
 devices:

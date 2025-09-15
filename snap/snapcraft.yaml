@@ -1,7 +1,7 @@
 name: stack-utils
 base: core24
 version: git
-summary: Utilities for selecting hardware optimised stacks
+summary: Utilities for selecting hardware optimised engines
 description: |
   These utilities help decide which components should be installed on a particular system.
 
@@ -77,23 +77,20 @@ parts:
     source: .
     source-type: local
 
+  engines:
+    plugin: dump
+    source: test_data/engines
+    organize:
+      "*": engines/
+
 apps:
-  hardware-info:
+  stack-utils:
     plugs:
       - hardware-observe
-      - opengl
+      - home
       - network
-    command: bin/hardware-info
-
-  select-stack:
-    plugs:
-      - home
-    command: bin/select-stack
-
-  stack:
-    plugs:
-      - home
-    command: bin/stack
+      - opengl
+    command: bin/cli
 
   clinfo:
     plugs:

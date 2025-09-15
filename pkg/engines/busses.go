@@ -1,31 +1,29 @@
-package validate
+package engines
 
 import (
 	"fmt"
 	"reflect"
 	"slices"
-
-	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func bus(device types.StackDevice, extraFields []string) error {
+func (device Device) validateBus(extraFields []string) error {
 	switch device.Bus {
 	case "pci":
-		return pci(device, extraFields)
+		return device.validatePci(extraFields)
 	case "usb":
-		return usb(device, extraFields)
+		return device.validateUsb(extraFields)
 	case "": // default to pci bus
-		return pci(device, extraFields)
+		return device.validatePci(extraFields)
 	default:
 		return fmt.Errorf("invalid bus: %v", device.Bus)
 	}
 }
 
-func usb(device types.StackDevice, extraFields []string) error {
+func (device Device) validateUsb(extraFields []string) error {
 	return fmt.Errorf("usb device validation not implemented")
 }
 
-func pci(device types.StackDevice, extraFields []string) error {
+func (device Device) validatePci(extraFields []string) error {
 	validFields := []string{
 		"Type",
 		"Bus",

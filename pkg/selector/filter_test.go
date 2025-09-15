@@ -4,14 +4,15 @@ import (
 	"os"
 	"testing"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
 /*
-If the model snap has no stacks defined, scoring should pass, but finding a top stack should not be possible.
+If the model snap has no engines defined, scoring should pass, but finding a top engine should not be possible.
 */
-func TestFindStackEmpty(t *testing.T) {
+func TestFindTopEngineFromNone(t *testing.T) {
 	hwInfo := types.HwInfo{
 		Memory: types.MemoryInfo{
 			TotalRam:  200000000,
@@ -25,20 +26,20 @@ func TestFindStackEmpty(t *testing.T) {
 		},
 	}
 
-	allStacks, err := LoadManifestsFromDir("../../test_data/engines")
+	allEngines, err := LoadManifestsFromDir("../../test_data/engines")
 	if err != nil {
 		t.Fatal(err)
 	}
-	scoredStacks, err := ScoreStacks(hwInfo, allStacks)
+	scoredEngines, err := ScoreEngines(hwInfo, allEngines)
 	if err != nil {
 		t.Fatal(err)
 	}
-	topStack, err := TopStack(scoredStacks)
+	topEngine, err := TopEngine(scoredEngines)
 	if err == nil {
-		t.Fatal("TopStack should return an error if no stacks are provided")
+		t.Fatal("TopEngine should return an error if no engines are provided")
 	}
-	if topStack != nil {
-		t.Fatal("No top stack should be returned if no stacks are provided")
+	if topEngine != nil {
+		t.Fatal("No top engine should be returned if no engines are provided")
 	}
 }
 
@@ -52,10 +53,10 @@ func TestDiskCheck(t *testing.T) {
 	hwInfo.Disk["/"] = dirStat
 	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
 
-	stackDisk := "300M"
-	stack := types.Stack{DiskSpace: &stackDisk}
+	manifestDisk := "300M"
+	engine := engines.Manifest{DiskSpace: &manifestDisk}
 
-	result, reasons, err := checkStack(hwInfo, stack)
+	result, reasons, err := checkEngine(hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,7 +69,7 @@ func TestDiskCheck(t *testing.T) {
 		Avail: 100000000,
 	}
 	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
-	result, reasons, err = checkStack(hwInfo, stack)
+	result, reasons, err = checkEngine(hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,10 +86,10 @@ func TestMemoryCheck(t *testing.T) {
 		},
 	}
 
-	stackMemory := "300M"
-	stack := types.Stack{Memory: &stackMemory}
+	engineMemory := "300M"
+	engine := engines.Manifest{Memory: &engineMemory}
 
-	result, reasons, err := checkStack(hwInfo, stack)
+	result, reasons, err := checkEngine(hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +98,7 @@ func TestMemoryCheck(t *testing.T) {
 	}
 
 	hwInfo.Memory.TotalRam = 100000000
-	result, reasons, err = checkStack(hwInfo, stack)
+	result, reasons, err = checkEngine(hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,14 +117,14 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var currentStack types.Stack
-	err = yaml.Unmarshal(data, &currentStack)
+	var currentEngine engines.Manifest
+	err = yaml.Unmarshal(data, &currentEngine)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// No memory in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkEngine(hwInfo, currentEngine)
 	if err == nil {
 		t.Fatalf("No Memory in hardware_info should return err")
 	}
@@ -134,7 +135,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No disk space in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkEngine(hwInfo, currentEngine)
 	if err == nil {
 		t.Fatal("No Disk space in hardware_info should return err")
 	}
@@ -145,7 +146,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No CPU in hardware info
-	_, _, err = checkStack(hwInfo, currentStack)
+	_, _, err = checkEngine(hwInfo, currentEngine)
 	if err == nil {
 		t.Fatal("No CPU in hardware_info should return err")
 	}

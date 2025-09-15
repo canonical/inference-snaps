@@ -1,5 +1,5 @@
 name: cpu-avx1
-description: Example stack for legacy CPUs with only SSE4.2 (2008) and AVX (2011) support
+description: Legacy CPUs with only SSE4.2 (2008) and AVX (2011)
 vendor: Canonical Ltd
 grade: stable
 devices:

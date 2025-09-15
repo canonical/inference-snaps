@@ -1,5 +1,5 @@
 name: cpu-avx512
-description: Example stack for modern CPUs, offering good accuracy with low footprints
+description: CPUs with AVX512
 vendor: Canonical Ltd
 grade: stable
 devices:

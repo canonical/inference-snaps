@@ -8,7 +8,7 @@ import (
 	"os/exec"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/stack-utils/pkg/engines"
 )
 
 const (
@@ -21,57 +21,50 @@ type Status struct {
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
-func scoredStacksFromOptions() ([]types.ScoredStack, error) {
-	stacksJson, err := snapctl.Get("engines").Document().Run()
+func scoredEnginesFromOptions() ([]engines.ScoredManifest, error) {
+	engineJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
 		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
 
-	stacksMap, err := parseStacksJson(stacksJson)
+	engines, err := parseEnginesJson(engineJson)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing engines: %v", err)
 	}
 
-	// map to slice
-	// TODO: Not a map. This is appending a slice to another
-	var stacks []types.ScoredStack
-	for _, stack := range stacksMap {
-		stacks = append(stacks, stack)
-	}
-
-	return stacks, nil
+	return engines, nil
 }
 
-func selectedStackFromOptions() (types.ScoredStack, error) {
-	selectedStackName, err := snapctl.Get("engine").Run()
+func selectedEngineFromOptions() (engines.ScoredManifest, error) {
+	selectedEngineName, err := snapctl.Get("engine").Run()
 	if err != nil {
-		return types.ScoredStack{}, fmt.Errorf("error loading selected engine: %v", err)
+		return engines.ScoredManifest{}, fmt.Errorf("error loading selected engine: %v", err)
 	}
 
-	stackJson, err := snapctl.Get("engines." + selectedStackName).Document().Run()
+	enginesJson, err := snapctl.Get("engines." + selectedEngineName).Document().Run()
 	if err != nil {
-		return types.ScoredStack{}, fmt.Errorf("error loading engine: %v", err)
+		return engines.ScoredManifest{}, fmt.Errorf("error loading engine: %v", err)
 	}
 
-	stack, err := parseStackJson(stackJson)
+	engine, err := parseEngineJson(enginesJson)
 	if err != nil {
-		return types.ScoredStack{}, fmt.Errorf("error parsing engine: %v", err)
+		return engines.ScoredManifest{}, fmt.Errorf("error parsing engine: %v", err)
 	}
 
-	return stack, nil
+	return engine, nil
 }
 
 func statusStruct() (*Status, error) {
 	var statusStr Status
 
-	// Find the selected stack
-	stack, err := selectedStackFromOptions()
+	// Find the selected engine
+	engine, err := selectedEngineFromOptions()
 	if err != nil {
 		return nil, fmt.Errorf("error loading selected engine: %v", err)
 	}
-	statusStr.Engine = stack.Name
+	statusStr.Engine = engine.Name
 
-	ssc, err := serverStatusCode(stack.Name)
+	ssc, err := serverStatusCode(engine.Name)
 	if err != nil {
 		return nil, fmt.Errorf("error getting server status: %v", err)
 	}
@@ -86,7 +79,7 @@ func statusStruct() (*Status, error) {
 		statusStr.Status = "unknown"
 	}
 
-	endpoints, err := serverApiUrls(stack)
+	endpoints, err := serverApiUrls(engine)
 	if err != nil {
 		return nil, fmt.Errorf("error getting server api endpoints: %v", err)
 	}
@@ -95,10 +88,10 @@ func statusStruct() (*Status, error) {
 	return &statusStr, nil
 }
 
-func serverApiUrls(stack types.ScoredStack) (map[string]string, error) {
+func serverApiUrls(engine engines.ScoredManifest) (map[string]string, error) {
 	// Build API URL
 	apiBasePath := "v1"
-	if val, ok := stack.Configurations["http.base-path"]; ok {
+	if val, ok := engine.Configurations["http.base-path"]; ok {
 		apiBasePath, ok = val.(string)
 		if !ok {
 			return nil, fmt.Errorf("unexpected type for base path: %v", val)
@@ -117,9 +110,9 @@ func serverApiUrls(stack types.ScoredStack) (map[string]string, error) {
 	// TODO add additional api endpoints like openvino on http://localhost:8080/v1
 }
 
-func serverStatusCode(stackName string) (int, error) {
+func serverStatusCode(engineName string) (int, error) {
 	// Depend on existing check server scripts for status
-	checkScript := os.ExpandEnv("$SNAP/engines/" + stackName + "/check-server")
+	checkScript := os.ExpandEnv("$SNAP/engines/" + engineName + "/check-server")
 	cmd := exec.Command(checkScript)
 	if err := cmd.Start(); err != nil {
 		return 0, fmt.Errorf("error checking server: %v", err)

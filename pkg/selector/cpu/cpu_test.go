@@ -4,12 +4,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
 func TestCheckCpuVendor(t *testing.T) {
 	manufacturerId := "GenuineIntel"
-	stackDevice := types.StackDevice{
+	device := engines.Device{
 		Type:           "cpu",
 		Bus:            "",
 		ManufacturerId: &manufacturerId,
@@ -20,7 +21,7 @@ func TestCheckCpuVendor(t *testing.T) {
 		ManufacturerId: manufacturerId,
 	}}
 
-	result, reasons, err := Match(stackDevice, hwInfoCpus)
+	result, reasons, err := Match(device, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
@@ -30,7 +31,7 @@ func TestCheckCpuVendor(t *testing.T) {
 
 	manufacturerId = "AuthenticAMD"
 
-	result, reasons, err = Match(stackDevice, hwInfoCpus)
+	result, reasons, err = Match(device, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
@@ -42,7 +43,7 @@ func TestCheckCpuVendor(t *testing.T) {
 
 func TestCheckCpuFlags(t *testing.T) {
 	manufacturerId := "GenuineIntel"
-	stackDevice := types.StackDevice{
+	device := engines.Device{
 		Type:           "cpu",
 		Bus:            "",
 		ManufacturerId: &manufacturerId,
@@ -55,7 +56,7 @@ func TestCheckCpuFlags(t *testing.T) {
 		Flags:          []string{"avx2"},
 	}}
 
-	result, reasons, err := Match(stackDevice, hwInfoCpus)
+	result, reasons, err := Match(device, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}
@@ -63,9 +64,9 @@ func TestCheckCpuFlags(t *testing.T) {
 		t.Fatalf("CPU flags should match: %s", strings.Join(reasons, ","))
 	}
 
-	stackDevice.Flags = []string{"avx512"}
+	device.Flags = []string{"avx512"}
 
-	result, reasons, err = Match(stackDevice, hwInfoCpus)
+	result, reasons, err = Match(device, hwInfoCpus)
 	if err != nil {
 		t.Error(err)
 	}

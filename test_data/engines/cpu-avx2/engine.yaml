@@ -1,5 +1,5 @@
 name: cpu-avx2
-description: Example stack for CPUs, offering good accuracy with low footprints
+description: CPUs with AVX2
 vendor: Canonical Ltd
 grade: stable
 devices:

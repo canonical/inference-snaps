@@ -9,10 +9,10 @@ import (
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/hardware_info"
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/snap_store"
-	"github.com/canonical/stack-utils/pkg/types"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -29,8 +29,8 @@ func addUseCommand() {
 		Short: "Select an engine",
 		// Long:  "",
 		GroupID: "engines",
-		// stack use <stack> requires 1 argument
-		// stack use --auto does not support any arguments
+		// cli use-engine <engine> requires 1 argument
+		// cli use-engine --auto does not support any arguments
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: useValidArgs,
 		RunE:              use,
@@ -44,30 +44,30 @@ func addUseCommand() {
 }
 
 func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	stacksJson, err := snapctl.Get("engines").Document().Run()
+	enginesJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
 		fmt.Printf("Error loading engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
-	stacks, err := parseStacksJson(stacksJson)
+	engines, err := parseEnginesJson(enginesJson)
 	if err != nil {
 		fmt.Printf("Error parsing engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
-	var stackNames []cobra.Completion
-	for i := range stacks {
-		if stacks[i].Compatible {
-			stackNames = append(stackNames, stacks[i].Name)
+	var engineNames []cobra.Completion
+	for i := range engines {
+		if engines[i].Compatible {
+			engineNames = append(engineNames, engines[i].Name)
 		}
 	}
-	if len(stackNames) == 0 {
-		// No stacks flagged as compatible
+	if len(engineNames) == 0 {
+		// No engines flagged as compatible
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	return stackNames, cobra.ShellCompDirectiveNoFileComp
+	return engineNames, cobra.ShellCompDirectiveNoFileComp
 }
 
 func use(_ *cobra.Command, args []string) error {
@@ -77,43 +77,43 @@ func use(_ *cobra.Command, args []string) error {
 			return fmt.Errorf("cannot specify both engine name and --auto flag")
 		}
 
-		scoredStacks, err := scoreStacks()
+		scoredEngines, err := scoreEngines()
 		if err != nil {
 			return fmt.Errorf("error scoring engines: %v", err)
 		}
 
-		for _, stack := range scoredStacks {
-			if stack.Score == 0 {
-				fmt.Printf("❌ %s - not compatible: %s\n", stack.Name, strings.Join(stack.Notes, ", "))
-			} else if stack.Grade != "stable" {
-				fmt.Printf("🟠 %s - score = %d, grade = %s\n", stack.Name, stack.Score, stack.Grade)
+		for _, engine := range scoredEngines {
+			if engine.Score == 0 {
+				fmt.Printf("❌ %s - not compatible: %s\n", engine.Name, strings.Join(engine.Notes, ", "))
+			} else if engine.Grade != "stable" {
+				fmt.Printf("🟠 %s - score = %d, grade = %s\n", engine.Name, engine.Score, engine.Grade)
 			} else {
-				fmt.Printf("✅ %s - compatible, score = %d\n", stack.Name, stack.Score)
+				fmt.Printf("✅ %s - compatible, score = %d\n", engine.Name, engine.Score)
 			}
 		}
 
-		err = stacksToSnapOptions(scoredStacks)
+		err = enginesToSnapOptions(scoredEngines)
 		if err != nil {
 			return fmt.Errorf("error saving scored engines: %v", err)
 		}
 
 		fmt.Println("Automatically selecting a compatible engine ...")
 
-		selectedStack, err := selector.TopStack(scoredStacks)
+		selectedEngine, err := selector.TopEngine(scoredEngines)
 		if err != nil {
 			return fmt.Errorf("error finding top engine: %v", err)
 		}
 
-		fmt.Printf("Selected engine for your hardware configuration: %s\n\n", selectedStack.Name)
+		fmt.Printf("Selected engine for your hardware configuration: %s\n\n", selectedEngine.Name)
 
-		err = useStack(selectedStack.Name, useAssumeYes)
+		err = useEngine(selectedEngine.Name, useAssumeYes)
 		if err != nil {
 			return fmt.Errorf("failed to use engine: %s", err)
 		}
 
 	} else {
 		if len(args) == 1 {
-			err := useStack(args[0], useAssumeYes)
+			err := useEngine(args[0], useAssumeYes)
 			if err != nil {
 				return fmt.Errorf("failed to use engine: %s", err)
 			}
@@ -124,8 +124,8 @@ func use(_ *cobra.Command, args []string) error {
 	return nil
 }
 
-func scoreStacks() ([]types.ScoredStack, error) {
-	allStacks, err := selector.LoadManifestsFromDir(enginesDir)
+func scoreEngines() ([]engines.ScoredManifest, error) {
+	allEngines, err := selector.LoadManifestsFromDir(enginesDir)
 	if err != nil {
 		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
@@ -136,24 +136,24 @@ func scoreStacks() ([]types.ScoredStack, error) {
 		return nil, fmt.Errorf("error getting hardware info: %v", err)
 	}
 
-	// score stacks
-	scoredStacks, err := selector.ScoreStacks(hardwareInfo, allStacks)
+	// score engines
+	scoredEngines, err := selector.ScoreEngines(hardwareInfo, allEngines)
 	if err != nil {
 		return nil, fmt.Errorf("error scoring engines: %v", err)
 	}
 
-	return scoredStacks, nil
+	return scoredEngines, nil
 }
 
-func stacksToSnapOptions(scoredStacks []types.ScoredStack) error {
-	// set all scored stacks as snap options
-	for _, stack := range scoredStacks {
-		stackJson, err := json.Marshal(stack)
+func enginesToSnapOptions(scoredEngines []engines.ScoredManifest) error {
+	// set all scored engines as snap options
+	for _, engine := range scoredEngines {
+		engineJson, err := json.Marshal(engine)
 		if err != nil {
 			return fmt.Errorf("error serializing engines: %v", err)
 		}
 
-		err = snapctl.Set("engines."+stack.Name, string(stackJson)).Document().Run()
+		err = snapctl.Set("engines."+engine.Name, string(engineJson)).Document().Run()
 		if err != nil {
 			return fmt.Errorf("error setting engine option: %v", err)
 		}
@@ -162,20 +162,20 @@ func stacksToSnapOptions(scoredStacks []types.ScoredStack) error {
 }
 
 /*
-useStack changes the stack that is used by the snap
+useEngine changes the engine that is used by the snap
 */
-func useStack(stackName string, assumeYes bool) error {
-	stackJson, err := snapctl.Get("engines." + stackName).Document().Run()
+func useEngine(engineName string, assumeYes bool) error {
+	engineJson, err := snapctl.Get("engines." + engineName).Document().Run()
 	if err != nil {
 		return fmt.Errorf("error loading engine: %v", err)
 	}
 
-	stack, err := parseStackJson(stackJson)
+	engine, err := parseEngineJson(engineJson)
 	if err != nil {
 		return fmt.Errorf("error parsing engine: %v", err)
 	}
 
-	components, err := missingComponents(stack.Components)
+	components, err := missingComponents(engine.Components)
 	if err != nil {
 		return fmt.Errorf("error checking installed components: %v", err)
 	}
@@ -216,7 +216,7 @@ func useStack(stackName string, assumeYes bool) error {
 
 		// This is blocking, but there is a timeout bug:
 		// https://github.com/canonical/stack-utils/issues/122
-		err = installComponents(stack.Components)
+		err = installComponents(engine.Components)
 		if err != nil {
 			return fmt.Errorf("error installing components: %v", err)
 		}
@@ -226,7 +226,7 @@ func useStack(stackName string, assumeYes bool) error {
 	if err != nil {
 		return fmt.Errorf("error getting current engine: %v", err)
 	}
-	if currentEngine == stackName {
+	if currentEngine == engineName {
 		// Nothing left to do
 		return nil
 	}
@@ -236,7 +236,7 @@ func useStack(stackName string, assumeYes bool) error {
 		fmt.Println()
 	}
 
-	err = setStackOptions(stack)
+	err = setEngineOptions(engine)
 	if err != nil {
 		return fmt.Errorf("error setting engine options: %v", err)
 	}
@@ -247,7 +247,7 @@ func useStack(stackName string, assumeYes bool) error {
 		return fmt.Errorf("error restarting snap service: %v", err)
 	}
 
-	fmt.Printf("Engine successfully changed to %q\n", stackName)
+	fmt.Printf("Engine successfully changed to %q\n", engineName)
 
 	return nil
 }
@@ -287,16 +287,16 @@ func componentInstalled(component string) (bool, error) {
 	}
 }
 
-func setStackOptions(stack types.ScoredStack) error {
-	// set stack config option
-	err := snapctl.Set("engine", stack.Name).Run()
+func setEngineOptions(engine engines.ScoredManifest) error {
+	// set engine config option
+	err := snapctl.Set("engine", engine.Name).Run()
 	if err != nil {
 		return fmt.Errorf(`error setting snap option "engine": %v`, err)
 	}
 
 	// set other config options
 	// TODO: clear beforehand
-	for confKey, confVal := range stack.Configurations {
+	for confKey, confVal := range engine.Configurations {
 		valJson, err := json.Marshal(confVal)
 		if err != nil {
 			return fmt.Errorf("error serializing configuration %q: %v - %v", confKey, confVal, err)

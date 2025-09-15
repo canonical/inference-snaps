@@ -1,4 +1,4 @@
-package validate
+package engines
 
 import (
 	"bytes"
@@ -7,21 +7,20 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/stack-utils/pkg/types"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
-func Stack(manifestFilePath string) error {
+func Validate(manifestFilePath string) error {
 
 	if !strings.HasSuffix(manifestFilePath, "engine.yaml") {
-		return fmt.Errorf("stack manifest file must be called engine.yaml: %s", manifestFilePath)
+		return fmt.Errorf("manifest file must be called engine.yaml: %s", manifestFilePath)
 	}
 
 	_, err := os.Stat(manifestFilePath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("stack manifest file does not exist: %s", manifestFilePath)
+			return fmt.Errorf("manifest file does not exist: %s", manifestFilePath)
 		}
 		return fmt.Errorf("error getting file info: %v", err)
 	}
@@ -31,27 +30,27 @@ func Stack(manifestFilePath string) error {
 		return fmt.Errorf("error reading file: %v", err)
 	}
 
-	// Get stack name from path
-	stackName := stackNameFromPath(manifestFilePath)
+	// Get engine name from path
+	engineName := engineNameFromPath(manifestFilePath)
 
-	return validateStackYaml(stackName, yamlData)
+	return validateManifestYaml(engineName, yamlData)
 }
 
-func stackNameFromPath(manifestFilePath string) string {
+func engineNameFromPath(manifestFilePath string) string {
 	parts := utils.SplitPathIntoDirectories(manifestFilePath)
 	if len(parts) < 2 {
 		return ""
 	}
-	return parts[len(parts)-2] // second last part: stack-name/engine.yaml
+	return parts[len(parts)-2] // second last part: engine-name/engine.yaml
 }
 
-func validateStackYaml(expectedStackName string, yamlData []byte) error {
+func validateManifestYaml(expectedName string, yamlData []byte) error {
 	yamlData = bytes.TrimSpace(yamlData)
 	if len(yamlData) == 0 {
 		return errors.New("empty yaml data")
 	}
 
-	var stack types.Stack
+	var manifest Manifest
 
 	yamlDecoder := yaml.NewDecoder(bytes.NewReader(yamlData))
 
@@ -59,59 +58,59 @@ func validateStackYaml(expectedStackName string, yamlData []byte) error {
 	yamlDecoder.KnownFields(true)
 
 	// We depend on the yaml unmarshal to check field types
-	if err := yamlDecoder.Decode(&stack); err != nil {
+	if err := yamlDecoder.Decode(&manifest); err != nil {
 		return fmt.Errorf("error decoding: %v", err)
 	}
 
-	return validateStackStruct(expectedStackName, stack)
+	return manifest.validate(expectedName)
 }
 
-func validateStackStruct(expectedStackName string, stack types.Stack) error {
-	if stack.Name == "" {
+func (manifest Manifest) validate(expectedEngineName string) error {
+	if manifest.Name == "" {
 		return fmt.Errorf("required field is not set: name")
 	}
 
-	// Only do stack name matching test if expected name is set
-	if expectedStackName != "" {
-		if stack.Name != expectedStackName {
-			return fmt.Errorf("stack dir name should equal name in manifest: %s != %s", expectedStackName, stack.Name)
+	// Only do engine name matching test if expected name is set
+	if expectedEngineName != "" {
+		if manifest.Name != expectedEngineName {
+			return fmt.Errorf("engine directory name should match name in manifest: %s != %s", expectedEngineName, manifest.Name)
 		}
 	}
 
-	if stack.Description == "" {
+	if manifest.Description == "" {
 		return fmt.Errorf("required field is not set: description")
 	}
 
-	if stack.Vendor == "" {
+	if manifest.Vendor == "" {
 		return fmt.Errorf("required field is not set: vendor")
 	}
 
-	if stack.Grade == "" {
+	if manifest.Grade == "" {
 		return fmt.Errorf("required field is not set: grade")
 	}
-	if stack.Grade != "stable" && stack.Grade != "devel" {
+	if manifest.Grade != "stable" && manifest.Grade != "devel" {
 		return fmt.Errorf("grade should be 'stable' or 'devel'")
 	}
 
-	if stack.Memory != nil {
-		_, err := utils.StringToBytes(*stack.Memory)
+	if manifest.Memory != nil {
+		_, err := utils.StringToBytes(*manifest.Memory)
 		if err != nil {
 			return fmt.Errorf("error parsing memory: %v", err)
 		}
 	}
 
-	if stack.DiskSpace != nil {
-		_, err := utils.StringToBytes(*stack.DiskSpace)
+	if manifest.DiskSpace != nil {
+		_, err := utils.StringToBytes(*manifest.DiskSpace)
 		if err != nil {
 			return fmt.Errorf("error parsing disk space: %v", err)
 		}
 	}
 
-	for key, val := range stack.Configurations {
+	for key, val := range manifest.Configurations {
 		if !utils.IsPrimitive(val) {
 			return fmt.Errorf("configuration field %s is not a primitive value: %v", key, val)
 		}
 	}
 
-	return stackDevices(stack.Devices)
+	return manifest.Devices.validate()
 }

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/canonical/stack-utils/pkg/selector"
-	"github.com/canonical/stack-utils/pkg/types"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -85,62 +85,62 @@ func statusJson() (string, error) {
 }
 
 func statusHuman() (string, error) {
-	// Find the selected stack
-	stack, err := selectedStackFromOptions()
+	// Find the selected engine
+	engine, err := selectedEngineFromOptions()
 	if err != nil {
 		return "", fmt.Errorf("error loading selected engine: %v", err)
 	}
 
-	// Get all stacks with scores
-	compatibleStacks := true
-	scoredStacks, err := scoredStacksFromOptions()
+	// Get all engines with scores
+	compatibleEngines := true
+	scoredEngines, err := scoredEnginesFromOptions()
 	if err != nil {
 		return "", fmt.Errorf("error loading scored engines: %v", err)
 	}
 
-	// Find top stack
-	autoStack, err := selector.TopStack(scoredStacks)
+	// Find top engine
+	autoEngine, err := selector.TopEngine(scoredEngines)
 	if err != nil {
-		if errors.Is(err, selector.ErrorNoCompatibleStacks) {
-			compatibleStacks = false
+		if errors.Is(err, selector.ErrorNoCompatibleEngine) {
+			compatibleEngines = false
 		} else {
 			return "", fmt.Errorf("error loading top engine: %v", err)
 		}
 	}
 
-	stackStatusText := statusHumanStack(stack, compatibleStacks && stack.Name == autoStack.Name)
+	engineStatusText := statusHumanEngine(engine, compatibleEngines && engine.Name == autoEngine.Name)
 
 	// TODO check if all required snap components are available, otherwise print "Downloading resources..."
 
-	serverStatusText, err := statusHumanServer(stack)
+	serverStatusText, err := statusHumanServer(engine)
 	if err != nil {
 		return "", fmt.Errorf("error getting server status: %v", err)
 	}
 
-	return fmt.Sprintf("%s\n\n%s", stackStatusText, serverStatusText), nil
+	return fmt.Sprintf("%s\n\n%s", engineStatusText, serverStatusText), nil
 }
 
-func statusHumanStack(stack types.ScoredStack, auto bool) string {
+func statusHumanEngine(engine engines.ScoredManifest, auto bool) string {
 	bold := color.New(color.Bold).SprintFunc()
-	engineString := fmt.Sprintf("Using %s", bold(stack.Name))
+	engineString := fmt.Sprintf("Using %s", bold(engine.Name))
 	if auto {
 		engineString += " (automatically selected)"
 	}
 	return engineString
 }
 
-func statusHumanServer(stack types.ScoredStack) (string, error) {
+func statusHumanServer(engine engines.ScoredManifest) (string, error) {
 	// Start, stop, log commands
 	startCmd := fmt.Sprintf(`Run "sudo snap start %s" to start the server.`, snapInstanceName)
 	stopCmd := fmt.Sprintf(`Run "sudo snap stop %s" to stop the server.`, snapInstanceName)
 	logsCmd := fmt.Sprintf(`Run "sudo snap logs %s" to view the server logs.`, snapInstanceName)
 
-	apiUrls, err := serverApiUrls(stack)
+	apiUrls, err := serverApiUrls(engine)
 	if err != nil {
 		return "", fmt.Errorf("error getting api urls: %v", err)
 	}
 
-	checkExitCode, err := serverStatusCode(stack.Name)
+	checkExitCode, err := serverStatusCode(engine.Name)
 	if err != nil {
 		return "", fmt.Errorf("error checking server status: %v", err)
 	}

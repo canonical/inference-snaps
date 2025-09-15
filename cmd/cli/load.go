@@ -23,26 +23,26 @@ func init() {
 }
 
 func load(_ *cobra.Command, _ []string) error {
-	return loadStacksToSnapOptions()
+	return loadEnginesToSnapOptions()
 }
 
-func loadStacksToSnapOptions() error {
+func loadEnginesToSnapOptions() error {
 	fmt.Println("Loading engines to snap options ...")
 
-	allStacks, err := selector.LoadManifestsFromDir(enginesDir)
+	allEngines, err := selector.LoadManifestsFromDir(enginesDir)
 	if err != nil {
 		return fmt.Errorf("error loading engines: %v", err)
 	}
 
-	// set all stacks as snap options
-	// TODO: change to also handle stack deletions
-	for _, stack := range allStacks {
-		stackJson, err := json.Marshal(stack)
+	// set all engines as snap options
+	// TODO: change to also handle engine deletions
+	for _, engine := range allEngines {
+		engineJson, err := json.Marshal(engine)
 		if err != nil {
 			return fmt.Errorf("error serializing engines: %s", err)
 		}
 
-		err = snapctl.Set("engines."+stack.Name, string(stackJson)).Document().Run()
+		err = snapctl.Set("engines."+engine.Name, string(engineJson)).Document().Run()
 		if err != nil {
 			return fmt.Errorf("error setting engines option: %s", err)
 		}
