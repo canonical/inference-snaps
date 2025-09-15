@@ -20,7 +20,9 @@ You can help improve our code by:
 - Reporting bugs and issues by opening an issue on GitHub
 
 ### AI model snaps code bases
-[Deepseek R1 snap](https://github.com/canonical/deepseek-r1-snap)
+Our projects' source code can be found at:
+- [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
+- [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 
 (contribute-to-our-docs)=
 
