@@ -11,7 +11,7 @@ CLI syntax:
 <ai-model-snap> [COMMAND] [OPTIONS] [ARGS]
 ```
 
-The main entrypoint to interact with the model runtime, manage engines, configure settings, and run interactive sessions.
+The main entry point to interact with the model runtime, manage engines, configure settings, and run interactive sessions.
 
 ## Global Options
 
