@@ -65,7 +65,7 @@ Get configuration values
 * **Set**: Override configuration values. Rejects unknown keys.
 * **Get**: Retrieve configuration values. If no key is given, list all configurations in tabular form.
 
-Key syntax: follows the same hierarchical format as **snapd**.
+Key syntax: follows the same hierarchical format as [**snapd**][snap_options].
 
 **Example**:
 ```{terminal}
@@ -187,4 +187,7 @@ Automatically select best engine
 | `<ai-model-snap> show-engine [<engine>] [--format=<f>]`     | Show engine details (yaml/json)                              |
 | `<ai-model-snap> use-engine <engine>` / `--auto`            | Switch or auto-select engine                                 |
 
+
+<!-- Links -->
+[snap_options]: https://snapcraft.io/docs/configuration-in-snaps
 
