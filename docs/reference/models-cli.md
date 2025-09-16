@@ -19,8 +19,36 @@ Show usage information and list all available commands.
 ```shell
 <my-model> --help
 ```
-```shell
-<ai-model-snap> --help
+
+**Example**:
+```{terminal}
+:input: deepseek-r1 --help
+
+Usage:
+  deepseek-r1 [command]
+
+Basic Commands:
+  status       Show the status
+  chat         Start the chat CLI
+
+Configuration Commands:
+  get          Print configuration option
+  set          Set configuration option
+  unset        Unset configuration option
+
+Management Commands:
+  list-engines List available engines
+  show-engine  Print information about an engine
+  use-engine   Select an engine
+
+Additional Commands:
+  debug        Debugging commands
+  help         Help about any command
+
+Flags:
+  -h, --help   help for deepseek-r1
+
+Use "deepseek-r1 [command] --help" for more information about a command.
 ```
 
 ## Commands
