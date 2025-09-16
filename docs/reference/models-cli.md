@@ -175,19 +175,3 @@ Automatically select best engine
 * `--auto` is run by default during installation.
 * Can be used to revert to the original engine after manual changes, driver updates, or new hardware installation.
 
-## Command Summary
-
-| Command                                             | Description                                                  |
-| :-------------------------------------------------- | :----------------------------------------------------------- |
-| `<ai-model-snap> [--help]`                                  | Show help                                                    |
-| `<ai-model-snap> status`                                    | Show server status, engine info, drivers, and resource usage |
-| `<ai-model-snap> chat`                                      | Start the command-line chat app                              |
-| `<ai-model-snap> set key=value...` / `<ai-model-snap> get [key]...` | Manage configuration values                                  |
-| `<ai-model-snap> list-engines`                              | List available engines                                       |
-| `<ai-model-snap> show-engine [<engine>] [--format=<f>]`     | Show engine details (yaml/json)                              |
-| `<ai-model-snap> use-engine <engine>` / `--auto`            | Switch or auto-select engine                                 |
-
-
-<!-- Links -->
-[snap_options]: https://snapcraft.io/docs/configuration-in-snaps
-
