@@ -8,7 +8,7 @@ It describes all available commands, options, arguments, and expected behavior.
 
 CLI syntax.
 ```shell
-<ai-model-snap> [COMMAND] [OPTIONS] [ARGS]
+<my-model> [COMMAND] [OPTIONS] [ARGS]
 ```
 
 The main entry point to interact with the model runtime, manage engines, configure settings, and run interactive sessions.
@@ -17,7 +17,7 @@ The main entry point to interact with the model runtime, manage engines, configu
 
 Show usage information and list all available commands.
 ```shell
-<ai-model-snap> -h
+<my-model> --help
 ```
 ```shell
 <ai-model-snap> --help
@@ -32,7 +32,7 @@ Following commands are available:
 Display information about the server and runtime environment.
 
 ```shell
-<ai-model-snap> status
+<my-model> status
 ```
 
 **Details shown:**
@@ -47,19 +47,19 @@ Display information about the server and runtime environment.
 
 Launch the command-line chat application.
 ```shell
-<ai-model-snap> chat
+<my-model> chat
 ```
 
 ### `set` and `get`
 
 Set configuration values
 ```shell
-<ai-model-snap> set <key>=<value>
+<my-model> set <key>=<value>
 ```
 
 Get configuration values
 ```shell
-<ai-model-snap> get [key]
+<my-model> get [key]
  ```
 
 * **Set**: Override configuration values. Rejects unknown keys.
@@ -87,14 +87,14 @@ verbose  false
 
 List engines with details including name, description, vendor, and compatibility.
 ```shell
-<ai-model-snap> list-engines
+<my-model> list-engines
 ```
 
 ### `show-engine`
 
 Show engine details.
 ```shell
-<ai-model-snap> show-engine <engine> [flags]
+<my-model> show-engine <engine> [flags]
 ```
 
 **Includes:**
@@ -160,12 +160,12 @@ Output format.
 
 Switch to a specific engine.
 ```shell
-<ai-model-snap> use-engine <engine>
+<my-model> use-engine <engine>
 ```
 
 Automatically select best engine.
 ```shell
-<ai-model-snap> use-engine --auto
+<my-model> use-engine --auto
 ```
 
 **Behavior:**
