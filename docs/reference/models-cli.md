@@ -92,11 +92,6 @@ Set configuration values.
 
 * **Set**: Override configuration values. Rejects unknown keys.
 
-**Example**:
-```{terminal}
-:input: deepseek-r1 set http.port=34531
-```
-
 ### `get`
 
 Get configuration values.
@@ -105,20 +100,6 @@ Get configuration values.
  ```
 
 * **Get**: Retrieve configuration values. If no key is given, list all configurations in tabular form.
-
-**Example**:
-```{terminal}
-:input: deepseek-r1 get http.port
-34531
-:input: deepseek-r1 get
-Key      Value
-engine   cpu-avx512
-engines  {...}
-http     {...}
-model    model-distill-qwen-7b-q4-k-m-gguf
-server   llamacpp-avx512
-verbose  false
-```
 
 ### `unset`
 
@@ -157,52 +138,6 @@ Show engine details.
 Output format.
 - `yaml` (default)
 - `json`
-
-**Example**
-```{terminal}
-:input: deepseek-r1 show-engine cpu-avx512 --format=json
-
-{
-   "engines.cpu-avx512":{
-      "compatible":true,
-      "components":[
-         "llamacpp-avx512",
-         "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations":{
-         "http.base-path":"v1",
-         "model":"model-distill-qwen-7b-q4-k-m-gguf",
-         "server":"llamacpp-avx512"
-      },
-      "description":"For CPUs with AVX512 support",
-      "devices":{
-         "any":[
-            {
-               "architecture":"amd64",
-               "flags":[
-                  "sse4_2",
-                  "f16c",
-                  "fma",
-                  "avx",
-                  "avx2",
-                  "avx512f",
-                  "avx512dq",
-                  "avx512bw"
-               ],
-               "type":"cpu"
-            }
-         ]
-      },
-      "disk-space":"8G",
-      "grade":"stable",
-      "memory":"4G",
-      "name":"cpu-avx512",
-      "score":20,
-      "vendor":"Canonical Ltd"
-   }
-}
-```
-
 
 ### `use-engine`
 
