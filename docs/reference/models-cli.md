@@ -6,7 +6,7 @@ It describes all available commands, options, arguments, and expected behavior.
 
 ## Overview
 
-CLI syntax:
+CLI syntax.
 ```shell
 <ai-model-snap> [COMMAND] [OPTIONS] [ARGS]
 ```
@@ -92,7 +92,7 @@ List engines with details including name, description, vendor, and compatibility
 
 ### `show-engine`
 
-Show engine details
+Show engine details.
 ```shell
 <ai-model-snap> show-engine <engine> [flags]
 ```
@@ -158,12 +158,12 @@ Output format.
 
 ### `use-engine`
 
-Switch to a specific engine
+Switch to a specific engine.
 ```shell
 <ai-model-snap> use-engine <engine>
 ```
 
-Automatically select best engine
+Automatically select best engine.
 ```shell
 <ai-model-snap> use-engine --auto
 ```
