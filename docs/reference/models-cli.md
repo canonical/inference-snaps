@@ -51,9 +51,9 @@ Flags:
 Use "deepseek-r1 [command] --help" for more information about a command.
 ```
 
-## Commands
+## Basic commands
 
-Following commands are available:
+Provide the core functionality for everyday use, such as checking tool status or starting an interactive chat session.
 
 ### `status`
 
@@ -78,27 +78,36 @@ Launch the command-line chat application.
 <my-model> chat
 ```
 
-### `set` and `get`
 
-Set configuration values
+## Configuration commands
+
+Control configuration options, including reading, setting, and unsetting persistent parameters.
+
+### `set`
+
+Set configuration values.
 ```shell
 <my-model> set <key>=<value>
 ```
 
-Get configuration values
-```shell
-<my-model> get [key]
- ```
-
 * **Set**: Override configuration values. Rejects unknown keys.
-* **Get**: Retrieve configuration values. If no key is given, list all configurations in tabular form.
-
-Key syntax: follows the same hierarchical format as [**snapd**][snap_options].
 
 **Example**:
 ```{terminal}
 :input: deepseek-r1 set http.port=34531
+```
 
+### `get`
+
+Get configuration values.
+```shell
+<my-model> get [key]
+ ```
+
+* **Get**: Retrieve configuration values. If no key is given, list all configurations in tabular form.
+
+**Example**:
+```{terminal}
 :input: deepseek-r1 get http.port
 34531
 :input: deepseek-r1 get
@@ -110,6 +119,17 @@ model    model-distill-qwen-7b-q4-k-m-gguf
 server   llamacpp-avx512
 verbose  false
 ```
+
+### `unset`
+
+Unset configuration values.
+```shell
+<my-model> unset <key>
+```
+
+## Management Commands
+
+Manage available engines by listing, inspecting, and selecting them for use.
 
 ### `list-engines`
 
