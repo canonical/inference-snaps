@@ -1,7 +1,7 @@
 (install-deepseek-r1-snap)=
-# Install Deepseek-R1 snap
+# Install DeepSeek-R1 snap
 
-The Deepseek-R1 snap installs a hardware-optimized runtime for inference with the [Deepseek-R1](https://github.com/deepseek-ai/DeepSeek-R1) Large Language Model.
+The DeepSeek-R1 snap installs a hardware-optimized runtime for inference with the [DeepSeek-R1](https://github.com/deepseek-ai/DeepSeek-R1) Large Language Model.
 It supports a range of hardware, in many cases with the help of drivers installed on the host.
 
 This snap works with amd64 and some arm64 CPU architectures and has been tested on Intel, AMD, and Ampere CPUs.
@@ -42,7 +42,7 @@ sudo snap start deepseek-r1
 When the server is running, it exposes an [OpenAI compatible endpoint](https://github.com/openai/openai-openapi) served via HTTP. 
 
 
-## Chat with Deepseek-R1
+## Chat with DeepSeek-R1
 
 The snap ships an example application that allows basic prompting from the command line.
 To run this built-in chat application:
@@ -151,7 +151,7 @@ sudo snap unset deepseek-r1 n-gpu-layers
 
 ## Uninstall the snap
 
-To remove the Deepseek R1 snap:
+To remove the DeepSeek R1 snap:
 
 ```bash
 sudo snap remove deepseek-r1
