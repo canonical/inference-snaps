@@ -14,10 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	listAll bool
-)
-
 func addListCommand() {
 	cmd := &cobra.Command{
 		Use:   "list-engines",
@@ -26,31 +22,24 @@ func addListCommand() {
 		GroupID:           "engines",
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              list,
+		RunE:              listEngines,
 	}
-
-	// flags
-	cmd.PersistentFlags().BoolVar(&listAll, "all", false, "include beta and incompatible engines")
 
 	rootCmd.AddCommand(cmd)
 }
 
-func list(_ *cobra.Command, _ []string) error {
-	return listEngines(listAll)
-}
-
-func listEngines(all bool) error {
+func listEngines(_ *cobra.Command, _ []string) error {
 	enginesJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
 		return fmt.Errorf("error loading engines: %v", err)
 	}
 
-	engines, err := parseEnginesJson(enginesJson)
+	scoredEngines, err := parseEnginesJson(enginesJson)
 	if err != nil {
 		return fmt.Errorf("error parsing engines: %v", err)
 	}
 
-	err = printEngines(engines, all)
+	err = printEnginesTable(scoredEngines)
 	if err != nil {
 		return fmt.Errorf("error printing list: %v", err)
 	}
@@ -58,58 +47,43 @@ func listEngines(all bool) error {
 	return nil
 }
 
-func printEngines(engines []engines.ScoredManifest, all bool) error {
-
-	var headerRow = []string{"engine", "vendor", "description"}
-	if all {
-		headerRow = append(headerRow, "compat")
-	}
+func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
+	var headerRow = []string{"engine", "vendor", "description", "compat"}
 	tableRows := [][]string{headerRow}
 
 	// Sort by Score in descending order
-	sort.Slice(engines, func(i, j int) bool {
+	sort.Slice(scoredEngines, func(i, j int) bool {
 		// Stable engines with equal score should be listed first
-		if engines[i].Score == engines[j].Score {
-			return engines[i].Grade == "stable"
+		if scoredEngines[i].Score == scoredEngines[j].Score {
+			return scoredEngines[i].Grade == "stable"
 		}
-		return engines[i].Score > engines[j].Score
+		return scoredEngines[i].Score > scoredEngines[j].Score
 	})
 
 	var engineNameMaxLen, engineVendorMaxLen int
-	for _, engine := range engines {
+	for _, engine := range scoredEngines {
+		// Find max name and vendor lengths
+		engineNameMaxLen = max(engineNameMaxLen, len(engine.Name))
+		engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor))
+
 		row := []string{engine.Name, engine.Vendor, engine.Description}
 
-		// Only for engines that will be printed, find max name and vendor lengths
-		if all || (engine.Compatible && engine.Grade == "stable") {
-			engineNameMaxLen = max(engineNameMaxLen, len(engine.Name))
-			engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor))
+		compatibleStr := ""
+		if engine.Compatible && engine.Grade == "stable" {
+			compatibleStr = "yes"
+		} else if engine.Compatible {
+			compatibleStr = "beta"
+		} else {
+			compatibleStr = "no"
 		}
+		row = append(row, compatibleStr)
 
-		if all {
-			compatibleStr := ""
-			if engine.Compatible && engine.Grade == "stable" {
-				compatibleStr = "yes"
-			} else if engine.Compatible {
-				compatibleStr = "beta"
-			} else {
-				compatibleStr = "no"
-			}
-
-			row = append(row, compatibleStr)
-			tableRows = append(tableRows, row)
-		} else if engine.Compatible && engine.Grade == "stable" {
-			tableRows = append(tableRows, row)
-		}
+		tableRows = append(tableRows, row)
 	}
 
 	if len(tableRows) == 1 {
-		if all {
-			_, err := fmt.Fprintln(os.Stderr, "No engines found.")
-			return err
-		} else {
-			_, err := fmt.Fprintln(os.Stderr, "No compatible engines found.")
-			return err
-		}
+		_, err := fmt.Fprintln(os.Stderr, "No engines found.")
+		return err
 	}
 
 	tableMaxWidth := 80
@@ -119,10 +93,8 @@ func printEngines(engines []engines.ScoredManifest, all bool) error {
 	engineVendorMaxLen += 2
 	// Description column fills the remaining space
 	engineDescriptionMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
-	if all {
-		// Reserve space for Compatible column if included
-		engineDescriptionMaxLen -= len(headerRow[3]) + 2
-	}
+	// Reserve space for Compatible column
+	engineDescriptionMaxLen -= len(headerRow[3]) + 2
 
 	options := []tablewriter.Option{
 		tablewriter.WithRenderer(renderer.NewColorized(renderer.ColorizedConfig{
