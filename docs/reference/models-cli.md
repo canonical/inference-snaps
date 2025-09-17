@@ -6,12 +6,11 @@ The CLI interface is the same across all models.
 
 ## Overview
 
-CLI syntax.
+The CLI is the main entry point to interact with the model runtime, manage engines, configure settings, and run interactive sessions. 
+The syntax used is:
+
 ```shell
 <my-model> [COMMAND] [OPTIONS] [ARGS]
-```
-
-The main entry point to interact with the model runtime, manage engines, configure settings, and run interactive sessions.
 
 ## Global Options
 
