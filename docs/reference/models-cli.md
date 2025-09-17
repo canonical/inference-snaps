@@ -148,10 +148,9 @@ To automatically select the best engine:
 <my-model> use-engine --auto
 ```
 
-**Behavior:**
+Switching engines will trigger the download of stack resources (as snap components).
+A confirmation prompt will appear before downloading.
 
-* Switching engines triggers download of stack resources (as snap components).
-* A confirmation prompt appears before downloading.
-* `--auto` is run by default during installation.
-* Can be used to revert to the original engine after manual changes, driver updates, or new hardware installation.
+For regular installations, the `--auto` flag is applied by default.
+This command can also be used to revert to the original engine after manual changes, driver updates, or new hardware installation.
 
