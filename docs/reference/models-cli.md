@@ -138,7 +138,7 @@ Output includes:
 
 ### `use-engine`
 
-Switch to a specific engine.
+To switch to a specific engine:
 ```shell
 <my-model> use-engine <engine>
 ```
