@@ -56,7 +56,7 @@ These provide the core functionality for everyday use such as checking tool stat
 
 ### `status`
 
-Display information about the server and runtime environment.
+Displays information about the server and runtime environment.
 
 ```shell
 <my-model> status
