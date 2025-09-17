@@ -11,6 +11,7 @@ The syntax used is:
 
 ```shell
 <my-model> [COMMAND] [OPTIONS] [ARGS]
+```
 
 ## Global Options
 
