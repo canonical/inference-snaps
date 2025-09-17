@@ -222,7 +222,9 @@ redirects = {}
 linkcheck_ignore = [
     "http://127.0.0.1:*",
     "http://localhost:*",
-    "https://github.com/canonical/ACME/*"
+    "https://github.com/canonical/ACME/*",
+    "https://github.com/canonical/deepseek-r1-snap",
+    "https://github.com/canonical/qwen-vl-snap",
     ]
 
 
