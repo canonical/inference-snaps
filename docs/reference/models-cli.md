@@ -104,7 +104,7 @@ If no key is given, all configurations are listed in tabular form.
 
 ### `unset`
 
-Unset configuration values.
+Unsets configuration values.
 ```shell
 <my-model> unset <key>
 ```
