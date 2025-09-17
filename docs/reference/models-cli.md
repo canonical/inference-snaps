@@ -127,18 +127,14 @@ Show engine details.
 <my-model> show-engine <engine> [flags]
 ```
 
-**Includes:**
+YAML is the default output format, but JSON is also available.
+You can use the `--format <output-type>` flag to specify a format.
+
+Output includes:
 
 * Supported devices
 * Default configurations
 
-```
---format <f>
-```
-
-Output format.
-- `yaml` (default)
-- `json`
 
 ### `use-engine`
 
