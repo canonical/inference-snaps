@@ -6,6 +6,7 @@ import (
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/selector"
+	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,9 @@ func init() {
 }
 
 func load(_ *cobra.Command, _ []string) error {
+	if !utils.IsRootUser() {
+		return ErrPermissionDenied
+	}
 	return loadEnginesToSnapOptions()
 }
 

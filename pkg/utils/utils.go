@@ -103,3 +103,10 @@ func SubDirectories(dirPath string) ([]string, error) {
 	}
 	return directories, nil
 }
+
+func IsRootUser() bool {
+	if os.Geteuid() == 0 {
+		return true
+	}
+	return false
+}

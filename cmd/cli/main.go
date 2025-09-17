@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -17,6 +18,8 @@ var (
 		Use:          snapInstanceName,
 		SilenceUsage: true,
 	}
+
+	ErrPermissionDenied = errors.New("permission denied, try again with sudo")
 )
 
 func main() {

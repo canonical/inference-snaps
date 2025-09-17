@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/canonical/go-snapctl"
+	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +23,9 @@ func addSetCommand() {
 }
 
 func set(_ *cobra.Command, args []string) error {
+	if !utils.IsRootUser() {
+		return ErrPermissionDenied
+	}
 	return setValue(args[0])
 }
 

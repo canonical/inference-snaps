@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/canonical/go-snapctl"
+	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +22,9 @@ func addUnsetCommand() {
 }
 
 func unset(_ *cobra.Command, args []string) error {
+	if !utils.IsRootUser() {
+		return ErrPermissionDenied
+	}
 	return unsetValue(args[0])
 }
 
