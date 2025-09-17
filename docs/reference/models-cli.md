@@ -62,7 +62,7 @@ Displays information about the server and runtime environment.
 <my-model> status
 ```
 
-**Details shown:**
+Details shown:
 
 * Server status and active endpoints
 * Currently selected engine
