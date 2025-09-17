@@ -52,7 +52,7 @@ Use "deepseek-r1 [command] --help" for more information about a command.
 
 ## Basic commands
 
-Provide the core functionality for everyday use, such as checking tool status or starting an interactive chat session.
+These provide the core functionality for everyday use such as checking tool status or starting an interactive chat session.
 
 ### `status`
 
