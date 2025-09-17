@@ -143,7 +143,7 @@ To switch to a specific engine:
 <my-model> use-engine <engine>
 ```
 
-Automatically select best engine.
+To automatically select the best engine:
 ```shell
 <my-model> use-engine --auto
 ```
