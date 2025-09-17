@@ -1,8 +1,8 @@
 # Models CLI
 
+This document provides a complete reference for the `ai model snaps` command line interface (CLI).
+It describes all available commands, options, arguments, and expected behavior. 
 The CLI interface is the same across all models.
-This document provides a complete reference for the **`ai model snaps`** command line interface (CLI).
-It describes all available commands, options, arguments, and expected behavior.
 
 ## Overview
 
