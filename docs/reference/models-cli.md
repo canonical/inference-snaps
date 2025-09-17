@@ -66,7 +66,7 @@ Details shown:
 
 * Server status and active endpoints
 * Currently selected engine
-* Availability of better engines (e.g., after attaching new hardware or installing drivers)
+* Availability of better engines, e.g., after attaching new hardware or installing drivers.
 * Missing drivers for available hardware
 * Resource usage by engines, including cached data
 
