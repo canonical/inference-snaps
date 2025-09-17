@@ -39,7 +39,7 @@ Select the model name you configured under connections.
 ## Use the model
 
 The model is now ready to be used.
-Refer to the [Open WebUI documentation][open-webui-install] to learn more about how to use it.
+Refer to the [Open WebUI documentation][open-webui-docs] to learn more about how to use it.
 
 <!-- links -->
 [open-webui-install]: https://github.com/open-webui/open-webui?tab=readme-ov-file#how-to-install-
