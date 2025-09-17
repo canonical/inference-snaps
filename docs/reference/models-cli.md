@@ -1,4 +1,4 @@
-# Models CLI
+# Models Command Line Interface (CLI)
 
 This document provides a complete reference for the `ai model snaps` command line interface (CLI).
 It describes all available commands, options, arguments, and expected behavior. 
