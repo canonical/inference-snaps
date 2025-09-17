@@ -94,12 +94,13 @@ Unknown keys are rejected.
 
 ### `get`
 
-Get configuration values.
+The `get` command retrieves configuration values.
+
 ```shell
 <my-model> get [key]
  ```
 
-* **Get**: Retrieve configuration values. If no key is given, list all configurations in tabular form.
+If no key is given, all configurations are listed in tabular form.
 
 ### `unset`
 
