@@ -80,7 +80,7 @@ Launch the command-line chat application.
 
 ## Configuration commands
 
-Control configuration options, including reading, setting, and unset persistent parameters.
+Change configuration options including reading, setting, and unsetting persistent parameters.
 
 ### `set`
 
