@@ -19,7 +19,7 @@ To show usage information and list all available commands:
 <my-model> --help
 ```
 
-**Example**:
+For example:
 ```{terminal}
 :input: deepseek-r1 --help
 
