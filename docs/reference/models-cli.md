@@ -89,7 +89,8 @@ Set configuration values.
 <my-model> set <key>=<value>
 ```
 
-* **Set**: Override configuration values. Rejects unknown keys.
+The `Set` command overrides configuration values. 
+Unknown keys are rejected.
 
 ### `get`
 
