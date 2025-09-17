@@ -14,7 +14,7 @@ The syntax used is:
 
 ## Global Options
 
-Show usage information and list all available commands.
+To show usage information and list all available commands:
 ```shell
 <my-model> --help
 ```
