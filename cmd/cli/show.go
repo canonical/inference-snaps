@@ -13,37 +13,49 @@ import (
 
 func addInfoCommand() {
 	cmd := &cobra.Command{
-		Use:   "show-engine <engine>",
-		Short: "Print information about an engine",
-		// Long:  "",
+		Use:               "show-engine [<engine>]",
+		Short:             "Print information about an engine",
+		Long:              "Print information about the currently selected engine, or the specified engine",
 		GroupID:           "engines",
-		Args:              cobra.ExactArgs(1),
-		ValidArgsFunction: infoValidArgs,
-		RunE:              info,
+		Args:              cobra.MaximumNArgs(1),
+		ValidArgsFunction: showEngineValidArgs,
+		RunE:              showEngine,
 	}
 	rootCmd.AddCommand(cmd)
 }
 
-func info(_ *cobra.Command, args []string) error {
-	return engineInfo(args[0])
+func showEngine(_ *cobra.Command, args []string) error {
+	if len(args) == 0 {
+		currentEngine, err := snapctl.Get("engine").Run()
+		if err != nil {
+			return fmt.Errorf("could not get currently selected engine: %v", err)
+		}
+		return engineInfo(currentEngine)
+
+	} else if len(args) == 1 {
+		return engineInfo(args[0])
+
+	} else {
+		return fmt.Errorf("invalid number of arguments")
+	}
 }
 
-func infoValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+func showEngineValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 	enginesJson, err := snapctl.Get("engines").Document().Run()
 	if err != nil {
 		fmt.Printf("Error loading engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
-	engines, err := parseEnginesJson(enginesJson)
+	scoredEngines, err := parseEnginesJson(enginesJson)
 	if err != nil {
 		fmt.Printf("Error parsing engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
 	var engineNames []cobra.Completion
-	for i := range engines {
-		engineNames = append(engineNames, engines[i].Name)
+	for i := range scoredEngines {
+		engineNames = append(engineNames, scoredEngines[i].Name)
 	}
 
 	return engineNames, cobra.ShellCompDirectiveNoSpace
