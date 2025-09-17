@@ -224,6 +224,7 @@ linkcheck_ignore = [
     "http://localhost:*",
     "https://github.com/canonical/ACME/*",
     "https://github.com/canonical/deepseek-r1-snap",
+    "https://github.com/canonical/qwen-vl-snap",
     ]
 
 
