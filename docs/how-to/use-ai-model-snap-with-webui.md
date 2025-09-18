@@ -16,8 +16,10 @@ To avoid conflicts, we recommend setting a different port for Open WebUI during 
 ````{tip}
 In case of using docker to run Open WebUI, you can set a different port by using the `PORT` environment variable.
 Also it's necessary to use `--network=host` to allow Open WebUI to access the AI model snap's API.
+
+For example:
 ```shell
-docker run -d --network=host -v open-webui-data:/app/backend/data -e PORT=8081 ghcr.io/open-webui/open-webui:main
+docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:0.6
 ```
 ````
 Open the Open WebUI interface on your browser.
