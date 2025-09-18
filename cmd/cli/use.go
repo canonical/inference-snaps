@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -13,6 +13,7 @@ import (
 	"github.com/canonical/stack-utils/pkg/hardware_info"
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/snap_store"
+	"github.com/canonical/stack-utils/pkg/storage"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -44,7 +45,7 @@ func addUseCommand() {
 }
 
 func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	enginesJson, err := snapctl.Get("engines").Document().Run()
+	enginesJson, err := config.Get("engines")
 	if err != nil {
 		fmt.Printf("Error loading engines: %v", err)
 		return nil, cobra.ShellCompDirectiveError
@@ -151,12 +152,7 @@ func scoreEngines() ([]engines.ScoredManifest, error) {
 func enginesToSnapOptions(scoredEngines []engines.ScoredManifest) error {
 	// set all scored engines as snap options
 	for _, engine := range scoredEngines {
-		engineJson, err := json.Marshal(engine)
-		if err != nil {
-			return fmt.Errorf("error serializing engines: %v", err)
-		}
-
-		err = snapctl.Set("engines."+engine.Name, string(engineJson)).Document().Run()
+		err := config.SetDocument("engines."+engine.Name, engine)
 		if err != nil {
 			return fmt.Errorf("error setting engine option: %v", err)
 		}
@@ -168,7 +164,7 @@ func enginesToSnapOptions(scoredEngines []engines.ScoredManifest) error {
 useEngine changes the engine that is used by the snap
 */
 func useEngine(engineName string, assumeYes bool) error {
-	engineJson, err := snapctl.Get("engines." + engineName).Document().Run()
+	engineJson, err := config.Get("engines." + engineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine: %v", err)
 	}
@@ -225,9 +221,13 @@ func useEngine(engineName string, assumeYes bool) error {
 		}
 	}
 
-	currentEngine, err := snapctl.Get("engine").Run()
+	currentEngine, err := cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("error getting current engine: %v", err)
+		if errors.Is(err, storage.ErrNoCache) {
+			// No engine set yet, continue
+		} else {
+			return fmt.Errorf("error getting current engine: %v", err)
+		}
 	}
 	if currentEngine == engineName {
 		// Nothing left to do
@@ -292,7 +292,7 @@ func componentInstalled(component string) (bool, error) {
 
 func setEngineOptions(engine engines.ScoredManifest) error {
 	// set engine config option
-	err := snapctl.Set("engine", engine.Name).Run()
+	err := cache.SetActiveEngine(engine.Name)
 	if err != nil {
 		return fmt.Errorf(`error setting snap option "engine": %v`, err)
 	}
@@ -300,11 +300,7 @@ func setEngineOptions(engine engines.ScoredManifest) error {
 	// set other config options
 	// TODO: clear beforehand
 	for confKey, confVal := range engine.Configurations {
-		valJson, err := json.Marshal(confVal)
-		if err != nil {
-			return fmt.Errorf("error serializing configuration %q: %v - %v", confKey, confVal, err)
-		}
-		err = snapctl.Set(confKey, string(valJson)).Document().Run()
+		err = config.SetDocument(confKey, confVal)
 		if err != nil {
 			return fmt.Errorf("error setting snap option %q: %v", confKey, err)
 		}

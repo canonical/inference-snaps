@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 )
@@ -41,7 +40,7 @@ func setValue(keyValue string) error {
 	}
 	key, value := parts[0], parts[1]
 
-	err := snapctl.Set(key, value).Run()
+	err := config.Set(key, value)
 	if err != nil {
 		return fmt.Errorf("error setting value %q for %q: %v", value, key, err)
 	}

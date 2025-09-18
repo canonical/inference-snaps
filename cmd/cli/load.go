@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
@@ -41,12 +39,7 @@ func loadEnginesToSnapOptions() error {
 	// set all engines as snap options
 	// TODO: change to also handle engine deletions
 	for _, engine := range allEngines {
-		engineJson, err := json.Marshal(engine)
-		if err != nil {
-			return fmt.Errorf("error serializing engines: %s", err)
-		}
-
-		err = snapctl.Set("engines."+engine.Name, string(engineJson)).Document().Run()
+		err = config.SetDocument("engines."+engine.Name, engine)
 		if err != nil {
 			return fmt.Errorf("error setting engines option: %s", err)
 		}

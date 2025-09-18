@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/stack-utils/pkg/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,10 @@ var (
 		SilenceUsage: true,
 	}
 
+	cache  = storage.NewCache()
+	config = storage.NewConfig()
+
+	// Error types
 	ErrPermissionDenied = errors.New("permission denied, try again with sudo")
 )
 
@@ -32,7 +37,6 @@ func main() {
 	rootCmd.AddGroup(&cobra.Group{ID: "config", Title: "Configuration Commands:"})
 	addGetCommand()
 	addSetCommand()
-	addUnsetCommand()
 
 	rootCmd.AddGroup(&cobra.Group{ID: "engines", Title: "Management Commands:"})
 	addListCommand()

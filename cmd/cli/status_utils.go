@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/engines"
 )
 
@@ -22,7 +21,7 @@ type Status struct {
 }
 
 func scoredEnginesFromOptions() ([]engines.ScoredManifest, error) {
-	engineJson, err := snapctl.Get("engines").Document().Run()
+	engineJson, err := config.Get("engines")
 	if err != nil {
 		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
@@ -36,12 +35,12 @@ func scoredEnginesFromOptions() ([]engines.ScoredManifest, error) {
 }
 
 func selectedEngineFromOptions() (engines.ScoredManifest, error) {
-	selectedEngineName, err := snapctl.Get("engine").Run()
+	selectedEngineName, err := cache.GetActiveEngine()
 	if err != nil {
 		return engines.ScoredManifest{}, fmt.Errorf("error loading selected engine: %v", err)
 	}
 
-	enginesJson, err := snapctl.Get("engines." + selectedEngineName).Document().Run()
+	enginesJson, err := config.Get("engines." + selectedEngineName)
 	if err != nil {
 		return engines.ScoredManifest{}, fmt.Errorf("error loading engine: %v", err)
 	}
@@ -98,7 +97,7 @@ func serverApiUrls(engine engines.ScoredManifest) (map[string]string, error) {
 		}
 
 	}
-	httpPort, err := snapctl.Get("http.port").Run()
+	httpPort, err := config.Get("http.port")
 	if err != nil {
 		return nil, fmt.Errorf("error getting http port: %v", err)
 	}

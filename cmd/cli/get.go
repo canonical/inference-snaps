@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/spf13/cobra"
 )
 
@@ -21,11 +20,15 @@ func addGetCommand() {
 }
 
 func get(_ *cobra.Command, args []string) error {
-	return getValue(args[0])
+	if len(args) == 0 {
+		return getValues()
+	} else {
+		return getValue(args[0])
+	}
 }
 
 func getValue(key string) error {
-	value, err := snapctl.Get(key).Run()
+	value, err := config.Get(key)
 	if err != nil {
 		return fmt.Errorf("error getting value of %q: %v", key, err)
 	}
@@ -36,6 +39,19 @@ func getValue(key string) error {
 
 	// print config value
 	fmt.Println(value)
+
+	return nil
+}
+
+// not reachable currently due to arg requirement
+func getValues() error {
+	values, err := config.GetAll()
+	if err != nil {
+		return fmt.Errorf("error getting values: %v", err)
+	}
+
+	// print config value
+	fmt.Println(values)
 
 	return nil
 }

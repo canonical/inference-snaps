@@ -5,7 +5,6 @@ import (
 	"os"
 	"sort"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/stack-utils/pkg/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
@@ -29,7 +28,7 @@ func addListCommand() {
 }
 
 func listEngines(_ *cobra.Command, _ []string) error {
-	enginesJson, err := snapctl.Get("engines").Document().Run()
+	enginesJson, err := config.Get("engines")
 	if err != nil {
 		return fmt.Errorf("error loading engines: %v", err)
 	}
