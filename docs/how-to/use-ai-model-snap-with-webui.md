@@ -13,6 +13,13 @@ To avoid conflicts, we recommend setting a different port for Open WebUI during 
 
 ## Configure Open WebUI
 
+````{tip}
+In case of using docker to run Open WebUI, you can set a different port by using the `PORT` environment variable.
+Also it's necessary to use `--network=host` to allow Open WebUI to access the AI model snap's API.
+```shell
+docker run -d --network=host -v open-webui-data:/app/backend/data -e PORT=8081 ghcr.io/open-webui/open-webui:main
+```
+````
 Open the Open WebUI interface on your browser.
 The default address is [http://localhost:8081](http://localhost:8081).
 After logging in:
