@@ -103,12 +103,6 @@ The `get` command retrieves configuration values.
 
 If no key is given, all configurations are listed in tabular form.
 
-### `unset`
-
-Unsets configuration values.
-```shell
-<my-model> unset <key>
-```
 
 ## Management Commands
 
