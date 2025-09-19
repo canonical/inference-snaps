@@ -78,7 +78,7 @@ Launch the command-line chat application.
 
 ## Configuration commands
 
-Change configuration options including reading, setting, and unsetting persistent parameters.
+Change configuration options including reading, and setting persistent parameters.
 
 ### `set`
 
