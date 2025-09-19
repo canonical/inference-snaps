@@ -15,10 +15,7 @@ The syntax used is:
 
 ## Global Options
 
-To show usage information and list all available commands:
-```shell
-<my-model> --help
-```
+To show usage information about any of the commands, set the `--help` flag.
 
 For example:
 ```{terminal}
@@ -143,7 +140,7 @@ To automatically select the best engine:
 <my-model> use-engine --auto
 ```
 
-Switching engines will trigger the download of stack resources (as snap components).
+Switching engines will trigger the download of engine resources (as snap components).
 A confirmation prompt will appear before downloading.
 
 For regular installations, the `--auto` flag is applied by default.
