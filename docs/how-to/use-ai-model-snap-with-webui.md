@@ -22,27 +22,19 @@ For example:
 docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:0.6
 ```
 ````
-Open the Open WebUI interface on your browser.
-The default address is [http://localhost:8081](http://localhost:8081).
-After logging in:
+Open the Open WebUI interface on your browser: `http://localhost:<port>`
+Register and logging in, then:
 
-1. Click on your user account icon and select **Settings** from the dropdown menu.
-2. Under **Settings**, select **Admin Settings** on the bottom left.
-3. Select **Connections** from the left sidebar.
-4. Under OpenAI API section, click on the **+** button to add a new connection.
-5. In the **URL** field, enter the URL of the AI model snap you want to use.
-  To identify the URL of the AI model snap, checkout this guide on [using an AI model snap via its OpenAI API](use-network-api.md).
-6. Save the connection, and click **Save** again to save the settings.
+1. Click your account icon, select **Settings**, and then choose **Admin Settings** at the bottom left.
+2. In the left sidebar, select **Connections**, and disable **OpenAI API** and **Ollama API** if they are not in use.
+3. Enable **Direct Connection** and save your changes.
 
-```{tip}
-By default, Open WebUI will first try to use a locally installed Ollama instance before it sends the prompt to the selected model.
-This can cause an unnecessary delay.
-We recommend disabling the Ollama and OpenAI connections in the Open WebUI admin settings if you are not using them:
-1. Open settings in Open WebUI and choose **Admin Settings**.
-2. In the **Admin Panel**, go to **Settings** > **Connections**.
-3. Disable **OpenAI API** and **Ollama API** and save the changes.
-```
+Next, create a new connection to the AI model snap:
 
+1. Open the settings again and select **Connections**.
+2. Click **+** to add a new connection.
+3. In the **URL** field, enter the URL of the AI model snap you want to use, then save it.
+  To find the correct URL, see the guide on [using an AI model snap via its OpenAI API](use-network-api.md).
 
 On the left top corner, click on the **Select a model**.
 Select the model name you configured under connections.
