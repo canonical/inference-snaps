@@ -27,7 +27,7 @@ Register and logging in, then:
 
 1. Click your account icon, select **Settings**, and then choose **Admin Settings** at the bottom left.
 2. In the left sidebar, select **Connections**, and disable **OpenAI API** and **Ollama API** if they are not in use.
-3. Enable **Direct Connection** and save your changes.
+3. Enable **Direct Connections** and save your changes.
 
 Next, create a new connection to the AI model snap:
 
