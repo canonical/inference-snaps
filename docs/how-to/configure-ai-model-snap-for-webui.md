@@ -1,5 +1,5 @@
-(configure-ai-model-snap-for-open-webui)=
-# Configure an AI model snap for Open WebUI
+(configure-openwebui-for-ai-model-snap)=
+# Configure Open WebUI for use with AI model snap
 
 Open WebUI provides a convenient web interface for interacting with AI models packaged as snaps.
 This guide will help you set up and use an AI model snap with Open WebUI.
