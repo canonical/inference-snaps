@@ -22,7 +22,7 @@ use-network-api
 Use the snap with web clients:
 ```{toctree}
 :maxdepth: 1
-use-ai-model-snap-with-webui
+configure-ai-model-snap-for-webui
 ```
 
 Use the snap with your IDE:
