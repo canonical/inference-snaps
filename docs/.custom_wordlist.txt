@@ -62,6 +62,7 @@ Rockcraft
 readthedocs
 rst
 sitemapindex
+snapd
 Snapcraft's
 starterpack
 subproject

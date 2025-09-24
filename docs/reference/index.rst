@@ -7,3 +7,4 @@ These documents provide specifications for different set ups when using or modif
    :maxdepth: 1
    
    Stack manifests <stack-manifests>
+   Models CLI <models-cli>
