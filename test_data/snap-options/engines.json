@@ -1,1718 +1,890 @@
 {
-  "engine": "intel-cpu",
-  "engines": {
-    "ampere-altra": {
-      "components": [
-        "llama-aio",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llama-aio"
-      },
-      "description": "Optimized for Ampere Altra CPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "arm64",
-            "implementer-id": "0x41",
-            "part-number": "0xD0C",
-            "type": "cpu"
-          },
-          {
-            "bus": "pci",
-            "device-id": "0xE100",
-            "vendor-id": "0x1DEF"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "5G",
-      "name": "ampere-altra",
-      "vendor": "Ampere Computing"
+  "ampere-altra": {
+    "compatible": false,
+    "components": [
+      "llama-aio",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llama-aio"
     },
-    "ampere-one": {
-      "components": [
-        "llama-aio-ampereone",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llama-aio-ampereone"
-      },
-      "description": "Optimized for Ampere One CPUs",
-      "devices": {
-        "any": [
-          {
-            "architecture": "arm64",
-            "implementer-id": "0xC0",
-            "part-number": "0xAC3",
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "implementer-id": "0xC0",
-            "part-number": "0xAC4",
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "5G",
-      "name": "ampere-one",
-      "vendor": "Ampere Computing"
+    "description": "Optimized for Ampere Altra CPUs",
+    "devices": {
+      "all": [
+        {
+          "architecture": "arm64",
+          "implementer-id": "0x41",
+          "part-number": "0xD0C",
+          "type": "cpu"
+        },
+        {
+          "bus": "pci",
+          "device-id": "0xE100",
+          "vendor-id": "0x1DEF"
+        }
+      ]
     },
-    "cpu": {
-      "components": [
-        "llamacpp",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llamacpp"
-      },
-      "description": "Use CPU, good accuracy with low footprints",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "features": [
-              "asimd"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-avx512": {
-      "components": [
-        "llamacpp-avx512",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llamacpp-avx512"
-      },
-      "description": "For CPUs with AVX512 support",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2",
-              "avx512f",
-              "avx512dq",
-              "avx512bw"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu-avx512",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-legacy": {
-      "components": [
-        "llamacpp-legacy",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llamacpp-legacy"
-      },
-      "description": "For legacy CPUs with only SSE4.2 (2008) and AVX (2011) support",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "avx"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu-legacy",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-tiny": {
-      "components": [
-        "llamacpp",
-        "model-distill-qwen-1-5b-q8-0-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-1-5b-q8-0-gguf",
-        "server": "llamacpp"
-      },
-      "description": "Use CPU, offering lower accuracy at higher speed",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "features": [
-              "asimd"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "4G",
-      "grade": "devel",
-      "memory": "2G",
-      "name": "cpu-tiny",
-      "vendor": "Canonical Ltd"
-    },
-    "cuda": {
-      "components": [
-        "llamacpp-cuda",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf",
-        "server": "llamacpp-cuda"
-      },
-      "description": "Use CUDA and Nvidia GPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "type": "gpu",
-            "vendor-id": "0x10DE",
-            "vram": "5G"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cuda",
-      "vendor": "Canonical Ltd"
-    },
-    "intel-cpu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "server": "openvino-model-server",
-        "target-device": "CPU"
-      },
-      "description": "Use Intel CPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "manufacturer-id": "GenuineIntel",
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "8G",
-      "name": "intel-cpu",
-      "vendor": "Intel Corporation"
-    },
-    "intel-gpu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "server": "openvino-model-server",
-        "target-device": "GPU"
-      },
-      "description": "Use modern Intel GPUs (integrated and discrete)",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "type": "cpu"
-          }
-        ],
-        "any": [
-          {
-            "device-id": "0x4F80",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F81",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F82",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F83",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F84",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F85",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F86",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F87",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x4F88",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5690",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5691",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5692",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5693",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5694",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5695",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5696",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5697",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x5698",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A1",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A2",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A3",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A4",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A5",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A6",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A7",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A8",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56A9",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56B0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56B1",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56B2",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56B3",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BA",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BB",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BC",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BD",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BE",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x56BF",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE202",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE20B",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE20C",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE20D",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE210",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE212",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE215",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xE216",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA720",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA721",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA780",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA781",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA782",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA783",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA788",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA789",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA78A",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA78B",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7A0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7A1",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7A8",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7A9",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7AA",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7AB",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7AC",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xA7AD",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7DD5",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D40",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D55",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D60",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D45",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x6420",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x64A0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x64B0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB640",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D41",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D51",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7D67",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0x7DD1",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB080",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB081",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB082",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB083",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB08F",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB090",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB0A0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "0xB0B0",
-            "type": "gpu",
-            "vendor-id": "0x8086",
-            "vram": "7G"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "intel-gpu",
-      "vendor": "Intel Corporation"
-    },
-    "intel-npu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "server": "openvino-model-server",
-        "target-device": "NPU"
-      },
-      "description": "Use Intel NPUs (Core Ultra series)",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "type": "cpu"
-          }
-        ],
-        "any": [
-          {
-            "device-id": "0x643E",
-            "type": "npu",
-            "vendor-id": "0x8086"
-          },
-          {
-            "device-id": "0x7D1D",
-            "type": "npu",
-            "vendor-id": "0x8086"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "intel-npu",
-      "vendor": "Intel Corporation"
-    }
+    "disk-space": "10G",
+    "grade": "stable",
+    "memory": "5G",
+    "name": "ampere-altra",
+    "notes": [
+      "devices all: required cpu device not found"
+    ],
+    "score": 0,
+    "vendor": "Ampere Computing"
   },
-  "http": {
-    "base-path": "v3",
-    "host": "127.0.0.1",
-    "port": 8080
+  "ampere-one": {
+    "compatible": false,
+    "components": [
+      "llama-aio-ampereone",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llama-aio-ampereone"
+    },
+    "description": "Optimized for Ampere One CPUs",
+    "devices": {
+      "any": [
+        {
+          "architecture": "arm64",
+          "implementer-id": "0xC0",
+          "part-number": "0xAC3",
+          "type": "cpu"
+        },
+        {
+          "architecture": "arm64",
+          "implementer-id": "0xC0",
+          "part-number": "0xAC4",
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "10G",
+    "grade": "stable",
+    "memory": "5G",
+    "name": "ampere-one",
+    "notes": [
+      "devices any: required device not found"
+    ],
+    "score": 0,
+    "vendor": "Ampere Computing"
   },
-  "model": "model-distill-qwen-7b-openvino-int4",
-  "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-  "server": "openvino-model-server",
-  "stack": "intel-cpu",
-  "stacks": {
-    "ampere-altra": {
-      "components": [
-        "llama-aio",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llama-aio",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "Optimized for Ampere Altra CPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "arm64",
-            "implementer-id": "41",
-            "part-number": "d0c",
-            "type": "cpu"
-          },
-          {
-            "bus": "pci",
-            "device-id": "e100",
-            "vendor-id": "1def"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "5G",
-      "name": "ampere-altra",
-      "vendor": "Ampere Computing"
+  "cpu": {
+    "compatible": true,
+    "components": [
+      "llamacpp",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llamacpp"
     },
-    "ampere-one": {
-      "components": [
-        "llama-aio-ampereone",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llama-aio-ampereone",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "Optimized for Ampere One CPUs",
-      "devices": {
-        "any": [
-          {
-            "architecture": "arm64",
-            "implementer-id": "c0",
-            "part-number": "ac3",
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "implementer-id": "c0",
-            "part-number": "ac4",
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "5G",
-      "name": "ampere-one",
-      "vendor": "Ampere Computing"
+    "description": "Use CPU, good accuracy with low footprints",
+    "devices": {
+      "any": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "f16c",
+            "fma",
+            "avx",
+            "avx2"
+          ],
+          "type": "cpu"
+        },
+        {
+          "architecture": "arm64",
+          "features": [
+            "asimd"
+          ],
+          "type": "cpu"
+        }
+      ]
     },
-    "cpu": {
-      "components": [
-        "llamacpp",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llamacpp",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "Use CPU, good accuracy with low footprints",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "features": [
-              "asimd"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-avx512": {
-      "components": [
-        "llamacpp-avx512",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llamacpp-avx512",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "For CPUs with AVX512 support",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2",
-              "avx512f",
-              "avx512dq",
-              "avx512bw"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu-avx512",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-legacy": {
-      "components": [
-        "llamacpp-legacy",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llamacpp-legacy",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "For legacy CPUs with only SSE4.2 (2008) and AVX (2011) support",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "avx"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cpu-legacy",
-      "vendor": "Canonical Ltd"
-    },
-    "cpu-tiny": {
-      "components": [
-        "llamacpp",
-        "model-distill-qwen-1-5b-q8-0-gguf"
-      ],
-      "configurations": {
-        "engine": "llamacpp",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-1-5b-q8-0-gguf"
-      },
-      "description": "Use CPU, offering lower accuracy at higher speed",
-      "devices": {
-        "any": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "architecture": "arm64",
-            "features": [
-              "asimd"
-            ],
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "4G",
-      "grade": "devel",
-      "memory": "2G",
-      "name": "cpu-tiny",
-      "vendor": "Canonical Ltd"
-    },
-    "cuda": {
-      "components": [
-        "llamacpp-cuda",
-        "model-distill-qwen-7b-q4-k-m-gguf"
-      ],
-      "configurations": {
-        "engine": "llamacpp-cuda",
-        "http.base-path": "v1",
-        "model": "model-distill-qwen-7b-q4-k-m-gguf"
-      },
-      "description": "Use CUDA and Nvidia GPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "flags": [
-              "sse4_2",
-              "f16c",
-              "fma",
-              "avx",
-              "avx2"
-            ],
-            "type": "cpu"
-          },
-          {
-            "type": "gpu",
-            "vendor-id": "10de",
-            "vram": "5G"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "cuda",
-      "vendor": "Canonical Ltd"
-    },
-    "intel-cpu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "engine": "openvino-model-server",
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "target-device": "CPU"
-      },
-      "description": "Use Intel CPUs",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "manufacturer-id": "GenuineIntel",
-            "type": "cpu"
-          }
-        ]
-      },
-      "disk-space": "10G",
-      "grade": "stable",
-      "memory": "5G",
-      "name": "intel-cpu",
-      "vendor": "Intel Corporation"
-    },
-    "intel-gpu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "engine": "openvino-model-server",
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "target-device": "GPU"
-      },
-      "description": "Use modern Intel GPUs (integrated and discrete)",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "type": "cpu"
-          }
-        ],
-        "any": [
-          {
-            "device-id": "4f80",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f81",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f82",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f83",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f84",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f85",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f86",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f87",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "4f88",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5690",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5691",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5692",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5693",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5694",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5695",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5696",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5697",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "5698",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a1",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a2",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a3",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a4",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a5",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a6",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a7",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a8",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56a9",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56b0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56b1",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56b2",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56b3",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56ba",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56bb",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56bc",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56bd",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56be",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "56bf",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e202",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e20b",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e20c",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e20d",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e210",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e212",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e215",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "e216",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a720",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a721",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a780",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a781",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a782",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a783",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a788",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a789",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a78a",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a78b",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7a0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7a1",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7a8",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7a9",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7aa",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7ab",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7ac",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "a7ad",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7dd5",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d40",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d55",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d60",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d45",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "6420",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "64a0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "64b0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b640",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d41",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d51",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7d67",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "7dd1",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b080",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b081",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b082",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b083",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b08f",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b090",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b0a0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          },
-          {
-            "device-id": "b0b0",
-            "type": "gpu",
-            "vendor-id": "8086",
-            "vram": "7G"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "intel-gpu",
-      "vendor": "Intel Corporation"
-    },
-    "intel-npu": {
-      "components": [
-        "openvino-model-server",
-        "model-distill-qwen-7b-openvino-int4"
-      ],
-      "configurations": {
-        "engine": "openvino-model-server",
-        "http.base-path": "v3",
-        "model": "model-distill-qwen-7b-openvino-int4",
-        "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
-        "target-device": "NPU"
-      },
-      "description": "Use Intel NPUs (Core Ultra series)",
-      "devices": {
-        "all": [
-          {
-            "architecture": "amd64",
-            "type": "cpu"
-          }
-        ],
-        "any": [
-          {
-            "device-id": "643e",
-            "type": "npu",
-            "vendor-id": "8086"
-          },
-          {
-            "device-id": "7d1d",
-            "type": "npu",
-            "vendor-id": "8086"
-          }
-        ]
-      },
-      "disk-space": "8G",
-      "grade": "stable",
-      "memory": "4G",
-      "name": "intel-npu",
-      "vendor": "Intel Corporation"
-    }
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "cpu",
+    "score": 17,
+    "vendor": "Canonical Ltd"
   },
-  "target-device": "CPU",
-  "verbose": false
+  "cpu-avx512": {
+    "compatible": false,
+    "components": [
+      "llamacpp-avx512",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llamacpp-avx512"
+    },
+    "description": "For CPUs with AVX512 support",
+    "devices": {
+      "any": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "f16c",
+            "fma",
+            "avx",
+            "avx2",
+            "avx512f",
+            "avx512dq",
+            "avx512bw"
+          ],
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "cpu-avx512",
+    "notes": [
+      "devices any: required device not found"
+    ],
+    "score": 0,
+    "vendor": "Canonical Ltd"
+  },
+  "cpu-legacy": {
+    "compatible": true,
+    "components": [
+      "llamacpp-legacy",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llamacpp-legacy"
+    },
+    "description": "For legacy CPUs with only SSE4.2 (2008) and AVX (2011) support",
+    "devices": {
+      "any": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "avx"
+          ],
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "cpu-legacy",
+    "score": 14,
+    "vendor": "Canonical Ltd"
+  },
+  "cpu-tiny": {
+    "compatible": true,
+    "components": [
+      "llamacpp",
+      "model-distill-qwen-1-5b-q8-0-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-1-5b-q8-0-gguf",
+      "server": "llamacpp"
+    },
+    "description": "Use CPU, offering lower accuracy at higher speed",
+    "devices": {
+      "any": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "f16c",
+            "fma",
+            "avx",
+            "avx2"
+          ],
+          "type": "cpu"
+        },
+        {
+          "architecture": "arm64",
+          "features": [
+            "asimd"
+          ],
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "4G",
+    "grade": "devel",
+    "memory": "2G",
+    "name": "cpu-tiny",
+    "score": 17,
+    "vendor": "Canonical Ltd"
+  },
+  "cuda": {
+    "compatible": false,
+    "components": [
+      "llamacpp-cuda",
+      "model-distill-qwen-7b-q4-k-m-gguf"
+    ],
+    "configurations": {
+      "http.base-path": "v1",
+      "model": "model-distill-qwen-7b-q4-k-m-gguf",
+      "server": "llamacpp-cuda"
+    },
+    "description": "Use CUDA and Nvidia GPUs",
+    "devices": {
+      "all": [
+        {
+          "architecture": "amd64",
+          "flags": [
+            "sse4_2",
+            "f16c",
+            "fma",
+            "avx",
+            "avx2"
+          ],
+          "type": "cpu"
+        },
+        {
+          "type": "gpu",
+          "vendor-id": "0x10DE",
+          "vram": "5G"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "cuda",
+    "notes": [
+      "devices all: required pci device not found"
+    ],
+    "score": 0,
+    "vendor": "Canonical Ltd"
+  },
+  "intel-cpu": {
+    "compatible": true,
+    "components": [
+      "openvino-model-server",
+      "model-distill-qwen-7b-openvino-int4"
+    ],
+    "configurations": {
+      "http.base-path": "v3",
+      "model": "model-distill-qwen-7b-openvino-int4",
+      "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
+      "server": "openvino-model-server",
+      "target-device": "CPU"
+    },
+    "description": "Use Intel CPUs",
+    "devices": {
+      "all": [
+        {
+          "architecture": "amd64",
+          "manufacturer-id": "GenuineIntel",
+          "type": "cpu"
+        }
+      ]
+    },
+    "disk-space": "10G",
+    "grade": "stable",
+    "memory": "8G",
+    "name": "intel-cpu",
+    "score": 18,
+    "vendor": "Intel Corporation"
+  },
+  "intel-gpu": {
+    "compatible": false,
+    "components": [
+      "openvino-model-server",
+      "model-distill-qwen-7b-openvino-int4"
+    ],
+    "configurations": {
+      "http.base-path": "v3",
+      "model": "model-distill-qwen-7b-openvino-int4",
+      "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
+      "server": "openvino-model-server",
+      "target-device": "GPU"
+    },
+    "description": "Use modern Intel GPUs (integrated and discrete)",
+    "devices": {
+      "all": [
+        {
+          "architecture": "amd64",
+          "type": "cpu"
+        }
+      ],
+      "any": [
+        {
+          "device-id": "0x4F80",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F81",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F82",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F83",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F84",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F85",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F86",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F87",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x4F88",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5690",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5691",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5692",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5693",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5694",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5695",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5696",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5697",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x5698",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A1",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A2",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A3",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A4",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A5",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A6",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A7",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A8",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56A9",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56B0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56B1",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56B2",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56B3",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BA",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BB",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BC",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BD",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BE",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x56BF",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE202",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE20B",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE20C",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE20D",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE210",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE212",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE215",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xE216",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA720",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA721",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA780",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA781",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA782",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA783",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA788",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA789",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA78A",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA78B",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7A0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7A1",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7A8",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7A9",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7AA",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7AB",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7AC",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xA7AD",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7DD5",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D40",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D55",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D60",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D45",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x6420",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x64A0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x64B0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB640",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D41",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D51",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7D67",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0x7DD1",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB080",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB081",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB082",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB083",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB08F",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB090",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB0A0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        },
+        {
+          "device-id": "0xB0B0",
+          "type": "gpu",
+          "vendor-id": "0x8086",
+          "vram": "7G"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "intel-gpu",
+    "notes": [
+      "devices any: required device not found"
+    ],
+    "score": 0,
+    "vendor": "Intel Corporation"
+  },
+  "intel-npu": {
+    "compatible": false,
+    "components": [
+      "openvino-model-server",
+      "model-distill-qwen-7b-openvino-int4"
+    ],
+    "configurations": {
+      "http.base-path": "v3",
+      "model": "model-distill-qwen-7b-openvino-int4",
+      "model-name": "DeepSeek-R1-Distill-Qwen-7B-ov-int4",
+      "server": "openvino-model-server",
+      "target-device": "NPU"
+    },
+    "description": "Use Intel NPUs (Core Ultra series)",
+    "devices": {
+      "all": [
+        {
+          "architecture": "amd64",
+          "type": "cpu"
+        }
+      ],
+      "any": [
+        {
+          "device-id": "0x643E",
+          "type": "npu",
+          "vendor-id": "0x8086"
+        },
+        {
+          "device-id": "0x7D1D",
+          "type": "npu",
+          "vendor-id": "0x8086"
+        }
+      ]
+    },
+    "disk-space": "8G",
+    "grade": "stable",
+    "memory": "4G",
+    "name": "intel-npu",
+    "notes": [
+      "devices any: required device not found"
+    ],
+    "score": 0,
+    "vendor": "Intel Corporation"
+  }
 }

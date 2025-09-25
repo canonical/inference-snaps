@@ -93,7 +93,7 @@ func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
 	// Description column fills the remaining space
 	engineDescriptionMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
 	// Reserve space for Compatible column
-	engineDescriptionMaxLen -= len(headerRow[3]) + 2
+	engineDescriptionMaxLen -= len(headerRow[3]) + 1
 
 	options := []tablewriter.Option{
 		tablewriter.WithRenderer(renderer.NewColorized(renderer.ColorizedConfig{
@@ -128,10 +128,26 @@ func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
 			},
 			Header: tw.CellConfig{
 				Alignment: tw.CellAlignment{Global: tw.AlignLeft},
+				Padding: tw.CellPadding{
+					PerColumn: []tw.Padding{
+						{Overwrite: true, Right: " "},
+						{Overwrite: true, Left: " ", Right: " "},
+						{Overwrite: true, Left: " ", Right: " "},
+						{Overwrite: true},
+					},
+				},
 			},
 			Row: tw.CellConfig{
 				Formatting: tw.CellFormatting{AutoWrap: tw.WrapTruncate},
 				Alignment:  tw.CellAlignment{Global: tw.AlignLeft},
+				Padding: tw.CellPadding{
+					PerColumn: []tw.Padding{
+						{Overwrite: true, Right: " "},
+						{Overwrite: true, Left: " ", Right: " "},
+						{Overwrite: true, Left: " ", Right: " "},
+						{Overwrite: true},
+					},
+				},
 			},
 		}),
 	}
