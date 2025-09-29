@@ -4,8 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/canonical/stack-utils/pkg/storage"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
+)
+
+var (
+	setPackageConfig bool
+	setEngineConfig  bool
 )
 
 func addSetCommand() {
@@ -18,6 +24,12 @@ func addSetCommand() {
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              set,
 	}
+
+	// flags
+	// TODO: hide these flags
+	cmd.PersistentFlags().BoolVar(&setPackageConfig, "package", false, "set package configurations")
+	cmd.PersistentFlags().BoolVar(&setEngineConfig, "engine", false, "set engine configuration")
+
 	rootCmd.AddCommand(cmd)
 }
 
@@ -40,7 +52,14 @@ func setValue(keyValue string) error {
 	}
 	key, value := parts[0], parts[1]
 
-	err := config.Set(key, value)
+	var err error
+	if setPackageConfig {
+		err = config.Set(key, value, storage.PackageConfig)
+	} else if setEngineConfig {
+		err = config.Set(key, value, storage.EngineConfig)
+	} else {
+		err = config.Set(key, value, storage.UserConfig)
+	}
 	if err != nil {
 		return fmt.Errorf("error setting value %q for %q: %v", value, key, err)
 	}

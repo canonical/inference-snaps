@@ -130,7 +130,7 @@ func debugSelectEngine(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error loading engines from directory: %s", err)
 	}
-	scoredEngines, err := selector.ScoreEngines(hardwareInfo, allEngines)
+	scoredEngines, err := selector.ScoreEngines(&hardwareInfo, allEngines)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %s", err)
 	}

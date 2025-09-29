@@ -1,39 +1,33 @@
 package main
 
 import (
-	"os"
 	"testing"
+
+	"github.com/canonical/stack-utils/pkg/engines"
+	"github.com/canonical/stack-utils/pkg/selector"
 )
 
 func TestInfoLong(t *testing.T) {
-	data, err := os.ReadFile("../../test_data/snap-options/engines.intel-gpu.json")
+	engine, err := selector.LoadManifestFromDir("../../test_data/engines", "intel-gpu")
 	if err != nil {
 		t.Fatal(err)
 	}
+	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	engine, err := parseEngineJson(string(data))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = printEngineInfo(engine)
+	err = printEngineInfo(scoredEngine)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestInfoShort(t *testing.T) {
-	data, err := os.ReadFile("../../test_data/snap-options/engines.cpu.json")
+	engine, err := selector.LoadManifestFromDir("../../test_data/engines", "cpu-avx1")
 	if err != nil {
 		t.Fatal(err)
 	}
+	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	engine, err := parseEngineJson(string(data))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = printEngineInfo(engine)
+	err = printEngineInfo(scoredEngine)
 	if err != nil {
 		t.Fatal(err)
 	}

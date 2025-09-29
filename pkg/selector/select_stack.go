@@ -59,9 +59,10 @@ func LoadManifestsFromDir(manifestsDir string) ([]engines.Manifest, error) {
 			continue
 		}
 
-		data, err := os.ReadFile(manifestsDir + file.Name() + "/engine.yaml")
+		fileName := manifestsDir + file.Name() + "/engine.yaml"
+		data, err := os.ReadFile(fileName)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %s", manifestsDir+file.Name(), err)
+			return nil, fmt.Errorf("%s: %s", fileName, err)
 		}
 
 		var manifest engines.Manifest
@@ -75,7 +76,28 @@ func LoadManifestsFromDir(manifestsDir string) ([]engines.Manifest, error) {
 	return manifests, nil
 }
 
-func ScoreEngines(hardwareInfo types.HwInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
+func LoadManifestFromDir(manifestsDir, engineName string) (*engines.Manifest, error) {
+	// Sanitize dir path
+	if !strings.HasSuffix(manifestsDir, "/") {
+		manifestsDir += "/"
+	}
+
+	fileName := manifestsDir + engineName + "/engine.yaml"
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %s", fileName, err)
+	}
+
+	var manifest engines.Manifest
+	err = yaml.Unmarshal(data, &manifest)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
+	}
+
+	return &manifest, nil
+}
+
+func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
 	var scoredEngines []engines.ScoredManifest
 
 	for _, currentManifest := range manifests {
@@ -101,7 +123,7 @@ func ScoreEngines(hardwareInfo types.HwInfo, manifests []engines.Manifest) ([]en
 	return scoredEngines, nil
 }
 
-func checkEngine(hardwareInfo types.HwInfo, manifest engines.Manifest) (int, []string, error) {
+func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []string, error) {
 	engineScore := 0
 	var reasons []string
 
@@ -174,7 +196,7 @@ func checkEngine(hardwareInfo types.HwInfo, manifest engines.Manifest) (int, []s
 	return engineScore, reasons, nil
 }
 
-func checkDevicesAll(hardwareInfo types.HwInfo, devices []engines.Device) (int, []string, error) {
+func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string, error) {
 	devicesFound := 0
 	extraScore := 0
 	var reasons []string
@@ -227,7 +249,7 @@ func checkDevicesAll(hardwareInfo types.HwInfo, devices []engines.Device) (int, 
 	return extraScore, reasons, nil
 }
 
-func checkDevicesAny(hardwareInfo types.HwInfo, devices []engines.Device) (int, []string, error) {
+func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string, error) {
 	devicesFound := 0
 	extraScore := 0
 	var reasons []string

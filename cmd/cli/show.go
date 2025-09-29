@@ -6,6 +6,7 @@ import (
 
 	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/canonical/stack-utils/pkg/engines"
+	"github.com/canonical/stack-utils/pkg/selector"
 	"github.com/canonical/stack-utils/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -41,38 +42,34 @@ func showEngine(_ *cobra.Command, args []string) error {
 }
 
 func showEngineValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	enginesJson, err := config.Get("engines")
+	manifests, err := selector.LoadManifestsFromDir(enginesDir)
 	if err != nil {
-		fmt.Printf("Error loading engines: %v", err)
-		return nil, cobra.ShellCompDirectiveError
-	}
-
-	scoredEngines, err := parseEnginesJson(enginesJson)
-	if err != nil {
-		fmt.Printf("Error parsing engines: %v", err)
+		fmt.Printf("Error loading engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
 	var engineNames []cobra.Completion
-	for i := range scoredEngines {
-		engineNames = append(engineNames, scoredEngines[i].Name)
+	for i := range manifests {
+		engineNames = append(engineNames, manifests[i].Name)
 	}
 
 	return engineNames, cobra.ShellCompDirectiveNoSpace
 }
 
 func engineInfo(engineName string) error {
-	enginesJson, err := config.Get("engines." + engineName)
+	scoredEngines, err := scoreEngines()
 	if err != nil {
-		return fmt.Errorf("error loading engine: %v", err)
+		return fmt.Errorf("error scoring engines: %v", err)
 	}
 
-	engine, err := parseEngineJson(enginesJson)
-	if err != nil {
-		return fmt.Errorf("error parsing engine: %v", err)
+	var scoredManifest engines.ScoredManifest
+	for i := range scoredEngines {
+		if scoredEngines[i].Name == engineName {
+			scoredManifest = scoredEngines[i]
+		}
 	}
 
-	err = printEngineInfo(engine)
+	err = printEngineInfo(scoredManifest)
 	if err != nil {
 		return fmt.Errorf("error printing engine info: %v", err)
 	}

@@ -86,16 +86,16 @@ func statusJson() (string, error) {
 
 func statusHuman() (string, error) {
 	// Find the selected engine
-	engine, err := selectedEngineFromOptions()
+	engine, err := activeEngine()
 	if err != nil {
-		return "", fmt.Errorf("error loading selected engine: %v", err)
+		return "", fmt.Errorf("error loading active engine: %v", err)
 	}
 
 	// Get all engines with scores
 	compatibleEngines := true
-	scoredEngines, err := scoredEnginesFromOptions()
+	scoredEngines, err := scoreEngines()
 	if err != nil {
-		return "", fmt.Errorf("error loading scored engines: %v", err)
+		return "", fmt.Errorf("error scoring engines: %v", err)
 	}
 
 	// Find top engine
@@ -120,7 +120,7 @@ func statusHuman() (string, error) {
 	return fmt.Sprintf("%s\n\n%s", engineStatusText, serverStatusText), nil
 }
 
-func statusHumanEngine(engine engines.ScoredManifest, auto bool) string {
+func statusHumanEngine(engine *engines.ScoredManifest, auto bool) string {
 	bold := color.New(color.Bold).SprintFunc()
 	engineString := fmt.Sprintf("Using %s", bold(engine.Name))
 	if auto {
@@ -129,7 +129,7 @@ func statusHumanEngine(engine engines.ScoredManifest, auto bool) string {
 	return engineString
 }
 
-func statusHumanServer(engine engines.ScoredManifest) (string, error) {
+func statusHumanServer(engine *engines.ScoredManifest) (string, error) {
 	// Start, stop, log commands
 	startCmd := fmt.Sprintf(`Run "sudo snap start %s" to start the server.`, snapInstanceName)
 	stopCmd := fmt.Sprintf(`Run "sudo snap stop %s" to stop the server.`, snapInstanceName)

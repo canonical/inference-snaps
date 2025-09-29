@@ -30,7 +30,7 @@ func TestFindTopEngineFromNone(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	scoredEngines, err := ScoreEngines(hwInfo, allEngines)
+	scoredEngines, err := ScoreEngines(&hwInfo, allEngines)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func TestDiskCheck(t *testing.T) {
 	manifestDisk := "300M"
 	engine := engines.Manifest{DiskSpace: &manifestDisk}
 
-	result, reasons, err := checkEngine(hwInfo, engine)
+	result, reasons, err := checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -69,7 +69,7 @@ func TestDiskCheck(t *testing.T) {
 		Avail: 100000000,
 	}
 	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
-	result, reasons, err = checkEngine(hwInfo, engine)
+	result, reasons, err = checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,7 +89,7 @@ func TestMemoryCheck(t *testing.T) {
 	engineMemory := "300M"
 	engine := engines.Manifest{Memory: &engineMemory}
 
-	result, reasons, err := checkEngine(hwInfo, engine)
+	result, reasons, err := checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,7 +98,7 @@ func TestMemoryCheck(t *testing.T) {
 	}
 
 	hwInfo.Memory.TotalRam = 100000000
-	result, reasons, err = checkEngine(hwInfo, engine)
+	result, reasons, err = checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -124,7 +124,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No memory in hardware info
-	_, _, err = checkEngine(hwInfo, currentEngine)
+	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
 		t.Fatalf("No Memory in hardware_info should return err")
 	}
@@ -135,7 +135,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No disk space in hardware info
-	_, _, err = checkEngine(hwInfo, currentEngine)
+	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
 		t.Fatal("No Disk space in hardware_info should return err")
 	}
@@ -146,7 +146,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No CPU in hardware info
-	_, _, err = checkEngine(hwInfo, currentEngine)
+	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
 		t.Fatal("No CPU in hardware_info should return err")
 	}

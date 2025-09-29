@@ -28,14 +28,9 @@ func addListCommand() {
 }
 
 func listEngines(_ *cobra.Command, _ []string) error {
-	enginesJson, err := config.Get("engines")
+	scoredEngines, err := scoreEngines()
 	if err != nil {
-		return fmt.Errorf("error loading engines: %v", err)
-	}
-
-	scoredEngines, err := parseEnginesJson(enginesJson)
-	if err != nil {
-		return fmt.Errorf("error parsing engines: %v", err)
+		return fmt.Errorf("error scoring engines: %v", err)
 	}
 
 	err = printEnginesTable(scoredEngines)

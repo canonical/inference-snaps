@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 func addGetCommand() {
@@ -12,7 +13,7 @@ func addGetCommand() {
 		Short: "Print configuration option",
 		// Long:  "",
 		GroupID:           "config",
-		Args:              cobra.ExactArgs(1),
+		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions, // To do
 		RunE:              get,
 	}
@@ -33,12 +34,20 @@ func getValue(key string) error {
 		return fmt.Errorf("error getting value of %q: %v", key, err)
 	}
 
-	if value == "" {
+	if len(value) == 0 {
 		return fmt.Errorf("no value set for key %q", key)
 	}
 
-	// print config value
-	fmt.Println(value)
+	if len(value) == 1 {
+		fmt.Println(value[key])
+	} else {
+		// print as yaml
+		yamlOutput, err := yaml.Marshal(value)
+		if err != nil {
+			return fmt.Errorf("error serializing value: %v", err)
+		}
+		fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
+	}
 
 	return nil
 }
@@ -51,7 +60,11 @@ func getValues() error {
 	}
 
 	// print config value
-	fmt.Println(values)
+	yamlOutput, err := yaml.Marshal(values)
+	if err != nil {
+		return fmt.Errorf("error serializing values: %v", err)
+	}
+	fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
 
 	return nil
 }

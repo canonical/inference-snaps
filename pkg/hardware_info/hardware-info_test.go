@@ -59,7 +59,7 @@ func TestGetFromFiles(t *testing.T) {
 				hardwareInfo.PciDevices[i].SubdeviceName = nil
 			}
 
-			if diff := deep.Equal(hwInfo, hardwareInfo); diff != nil {
+			if diff := deep.Equal(*hwInfo, hardwareInfo); diff != nil {
 				t.Error(diff)
 			}
 		})

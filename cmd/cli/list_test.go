@@ -1,22 +1,29 @@
 package main
 
 import (
-	"os"
 	"testing"
+
+	"github.com/canonical/stack-utils/pkg/hardware_info"
+	"github.com/canonical/stack-utils/pkg/selector"
 )
 
 func TestList(t *testing.T) {
-	data, err := os.ReadFile("../../test_data/snap-options/engines.json")
+	allEngines, err := selector.LoadManifestsFromDir("../../test_data/engines")
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("error loading engines: %v", err)
 	}
 
-	engines, err := parseEnginesJson(string(data))
+	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-7390", true)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("error getting hardware info: %v", err)
 	}
 
-	err = printEnginesTable(engines)
+	scoredEngines, err := selector.ScoreEngines(hardwareInfo, allEngines)
+	if err != nil {
+		t.Fatalf("error scoring engines: %v", err)
+	}
+
+	err = printEnginesTable(scoredEngines)
 	if err != nil {
 		t.Fatal(err)
 	}

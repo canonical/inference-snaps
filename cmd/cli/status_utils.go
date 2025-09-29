@@ -20,44 +20,32 @@ type Status struct {
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
-func scoredEnginesFromOptions() ([]engines.ScoredManifest, error) {
-	engineJson, err := config.Get("engines")
+func activeEngine() (*engines.ScoredManifest, error) {
+	activeEngineName, err := cache.GetActiveEngine()
 	if err != nil {
-		return nil, fmt.Errorf("error loading engines: %v", err)
+		return nil, fmt.Errorf("error looking up active engine: %v", err)
 	}
 
-	engines, err := parseEnginesJson(engineJson)
+	scoredEngines, err := scoreEngines()
 	if err != nil {
-		return nil, fmt.Errorf("error parsing engines: %v", err)
+		return nil, fmt.Errorf("error scoring engines: %v", err)
 	}
 
-	return engines, nil
-}
-
-func selectedEngineFromOptions() (engines.ScoredManifest, error) {
-	selectedEngineName, err := cache.GetActiveEngine()
-	if err != nil {
-		return engines.ScoredManifest{}, fmt.Errorf("error loading selected engine: %v", err)
+	var scoredManifest engines.ScoredManifest
+	for i := range scoredEngines {
+		if scoredEngines[i].Name == activeEngineName {
+			scoredManifest = scoredEngines[i]
+		}
 	}
 
-	enginesJson, err := config.Get("engines." + selectedEngineName)
-	if err != nil {
-		return engines.ScoredManifest{}, fmt.Errorf("error loading engine: %v", err)
-	}
-
-	engine, err := parseEngineJson(enginesJson)
-	if err != nil {
-		return engines.ScoredManifest{}, fmt.Errorf("error parsing engine: %v", err)
-	}
-
-	return engine, nil
+	return &scoredManifest, nil
 }
 
 func statusStruct() (*Status, error) {
 	var statusStr Status
 
 	// Find the selected engine
-	engine, err := selectedEngineFromOptions()
+	engine, err := activeEngine()
 	if err != nil {
 		return nil, fmt.Errorf("error loading selected engine: %v", err)
 	}
@@ -87,7 +75,7 @@ func statusStruct() (*Status, error) {
 	return &statusStr, nil
 }
 
-func serverApiUrls(engine engines.ScoredManifest) (map[string]string, error) {
+func serverApiUrls(engine *engines.ScoredManifest) (map[string]string, error) {
 	// Build API URL
 	apiBasePath := "v1"
 	if val, ok := engine.Configurations["http.base-path"]; ok {
@@ -97,12 +85,25 @@ func serverApiUrls(engine engines.ScoredManifest) (map[string]string, error) {
 		}
 
 	}
-	httpPort, err := config.Get("http.port")
+	httpPortMap, err := config.Get("http.port")
 	if err != nil {
 		return nil, fmt.Errorf("error getting http port: %v", err)
 	}
+	httpPort := httpPortMap["http.port"]
+	httpPortStr := ""
 
-	openaiHost := fmt.Sprintf("localhost:%s", httpPort)
+	switch v := httpPort.(type) {
+	case int, uint, int8, uint8, int16, uint16, int32, uint32, int64, uint64:
+		httpPortStr = fmt.Sprintf("%d", v)
+	case float32, float64:
+		httpPortStr = fmt.Sprintf("%.0f", v)
+	case string:
+		httpPortStr = v
+	default:
+		return nil, fmt.Errorf("unexpected type for http port: %v", v)
+	}
+
+	openaiHost := fmt.Sprintf("localhost:%s", httpPortStr)
 	openaiUrl := url.URL{Scheme: "http", Host: openaiHost, Path: apiBasePath}
 	return map[string]string{openAi: openaiUrl.String()}, nil
 

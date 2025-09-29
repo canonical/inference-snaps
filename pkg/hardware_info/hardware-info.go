@@ -13,38 +13,38 @@ import (
 	"github.com/canonical/stack-utils/pkg/types"
 )
 
-func Get(friendlyNames bool) (types.HwInfo, error) {
+func Get(friendlyNames bool) (*types.HwInfo, error) {
 	var hwInfo types.HwInfo
 
 	memoryInfo, err := memory.Info()
 	if err != nil {
-		return hwInfo, fmt.Errorf("error getting memory info: %v", err)
+		return nil, fmt.Errorf("error getting memory info: %v", err)
 	}
 	hwInfo.Memory = memoryInfo
 
 	cpus, err := cpu.Info()
 	if err != nil {
-		return hwInfo, fmt.Errorf("error getting cpu info: %v", err)
+		return nil, fmt.Errorf("error getting cpu info: %v", err)
 	}
 	hwInfo.Cpus = cpus
 
 	diskInfo, err := disk.Info()
 	if err != nil {
-		return hwInfo, fmt.Errorf("error getting disk info: %v", err)
+		return nil, fmt.Errorf("error getting disk info: %v", err)
 	}
 	hwInfo.Disk = diskInfo
 
 	pciDevices, err := pci.Devices(friendlyNames)
 	if err != nil {
-		return hwInfo, fmt.Errorf("error getting pci devices: %v", err)
+		return nil, fmt.Errorf("error getting pci devices: %v", err)
 	}
 	hwInfo.PciDevices = pciDevices
 
-	return hwInfo, nil
+	return &hwInfo, nil
 }
 
 // GetFromRawData is mainly used during testing, but also from other packages, and therefore needs to be exported
-func GetFromRawData(t *testing.T, device string, friendlyNames bool) (types.HwInfo, error) {
+func GetFromRawData(t *testing.T, device string, friendlyNames bool) (*types.HwInfo, error) {
 	var hwInfo types.HwInfo
 
 	devicePath := "../../test_data/machines/" + device + "/"
@@ -123,5 +123,5 @@ func GetFromRawData(t *testing.T, device string, friendlyNames bool) (types.HwIn
 		}
 	}
 
-	return hwInfo, nil
+	return &hwInfo, nil
 }
