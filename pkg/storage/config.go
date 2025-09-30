@@ -53,7 +53,9 @@ func (c *config) Get(key string) (map[string]any, error) {
 
 	// Filter to needed keys
 	for k := range configs {
-		if !strings.HasPrefix(k, key) {
+		// Only keep exact key matches for both primitives and objects
+		// e.g. model and model.source
+		if k != key && !strings.HasPrefix(k, key+".") {
 			delete(configs, k)
 		}
 	}
