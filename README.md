@@ -37,6 +37,8 @@ To build and install from source, refer to [here](#build-snap).
 
 ## Usage
 
+The following assumes use of the stack-utils snap to use the CLI.
+
 ### Machine Info
 
 A summary of the current host machine can be obtained by running:
@@ -45,18 +47,20 @@ A summary of the current host machine can be obtained by running:
 stack-utils debug machine-info
 ```
 
-This will print out a summary of the host system to `STDOUT` in JSON format.
-The output format can be changed to yaml by addign `--format yaml` to the command.
+This prints a machine-readable summary of the host system. 
 
-Errors and warnings are printed to STDERR.
+Errors and warnings are printed as standard errors.
 This allows piping the output to another application.
 
 ### Select Engine
 
-The machine info can be piped into `select-engine`.
-You need to provide the location of the engine definitions from which the selection should be made.
+This command can be used to perform engine selection using static data.
+It is useful for testing purposes.
 
-The result is written as json to STDOUT, while any other log messages are available on STDERR.
+To use, pipe the machine info in JSON format into `select-engine`.
+You also need to provide the location of the engine manifests from which the selection should be made.
+
+The result is printed as JSON to the standard output, while any other log messages are written as standard errors.
 
 Example:
 

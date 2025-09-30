@@ -9,7 +9,7 @@ type PciDevice struct {
 	DeviceId             HexInt  `json:"device_id" yaml:"device-id"`
 	SubvendorId          *HexInt `json:"subvendor_id,omitempty" yaml:"subvendor-id,omitempty"`
 	SubdeviceId          *HexInt `json:"subdevice_id,omitempty" yaml:"subdevice-id,omitempty"`
-	PciFriendlyNames
+	PciFriendlyNames     `yaml:",inline"`
 	AdditionalProperties map[string]string `json:"additional_properties,omitempty" yaml:"additional-properties,omitempty"`
 }
 
