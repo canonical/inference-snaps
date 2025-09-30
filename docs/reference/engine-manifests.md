@@ -132,9 +132,6 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
 
   # default config
   configurations:
-    engine: llamacpp
-    model: model-q4-k-m-gguf
-
 ```
 
 [^1]:  The comparison operators used for Compute Capability are based on
