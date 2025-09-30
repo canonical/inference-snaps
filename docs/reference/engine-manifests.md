@@ -22,15 +22,15 @@ get auto selected. (supported values: `stable` and `devel`)
 
 ## `devices`
 Lists of required computing devices. It’s possible to indicate if more than one
-device is required, or if there are multiple options, using the `any` and `all`
+device is required, or if there are multiple options, using the `anyof`, `allof`, `oneoff` and `not`
 keywords. For example, a engine requiring a generic CPU, combined with either an
 Nvidia GPU with compute capability 7.0 or an AMD GPU with 8GB vRAM should list
-the CPU under `all` and GPUs under `any`.
+the CPU under `allof` and GPUs under `anyoff`.
   - `type` - type of the device (cpu, gpu, npu, nil)
   - Remaining field types depend on the type. See other
   {ref}`device-specific properties <device-specific-fields>` below.
 
-## `memory` 
+## `memory`
 Required system memory to load the model. Memory capacities should be given
 either in gigabytes or megabytes, with **G** or **M** as suffixes.
 
@@ -101,13 +101,13 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
   # metadata
   name: engine-template # <vendor>-<id>
   description: This is a engine definition template
-  vendor: engine Ltd
+  vendor: Engine Ltd
   grade: stable
 
   # hardware requirements
   devices:
     # at least one is required
-    any:
+    anyof:
       - type: cpu
         manufacturer-id: AuthenticAMD
         architecture: amd64
@@ -116,15 +116,14 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
         architecture: amd64
         flags: [avx2, avx512]
     # all are required
-    all:
+    allof:
       - type: gpu
         vendor-id: "0x10de" # Nvidia Corporation
-        # device-id: 
+        # device-id:
         vram: 4G
         compute-capability: ["==5.3", ">=6.2"]
   memory: 4G
   disk-space: 15G
-
 
   # required snap components
   components:
