@@ -9,8 +9,8 @@ You can switch to another engine at any time using the steps below.
 <my-model> list-engines
 ```
 
-The table shows available engines.
-On the {spellexception}`**COMPAT**` column is shown the compatibility of each engine with your system:
+The command shows available engines.
+On the {spellexception}`COMPAT` column is shown the compatibility of each engine with your system:
 
 * **yes** → compatible and stable
 * **beta** → compatible but not stable
