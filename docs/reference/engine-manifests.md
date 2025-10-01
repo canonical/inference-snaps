@@ -1,4 +1,4 @@
-# engine manifests
+# Engine manifest
 
 Each engine is accompanied by a manifest file outlining the engine’s components
 and configurations. The manifest also describes the engine’s system requirements.
