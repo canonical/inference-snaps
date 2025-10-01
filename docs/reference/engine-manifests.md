@@ -95,7 +95,7 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
 
 When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-peripherals>` fields.
 
-## Example YAML {spellexception}`serialization` of a engine manifest
+## Example YAML {spellexception}`serialization` of an engine manifest
 
 ```yaml
   # metadata
