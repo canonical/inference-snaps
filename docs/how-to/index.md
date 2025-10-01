@@ -17,6 +17,7 @@ Use the snap:
 ```{toctree}
 :maxdepth: 1
 use-network-api
+switch-between-engines
 ```
 
 Use the snap with web clients:
