@@ -93,7 +93,7 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
 
 ```yaml
   # metadata
-  name: engine-template # <vendor>-<id>
+  name: manifest-template # <vendor>-<id>
   description: This is an engine manifest template
   vendor: Engine Ltd
   grade: stable
