@@ -22,7 +22,7 @@ get auto selected. (supported values: `stable` and `devel`)
 
 ## `devices`
 Lists of required computing devices. It’s possible to indicate if more than one
-device is required, or if there are multiple options, using the `anyof`, `allof`, `oneoff` and `not`
+device is required, or if there are multiple options, using the `anyof` and `allof`
 keywords. For example, a engine requiring a generic CPU, combined with either an
 Nvidia GPU with compute capability 7.0 or an AMD GPU with 8GB vRAM should list
 the CPU under `allof` and GPUs under `anyoff`.
