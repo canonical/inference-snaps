@@ -1,6 +1,6 @@
 # How to switch between engines
 
-When installed, the engine that best matches your system is selected automatically.
+When a model snap is installed, the engine that best matches your system is selected automatically.
 You can switch to another engine at any time using the steps below.
 
 ## Check available engines
