@@ -43,13 +43,7 @@ suffixes.
 List of snap components required by the engine
 
 # `configurations`
-Default snap configurations
-  - `engine` - name of engine snap component (mandatory)
-  - `model` - one of:
-    * Name of model snap component
-    * Path to local directory or file containing the model
-    * nil \- indicates that a separate model is not needed, i.e., when one is
-    already embedded in the engine (e.g. [llamafile](https://github.com/Mozilla-Ocho/llamafile))
+Default engine configurations
 
 (device-specific-fields)=
 ## Device-specific fields
