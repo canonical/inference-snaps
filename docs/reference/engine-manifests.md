@@ -132,6 +132,7 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
 
   # default config
   configurations:
+    key: value
 ```
 
 [^1]:  The comparison operators used for Compute Capability are based on
