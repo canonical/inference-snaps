@@ -1,6 +1,6 @@
-# Models Command Line Interface (CLI)
+# Models command line interface (CLI)
 
-This document provides a complete reference for the Famous Models command line interface (CLI).
+This document provides a complete reference for the command line interface (CLI).
 It describes all available commands, options, arguments, and expected behavior. 
 The CLI interface is the same across all models.
 
@@ -13,7 +13,7 @@ The syntax used is:
 <my-model> [COMMAND] [OPTIONS] [ARGS]
 ```
 
-## Global Options
+## Global options
 
 To show usage information about any of the commands, set the `--help` flag.
 
@@ -38,7 +38,7 @@ Management Commands:
   use-engine   Select an engine
 
 Additional Commands:
-  debug        Debugging commands
+  show-machine Print info about the host machine
   help         Help about any command
 
 Flags:
@@ -100,7 +100,7 @@ The `get` command retrieves configuration values.
 If no key is given, all configurations are listed in tabular form.
 
 
-## Management Commands
+## Management commands
 
 Manage available engines by listing, inspecting, and selecting them for use.
 
@@ -145,3 +145,17 @@ A confirmation prompt will appear before downloading.
 For regular installations, the `--auto` flag is applied by default.
 This command can also be used to revert to the original engine after manual changes,
 or to reselect the best engine after driver updates, or new hardware installation.
+
+
+## Additional commands
+
+### `show-machine`
+
+Show information about the host machine.
+
+```shell
+<my-model> show-machine [flags]
+```
+
+YAML is the default output format, but JSON is also available.
+You can use the `--format <output-type>` flag to specify the output format as `yaml` or `json`.
