@@ -1,6 +1,6 @@
 # Models Command Line Interface (CLI)
 
-This document provides a complete reference for the `ai model snaps` command line interface (CLI).
+This document provides a complete reference for the Famous Models command line interface (CLI).
 It describes all available commands, options, arguments, and expected behavior. 
 The CLI interface is the same across all models.
 
@@ -31,7 +31,6 @@ Basic Commands:
 Configuration Commands:
   get          Print configuration option
   set          Set configuration option
-  unset        Unset configuration option
 
 Management Commands:
   list-engines List available engines
@@ -144,5 +143,5 @@ Switching engines will trigger the download of engine resources (as snap compone
 A confirmation prompt will appear before downloading.
 
 For regular installations, the `--auto` flag is applied by default.
-This command can also be used to revert to the original engine after manual changes, driver updates, or new hardware installation.
-
+This command can also be used to revert to the original engine after manual changes,
+or to reselect the best engine after driver updates, or new hardware installation.
