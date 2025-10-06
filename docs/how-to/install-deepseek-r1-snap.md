@@ -25,7 +25,7 @@ If you have a GPU or NPU, follow the appropriate guide to install its driver:
 After installing the drivers, install the snap:
 
 ```shell
-sudo snap install deepseek-r1
+sudo snap install deepseek-r1 --beta
 ```
 
 During installation, the most appropriate combination of inference runtime and model weights is selected for your system.
