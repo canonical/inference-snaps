@@ -24,7 +24,7 @@ If you have a GPU or NPU, follow the appropriate guide to install its driver:
 
 After installing the drivers, install the snap:
 
-```bash
+```shell
 sudo snap install deepseek-r1
 ```
 
@@ -47,7 +47,7 @@ You can also change to a different engine as described in {ref}`switch-between-e
 The snap ships an example application that allows basic prompting from the command line.
 To run this built-in chat application:
 
-```bash
+```shell
 deepseek-r1 chat
 ```
 
@@ -61,15 +61,15 @@ All engines contain a server application.
 It is started automatically after installation.
 To conserve computing resources, it can be stopped and started on demand by the user.
 
-To stop the server:
+To stop and disable the server:
 
-```bash
-sudo snap stop deepseek-r1
+```shell
+sudo snap stop --disable deepseek-r1
 ```
 
 To start the server:
 
-```bash
+```shell
 sudo snap start deepseek-r1
 ```
 
@@ -78,7 +78,7 @@ sudo snap start deepseek-r1
 
 To debug possible issues, you can query the server logs:
 
-```bash
+```shell
 sudo snap logs deepseek-r1
 ```
 To query more lines and follow the logs, use `-n -100 -f`.
@@ -89,7 +89,7 @@ Configurations can be explored and changed using the `deepseek-r1 get` and `deep
 
 All configurations can be seen by running:
 
-```bash
+```shell
 deepseek-r1 get
 ```
 
@@ -99,31 +99,25 @@ Not all configurations can be changed, as they are defined by the selected engin
 
 The HTTP server's bind host and port are user changeable and can be seen under the `http` key:
 
-```{terminal} 
-:input: deepseek-r1 get http
-
-{
-	"base-path": "v3",
-	"host": "127.0.0.1",
-	"port": 8080
-}
+```shell 
+deepseek-r1 get http
 ```
 
 To change the HTTP port to, for example, 8999:
 
-```bash
+```shell
 sudo deepseek-r1 set http.port=8999
 ```
 
 If you need other machines on the network to use this server, you need to change the bind host to 0.0.0.0:
 
-```bash
+```shell
 sudo deepseek-r1 set http.host=0.0.0.0
 ```
 
 Once changed, restart the server:
 
-```bash
+```shell
 sudo snap restart deepseek-r1
 ```
 
@@ -132,16 +126,14 @@ sudo snap restart deepseek-r1
 CUDA-based stacks allow you to limit the number of model layers that are loaded onto the GPU by using the `n-gpu-layers` snap option.
 This is useful if the GPU does not have enough vRAM.
 The remaining layers will run on the CPU.
-```bash
+```shell
 sudo deepseek-r1 set n-gpu-layers=20
 ```
-
-[//]: # (To reset to the default option, which is to load the entire model onto the GPU, unset the value)
 
 ## Uninstall the snap
 
 To remove the DeepSeek R1 snap:
 
-```bash
+```shell
 sudo snap remove deepseek-r1
 ```
