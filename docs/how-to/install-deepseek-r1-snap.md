@@ -9,15 +9,18 @@ It is also compatible with Intel and Nvidia GPUs, as well as Intel NPUs.
 
 ```{note}
 This snap has mainly been tested on Ubuntu 24.04 and newer systems.
-For the best experience, make sure the drivers are installed on the host before installing the snap.
 ```
 
-## Install the snap
+## Install drivers
+
+For the best experience, make sure the drivers are installed on the host before installing the snap.
 
 If you have a GPU or NPU, follow the appropriate guide to install its driver:
 * {ref}`Intel GPU<install-intel-gpu-drivers>`
 * {ref}`Nvidia GPU<install-nvidia-gpu-drivers>`
 * {ref}`Intel NPU<install-intel-npu-drivers>`
+
+## Install the snap
 
 After installing the drivers, install the snap:
 
@@ -37,6 +40,8 @@ You can see which engine is selected, and its current state by using the status 
 deepseek-r1 status
 ```
 
+You can also change to a different engine as described in {ref}`switch-between-engines`.
+
 ## Chat with DeepSeek-R1
 
 The snap ships an example application that allows basic prompting from the command line.
@@ -47,33 +52,7 @@ deepseek-r1 chat
 ```
 
 You can also use any other OpenAI API compatible client to interact with this model via the network API.
-To do this, configure your client with the URL shown by the status command.
-
-
-## Change the engine
-
-It is possible to manually change to another engine.
-To do this, first check which engines are available and compatible with your machine:
-
-```bash
-deepseek-r1 list-engines
-```
-
-Check the `COMAPT` column to know if this engine will work on your hardware.
-
-You can also get more details about a specific engine:
-
-```bash
-deepseek-r1 show-engine <name>
-```
-
-This will print many fields describing what this engine consists of.
-
-The engine that is used can be changed:
-
-```bash
-sudo deepseek-r1 use-engine <name>
-```
+To do this, configure your client with the URL shown by the status command, or refer to {ref}`use-openai-api` for more details.
 
 
 ## Start and stop the server
@@ -93,8 +72,6 @@ To start the server:
 ```bash
 sudo snap start deepseek-r1
 ```
-
-When the server is running, it exposes an [OpenAI compatible endpoint](https://github.com/openai/openai-openapi) served via HTTP. 
 
 
 ## Checking the logs
