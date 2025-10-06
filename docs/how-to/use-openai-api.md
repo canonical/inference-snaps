@@ -6,49 +6,65 @@ This guide shows how to find the configurations needed to access this API.
 
 ## Identify API URL
 
-The model server binds to the host interface and port that are configured as snap options.
-These snap options can be viewed as follows:
+The OpenAI API URL is reported by the `status` command:
 
-```{terminal}
-:input: sudo snap get <ai-snap> http
-Key             Value
-http.base-path  v1
-http.host       127.0.0.1
-http.port       8080
+```shell
+<ai-snap> status
 ```
 
-The base path of the OpenAI compliant API might be different between stacks.
-This is also reported here as a snap configuration option.
+The URL is in the format `http://localhost:<port>/<base-path>/`, where the `<base-path>` depends on the currently active engine.
+This URL can be used to access the model from your local computer.
 
-The URL for the API should be built up using these options, in the format: `http://localhost:<http.port>/<http.base-path>/`.
-In this example that would be http://localhost:8080/v1/.
-The API can be accessed from your local computer using this URL.
+## API interface and port
 
-If the `http.host` value is set to `127.0.0.1`, the model can only be accessed from the local device.
-Set it to `0.0.0.0` if you want to access it from other devices on the network.
-From other devices, the full URL will be similar to above, but with `localhost` replaced by the IP address or hostname of the device where the model is running.
+The model server binds to the configured host interface and port.
+These configurations can be viewed with:
+
+```shell
+<ai-snap> get http
+```
+
+It can also be changed by using the `set` command.
+A server restart is required after changing these values.
+
+```shell
+<ai-snap> set http.port=9090
+sudo snap restart <ai-snap>
+```
+
+If the `http.host` value is set to `127.0.0.1`, the model can only be accessed from the local machine.
+Set it to `0.0.0.0` if you want to access it from other machines on the network:
+
+```shell
+<ai-snap> set http.host=0.0.0.0
+sudo snap restart <ai-snap>
+```
+
+To access the API from elsewhere, use the IP address or hostname of the machine where the model is running, instead of `localhost`.
+
 
 ## Look up model name
 
 Some servers require you to specify the exact model name when querying it via the API.
 An OpenAI compliant API lists available models under `<api-url>/models`.
-If the server does not implement this endpoint, the model name can also be looked up in the snap options:
 
-```{terminal}
-:input: sudo snap get <ai-model> 
-Key            Value
-http           {...}
-model-name     <model-name>
-...
+```shell
+curl <api-url>/models
+```
+
+If the server does not implement this endpoint, the model name can be looked up from configurations:
+
+```shell
+<ai-model> get model-name
 ```
 
 ## Test API access with `curl`
 
 If your installed model supports chat completions, you can use its API URL to make a test prompt.
-In this example, replace the URL and `<model-name>` fields with the values you obtained previously.
+In this example, replace the `<api-url>` and `<model-name>` fields with the values you obtained previously.
 
-```sh
-curl http://localhost:8080/v1/chat/completions \
+```shell
+curl <api-url>/chat/completions \
 -H "Content-Type: application/json" \
 -d '{
 "model": "<model-name>",
@@ -97,3 +113,5 @@ This should return a JSON response looking similar to this:
 
 Other OpenAI API compatible clients can also make use of these snaps.
 Configure these clients with the API URL and the model name obtained above.
+
+If the client requires you to provide an API key, you can leave this blank or provide a dummy value.

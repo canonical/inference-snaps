@@ -35,7 +35,7 @@ Enable `Direct Connections` and save your changes.
 Open settings in Open WebUI, select `Connections`, and click on the **+** icon to add a new connection.
 
 In the `URL` field, enter the URL of the AI model snap you want to use, then save it.
-To find the correct URL, check out this guide on [using an AI model snap via its OpenAI API](use-network-api.md).
+To find the correct URL, check out this guide on {doc}`using an AI model snap via its OpenAI API <use-openai-api>`.
 
 Click `Select a model` and select the model name you configured under connections.
 
