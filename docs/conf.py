@@ -25,7 +25,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "AI model snaps"
+project = "Famous models"
 author = "Canonical Ltd."
 
 
@@ -133,7 +133,7 @@ html_context = {
     #
     # NOTE: If set, links for viewing the documentation source files
     #       and creating GitHub issues are added at the bottom of each page.
-    "github_url": "https://github.com/canonical/ai-model-snaps-documentation",
+    "github_url": "https://github.com/canonical/famous-models-documentation",
     # Docs branch in the repo; used in links for viewing the source files
     #
     # TODO: To customise the branch, uncomment and update as needed.
