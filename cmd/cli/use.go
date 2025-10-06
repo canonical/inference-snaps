@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -191,28 +190,27 @@ func useEngine(engineName string, assumeYes bool) error {
 		}
 	}
 
-	currentEngine, err := cache.GetActiveEngine()
+	activeEngineName, err := cache.GetActiveEngine()
 	if err != nil {
-		if errors.Is(err, storage.ErrNoCache) {
-			// No engine set yet, continue
-		} else {
-			return fmt.Errorf("error getting current engine: %v", err)
-		}
+		return fmt.Errorf("error getting active engine: %v", err)
 	}
-	if currentEngine == engineName {
-		// Nothing left to do
+
+	if activeEngineName == engineName {
+		// Engine not changed, nothing left to do
 		return nil
+	}
+
+	// Unset active engine's configurations
+	if activeEngineName != "" {
+		err = unsetEngineConfigs(activeEngineName)
+		if err != nil {
+			return fmt.Errorf("error un-setting engine configurations: %v", err)
+		}
 	}
 
 	if len(components) > 0 {
 		// Leave a blank line if components were installed, before continuing
 		fmt.Println()
-	}
-
-	// unset all engine configurations
-	err = config.Unset(".", storage.EngineConfig)
-	if err != nil {
-		return fmt.Errorf("error un-setting current engine configurations: %v", err)
 	}
 
 	err = setEngineOptions(engine)
@@ -227,6 +225,29 @@ func useEngine(engineName string, assumeYes bool) error {
 	}
 
 	fmt.Printf("Engine successfully changed to %q\n", engineName)
+
+	return nil
+}
+
+func unsetEngineConfigs(engineName string) error {
+	// Unset all engine configurations
+	err := config.Unset(".", storage.EngineConfig)
+	if err != nil {
+		return fmt.Errorf("error un-setting engine configurations: %v", err)
+	}
+
+	engine, err := selector.LoadManifestFromDir(enginesDir, engineName)
+	if err != nil {
+		return fmt.Errorf("error loading engine manifest: %v", err)
+	}
+
+	// Unset any user overrides
+	for k := range engine.Configurations {
+		err = config.Unset(k, storage.UserConfig)
+		if err != nil {
+			return fmt.Errorf("error un-setting configuration %q: %v", k, err)
+		}
+	}
 
 	return nil
 }

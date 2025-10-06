@@ -27,8 +27,6 @@ const (
 	activeEngineKey = cacheKeyPrefix + "active-engine"
 )
 
-var ErrNoCache = errors.New("no cache")
-
 func (c cache) SetActiveEngine(engine string) error {
 	if engine == "" {
 		return fmt.Errorf("engine name cannot be empty")
@@ -37,11 +35,12 @@ func (c cache) SetActiveEngine(engine string) error {
 	return c.storage.Set(activeEngineKey, engine)
 }
 
+// GetActiveEngine returns the currently active engine name, or an empty string if none is set
 func (c *cache) GetActiveEngine() (string, error) {
 	data, err := c.storage.Get(activeEngineKey)
 	if err != nil {
-		if errors.Is(err, ErrorNotFound) { // cache miss
-			return "", ErrNoCache
+		if errors.Is(err, ErrorNotFound) { // cache miss, no active engine set
+			return "", nil
 		}
 		return "", err
 	}
