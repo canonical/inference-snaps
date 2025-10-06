@@ -144,7 +144,7 @@ A confirmation prompt will appear before downloading.
 
 For regular installations, the `--auto` flag is applied by default.
 This command can also be used to revert to the original engine after manual changes,
-or to reselect the best engine after driver updates, or new hardware installation.
+or to {spellexception}`reselect` the best engine after driver updates, or new hardware installation.
 
 
 ## Additional commands
