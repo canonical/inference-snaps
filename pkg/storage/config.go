@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"fmt"
 	"maps"
 	"strings"
 )
@@ -35,6 +36,17 @@ const (
 
 // Set sets a configuration value
 func (c *config) Set(key, value string, confType configType) error {
+	// User configs are overrides, reject unknown keys
+	if confType == UserConfig {
+		valMap, err := c.Get(key)
+		if err != nil {
+			return fmt.Errorf("error checking existing keys: %s", err)
+		}
+		if len(valMap) == 0 {
+			return fmt.Errorf("unknown key")
+		}
+	}
+
 	return c.storage.Set(c.nestKeys(confType, key), value)
 }
 
