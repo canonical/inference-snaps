@@ -1,3 +1,4 @@
+(switch-between-engines)=
 # How to switch between engines
 
 During installation, the engine that best matches your system is automatically selected.
