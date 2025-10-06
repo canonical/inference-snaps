@@ -114,4 +114,4 @@ This should return a JSON response looking similar to this:
 Other OpenAI API compatible clients can also make use of these snaps.
 Configure these clients with the API URL and the model name obtained above.
 
-If the client requires you to provide an API key, you can leave this blank or provide a dummy value.
+If the client requires you to provide an API key, you can leave this blank or provide a placeholder value.
