@@ -225,6 +225,8 @@ linkcheck_ignore = [
     "https://github.com/canonical/ACME/*",
     "https://github.com/canonical/deepseek-r1-snap",
     "https://github.com/canonical/qwen-vl-snap",
+    "https://github.com/canonical/famous-models-dev",
+    "https://github.com/canonical/famous-models-cli",
     ]
 
 
