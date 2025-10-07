@@ -3,7 +3,7 @@ package intel
 import (
 	"fmt"
 
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 /*

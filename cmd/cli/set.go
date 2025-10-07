@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/canonical/stack-utils/pkg/storage"
-	"github.com/canonical/stack-utils/pkg/utils"
+	"github.com/canonical/famous-models-cli/pkg/storage"
+	"github.com/canonical/famous-models-cli/pkg/utils"
 	"github.com/spf13/cobra"
 )
 

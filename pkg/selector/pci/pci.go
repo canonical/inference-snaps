@@ -3,9 +3,9 @@ package pci
 import (
 	"fmt"
 
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/selector/weights"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/selector/weights"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 func Match(device engines.Device, pcis []types.PciDevice) (int, []string, error) {

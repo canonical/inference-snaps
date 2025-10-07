@@ -3,7 +3,7 @@ package memory
 import (
 	"fmt"
 
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 func Info() (types.MemoryInfo, error) {

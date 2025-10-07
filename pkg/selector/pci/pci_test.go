@@ -3,8 +3,8 @@ package pci
 import (
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 func TestCheckGpuVendor(t *testing.T) {

@@ -1,6 +1,6 @@
 package engines
 
-import "github.com/canonical/stack-utils/pkg/types"
+import "github.com/canonical/famous-models-cli/pkg/types"
 
 type ScoredManifest struct {
 	Manifest   `yaml:",inline"`

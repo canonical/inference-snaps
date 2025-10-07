@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/hardware_info"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info"
 	"gopkg.in/yaml.v3"
 )
 

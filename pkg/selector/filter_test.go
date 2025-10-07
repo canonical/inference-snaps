@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 

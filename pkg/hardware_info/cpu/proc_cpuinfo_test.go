@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/constants"
+	"github.com/canonical/famous-models-cli/pkg/constants"
 )
 
 var procCpuInfoTestFiles = map[string]string{

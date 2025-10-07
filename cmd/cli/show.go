@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/alecthomas/chroma/v2/quick"
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/selector"
-	"github.com/canonical/stack-utils/pkg/utils"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/selector"
+	"github.com/canonical/famous-models-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

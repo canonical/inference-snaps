@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/canonical/famous-models-cli/pkg/storage"
 	"github.com/canonical/go-snapctl/env"
-	"github.com/canonical/stack-utils/pkg/storage"
 	"github.com/spf13/cobra"
 )
 

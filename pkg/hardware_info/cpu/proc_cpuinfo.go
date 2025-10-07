@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/canonical/stack-utils/pkg/constants"
+	"github.com/canonical/famous-models-cli/pkg/constants"
 )
 
 func hostProcCpuInfo() (string, error) {

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/utils"
+	"github.com/canonical/famous-models-cli/pkg/utils"
 )
 
 func TestParseLsCpu(t *testing.T) {

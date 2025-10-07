@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/hardware_info"
-	"github.com/canonical/stack-utils/pkg/selector"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info"
+	"github.com/canonical/famous-models-cli/pkg/selector"
 )
 
 func TestList(t *testing.T) {

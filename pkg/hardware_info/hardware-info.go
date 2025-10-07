@@ -6,11 +6,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/hardware_info/cpu"
-	"github.com/canonical/stack-utils/pkg/hardware_info/disk"
-	"github.com/canonical/stack-utils/pkg/hardware_info/memory"
-	"github.com/canonical/stack-utils/pkg/hardware_info/pci"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/cpu"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/disk"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/memory"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/pci"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 func Get(friendlyNames bool) (*types.HwInfo, error) {

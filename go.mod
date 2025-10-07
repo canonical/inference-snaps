@@ -1,4 +1,4 @@
-module github.com/canonical/stack-utils
+module github.com/canonical/famous-models-cli
 
 go 1.24.0
 

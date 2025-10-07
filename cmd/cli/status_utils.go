@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/canonical/stack-utils/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/engines"
 )
 
 const (

@@ -2,7 +2,6 @@
 
 Each subdirectory represents a single machine.
 This directory contains files with raw hardware info data from the respective machine.
-It optionally contains a `hardware-info.json` file which is the output of the `cmd/hardware-info` application.
 
 ## cpuinfo.txt
 
@@ -47,13 +46,4 @@ If any additional properties need to be added to PCI devices, add it to this fil
     "compute_capability": "12.4"
   }
 }
-```
-
-## hardware-info.json (optional)
-
-If we have access to the machine, and we can run the hardware-info application on it, add the output to this file.
-It is used for cross-validation of the output between the actual hardware-info vs the hardware info from test data.
-
-```
-stack-utils.hardware-info --pretty --friendly
 ```

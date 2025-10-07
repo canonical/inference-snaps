@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/canonical/stack-utils/pkg/constants"
-	"github.com/canonical/stack-utils/pkg/hardware_info/pci/amd"
-	"github.com/canonical/stack-utils/pkg/hardware_info/pci/intel"
-	"github.com/canonical/stack-utils/pkg/hardware_info/pci/nvidia"
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/constants"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/pci/amd"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/pci/intel"
+	"github.com/canonical/famous-models-cli/pkg/hardware_info/pci/nvidia"
+	"github.com/canonical/famous-models-cli/pkg/types"
 	"github.com/jaypipes/pcidb"
 )
 

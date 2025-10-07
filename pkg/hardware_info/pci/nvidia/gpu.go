@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/canonical/stack-utils/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/types"
 )
 
 func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {

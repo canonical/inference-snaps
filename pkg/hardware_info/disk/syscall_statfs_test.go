@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/canonical/stack-utils/pkg/utils"
+	"github.com/canonical/famous-models-cli/pkg/utils"
 )
 
 var testDirs = []string{

@@ -7,11 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/canonical/stack-utils/pkg/engines"
-	"github.com/canonical/stack-utils/pkg/selector/cpu"
-	"github.com/canonical/stack-utils/pkg/selector/pci"
-	"github.com/canonical/stack-utils/pkg/types"
-	"github.com/canonical/stack-utils/pkg/utils"
+	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/famous-models-cli/pkg/selector/cpu"
+	"github.com/canonical/famous-models-cli/pkg/selector/pci"
+	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/famous-models-cli/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 

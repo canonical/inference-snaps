@@ -1,6 +1,6 @@
-# Stack Utils
+# Famous Models CLI
 
-This repo contains utilities used in snapping and selecting hardware specific workloads.
+This repo contains the CLI implementation for configuration and engine management.
 
 ## Development
 
@@ -26,6 +26,9 @@ Then install the snap and connect the required interfaces:
 sudo snap install --dangerous ./stack-utils_*.snap
 sudo snap connect stack-utils:hardware-observe 
 ```
+
+> [!NOTE]
+> This snap is named `stack-utils` for historical reasons. It will be refactored in the future.
 
 ## Installation
 
