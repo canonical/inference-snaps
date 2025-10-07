@@ -2,7 +2,7 @@
 # Use an AI model snap via its OpenAI API
 
 Some AI model snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
-This guide shows how to find the configurations needed to access this API.
+This guide shows how to access this API.
 
 ## Identify API URL
 
@@ -12,7 +12,7 @@ The OpenAI API URL is reported by the `status` command:
 <ai-snap> status
 ```
 
-The URL is in the format `http://localhost:<port>/<base-path>/`, where the `<base-path>` depends on the currently active engine.
+The URL is in the format `http://localhost:<port>/<base-path>`, where the `<base-path>` depends on the currently active engine.
 This URL can be used to access the model from your local computer.
 
 ## API interface and port
@@ -52,11 +52,6 @@ An OpenAI compliant API lists available models under `<api-url>/models`.
 curl <api-url>/models
 ```
 
-If the server does not implement this endpoint, the model name can be looked up from configurations:
-
-```shell
-<ai-model> get model-name
-```
 
 ## Test API access with `curl`
 
@@ -87,7 +82,7 @@ This should return a JSON response looking similar to this:
     }
   ],
   "created": 1752591235,
-  "model": "<ai-model>",
+  "model": "<model-name>",
   "system_fingerprint": "b1-6a746cf",
   "object": "chat.completion",
   "usage": {
