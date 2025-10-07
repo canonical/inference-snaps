@@ -4,6 +4,12 @@ This repo contains the CLI implementation for configuration and engine managemen
 
 ## Development
 
+### Run tests
+
+```bash
+go test -count 1 -failfast ./...
+```
+
 ### Build binaries
 
 The CLIs included in this repo can be built using the following commands:
