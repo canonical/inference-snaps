@@ -14,10 +14,11 @@ var (
 	enginesDir       = env.Snap() + "/engines"
 	snapInstanceName = env.SnapInstanceName()
 	// rootCmd is the base command
-	// It gets populated with subcommands via init functions
+	// It gets populated with subcommands
 	rootCmd = &cobra.Command{
 		Use:          snapInstanceName,
 		SilenceUsage: true,
+		Long:         "", // Base command description TBA
 	}
 
 	cache  = storage.NewCache()
@@ -29,6 +30,8 @@ var (
 
 func main() {
 	cobra.EnableCommandSorting = false
+
+	// TODO: refact: functions called below add to the global rootCmd
 
 	rootCmd.AddGroup(&cobra.Group{ID: "basics", Title: "Basic Commands:"})
 	addStatusCommand()
@@ -44,6 +47,7 @@ func main() {
 	addUseCommand()
 
 	// other commands (help is added by default)
+	addShowMachineCommand()
 	addDebugCommand()
 
 	// disable logging timestamps

@@ -53,7 +53,7 @@ The following assumes use of the stack-utils snap to use the CLI.
 A summary of the current host machine can be obtained by running:
 
 ```
-stack-utils debug machine-info
+stack-utils show-machine
 ```
 
 This prints a machine-readable summary of the host system. 
@@ -74,7 +74,7 @@ The result is printed as JSON to the standard output, while any other log messag
 Example:
 
 ```bash
-$  stack-utils debug machine-info | stack-utils debug select-engine --engines test_data/engines/
+$ stack-utils show-machine --format=json | stack-utils debug select-engine --engines test_data/engines/
 ❌ ampere - not compatible: devices all: required cpu device not found
 ❌ ampere-altra - not compatible: devices all: required cpu device not found
 ❌ arm-neon - not compatible: devices any: required device not found

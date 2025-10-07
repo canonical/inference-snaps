@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/hardware_info"
 	"github.com/canonical/famous-models-cli/pkg/selector"
 	"github.com/canonical/famous-models-cli/pkg/types"
 	"github.com/fatih/color"
@@ -23,21 +22,10 @@ var (
 
 func addDebugCommand() {
 	debugCmd := &cobra.Command{
-		Use:   "debug",
-		Short: "Debugging commands",
-		// Long:  "",
-		// GroupID: "debug",
+		Use:    "debug",
+		Long:   "Developer/debugging commands",
+		Hidden: true,
 	}
-
-	machineInfoCmd := &cobra.Command{
-		Use:               "machine-info",
-		Short:             "Print machine information",
-		Args:              cobra.NoArgs,
-		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              machineInfo,
-	}
-	machineInfoCmd.PersistentFlags().StringVar(&debugMachineInfoFormat, "format", "yaml", "output format")
-	debugCmd.AddCommand(machineInfoCmd)
 
 	validateCmd := &cobra.Command{
 		Use:   "validate-engines",
@@ -59,35 +47,6 @@ func addDebugCommand() {
 	debugCmd.AddCommand(selectCmd)
 
 	rootCmd.AddCommand(debugCmd)
-}
-
-func machineInfo(_ *cobra.Command, args []string) error {
-	hwInfo, err := hardware_info.Get(true)
-	if err != nil {
-		return fmt.Errorf("failed to get hardware info: %s", err)
-	}
-
-	var hwInfoStr string
-	switch debugMachineInfoFormat {
-	case "json":
-		jsonString, err := json.MarshalIndent(hwInfo, "", "  ")
-		if err != nil {
-			return fmt.Errorf("failed to marshal to JSON: %s", err)
-		}
-		hwInfoStr = string(jsonString)
-	case "yaml":
-		yamlString, err := yaml.Marshal(hwInfo)
-		if err != nil {
-			return fmt.Errorf("failed to marshal to YAML: %s", err)
-		}
-		hwInfoStr = string(yamlString)
-	default:
-		return fmt.Errorf("unknown format %q", debugMachineInfoFormat)
-	}
-
-	fmt.Println(hwInfoStr)
-
-	return nil
 }
 
 func validateEngineManifests(_ *cobra.Command, args []string) error {
