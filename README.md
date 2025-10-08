@@ -39,7 +39,9 @@ sudo snap connect stack-utils:hardware-observe
 ## Installation
 
 ```bash
-sudo snap install stack-utils --devmode
+sudo snap install stack-utils
+sudo snap connect stack-utils:hardware-observe 
+snap alias stack-utils famous-models-cli
 ```
 
 To build and install from source, refer to [here](#build-snap).
@@ -53,7 +55,7 @@ The following assumes use of the stack-utils snap to use the CLI.
 A summary of the current host machine can be obtained by running:
 
 ```
-stack-utils show-machine
+famous-models-cli show-machine
 ```
 
 This prints a machine-readable summary of the host system. 
@@ -74,7 +76,7 @@ The result is printed as JSON to the standard output, while any other log messag
 Example:
 
 ```bash
-$ stack-utils show-machine --format=json | stack-utils debug select-engine --engines test_data/engines/
+$ famous-models-cli show-machine --format=json | famous-models-cli debug select-engine --engines test_data/engines/
 ❌ ampere - not compatible: devices all: required cpu device not found
 ❌ ampere-altra - not compatible: devices all: required cpu device not found
 ❌ arm-neon - not compatible: devices any: required device not found
