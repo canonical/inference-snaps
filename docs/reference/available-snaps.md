@@ -2,7 +2,6 @@
 # Available snaps
 
 
-
 | Snap name                                      | Description                                                                                     | Reference                                                                                 | 
 |------------------------------------------------|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | ~~mistral-7b-instruct~~                        | The Mistral 7B instruct *snap* has been deprecated. DeepSeek-R1 provides similar functionality. | [Huggingface](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3)                  |
