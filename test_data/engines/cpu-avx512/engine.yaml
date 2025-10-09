@@ -3,7 +3,7 @@ description: CPUs with AVX512
 vendor: Canonical Ltd
 grade: stable
 devices:
-  all:
+  allof:
     - type: cpu
       architecture: amd64
       flags: [sse4_2, f16c, fma, avx, avx2, avx512f, avx512dq, avx512bw]

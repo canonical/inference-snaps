@@ -3,10 +3,10 @@ description: Modern Intel GPUs (>=gen 13)
 vendor: Intel Corporation
 grade: stable
 devices:
-  all:
+  allof:
     - type: cpu
       architecture: amd64
-  any:
+  anyof:
     # DG2 = Arc core
     - type: gpu
       vendor-id: 8086

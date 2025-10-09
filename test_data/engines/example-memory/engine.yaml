@@ -3,7 +3,7 @@ description: Legacy CPUs, offering full accuracy but very high memory usage
 vendor: Canonical Ltd
 grade: stable
 devices:
-  any:
+  anyof:
     - type: cpu
       architecture: amd64
       manufacturer-id: AuthenticAMD

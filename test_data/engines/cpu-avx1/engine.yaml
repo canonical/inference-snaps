@@ -3,7 +3,7 @@ description: Legacy CPUs with only SSE4.2 (2008) and AVX (2011)
 vendor: Canonical Ltd
 grade: stable
 devices:
-  any:
+  anyof:
     - type: cpu
       architecture: amd64
       flags: [sse4_2, avx]

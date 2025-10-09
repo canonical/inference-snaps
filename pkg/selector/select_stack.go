@@ -164,10 +164,10 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 
 	// Devices
 	// all
-	if len(manifest.Devices.All) > 0 {
-		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, manifest.Devices.All)
+	if len(manifest.Devices.Allof) > 0 {
+		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
 		for _, reason := range reasonsAll {
-			reasons = append(reasons, "devices all: "+reason)
+			reasons = append(reasons, "devices allof: "+reason)
 		}
 		if err != nil {
 			return 0, reasons, err
@@ -179,10 +179,10 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 	}
 
 	// any
-	if len(manifest.Devices.Any) > 0 {
-		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, manifest.Devices.Any)
+	if len(manifest.Devices.Anyof) > 0 {
+		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
 		for _, reason := range reasonsAny {
-			reasons = append(reasons, "devices any: "+reason)
+			reasons = append(reasons, "devices anyof: "+reason)
 		}
 		if err != nil {
 			return 0, reasons, err
@@ -202,7 +202,6 @@ func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 	var reasons []string
 
 	for _, device := range devices {
-
 		if device.Type == "cpu" {
 			if hardwareInfo.Cpus == nil {
 				reasons = append(reasons, "cpu device is required but host reported none")
@@ -221,7 +220,6 @@ func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 
 		} else if device.Bus == "usb" {
 			// Not implemented
-
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
 			if len(hardwareInfo.PciDevices) == 0 {
@@ -255,7 +253,6 @@ func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 	var reasons []string
 
 	for _, device := range devices {
-
 		if device.Type == "cpu" {
 			if hardwareInfo.Cpus == nil {
 				continue

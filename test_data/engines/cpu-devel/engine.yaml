@@ -3,7 +3,7 @@ description: Requires any CPU but is grade devel
 vendor: Canonical Ltd
 grade: devel
 devices:
-  any:
+  anyof:
     - type: cpu
       architecture: amd64
     - type: cpu

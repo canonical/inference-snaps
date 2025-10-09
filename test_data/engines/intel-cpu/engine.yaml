@@ -3,7 +3,7 @@ description: Use Intel CPUs
 vendor: Intel Corporation
 grade: stable
 devices:
-  all:
+  allof:
     - type: cpu
       architecture: amd64
       manufacturer-id: GenuineIntel

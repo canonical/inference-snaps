@@ -12,7 +12,7 @@
     },
     "description": "Use CPU, good accuracy with low footprints",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "amd64",
           "flags": [

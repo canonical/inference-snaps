@@ -12,7 +12,7 @@
     },
     "description": "Optimized for Ampere Altra CPUs",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "arm64",
           "implementer-id": "0x41",
@@ -31,7 +31,7 @@
     "memory": "5G",
     "name": "ampere-altra",
     "notes": [
-      "devices all: required cpu device not found"
+      "devices allof: required cpu device not found"
     ],
     "score": 0,
     "vendor": "Ampere Computing"
@@ -49,7 +49,7 @@
     },
     "description": "Optimized for Ampere One CPUs",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "arm64",
           "implementer-id": "0xC0",
@@ -69,7 +69,7 @@
     "memory": "5G",
     "name": "ampere-one",
     "notes": [
-      "devices any: required device not found"
+      "devices anyof: required device not found"
     ],
     "score": 0,
     "vendor": "Ampere Computing"
@@ -87,7 +87,7 @@
     },
     "description": "Use CPU, good accuracy with low footprints",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "amd64",
           "flags": [
@@ -128,7 +128,7 @@
     },
     "description": "For CPUs with AVX512 support",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "amd64",
           "flags": [
@@ -150,7 +150,7 @@
     "memory": "4G",
     "name": "cpu-avx512",
     "notes": [
-      "devices any: required device not found"
+      "devices anyof: required device not found"
     ],
     "score": 0,
     "vendor": "Canonical Ltd"
@@ -168,7 +168,7 @@
     },
     "description": "For legacy CPUs with only SSE4.2 (2008) and AVX (2011) support",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "amd64",
           "flags": [
@@ -199,7 +199,7 @@
     },
     "description": "Use CPU, offering lower accuracy at higher speed",
     "devices": {
-      "any": [
+      "anyof": [
         {
           "architecture": "amd64",
           "flags": [
@@ -240,7 +240,7 @@
     },
     "description": "Use CUDA and Nvidia GPUs",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "amd64",
           "flags": [
@@ -264,7 +264,7 @@
     "memory": "4G",
     "name": "cuda",
     "notes": [
-      "devices all: required pci device not found"
+      "devices allof: required pci device not found"
     ],
     "score": 0,
     "vendor": "Canonical Ltd"
@@ -284,7 +284,7 @@
     },
     "description": "Use Intel CPUs",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "amd64",
           "manufacturer-id": "GenuineIntel",
@@ -314,13 +314,13 @@
     },
     "description": "Use modern Intel GPUs (integrated and discrete)",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "amd64",
           "type": "cpu"
         }
       ],
-      "any": [
+      "anyof": [
         {
           "device-id": "0x4F80",
           "type": "gpu",
@@ -838,7 +838,7 @@
     "memory": "4G",
     "name": "intel-gpu",
     "notes": [
-      "devices any: required device not found"
+      "devices anyof: required device not found"
     ],
     "score": 0,
     "vendor": "Intel Corporation"
@@ -858,13 +858,13 @@
     },
     "description": "Use Intel NPUs (Core Ultra series)",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "amd64",
           "type": "cpu"
         }
       ],
-      "any": [
+      "anyof": [
         {
           "device-id": "0x643E",
           "type": "npu",
@@ -882,7 +882,7 @@
     "memory": "4G",
     "name": "intel-npu",
     "notes": [
-      "devices any: required device not found"
+      "devices anyof: required device not found"
     ],
     "score": 0,
     "vendor": "Intel Corporation"

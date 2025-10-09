@@ -24,8 +24,8 @@ type Manifest struct {
 }
 
 type Devices struct {
-	Any []Device `yaml:"any,omitempty" json:"any"`
-	All []Device `yaml:"all,omitempty" json:"all"`
+	Anyof []Device `yaml:"anyof,omitempty" json:"anyof"`
+	Allof []Device `yaml:"allof,omitempty" json:"allof"`
 }
 
 type Device struct {

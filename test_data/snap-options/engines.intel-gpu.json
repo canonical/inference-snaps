@@ -14,13 +14,13 @@
     },
     "description": "Use modern Intel GPUs (integrated and discrete)",
     "devices": {
-      "all": [
+      "allof": [
         {
           "architecture": "amd64",
           "type": "cpu"
         }
       ],
-      "any": [
+      "anyof": [
         {
           "device-id": "0x4F80",
           "type": "gpu",

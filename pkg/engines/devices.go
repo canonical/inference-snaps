@@ -5,17 +5,17 @@ import (
 )
 
 func (devices Devices) validate() error {
-	for i, device := range devices.All {
+	for i, device := range devices.Allof {
 		err := device.validate()
 		if err != nil {
-			return fmt.Errorf("invalid device: all %d/%d: %v", i+1, len(devices.All), err)
+			return fmt.Errorf("invalid device: allof %d/%d: %v", i+1, len(devices.Allof), err)
 		}
 	}
 
-	for i, device := range devices.Any {
+	for i, device := range devices.Anyof {
 		err := device.validate()
 		if err != nil {
-			return fmt.Errorf("invalid device: any %d/%d: %v", i+1, len(devices.Any), err)
+			return fmt.Errorf("invalid device: anyof %d/%d: %v", i+1, len(devices.Anyof), err)
 		}
 	}
 

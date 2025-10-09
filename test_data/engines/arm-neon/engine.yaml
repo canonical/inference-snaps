@@ -3,7 +3,7 @@ description: ARM CPUs with NEON instruction set
 vendor: Canonical Ltd
 grade: stable
 devices:
-  any:
+  anyof:
 #    - type: cpu
 #      architecture: armhf
 #      features: [neon] # for ARMv7

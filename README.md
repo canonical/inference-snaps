@@ -77,18 +77,18 @@ Example:
 
 ```bash
 $ famous-models-cli show-machine --format=json | famous-models-cli debug select-engine --engines test_data/engines/
-❌ ampere - not compatible: devices all: required cpu device not found
-❌ ampere-altra - not compatible: devices all: required cpu device not found
-❌ arm-neon - not compatible: devices any: required device not found
+❌ ampere - not compatible: devices allof: required cpu device not found
+❌ ampere-altra - not compatible: devices allof: required cpu device not found
+❌ arm-neon - not compatible: devices anyof: required device not found
 ✅ cpu-avx1 - compatible, score = 14
 ✅ cpu-avx2 - compatible, score = 17
-❌ cpu-avx512 - not compatible: devices all: required cpu device not found
+❌ cpu-avx512 - not compatible: devices allof: required cpu device not found
 🟠 cpu-devel - score = 12, grade = devel
-❌ cuda-generic - not compatible: devices all: required pci device not found
+❌ cuda-generic - not compatible: devices allof: required pci device not found
 ✅ example-memory - compatible, score = 18
 ✅ intel-cpu - compatible, score = 18
-❌ intel-gpu - not compatible: devices any: required device not found
-❌ intel-npu - not compatible: devices any: required device not found
+❌ intel-gpu - not compatible: devices anyof: required device not found
+❌ intel-npu - not compatible: devices anyof: required device not found
 Selected engine for your hardware configuration: example-memory
 
 {"engines":[{"name":"ampere","description":"Test ampere selection" ...

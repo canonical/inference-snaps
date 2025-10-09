@@ -3,7 +3,7 @@ description: Test ampere selection
 vendor: Canonical Ltd
 grade: stable
 devices:
-  all:
+  allof:
     - type: cpu
       architecture: arm64
       implementer-id: 0x41

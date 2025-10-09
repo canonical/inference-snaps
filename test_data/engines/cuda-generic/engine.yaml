@@ -3,7 +3,7 @@ description: Nvidia GPUs using CUDA. All major CUDA versions are targeted.
 vendor: Canonical Ltd
 grade: stable
 devices:
-  all:
+  allof:
     - type: cpu
       architecture: amd64
       flags: [sse4_2, f16c, fma, avx, avx2]
