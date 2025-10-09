@@ -21,14 +21,12 @@ The components of the system are shown below:
 ![Component diagram](architecture.svg)
 
 Where:
-
-* **AI model snap** is a snap package corresponding to a model. The snap is named after the model.
-  * **Stack manifests** are documents that describe each inference engine; see {ref}`engine-manifest`
-  * **Hardware detector** is responsible for generating a report on the available hardware and compute resources  
-  * **Matchmaker** is in charge of selecting and installing an engine
-  * **Inference stack** is the engine that gets installed at runtime. Only one engine can be active at a time.  
-    * **Runtime** is the inference runtime serving the model and providing a standard API.  
-    * **Model** contains the model weights  
-  * **CLI** is a command-line interface for managing the snap; see {ref}`models-cli`
-* **Drivers** are kernel and user-space binaries/libraries installed on the host. 
-* **Hardware** refers to the compute nodes, including CPUs and accelerators.
+* **AI model snap**: A snap package representing a specific AI model, named after the model itself.
+  * **Engine Manifests**: Documents describing each inference engine’s requirements. See {ref}`engine-manifest`.
+  * **Engine Manager**: The core program responsible for matching engines to hardware, installing and configuring engines, and, in some cases, providing status reporting or chat features.
+  * **Inference stack**: The engine installed at runtime (only one engine can be active).
+    * **Runtime**: The inference runtime that serves the model and exposes standard APIs.
+    * **Model**: The model weights used for inference.
+  * **CLI**: A standard command-line interface for managing the snap. See {ref}`models-cli`.
+* **Drivers**: Kernel and user-space programs or libraries installed on the host to enable hardware support.
+* **Compute components**: The processors and accelerators used for inference.
