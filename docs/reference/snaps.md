@@ -1,13 +1,13 @@
-(available-snaps)=
+(snaps)=
 # Available snaps
 
 This page contains a list of Inference Snaps.
 
-## DeepSeek-R1
+## DeepSeek R1
 
 [Store listing](https://snapcraft.io/deepseek-r1) | [Snap source code](https://github.com/canonical/deepseek-r1-snap)
 
-DeepSeek-R1 is a general purpose Large Language Model, mainly meant for chat completions. Input and output is text-based.
+DeepSeek R1 is a general purpose Large Language Model, mainly meant for chat completions. Input and output is text-based.
 
 :Status: maintained
 :Version: R1
