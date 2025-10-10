@@ -32,7 +32,7 @@ func showEngine(_ *cobra.Command, args []string) error {
 			return fmt.Errorf("could not get currently selected engine: %v", err)
 		}
 		if currentEngine == "" {
-			return fmt.Errorf(`No active engine. Select one with "use-engine".`)
+			return fmt.Errorf(`no active engine. Select one with "use-engine".`)
 		}
 		return engineInfo(currentEngine)
 
