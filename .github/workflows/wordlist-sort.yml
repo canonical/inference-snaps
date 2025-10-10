@@ -19,12 +19,12 @@ jobs:
 
       - name: Check if word list is sorted
         env:
-          LC_ALL: C # For operations to use "C" locale
+          LC_ALL: POSIX # Force operations to use the POSIX locale
         run: |
           if sort --stable --ignore-case --check "$WORDLIST"; then
             echo "✅ $WORDLIST is correctly sorted."
           else
             echo "❌ $WORDLIST is not sorted lexicographically."
-            echo "To sort, run: \"LC_ALL=C sort --stable --ignore-case $WORDLIST --output=$WORDLIST\""
+            echo "To sort, run: \"LC_ALL=POSIX sort --stable --ignore-case $WORDLIST --output=$WORDLIST\""
             exit 1 
           fi
