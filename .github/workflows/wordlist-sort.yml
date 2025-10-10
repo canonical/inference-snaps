@@ -19,10 +19,10 @@ jobs:
 
       - name: Check if word list is sorted
         run: |
-          if sort --check "$WORDLIST"; then
+          if sort --stable --check "$WORDLIST"; then
             echo "✅ $WORDLIST is correctly sorted."
           else
             echo "❌ $WORDLIST is not sorted lexicographically."
-            echo "To sort, run: sort $WORDLIST --output=$WORDLIST"
+            echo "To sort, run: sort --stable $WORDLIST --output=$WORDLIST"
             exit 1 
           fi
