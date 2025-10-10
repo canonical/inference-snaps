@@ -4,15 +4,7 @@ We are committed to continuously improving our code and documentation and making
 We welcome community contributions, suggestions, and fixes.
 Please review the following guidelines before contributing to the project.
 
-## License and copyright
-Unless explicitly stated in the license headers of source files, all contributions to AI model snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/). 
-You can also get a copy of this license by sending a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
-
-All contributors must sign the [Canonical contributor license agreement](https://canonical.com/legal/contributors), which grants Canonical permission to use the contributions. 
-The author of a change remains the copyright owner of their code (no copyright assignment occurs).
-
 (contribute-to-our-code)=
-
 ## Contribute to our code
 You can help improve our code by:
 - Proposing new features or improvements
@@ -24,8 +16,13 @@ Our projects' source code can be found at:
 - [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 
-(contribute-to-our-docs)=
+### Tooling
+The AI models snaps use the following reusable building blocks:
+- [Famous Models CLI](https://github.com/canonical/famous-models-cli) – the command-line interface at the heart of each AI model snap
+- [Famous Models Developer Tools](https://github.com/canonical/famous-models-dev) – GitHub Actions and utility scripts for building, testing, and publishing AI model snaps
 
+
+(contribute-to-our-docs)=
 ## Contribute to our docs
 You can help improve this documentation by:
 
@@ -33,6 +30,13 @@ You can help improve this documentation by:
 - Clarifying concepts or common questions based on your own experience.
 - Fixing typos, formatting errors, and other mistakes.
 - Reporting documentation issues by opening an issue on GitHub.
+
+### License and copyright
+Unless explicitly stated in the license headers of source files, all contributions to the AI model snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/). 
+You can also get a copy of this license by sending a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+All contributors must sign the [Canonical contributor license agreement](https://canonical.com/legal/contributors), which grants Canonical permission to use the contributions. 
+The author of a change remains the copyright owner of their code (no copyright assignment occurs).
 
 ### Style and language
 This documentation is aimed at helping both beginners and experts. 

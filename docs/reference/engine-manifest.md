@@ -1,3 +1,4 @@
+(engine-manifest)=
 # Engine manifest
 
 Each engine is accompanied by a manifest file outlining the engine’s components
@@ -42,7 +43,7 @@ suffixes.
 ## `components`
 List of snap components required by the engine
 
-# `configurations`
+## `configurations`
 Default engine configurations
 
 (device-specific-fields)=

@@ -1,3 +1,4 @@
+(models-cli)=
 # Models command line interface (CLI)
 
 This document provides a complete reference for the command line interface (CLI).
