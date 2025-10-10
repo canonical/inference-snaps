@@ -1,4 +1,4 @@
-name: Ignore list sorting
+name: Check wordlist sorting
 
 on:
   pull_request:
@@ -22,6 +22,6 @@ jobs:
           if sort --check "$WORDLIST"; then
             echo "✅ $WORDLIST is correctly sorted."
           else
-            echo "::error file=$WORDLIST::Word list is not sorted lexicographically."
+            echo "❌ $WORDLIST is not sorted lexicographically."
             exit 1 
           fi
