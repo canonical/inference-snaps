@@ -1,0 +1,27 @@
+name: Ignore list sorting
+
+on:
+  pull_request:
+    paths:
+      - 'docs/.custom_wordlist.txt'
+
+  workflow_dispatch: # Manual trigger
+
+env:
+  WORDLIST: docs/.custom_wordlist.txt
+
+jobs:
+  check_sort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Check if word list is sorted
+        run: |
+          if sort -c "$WORDLIST"; then
+            echo "✅ $WORDLIST is correctly sorted."
+          else
+            echo "::error file=$WORDLIST::Word list is not sorted lexicographically."
+            exit 1 
+          fi
