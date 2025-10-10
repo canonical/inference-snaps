@@ -9,7 +9,7 @@ The primary focus of Famous Models is on Generative AI models that are pre-train
 Famous Models provide an automatic mechanism to deliver a balance of accuracy and performance tailored to the underlying silicon. 
 They hide the complexity of picking model quantization and runtime optimizations from the users.
 
-Each Famous Model snap maps to a single, fine-tuned AI model. The snap is associated with multiple [engines](../index), which are optimizations for various hardware, but installs the one that is deemed most suitable.
+Each Famous Model snap maps to a single, fine-tuned AI model. The snap is associated with multiple {ref}`engines <engines>`, which are optimizations for various hardware, but installs the one that is deemed most suitable.
 <!-- Another doc should explain the selection mechanism -->
 
 In a more technical sense, each engine consists of a manifest and one or more artifacts. 
