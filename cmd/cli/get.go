@@ -2,10 +2,22 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"slices"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
+
+// Deprecated configurations from the user
+var deprecatedConfig = []string{
+	"model",
+	"model-name",
+	"multimodel-projector",
+	"server",
+	"target-device",
+	"http.base-path",
+}
 
 func addGetCommand() {
 	cmd := &cobra.Command{
@@ -49,6 +61,11 @@ func getValue(key string) error {
 		fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
 	}
 
+	// Warn the user about deprecated fields. These are still consumed by the engines.
+	if slices.Contains(deprecatedConfig, key) {
+		fmt.Fprintf(os.Stderr, "Note: %q configuration field is deprecated!\n", key)
+	}
+
 	return nil
 }
 
@@ -57,6 +74,13 @@ func getValues() error {
 	values, err := config.GetAll()
 	if err != nil {
 		return fmt.Errorf("error getting values: %v", err)
+	}
+
+	// Drop deprecated configurations. The user doesn't need to see them.
+	for k := range values {
+		if slices.Contains(deprecatedConfig, k) {
+			delete(values, k)
+		}
 	}
 
 	// print config value

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/canonical/famous-models-cli/pkg/storage"
@@ -26,9 +27,10 @@ func addSetCommand() {
 	}
 
 	// flags
-	// TODO: hide these flags
 	cmd.PersistentFlags().BoolVar(&setPackageConfig, "package", false, "set package configurations")
+	cmd.PersistentFlags().MarkHidden("package")
 	cmd.PersistentFlags().BoolVar(&setEngineConfig, "engine", false, "set engine configuration")
+	cmd.PersistentFlags().MarkHidden("engine")
 
 	rootCmd.AddCommand(cmd)
 }
@@ -58,6 +60,10 @@ func setValue(keyValue string) error {
 	} else if setEngineConfig {
 		err = config.Set(key, value, storage.EngineConfig)
 	} else {
+		// Reject use of internal keys by the user
+		if slices.Contains(deprecatedConfig, key) {
+			return fmt.Errorf("%q is read-only", key)
+		}
 		err = config.Set(key, value, storage.UserConfig)
 	}
 	if err != nil {
