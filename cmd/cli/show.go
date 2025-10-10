@@ -31,6 +31,9 @@ func showEngine(_ *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("could not get currently selected engine: %v", err)
 		}
+		if currentEngine == "" {
+			return fmt.Errorf(`No active engine. Select one with "use-engine".`)
+		}
 		return engineInfo(currentEngine)
 
 	} else if len(args) == 1 {
@@ -67,6 +70,9 @@ func engineInfo(engineName string) error {
 		if scoredEngines[i].Name == engineName {
 			scoredManifest = scoredEngines[i]
 		}
+	}
+	if scoredManifest.Name != engineName {
+		return fmt.Errorf(`engine "%s" does not exist`, engineName)
 	}
 
 	err = printEngineInfo(scoredManifest)
