@@ -42,7 +42,7 @@ suffixes.
 ## `components`
 List of snap components required by the engine
 
-# `configurations`
+## `configurations`
 Default engine configurations
 
 (device-specific-fields)=
