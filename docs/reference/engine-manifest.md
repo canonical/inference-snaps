@@ -1,3 +1,4 @@
+(engine-manifest)=
 # Engine manifest
 
 Each engine is accompanied by a manifest file outlining the engine’s components
