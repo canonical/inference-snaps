@@ -29,8 +29,8 @@ IDEs
 Intersphinx
 io
 JetBrains
-json
 JSON
+json
 lang
 LaTeX
 latexmk
@@ -88,5 +88,5 @@ wordlist
 xetex
 xindy
 xml
-yaml
 YAML
+yaml

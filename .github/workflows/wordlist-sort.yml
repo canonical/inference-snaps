@@ -18,11 +18,13 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Check if word list is sorted
+        env:
+          LC_ALL: C # For operations to use "C" locale
         run: |
-          if sort --stable --check "$WORDLIST"; then
+          if sort --stable --ignore-case --check "$WORDLIST"; then
             echo "✅ $WORDLIST is correctly sorted."
           else
             echo "❌ $WORDLIST is not sorted lexicographically."
-            echo "To sort, run: sort --stable $WORDLIST --output=$WORDLIST"
+            echo "To sort, run: \"LC_ALL=C sort --stable --ignore-case $WORDLIST --output=$WORDLIST\""
             exit 1 
           fi
