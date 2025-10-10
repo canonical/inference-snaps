@@ -29,6 +29,7 @@ func (device Device) validatePci(extraFields []string) error {
 		"Bus",
 		"VendorId",
 		"DeviceId",
+		"SnapConnections",
 	}
 	validFields = append(validFields, extraFields...)
 

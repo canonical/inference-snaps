@@ -2,10 +2,12 @@ package pci
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/canonical/famous-models-cli/pkg/engines"
 	"github.com/canonical/famous-models-cli/pkg/selector/weights"
 	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/go-snapctl"
 )
 
 func Match(device engines.Device, pcis []types.PciDevice) (int, []string, error) {
@@ -83,6 +85,18 @@ func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []st
 		}
 	}
 
+	// Check drivers
+	for _, connection := range device.SnapConnections {
+		connected, err := checkSnapConnection(connection)
+		if err != nil {
+			return 0, reasons, fmt.Errorf("error checking snap connection %q: %v", connection, err)
+		}
+		if !connected {
+			reasons = append(reasons, fmt.Sprintf("%q is not connected", connection))
+			return 0, reasons, nil
+		}
+	}
+
 	return currentDeviceScore, reasons, nil
 }
 
@@ -111,4 +125,13 @@ func checkType(requiredType string, pciDevice types.PciDevice) bool {
 	}
 
 	return false
+}
+
+func checkSnapConnection(connection string) (bool, error) {
+	if testing.Testing() {
+		// Tests do not necessarily run inside a snap
+		// Stub out and always return true for all connections
+		return true, nil
+	}
+	return snapctl.IsConnected(connection).Run()
 }

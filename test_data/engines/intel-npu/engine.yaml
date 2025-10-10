@@ -10,8 +10,10 @@ devices:
     - bus: pci
       vendor-id: 0x8086 # Intel Corporation
       device-id: 643e # Lunar Lake NPU
+      snap-connections: [ intel-npu, npu-libs ]
     - bus: pci
       vendor-id: 0x8086
       device-id: 7d1d # Meteor Lake NPU
+      snap-connections: [ intel-npu, npu-libs ]
 memory: 4G
 disk-space: 8G

@@ -54,6 +54,9 @@ type Device struct {
 
 	// NPU
 	// no additional properties for now
+
+	// Drivers
+	SnapConnections []string `yaml:"snap-connections,omitempty" json:"snap-connections,omitempty"`
 }
 
 type Configurations map[string]interface{}
