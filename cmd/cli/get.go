@@ -5,6 +5,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/canonical/famous-models-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -62,7 +63,7 @@ func getValue(key string) error {
 	}
 
 	// Warn the user about deprecated fields. These are still consumed by the engines.
-	if slices.Contains(deprecatedConfig, key) {
+	if slices.Contains(deprecatedConfig, key) && utils.IsTerminalOutput() {
 		fmt.Fprintf(os.Stderr, "Note: %q configuration field is deprecated!\n", key)
 	}
 
