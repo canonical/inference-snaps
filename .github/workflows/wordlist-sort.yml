@@ -1,0 +1,30 @@
+name: Check wordlist sorting
+
+on:
+  pull_request:
+    paths:
+      - 'docs/.custom_wordlist.txt'
+
+  workflow_dispatch: # Manual trigger
+
+env:
+  WORDLIST: docs/.custom_wordlist.txt
+
+jobs:
+  check_sort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Check if word list is sorted
+        env:
+          LC_ALL: POSIX # Force operations to use the POSIX locale
+        run: |
+          if sort --stable --ignore-case --check "$WORDLIST"; then
+            echo "✅ $WORDLIST is correctly sorted."
+          else
+            echo "❌ $WORDLIST is not sorted lexicographically."
+            echo "To sort, run: \"LC_ALL=POSIX sort --stable --ignore-case $WORDLIST --output=$WORDLIST\""
+            exit 1 
+          fi

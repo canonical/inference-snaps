@@ -10,7 +10,6 @@ cpu
 CPUs
 cryptographically
 CUDA
-CUDA
 DeepSeek
 dvipng
 fonts
@@ -80,7 +79,6 @@ ubuntu
 UIs
 uncommenting
 unported
-userspace
 userspace
 utils
 VL
