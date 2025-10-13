@@ -4,5 +4,6 @@ These documents explain different concepts that are applied in the creation and 
 
 ```{toctree}
 :maxdepth: 1
+engines
 architecture
 ```
