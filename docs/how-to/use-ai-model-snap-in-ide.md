@@ -65,7 +65,7 @@ Find the `models` list in the YAML file and add:
 
 The values above are examples based on the DeepSeek-R1 snap.
 Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
-To identify the correct `apiBase` and `model` name, check out this guide on [using the snap via its OpenAI API](use-openai-api).
+To identify the correct `apiBase` and `model` name, check out this guide on {ref}`using the snap via its OpenAI API<use-openai-api>`.
 
 For additional configuration options, visit the [Continue reference page][continue-ref].
 

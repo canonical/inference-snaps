@@ -19,7 +19,7 @@ install-deepseek-r1-snap
 Use the snap:
 ```{toctree}
 :maxdepth: 1
-use-network-api
+use-openai-api
 switch-between-engines
 ```
 
