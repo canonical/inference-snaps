@@ -10,7 +10,7 @@ This page contains a list of Inference Snaps.
 DeepSeek R1 is a reasoning Large Language Model, mainly meant for chat completions. Input and output is text-based.
 
 :Status: maintained
-:Version: R1
+:Versions: 1.0.0
 :Available vendor optimizations: Intel, Ampere
 
 ## Mistral 7B instruct
