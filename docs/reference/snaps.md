@@ -7,7 +7,7 @@ This page contains a list of Inference Snaps.
 
 [Store listing](https://snapcraft.io/deepseek-r1) | [Snap source code](https://github.com/canonical/deepseek-r1-snap)
 
-DeepSeek R1 is a general purpose Large Language Model, mainly meant for chat completions. Input and output is text-based.
+DeepSeek R1 is a reasoning Large Language Model, mainly meant for chat completions. Input and output is text-based.
 
 :Status: maintained
 :Version: R1
@@ -29,7 +29,7 @@ The instruct fine-tuning is aimed at chat completions, providing text-based inpu
 [Store listing](https://snapcraft.io/qwen-vl) | [Snap source code](https://github.com/canonical/qwen-vl-snap)
 
 Qwen VL is a Vision Language Model which has the ability to process both visual and textual data.
-The input is a combination of an image and text, with the output being text-based.
+The input can be a combination of an image and text, with the output being text-based.
 
 :Status: maintained
 :Versions: 2.5
