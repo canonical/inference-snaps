@@ -127,7 +127,7 @@ func statusHuman() (string, error) {
 
 func statusHumanEngine(engine *engines.ScoredManifest, auto bool) string {
 	bold := color.New(color.Bold).SprintFunc()
-	engineString := fmt.Sprintf("Using %s", bold(engine.Name))
+	engineString := fmt.Sprintf("Using %s engine", bold(engine.Name))
 	if auto {
 		engineString += " (automatically selected)"
 	}
