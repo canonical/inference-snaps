@@ -182,7 +182,7 @@ This allows them to make meaningful contributions to established open-source pro
 
 For experts, the academy can be a great place to share knowledge and get involved with new developments.
 
-For more information on how you can get involved, visit the [CODA website](https://documentationacademy.org/). 
+For more information on how you can get involved, visit the [CODA project](https://github.com/canonical/open-documentation-academy). 
 You can also browse through the types of issues you’ll be working on in the [CODA repository](https://github.com/canonical/open-documentation-academy/issues).
 
 Other channels to get involved with the academy include:
