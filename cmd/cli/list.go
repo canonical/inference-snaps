@@ -5,7 +5,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"

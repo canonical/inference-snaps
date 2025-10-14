@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 
 	"github.com/go-test/deep"
 )

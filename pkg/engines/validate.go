@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/famous-models-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 

@@ -1,4 +1,4 @@
-module github.com/canonical/famous-models-cli
+module github.com/canonical/inference-snaps-cli
 
 go 1.24.0
 

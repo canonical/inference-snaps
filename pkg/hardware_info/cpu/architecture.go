@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/canonical/famous-models-cli/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
 )
 
 func hostUnameMachine() (string, error) {

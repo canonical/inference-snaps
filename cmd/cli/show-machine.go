@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/canonical/famous-models-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

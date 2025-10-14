@@ -5,7 +5,7 @@ import (
 	"os"
 	"slices"
 
-	"github.com/canonical/famous-models-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

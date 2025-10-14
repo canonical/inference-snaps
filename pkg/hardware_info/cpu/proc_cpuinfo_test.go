@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
 )
 
 var procCpuInfoTestFiles = map[string]string{

@@ -3,8 +3,8 @@ package engines
 import (
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/constants"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 func TestCpuArchitecture(t *testing.T) {

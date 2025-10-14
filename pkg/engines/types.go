@@ -1,6 +1,6 @@
 package engines
 
-import "github.com/canonical/famous-models-cli/pkg/types"
+import "github.com/canonical/inference-snaps-cli/pkg/types"
 
 type ScoredManifest struct {
 	Manifest   `yaml:",inline"`

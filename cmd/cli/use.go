@@ -6,11 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/selector"
-	"github.com/canonical/famous-models-cli/pkg/snap_store"
-	"github.com/canonical/famous-models-cli/pkg/storage"
-	"github.com/canonical/famous-models-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
+	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
 	"github.com/spf13/cobra"
@@ -183,7 +183,7 @@ func useEngine(engineName string, assumeYes bool) error {
 		fmt.Println()
 
 		// This is blocking, but there is a timeout bug:
-		// https://github.com/canonical/famous-models-cli/issues/122
+		// https://github.com/canonical/inference-snaps-cli/issues/122
 		err = installComponents(engine.Components)
 		if err != nil {
 			return fmt.Errorf("error installing components: %v", err)

@@ -3,7 +3,7 @@ package disk
 import (
 	"fmt"
 
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 var directories = []string{

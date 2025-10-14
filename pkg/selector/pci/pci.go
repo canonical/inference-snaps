@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/selector/weights"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/selector/weights"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 	"github.com/canonical/go-snapctl"
 )
 

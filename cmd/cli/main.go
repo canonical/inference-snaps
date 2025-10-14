@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/canonical/famous-models-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/canonical/go-snapctl/env"
 	"github.com/spf13/cobra"
 )

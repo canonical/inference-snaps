@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/canonical/famous-models-cli/pkg/hardware_info"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 type cache struct {

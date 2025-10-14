@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 

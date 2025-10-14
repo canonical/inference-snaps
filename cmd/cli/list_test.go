@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/hardware_info"
-	"github.com/canonical/famous-models-cli/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/pkg/selector"
 )
 
 func TestList(t *testing.T) {

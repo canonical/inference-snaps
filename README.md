@@ -1,4 +1,4 @@
-# Famous Models CLI
+# Inference Snaps CLI
 
 This repo contains the CLI implementation for configuration and engine management.
 
@@ -41,7 +41,7 @@ sudo snap connect stack-utils:hardware-observe
 ```bash
 sudo snap install stack-utils
 sudo snap connect stack-utils:hardware-observe 
-snap alias stack-utils famous-models-cli
+snap alias stack-utils inference-snaps-cli
 ```
 
 To build and install from source, refer to [here](#build-snap).
@@ -55,7 +55,7 @@ The following assumes use of the stack-utils snap to use the CLI.
 A summary of the current host machine can be obtained by running:
 
 ```
-famous-models-cli show-machine
+inference-snaps-cli show-machine
 ```
 
 This prints a machine-readable summary of the host system. 
@@ -76,7 +76,7 @@ The result is printed as JSON to the standard output, while any other log messag
 Example:
 
 ```bash
-$ famous-models-cli show-machine --format=json | famous-models-cli debug select-engine --engines test_data/engines/
+$ inference-snaps-cli show-machine --format=json | inference-snaps-cli debug select-engine --engines test_data/engines/
 ❌ ampere - not compatible: devices allof: required cpu device not found
 ❌ ampere-altra - not compatible: devices allof: required cpu device not found
 ❌ arm-neon - not compatible: devices anyof: required device not found

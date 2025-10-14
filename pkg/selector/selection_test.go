@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"gopkg.in/yaml.v3"
 )
 

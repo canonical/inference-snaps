@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/selector"
 )
 
 func TestInfoLong(t *testing.T) {

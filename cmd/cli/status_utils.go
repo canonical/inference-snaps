@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
 )
 
 const (

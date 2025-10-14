@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"slices"
 
-	"github.com/canonical/famous-models-cli/pkg/constants"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 func Info() ([]types.CpuInfo, error) {

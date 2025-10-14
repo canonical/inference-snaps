@@ -7,11 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/selector/cpu"
-	"github.com/canonical/famous-models-cli/pkg/selector/pci"
-	"github.com/canonical/famous-models-cli/pkg/types"
-	"github.com/canonical/famous-models-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/selector/cpu"
+	"github.com/canonical/inference-snaps-cli/pkg/selector/pci"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 

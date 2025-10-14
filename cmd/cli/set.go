@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/canonical/famous-models-cli/pkg/storage"
-	"github.com/canonical/famous-models-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 )
 

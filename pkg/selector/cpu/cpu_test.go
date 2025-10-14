@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/famous-models-cli/pkg/engines"
-	"github.com/canonical/famous-models-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 func TestCheckCpuVendor(t *testing.T) {
