@@ -3,6 +3,7 @@ backend
 backends
 Battlemage
 Charmcraft
+chatbot
 cjk
 config
 Continue
