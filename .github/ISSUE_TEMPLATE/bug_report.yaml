@@ -1,0 +1,51 @@
+name: Bug report
+description: File a software bug report
+#labels: 
+type: Bug
+
+body:
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: Describe the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To reproduce
+      description: Step-by-step instructions on how to reproduce the behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: snap-version
+    attributes:
+      label: Snap version
+      description: Provide the output of the following command `snap list <inference-snap>`
+      render: shell
+    # validations:
+    #   required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: System information
+      description: |
+        Provide information about your hardware.
+
+        Run `<inference-snap> show-machine` and paste the output below.
+      value: |
+        <details>
+
+        ```yaml
+        
+        ```
+
+        </details>
+    validations:
+      required: true
+

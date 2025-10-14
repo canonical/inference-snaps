@@ -1,9 +1,8 @@
 ---
 name: Documentation issue
-about: Report any issue you're facing with the AI model snaps documentation
+about: Report issue related to the documentation
 title: ''
-labels: ''
-assignees: ''
+labels: documentation
 
 ---
 
