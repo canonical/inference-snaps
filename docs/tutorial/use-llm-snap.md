@@ -19,8 +19,8 @@ During installation, the snap detects information about your system like install
 Based on this, an appropriate engine is chosen.
 An *engine* in the context of Inference Snaps is a combination of model weights and a runtime, 
 along with some utilities to make it work, like a server exposing a standard API.
-Depending on the vendor of your hardware, they might have optimizations available some of these parts.
-These are packaged together as a vendor specific engine.
+Hardware vendors publish optimizations for some of these parts.
+These are packaged as a vendor specific engine.
 
 
 ## Check the status
@@ -76,7 +76,8 @@ This command has a few customizations:
 
 After running the Open WebUI Docker container with the command above, the web interface can be accessed at [http://localhost:9099](http://localhost:9099).
 
-Follow {ref}`configure-openwebui-for-ai-model-snap` to configure Open WebUI to use the `qwen-vl` Inference Snap.
+Use the URL you obtained from the `status` command to configure a new connection in the settings of Open WebUI.
+This is described in {ref}`configure-openwebui-for-ai-model-snap`.
 
 ## Prompt Qwen VL with an image
 
@@ -96,7 +97,7 @@ Attachments like images can be added for additional context by clicking on the `
 As an example we attach [this image](https://commons.wikimedia.org/wiki/File:Portugal,_Porto,_Dominic_Lu%C3%ADs_l_Bridge_(52594422458).jpg) of a bridge.
 We ask the question `What is the significance of the triangles?`, hoping that the model would explain the architectural reason structures are tessellated.
 
-After submitting the image and text prompt, takes a bit of time to process the query, and then starts printing a response.
+After submitting the image and text prompt, it takes a bit of time to process the query, and then starts printing a response.
 In this example we can see that the model spotted something in the image that we did not necessarily anticipate.
 
 ```{image} response.png
@@ -107,6 +108,6 @@ In this example we can see that the model spotted something in the image that we
 ## Conclusion
 
 In this tutorial you learned how to install an Inference Snap.
-A suitable engine was automatically installed, and its status functionality was verified.
+A suitable engine was automatically installed, and its status and functionality were verified.
 A more advanced client was installed that allows you to perform advanced queries.
 As an example an image was attached to the text prompt, allowing you to ask questions related to the image.
