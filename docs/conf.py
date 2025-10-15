@@ -25,7 +25,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "Inference models"
+project = "Inference Snaps"
 author = "Canonical Ltd."
 
 
@@ -304,6 +304,7 @@ rst_epilog = """
 #
 # TODO: To disable the button, uncomment this.
 
+# Disable the default feedback button as issue_links.js adds a custom one
 disable_feedback_button = True
 
 
