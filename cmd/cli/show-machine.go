@@ -28,25 +28,22 @@ func showMachine(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to get hardware info: %s", err)
 	}
 
-	var hwInfoStr string
 	switch debugMachineInfoFormat {
 	case "json":
 		jsonString, err := json.MarshalIndent(hwInfo, "", "  ")
 		if err != nil {
 			return fmt.Errorf("failed to marshal to JSON: %s", err)
 		}
-		hwInfoStr = string(jsonString)
+		fmt.Printf("%s\n", jsonString)
 	case "yaml":
 		yamlString, err := yaml.Marshal(hwInfo)
 		if err != nil {
 			return fmt.Errorf("failed to marshal to YAML: %s", err)
 		}
-		hwInfoStr = string(yamlString)
+		fmt.Printf("%s", yamlString)
 	default:
 		return fmt.Errorf("unknown format %q", debugMachineInfoFormat)
 	}
-
-	fmt.Println(hwInfoStr)
 
 	return nil
 }

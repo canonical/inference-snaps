@@ -46,6 +46,7 @@ func status(_ *cobra.Command, _ []string) error {
 		if err != nil {
 			return fmt.Errorf("error getting json status: %v", err)
 		}
+		statusText += "\n"
 	case "yaml":
 		statusText, err = statusYaml()
 		if err != nil {
@@ -56,11 +57,12 @@ func status(_ *cobra.Command, _ []string) error {
 		if err != nil {
 			return fmt.Errorf("error getting status: %v", err)
 		}
+		statusText += "\n"
 	}
 
 	stopProgress()
 
-	fmt.Println(statusText)
+	fmt.Print(statusText)
 
 	return nil
 }

@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -88,15 +85,7 @@ func printEngineInfo(engine engines.ScoredManifest) error {
 		return fmt.Errorf("error converting engine to yaml: %v", err)
 	}
 
-	if utils.IsTerminalOutput() {
-		err = quick.Highlight(os.Stdout, string(engineYaml), "yaml", "terminal", "colorful")
-		if err != nil {
-			return fmt.Errorf("error formatting yaml: %v", err)
-		}
-	} else {
-		fmt.Print(string(engineYaml))
-		return nil
-	}
+	fmt.Print(string(engineYaml))
 
 	return nil
 }
