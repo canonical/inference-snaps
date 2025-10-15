@@ -16,11 +16,11 @@ qwen-vl (2.5/beta) 2.5 from Canonical IoT Labs✓ installed
 ```
 
 During installation, the snap detects information about your system like installed hardware and available memory.
-Based on this, an appropriate engine is chosen.
+Based on this, an appropriate {ref}`engine <engines>` is chosen.
 An *engine* in the context of Inference Snaps is a combination of model weights and a runtime, 
 along with some utilities to make it work, like a server exposing a standard API.
 Hardware vendors publish optimizations for some of these parts.
-These are packaged as a vendor specific engine.
+These optimization are packaged in silicon-specific engines.
 
 
 ## Check the status
