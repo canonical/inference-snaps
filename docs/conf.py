@@ -192,7 +192,7 @@ else:
 # Template and asset locations
 
 html_static_path = ["_static"]
-templates_path = [".sphinx/_templates"]
+#  templates_path = [".sphinx/_templates"]
 
 
 #############
@@ -304,7 +304,7 @@ rst_epilog = """
 #
 # TODO: To disable the button, uncomment this.
 
-# disable_feedback_button = True
+disable_feedback_button = True
 
 
 # Your manpage URL
