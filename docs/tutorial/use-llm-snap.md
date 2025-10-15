@@ -1,4 +1,4 @@
-# Use an LLM snap
+# Get started with Qwen VL Inference Snap
 
 This tutorial will guide you through the steps to install and use an Inference Snap.
 We will specifically be using *Qwen 2.5 VL*, which is a multi-modal large language model.
@@ -72,7 +72,7 @@ docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:0.6
 
 This command has a few customizations:
 * `--network=host` is required so that the Docker container can access the URL of the Inference Snap on the host machine
-* `--env PORT=9099` is recommended to define on which port Open WebUI is listening, preventing collisions with other services on your host machine
+* `--env PORT=9099` is to change the port which Open WebUI listens on, preventing collisions with other services on your host machine using the default `8080` port
 
 After running the Open WebUI Docker container with the command above, the web interface can be accessed at [http://localhost:9099](http://localhost:9099).
 
@@ -95,7 +95,7 @@ Attachments like images can be added for additional context by clicking on the `
 ```
 
 As an example we attach [this image](https://commons.wikimedia.org/wiki/File:Portugal,_Porto,_Dominic_Lu%C3%ADs_l_Bridge_(52594422458).jpg) of a bridge.
-We ask the question `What is the significance of the triangles?`, hoping that the model would explain the architectural reason structures are tessellated.
+We ask the question "What is the significance of the triangles?", hoping that the model would explain the architectural reason structures are tessellated.
 
 After submitting the image and text prompt, it takes a bit of time to process the query, and then starts printing a response.
 In this example we can see that the model spotted something in the image that we did not necessarily anticipate.
