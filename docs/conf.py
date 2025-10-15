@@ -25,7 +25,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "Famous models"
+project = "Inference snaps"
 author = "Canonical Ltd."
 
 
@@ -133,7 +133,7 @@ html_context = {
     #
     # NOTE: If set, links for viewing the documentation source files
     #       and creating GitHub issues are added at the bottom of each page.
-    "github_url": "https://github.com/canonical/famous-models-documentation",
+    "github_url": "https://github.com/canonical/inference-snaps",
     # Docs branch in the repo; used in links for viewing the source files
     #
     # TODO: To customise the branch, uncomment and update as needed.
@@ -191,8 +191,8 @@ else:
 
 # Template and asset locations
 
-#html_static_path = ["_static"]
-#templates_path = ["_templates"]
+html_static_path = ["_static"]
+#  templates_path = [".sphinx/_templates"]
 
 
 #############
@@ -290,7 +290,7 @@ exclude_patterns = [
 
 # Adds custom JavaScript files, located under 'html_static_path'
 
-# html_js_files = []
+html_js_files = ["issue_links.js"]
 
 
 # Specifies a reST snippet to be appended to each .rst file
@@ -304,7 +304,8 @@ rst_epilog = """
 #
 # TODO: To disable the button, uncomment this.
 
-# disable_feedback_button = True
+# Disable the default feedback button as issue_links.js adds a custom one
+disable_feedback_button = True
 
 
 # Your manpage URL
