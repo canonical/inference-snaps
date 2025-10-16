@@ -11,6 +11,7 @@ settings:
   # Component names are case-sensitive
   components:
     - inference-snaps
+    - cli
       
   # (Optional) GitHub labels. Only issues with one of those labels will be synchronized.
   # If not specified, all issues will be synchronized
