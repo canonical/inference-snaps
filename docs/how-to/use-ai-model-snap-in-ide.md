@@ -1,8 +1,8 @@
 (use-ai-model-snap-in-ide)=
-# Use an AI model snap in your favorite IDE
+# Use an Inference Snap from your favorite IDE
 
-The AI model snaps provide an API that can be integrated with other software.
-This guide explains how to integrate an AI model snap with your favorite IDE.
+The Inference Snaps provide an API that can be integrated with other software.
+This guide explains how to integrate an Inference Snap with your favorite IDE.
 It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
 
 ## Install Continue
@@ -54,22 +54,22 @@ You can also open it from the plugin as follows:
 Find the `models` list in the YAML file and add:
 
 ```yaml
-  - name: Deepseek-R1
+  - name: Qwen-VL
     provider: openai
-    model: deepseek-r1
-    apiBase: http://localhost:8080/v1
+    apiBase: http://localhost:8326/v3
+    model: Qwen2.5-VL-3B-Instruct-ov-int4
     roles:
       - chat
       - edit
 ```
 
-The values above are examples based on the DeepSeek-R1 snap.
+The values above are examples based on the `qwen-vl` Inference Snap.
 Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
 To identify the correct `apiBase` and `model` name, check out this guide on {ref}`using the snap via its OpenAI API<use-openai-api>`.
 
 For additional configuration options, visit the [Continue reference page][continue-ref].
 
-## Use the AI snap with Continue
+## Use the Inference Snap with Continue
 
 Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue chat box.
 Any requests in the chat box will be sent to the selected model.

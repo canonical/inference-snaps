@@ -31,12 +31,10 @@ To see the selected engine and the status of this server, run the status command
 
 ```{terminal}
 :input: qwen-vl status
-
-Using intel-cpu engine (automatically selected)
-
-OpenAI API at http://localhost:8326/v3
-
-Run "sudo snap stop qwen-vl" to stop the server.
+engine: intel-cpu
+status: online
+endpoints:
+    openai: http://localhost:8326/v3
 ```
 
 In this case we see the `intel-cpu` engine was selected automatically.
@@ -51,6 +49,7 @@ A chat session can be started with the `chat` command:
 
 ```{terminal}
 :input: qwen-vl chat
+Connected to http://localhost:8326/v3
 Type your prompt, then ENTER to submit. CTRL-C to quit.
 » Hi there
 Hello! How can I assist you today?
@@ -58,7 +57,7 @@ Hello! How can I assist you today?
 »  
 ```
 
-This chat is an example and only supports text input.
+This chat client is an example that only supports text input.
 For more advanced queries, like ones that include images, we need to use a more advanced client.
 
 ## Run and configure Open WebUI

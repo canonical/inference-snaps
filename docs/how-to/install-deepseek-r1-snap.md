@@ -123,11 +123,11 @@ sudo snap restart deepseek-r1
 
 ### Model layers on GPU
 
-CUDA-based stacks allow you to limit the number of model layers that are loaded onto the GPU by using the `n-gpu-layers` snap option.
+CUDA-based stacks allow you to limit the number of model layers that are loaded onto the GPU by using the `gpu-layers` snap option.
 This is useful if the GPU does not have enough vRAM.
 The remaining layers will run on the CPU.
 ```shell
-sudo deepseek-r1 set n-gpu-layers=20
+sudo deepseek-r1 set gpu-layers=20
 ```
 
 ## Uninstall the snap

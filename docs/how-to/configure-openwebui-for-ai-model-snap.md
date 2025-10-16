@@ -1,15 +1,15 @@
 (configure-openwebui-for-ai-model-snap)=
-# Configure Open WebUI for use with AI model snap
+# Configure Open WebUI for use with Inference Snaps
 
-Open WebUI provides a convenient web interface for interacting with AI models packaged as snaps.
-This guide will help you set up and use an AI model snap with Open WebUI.
+Open WebUI provides a convenient web interface for interacting with Inference Snaps.
+This guide will help you set up and use an Inference Snap with Open WebUI.
 
-You must have Open WebUI and an AI model snap installed to continue.
-For installation instructions, check out the [Open WebUI][open-webui-install] and the [AI model snap](install-deepseek-r1-snap.md) installation guides.
+You must have Open WebUI and an Inference Snap installed to continue.
+For installation instructions, check out the [Open WebUI][open-webui-install] and the [Inference Snap](install-deepseek-r1-snap.md) installation guides.
 
 ````{note}
 Open WebUI uses `8080` as its default HTTP port. 
-This port is also used by some AI model snaps.
+This port is also commonly used by other services like webservers and inference engines.
 To avoid conflicts, use a different port for Open WebUI during installation.
 
 In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
@@ -30,14 +30,13 @@ Go to `Admin Settings` and select `Connections`.
 If they are not in use, disable the OpenAI and Ollama APIs.
 Enable `Direct Connections` and save your changes.
 
-## Create a connection to the AI model snap
+## Create a connection to the Inference Snap
 
 Open settings in Open WebUI, select `Connections`, and click on the **+** icon to add a new connection.
 
-In the `URL` field, enter the URL of the AI model snap you want to use, then save it.
-To find the correct URL, check out this guide on {ref}`using an AI model snap via its OpenAI API <use-openai-api>`.
-
-Click `Select a model` and select the model name you configured under connections.
+In the `URL` field, enter the URL of the Inference Snap you want to use, then save it.
+The URL can be found from the Inference Snap's `status` command.
+Refer to {ref}`using OpenAI API <use-openai-api>` for details.
 
 ## Use the model
 
