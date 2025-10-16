@@ -3,7 +3,7 @@
 
 The Inference Snaps provide an API that can be integrated with other software.
 This guide explains how to integrate an Inference Snap with your favorite IDE.
-It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
+It assumes that the snap has already been installed and configured.
 
 ## Install Continue
 
