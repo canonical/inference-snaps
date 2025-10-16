@@ -1,7 +1,7 @@
 # How-to guides
 
 These guides will walk you through the processes of configuring,
-deploying, and modifying AI model snaps.
+deploying, and modifying Inference Snaps.
 
 Install required drivers:
 ```{toctree}
@@ -26,11 +26,11 @@ switch-between-engines
 Use the snap with web clients:
 ```{toctree}
 :maxdepth: 1
-configure-openwebui-for-ai-model-snap
+configure-openwebui
 ```
 
 Use the snap with your IDE:
 ```{toctree}
 :maxdepth: 1
-use-ai-model-snap-in-ide
+use-in-ide
 ```

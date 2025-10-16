@@ -1,3 +1,4 @@
+(use-llm-snap)=
 # Get started with Qwen VL Inference Snap
 
 This tutorial will guide you through the steps to install and use an Inference Snap.
@@ -31,12 +32,10 @@ To see the selected engine and the status of this server, run the status command
 
 ```{terminal}
 :input: qwen-vl status
-
-Using intel-cpu engine (automatically selected)
-
-OpenAI API at http://localhost:8326/v3
-
-Run "sudo snap stop qwen-vl" to stop the server.
+engine: intel-cpu
+status: online
+endpoints:
+    openai: http://localhost:8326/v3
 ```
 
 In this case we see the `intel-cpu` engine was selected automatically.
@@ -51,6 +50,7 @@ A chat session can be started with the `chat` command:
 
 ```{terminal}
 :input: qwen-vl chat
+Connected to http://localhost:8326/v3
 Type your prompt, then ENTER to submit. CTRL-C to quit.
 » Hi there
 Hello! How can I assist you today?
@@ -58,7 +58,7 @@ Hello! How can I assist you today?
 »  
 ```
 
-This chat is an example and only supports text input.
+This chat client is an example that only supports text input.
 For more advanced queries, like ones that include images, we need to use a more advanced client.
 
 ## Run and configure Open WebUI
@@ -77,7 +77,7 @@ This command has a few customizations:
 After running the Open WebUI Docker container with the command above, the web interface can be accessed at [http://localhost:9099](http://localhost:9099).
 
 Use the URL you obtained from the `status` command to configure a new connection in the settings of Open WebUI.
-This is described in {ref}`configure-openwebui-for-ai-model-snap`.
+This is described in {ref}`configure-openwebui`.
 
 ## Prompt Qwen VL with an image
 
