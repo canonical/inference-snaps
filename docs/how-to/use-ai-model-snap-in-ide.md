@@ -3,7 +3,7 @@
 
 The AI model snaps provide an API that can be integrated with other software.
 This guide explains how to integrate an AI model snap with your favorite IDE.
-It assumes that the snap has already been [installed and configured](install-deepseek-r1-snap.md).
+It assumes that the snap has already been installed and configured.
 
 ## Install Continue
 
