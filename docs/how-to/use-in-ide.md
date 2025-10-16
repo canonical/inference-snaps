@@ -1,4 +1,4 @@
-(use-ai-model-snap-in-ide)=
+(use-in-ide)=
 # Use an Inference Snap from your favorite IDE
 
 The Inference Snaps provide an API that can be integrated with other software.

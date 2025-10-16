@@ -26,11 +26,11 @@ switch-between-engines
 Use the snap with web clients:
 ```{toctree}
 :maxdepth: 1
-configure-openwebui-for-ai-model-snap
+configure-openwebui
 ```
 
 Use the snap with your IDE:
 ```{toctree}
 :maxdepth: 1
-use-ai-model-snap-in-ide
+use-in-ide
 ```

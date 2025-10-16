@@ -76,7 +76,7 @@ This command has a few customizations:
 After running the Open WebUI Docker container with the command above, the web interface can be accessed at [http://localhost:9099](http://localhost:9099).
 
 Use the URL you obtained from the `status` command to configure a new connection in the settings of Open WebUI.
-This is described in {ref}`configure-openwebui-for-ai-model-snap`.
+This is described in {ref}`configure-openwebui`.
 
 ## Prompt Qwen VL with an image
 

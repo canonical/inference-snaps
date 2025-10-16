@@ -7,7 +7,7 @@ This system includes the AI model weights plus all the necessary supporting comp
 
 This end-to-end system is what a user or developer interacts with and typically includes:
 
-* **AI Model Weights:** The pre-trained model (e.g. the weights of Qwen2.5 VL quantized at Q4_K)
+* **AI Model Weights:** The pre-trained model (e.g. the weights of Qwen2.5 VL {spellexception}`quantized` at Q4_K)
 * **Runtime:** Execution logic and the necessary optimizations to efficiently perform matrix multiplications of the model architecture.
 * **Supporting subsystems:**
   * **Language embedding:** Converts input text into numerical representations the engine can operate on.

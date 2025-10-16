@@ -1,4 +1,4 @@
-(configure-openwebui-for-ai-model-snap)=
+(configure-openwebui)=
 # Configure Open WebUI for use with Inference Snaps
 
 Open WebUI provides a convenient web interface for interacting with Inference Snaps.
@@ -9,7 +9,7 @@ For installation instructions, check out the [Open WebUI][open-webui-install] an
 
 ````{note}
 Open WebUI uses `8080` as its default HTTP port. 
-This port is also commonly used by other services like webservers and inference engines.
+This port is also commonly used by other services like web servers and inference engines.
 To avoid conflicts, use a different port for Open WebUI during installation.
 
 In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
