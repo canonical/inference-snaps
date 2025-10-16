@@ -28,7 +28,7 @@ func addStatusCommand() {
 	}
 
 	// flags
-	cmd.PersistentFlags().StringVar(&statusFormat, "format", "", "return the status as yaml or json")
+	cmd.PersistentFlags().StringVar(&statusFormat, "format", "yaml", "output format")
 
 	rootCmd.AddCommand(cmd)
 }
@@ -52,12 +52,14 @@ func status(_ *cobra.Command, _ []string) error {
 		if err != nil {
 			return fmt.Errorf("error getting yaml status: %v", err)
 		}
-	default:
+	case "plain":
 		statusText, err = statusHuman()
 		if err != nil {
 			return fmt.Errorf("error getting status: %v", err)
 		}
 		statusText += "\n"
+	default:
+		return fmt.Errorf("unknown format %q", statusFormat)
 	}
 
 	stopProgress()
