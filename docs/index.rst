@@ -53,7 +53,7 @@ In this documentation
 Project and community
 ---------------------
 
-Inference Snaps project is a member of the Ubuntu family. 
+The Inference Snaps project is a member of the Ubuntu family.
 It is open source and warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
 
 - `Code of conduct <https://ubuntu.com/community/docs/ethos/code-of-conduct>`__

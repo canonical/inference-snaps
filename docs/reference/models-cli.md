@@ -1,17 +1,17 @@
 (models-cli)=
-# Models command line interface (CLI)
+# Command line interface (CLI)
 
 This document provides a complete reference for the command line interface (CLI).
 It describes all available commands, options, arguments, and expected behavior. 
-The CLI interface is the same across all models.
+The CLI interface is the same across all Inference Snaps.
 
 ## Overview
 
-The CLI is the main entry point to interact with the model runtime, manage engines, configure settings, and run interactive sessions. 
+The CLI is the main entry point to interact with the Inference Snap, manage engines, configure settings, and run interactive sessions. 
 The syntax used is:
 
 ```shell
-<my-model> [COMMAND] [OPTIONS] [ARGS]
+<inference-snap> [COMMAND] [OPTIONS] [ARGS]
 ```
 
 ## Global options
@@ -20,10 +20,10 @@ To show usage information about any of the commands, set the `--help` flag.
 
 For example:
 ```{terminal}
-:input: deepseek-r1 --help
+:input: qwen-vl --help
 
 Usage:
-  deepseek-r1 [command]
+  qwen-vl [command]
 
 Basic Commands:
   status       Show the status
@@ -43,9 +43,9 @@ Additional Commands:
   help         Help about any command
 
 Flags:
-  -h, --help   help for deepseek-r1
+  -h, --help   help for qwen-vl
 
-Use "deepseek-r1 [command] --help" for more information about a command.
+Use "qwen-vl [command] --help" for more information about a command.
 ```
 
 ## Basic commands
@@ -57,7 +57,7 @@ These provide the core functionality for everyday use such as checking tool stat
 Displays information about the server and runtime environment.
 
 ```shell
-<my-model> status
+<inference-snap> status
 ```
 
 Details shown:
@@ -72,7 +72,7 @@ Details shown:
 
 Launch the command-line chat application.
 ```shell
-<my-model> chat
+<inference-snap> chat
 ```
 
 
@@ -84,7 +84,7 @@ Change configuration options including reading, and setting persistent parameter
 
 Set configuration values.
 ```shell
-<my-model> set <key>=<value>
+<inference-snap> set <key>=<value>
 ```
 
 The `Set` command overrides configuration values. 
@@ -95,7 +95,7 @@ Unknown keys are rejected.
 The `get` command retrieves configuration values.
 
 ```shell
-<my-model> get [key]
+<inference-snap> get [key]
  ```
 
 If no key is given, all configurations are listed in tabular form.
@@ -109,14 +109,14 @@ Manage available engines by listing, inspecting, and selecting them for use.
 
 List engines with details including name, description, vendor, and compatibility.
 ```shell
-<my-model> list-engines
+<inference-snap> list-engines
 ```
 
 ### `show-engine`
 
 Show engine details.
 ```shell
-<my-model> show-engine <engine> [flags]
+<inference-snap> show-engine <engine> [flags]
 ```
 
 YAML is the default output format, but JSON is also available.
@@ -132,12 +132,12 @@ Output includes:
 
 To switch to a specific engine:
 ```shell
-<my-model> use-engine <engine>
+<inference-snap> use-engine <engine>
 ```
 
 To automatically select the best engine:
 ```shell
-<my-model> use-engine --auto
+<inference-snap> use-engine --auto
 ```
 
 Switching engines will trigger the download of engine resources (as snap components).
@@ -155,7 +155,7 @@ or to {spellexception}`reselect` the best engine after driver updates, or new ha
 Show information about the host machine.
 
 ```shell
-<my-model> show-machine [flags]
+<inference-snap> show-machine [flags]
 ```
 
 YAML is the default output format, but JSON is also available.
