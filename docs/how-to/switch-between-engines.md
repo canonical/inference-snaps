@@ -6,7 +6,7 @@ However, you can switch to another engine after installation.
 
 ## Check available engines
 
-In the Inference Snaps' CLI, list all available engines:
+Use the Inference Snap CLI to list available engines:
 
 ```shell
 <inference-snap> list-engines

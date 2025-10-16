@@ -17,7 +17,7 @@ This URL can be used to access the model from your local computer.
 
 ## Configure API interface and port
 
-The Inference Snap's server binds to the configured host interface and port.
+The Inference Snap's OpenAI HTTP server binds to the configured host interface and port.
 To view these configurations:
 
 ```shell

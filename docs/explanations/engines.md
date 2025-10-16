@@ -6,7 +6,7 @@ It refers to the entire system architecture that manages input, generation, and 
 
 Engines consist of the AI model weights plus every other component they need to be able to serve real-world applications. An engine will typically have:
 
-* **AI Model Weights:** The pre-trained model (e.g. the weights of Qwen2.5 VL {spellexception}`quantized` at Q4_K)
+* **AI Model Weights:** The pre-trained model (e.g. the weights of Qwen2.5 VL quantized at Q4_K)
 * **Runtime:** Execution logic and the necessary optimizations to efficiently perform matrix multiplications of the model architecture.
 * **Supporting subsystems:**
   * **Language embedding:** Converts input text into numerical representations the engine can use.

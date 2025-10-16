@@ -1,3 +1,4 @@
+(use-llm-snap)=
 # Get started with Qwen VL Inference Snap
 
 This tutorial will guide you through the steps to install and use an Inference Snap.

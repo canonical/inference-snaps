@@ -1,15 +1,15 @@
 (configure-openwebui)=
 # Configure Open WebUI for use with Inference Snaps
 
-Open WebUI provides a convenient web interface for interacting with Inference Snaps.
+Open WebUI provides a convenient web interface for interacting with Inference Snaps that offer an OpenAI endpoint.
 This guide will help you set up and use an Inference Snap with Open WebUI.
 
 You must have Open WebUI and an Inference Snap installed to continue.
-For installation instructions, check out the [Open WebUI][open-webui-install] and the [Inference Snap](install-deepseek-r1-snap.md) installation guides.
+For detailed installation instructions refer to [How to Install Open WebUI][open-webui-install], {ref}`install-deepseek-r1-snap` and {ref}`use-llm-snap`.
 
 ````{note}
 Open WebUI uses `8080` as its default HTTP port. 
-This port is also commonly used by other services like web servers and inference engines.
+This port is commonly used by other services like web servers and inference engines.
 To avoid conflicts, use a different port for Open WebUI during installation.
 
 In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
@@ -34,8 +34,8 @@ Enable `Direct Connections` and save your changes.
 
 Open settings in Open WebUI, select `Connections`, and click on the **+** icon to add a new connection.
 
-In the `URL` field, enter the URL of the Inference Snap you want to use, then save it.
-The URL can be found from the Inference Snap's `status` command.
+In the `URL` field, enter the URL of the endpoint you want to use, then save it.
+The URL can be found using the Inference Snap's `status` command.
 Refer to {ref}`using OpenAI API <use-openai-api>` for details.
 
 ## Use the model
