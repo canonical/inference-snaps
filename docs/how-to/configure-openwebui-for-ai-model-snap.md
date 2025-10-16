@@ -5,7 +5,7 @@ Open WebUI provides a convenient web interface for interacting with AI models pa
 This guide will help you set up and use an AI model snap with Open WebUI.
 
 You must have Open WebUI and an AI model snap installed to continue.
-For installation instructions, check out the [Open WebUI][open-webui-install] and the [AI model snap](install-deepseek-r1-snap.md) installation guides.
+For installation instructions, check out [Open WebUI][open-webui-install].
 
 ````{note}
 Open WebUI uses `8080` as its default HTTP port. 

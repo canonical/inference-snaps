@@ -9,16 +9,10 @@ Install required drivers:
 install-drivers/index
 ```
 
-Install model snaps:
-
-```{toctree}
-:maxdepth: 1
-install-deepseek-r1-snap
-```
-
 Use the snap:
 ```{toctree}
 :maxdepth: 1
+manage-snap
 use-openai-api
 switch-between-engines
 ```
