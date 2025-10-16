@@ -1,10 +1,10 @@
-# AI Model Snaps Documentation
+# Inference Snaps Documentation
 
-*A repository for a private Read the Docs instance for the AI model snaps documentation*
+*A repository for a private Read the Docs instance for the Inference Snaps documentation*
 
 ## Description
 
-AI model snaps packages known AI models as snap packages. 
+Inference Snaps package known AI models as snap packages. 
 This project is still under development at Canonical. 
 
 Specific partners have been granted access to this project under NDA.

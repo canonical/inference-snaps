@@ -7,10 +7,10 @@ Release notes for each project are published on Github, following the [keep a {s
 
 To view project-specific release notes, visit the GitHub Releases pages below:  
 
-AI model snaps:
+Inference Snaps:
 - [DeepSeek R1 snap release notes](https://github.com/canonical/deepseek-r1-snap/releases)
 - [Qwen-VL snap release notes](https://github.com/canonical/qwen-vl-snap/releases)
 
 Tooling:
-- [CLI release notes](https://github.com/canonical/famous-models-cli/releases)
-- [Developer Tools release notes](https://github.com/canonical/famous-models-dev/releases)
+- [CLI release notes](https://github.com/canonical/inference-snaps-cli/releases)
+- [Developer Tools release notes](https://github.com/canonical/inference-snaps-dev/releases)

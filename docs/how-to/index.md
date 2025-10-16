@@ -1,7 +1,7 @@
 # How-to guides
 
 These guides will walk you through the processes of configuring,
-deploying, and modifying AI model snaps.
+deploying, and modifying Inference Snaps.
 
 Install required drivers:
 ```{toctree}

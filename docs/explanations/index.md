@@ -1,6 +1,6 @@
 # Explanations
 
-These documents explain different concepts that are applied in the creation and use of AI model snaps.
+These documents explain different concepts that are applied in the creation and use of Inference Snaps.
 
 ```{toctree}
 :maxdepth: 1

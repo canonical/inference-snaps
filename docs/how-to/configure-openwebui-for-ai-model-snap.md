@@ -13,7 +13,7 @@ This port is also commonly used by other services like webservers and inference 
 To avoid conflicts, use a different port for Open WebUI during installation.
 
 In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
-You must use `--network=host` option to allow Open WebUI to access the AI model snap's API.
+You must use `--network=host` option to allow Open WebUI to access the Inference Snap's API.
 
 For example:
 ```shell
