@@ -17,9 +17,9 @@ var (
 
 func addSetCommand() {
 	cmd := &cobra.Command{
-		Use:   "set <key>",
-		Short: "Set configuration option",
-		// Long:  "",
+		Use:               "set <key>",
+		Short:             "Set configurations",
+		Long:              "Set a configuration",
 		GroupID:           "config",
 		Args:              cobra.ExactArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,

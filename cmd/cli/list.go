@@ -76,8 +76,8 @@ func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
 	}
 
 	if len(tableRows) == 1 {
-		_, err := fmt.Fprintln(os.Stderr, "No engines found.")
-		return err
+		fmt.Fprintln(os.Stderr, "No engines found.")
+		return nil
 	}
 
 	tableMaxWidth := 80

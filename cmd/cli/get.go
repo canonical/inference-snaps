@@ -22,9 +22,9 @@ var deprecatedConfig = []string{
 
 func addGetCommand() {
 	cmd := &cobra.Command{
-		Use:   "get <key>",
-		Short: "Print configuration option",
-		// Long:  "",
+		Use:               "get <key>",
+		Short:             "Print configurations",
+		Long:              "Print one or more configurations",
 		GroupID:           "config",
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions, // To do

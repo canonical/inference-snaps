@@ -20,7 +20,7 @@ func addStatusCommand() {
 	cmd := &cobra.Command{
 		Use:               "status",
 		Short:             "Show the status",
-		Long:              "Show the status of the model snap",
+		Long:              "Show the status of the inference snap",
 		GroupID:           "basics",
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,

@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/canonical/go-snapctl"
+	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
-	"github.com/canonical/go-snapctl"
-	"github.com/canonical/go-snapctl/env"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
@@ -123,7 +123,7 @@ func scoreEngines() ([]engines.ScoredManifest, error) {
 
 	machineInfo, err := cache.GetMachineInfo()
 	if err != nil {
-		return nil, fmt.Errorf("error getting hardware info: %v", err)
+		return nil, fmt.Errorf("error getting machine info: %v", err)
 	}
 
 	// score engines
@@ -300,7 +300,7 @@ func setEngineOptions(engine *engines.Manifest) error {
 	// set engine config option
 	err := cache.SetActiveEngine(engine.Name)
 	if err != nil {
-		return fmt.Errorf(`error setting snap option "engine": %v`, err)
+		return fmt.Errorf("error setting active engine: %v", err)
 	}
 
 	// set other config options
@@ -308,7 +308,7 @@ func setEngineOptions(engine *engines.Manifest) error {
 	for confKey, confVal := range engine.Configurations {
 		err = config.SetDocument(confKey, confVal, storage.EngineConfig)
 		if err != nil {
-			return fmt.Errorf("error setting snap option %q: %v", confKey, err)
+			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
 		}
 	}
 

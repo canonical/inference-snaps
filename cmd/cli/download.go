@@ -27,7 +27,7 @@ func installComponents(components []string) error {
 			} else if strings.Contains(err.Error(), snapdTimeoutError) {
 				return fmt.Errorf("timed out while installing %q:"+
 					"\nMonitor the installation progress with \"snap changes\""+
-					"\nRerun this command once the installation is complete",
+					"\n\nRerun this command once the installation is complete",
 					component)
 			} else if strings.Contains(err.Error(), "already installed") {
 				continue

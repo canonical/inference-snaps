@@ -14,7 +14,7 @@ func TestInfoLong(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	err = printEngineInfo(scoredEngine)
+	err = printEngineManifest(scoredEngine)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func TestInfoShort(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	err = printEngineInfo(scoredEngine)
+	err = printEngineManifest(scoredEngine)
 	if err != nil {
 		t.Fatal(err)
 	}

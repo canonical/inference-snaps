@@ -25,7 +25,7 @@ func addShowMachineCommand() {
 func showMachine(_ *cobra.Command, args []string) error {
 	hwInfo, err := hardware_info.Get(true)
 	if err != nil {
-		return fmt.Errorf("failed to get hardware info: %s", err)
+		return fmt.Errorf("failed to get machine info: %s", err)
 	}
 
 	switch debugMachineInfoFormat {

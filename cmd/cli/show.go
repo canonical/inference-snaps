@@ -13,7 +13,7 @@ func addInfoCommand() {
 	cmd := &cobra.Command{
 		Use:               "show-engine [<engine>]",
 		Short:             "Print information about an engine",
-		Long:              "Print information about the currently selected engine, or the specified engine",
+		Long:              "Print information about the active engine, or the specified engine",
 		GroupID:           "engines",
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: showEngineValidArgs,
@@ -26,10 +26,10 @@ func showEngine(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		currentEngine, err := cache.GetActiveEngine()
 		if err != nil {
-			return fmt.Errorf("could not get currently selected engine: %v", err)
+			return fmt.Errorf("could not get the active engine: %v", err)
 		}
 		if currentEngine == "" {
-			return fmt.Errorf(`no active engine. Select one with "use-engine".`)
+			return fmt.Errorf("no active engine")
 		}
 		return engineInfo(currentEngine)
 
@@ -72,14 +72,14 @@ func engineInfo(engineName string) error {
 		return fmt.Errorf(`engine "%s" does not exist`, engineName)
 	}
 
-	err = printEngineInfo(scoredManifest)
+	err = printEngineManifest(scoredManifest)
 	if err != nil {
-		return fmt.Errorf("error printing engine info: %v", err)
+		return fmt.Errorf("error printing engine manifest: %v", err)
 	}
 	return nil
 }
 
-func printEngineInfo(engine engines.ScoredManifest) error {
+func printEngineManifest(engine engines.ScoredManifest) error {
 	engineYaml, err := yaml.Marshal(engine)
 	if err != nil {
 		return fmt.Errorf("error converting engine to yaml: %v", err)
