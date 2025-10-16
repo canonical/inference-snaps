@@ -10,7 +10,7 @@ settings:
   # (Optional) Jira project components that should be attached to the created issue
   # Component names are case-sensitive
   components:
-    - llm-snap
+    - inference-snaps
     - docs
       
   # (Optional) GitHub labels. Only issues with one of those labels will be synchronized.

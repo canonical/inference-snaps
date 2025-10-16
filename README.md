@@ -1,25 +1,9 @@
-# Inference Snaps Documentation
+# Inference Snaps
 
-*A repository for a private Read the Docs instance for the Inference Snaps documentation*
+This project hosts Inference Snaps documentation, issues, and discussions.
 
-## Description
+The documentation is maintained inside the [docs](./docs) directory. 
 
-Inference Snaps package known AI models as snap packages. 
-This project is still under development at Canonical. 
+For discussion and reported issues, select the corresponding tab on GitHub. 
 
-Specific partners have been granted access to this project under NDA.
-These docs are only intended for the partners under Canonical's NDA.
-
-## Structure
-
-This section outlines the structure of this repository, and some key files.
-
-### `docs/`
-
-This directory contains the documentation for the snaps.
-
-To view it in your browser, navigate to this directory and type `make run`.
-
-### `.github/workflows/`
-
-This directory contains files used for documentation build checks via GitHub's CI.
+For the source codes of Inference Snaps, refer [here](https://github.com/search?q=topic%3Ainference-snaps+org%3Acanonical+&type=repositories).
