@@ -2,21 +2,18 @@ Inference Snaps
 ==========================
 
 .. In a single sentence, say what the product is.
-
-Inference Snaps are Generative AI models packaged and optimized for efficient inference on local hardware.
-
 .. In a paragraph of one to three short sentences, describe what the product does.
-
-Inference Snaps automatically detect your host machine's hardware and install runtime and model weight optimizations that best match its capabilities. This process allows for the most effective use of your silicon, whether it's a CPU, integrated or discrete GPU, or an NPU.
-
 .. In a paragraph of one to three short sentences, describe what need the product meets.
-
-Generative AI models perform most efficiently when they are custom-tuned for the underlying hardware. Developers and end-users often struggle to find and correctly install the complex, vendor-specific software (drivers and optimization libraries) needed for peak performance. Inference Snaps simplify this process by providing an automatic, unified detection and installation mechanism, bringing powerful local AI within easy reach.
-
-
 .. Whom is the product useful for?
 
-Inference Snaps are useful for end-users who require fast, local AI capabilities for their desktop applications, such as an IDE, a local chatbot, or a media editing tool. Additionally, they are invaluable for Application Developers who need a standardized, reliable local API to integrate high-performance AI features into their software without handling complex hardware-specific tuning.
+Inference snaps are generative AI models that are packaged and optimized for efficient performance on local hardware.
+They automatically detect your host machine's hardware and install runtime and model weight optimizations that best match its capabilities. 
+
+Inference snaps provide an automatic, unified detection and installation mechanism.
+This results in model and runtime choices that make effective use of your CPU, GPU, or NPU.
+
+With inference snaps, you get fast, local AI capabilities for applications such as IDEs, chat bots, and media editing tools.
+They also provide application developers with a standardized and reliable local API to integrate AI features into their software without the need for complex hardware-specific tuning.
 
 
 In this documentation
