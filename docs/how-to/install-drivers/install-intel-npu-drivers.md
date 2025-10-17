@@ -8,8 +8,8 @@ It is available as a snap:
 sudo snap install intel-npu-driver
 ```
 
-After installing the AI model snap, connect the NPU driver to it:
+After installing the inference snap, connect the NPU driver to it:
 
 ```
-sudo snap connect <ai-model>:npu-libs intel-npu-driver
+sudo snap connect <inference-snap>:npu-libs intel-npu-driver
 ``` 

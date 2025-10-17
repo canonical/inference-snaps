@@ -225,8 +225,11 @@ linkcheck_ignore = [
     "https://github.com/canonical/ACME/*",
     "https://github.com/canonical/deepseek-r1-snap",
     "https://github.com/canonical/qwen-vl-snap",
-    "https://github.com/canonical/famous-models-dev",
-    "https://github.com/canonical/famous-models-cli",
+    "https://github.com/canonical/mistral-7b-instruct-snap",
+    "https://github.com/canonical/inference-snaps-dev",
+    "https://github.com/canonical/inference-snaps-cli",
+    "https://snapcraft.io/deepseek-r1",
+    "https://snapcraft.io/qwen-vl",
     ]
 
 
@@ -248,7 +251,7 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-# myst_enable_extensions = set()
+myst_enable_extensions = set(["fieldlist"])
 
 
 # Custom Sphinx extensions; see

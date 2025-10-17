@@ -11,15 +11,15 @@ You can help improve our code by:
 - Identifying and fixing bugs
 - Reporting bugs and issues by opening an issue on GitHub
 
-### AI model snaps code bases
+### Inference snaps code bases
 Our projects' source code can be found at:
 - [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 
 ### Tooling
-The AI models snaps use the following reusable building blocks:
-- [Famous Models CLI](https://github.com/canonical/famous-models-cli) – the command-line interface at the heart of each AI model snap
-- [Famous Models Developer Tools](https://github.com/canonical/famous-models-dev) – GitHub Actions and utility scripts for building, testing, and publishing AI model snaps
+Inference snaps use the following reusable building blocks:
+- [Inference Snaps CLI](https://github.com/canonical/inference-snaps-cli) – the command-line interface at the heart of each inference snap
+- [Inference Snaps Developer Tools](https://github.com/canonical/inference-snaps-dev) – GitHub Actions and utility scripts for building, testing, and publishing inference snaps
 
 
 (contribute-to-our-docs)=
@@ -32,7 +32,7 @@ You can help improve this documentation by:
 - Reporting documentation issues by opening an issue on GitHub.
 
 ### License and copyright
-Unless explicitly stated in the license headers of source files, all contributions to the AI model snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/). 
+Unless explicitly stated in the license headers of source files, all contributions to the Inference Snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/). 
 You can also get a copy of this license by sending a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
 All contributors must sign the [Canonical contributor license agreement](https://canonical.com/legal/contributors), which grants Canonical permission to use the contributions. 
@@ -60,9 +60,9 @@ We also recommend using the [Ubuntu style guide].
 You are welcome to suggest changes to any documentation topic with updated or more insightful information. 
 We aim for consistency, but don’t let formality prevent you from contributing.
 
-### AI Snaps documentation overview
+### Inference Snaps documentation overview
 
-The AI Snaps documentation is built on top of [Canonical's Sphinx starter pack] and hosted on GitHub.
+The Inference Snaps documentation is built on top of [Canonical's Sphinx starter pack] and hosted on GitHub.
 It is published on [Read the Docs].
 
 The documentation is organized according to the [Diátaxis](https://diataxis.fr/) framework and written in reStructuredText or MyST Markdown.
@@ -73,7 +73,7 @@ The documentation is organized according to the [Diátaxis](https://diataxis.fr/
 
 ### Build the docs
 
-The sphinx starterpack allows you to build the AI model snaps documentation locally.
+The sphinx starterpack allows you to build the Inference Snaps documentation locally.
 
 #### Fork and clone the repository
 
@@ -137,7 +137,7 @@ repositories].
 #### Commit structure and messages
 
 Use separate commits for each logical change, and for changes to different
-sections in the AI model snaps documentation.
+sections in the Inference Snaps documentation.
 Prefix your commit messages with the names of sections or pages that they
 affect, using the code tree structure. For example, start a commit that updates
 the reference page kernel boot parameters with `ref/kernel-boot:`.
@@ -172,7 +172,7 @@ git commit -m "docs(ref/kernel-boot): Add example for nohz parameter" -s
 When you submit a pull request, GitHub will automatically run checks on the documentation to verify the spelling, validity of links, correct formatting of Markdown files, and use of inclusive language.
 
 ### Open Documentation Academy
-The AI model snaps project is a proud member of the Canonical Open Documentation Academy (CODA).
+The Inference Snaps project is a proud member of the Canonical Open Documentation Academy (CODA).
 
 The Open Documentation Academy is an initiative that aims to encourage open source contributions from the community.
 We use documentation as the gateway, thus lowering the barrier to entry.

@@ -1,9 +1,20 @@
-AI Model Snaps
+Inference Snaps
 ==========================
 
-AI model snaps allow you to package famous AI models as snaps that can be deployed on all compatible hardware. 
+.. In a single sentence, say what the product is.
+.. In a paragraph of one to three short sentences, describe what the product does.
+.. In a paragraph of one to three short sentences, describe what need the product meets.
+.. Whom is the product useful for?
 
-It checks the hardware available on the host machine and recommends the stack that is optimized for the available hardware.
+Inference snaps are generative AI models that are packaged and optimized for efficient performance on local hardware.
+They automatically detect your host machine's hardware and install runtime and model weight optimizations that best match its capabilities. 
+
+Inference snaps provide an automatic, unified detection and installation mechanism.
+This results in model and runtime choices that make effective use of your CPU, GPU, or NPU.
+
+With inference snaps, you get fast, local AI capabilities for applications such as IDEs, chat bots, and media editing tools.
+They also provide application developers with a standardized and reliable local API to integrate AI features into their software without the need for complex hardware-specific tuning.
+
 
 In this documentation
 ---------------------
@@ -14,7 +25,7 @@ In this documentation
       :link: /tutorial/index
       :link-type: doc
 
-      **Get started** - a hands-on introduction to AI model snaps for new users.
+      **Get started** - a hands-on introduction for new users.
 
    .. grid-item-card:: How-to guides
       :link: /how-to/index
@@ -28,19 +39,19 @@ In this documentation
       :link: /reference/index
       :link-type: doc
 
-      **Technical information** - specifications, configuration files, architecture.
+      **Technical information** - specifications, user manuals, and architecture
 
    .. grid-item-card:: Explanations
       :link: /explanations/index
       :link-type: doc
 
-      **Concepts** - discussion and clarification of key topics.
+      **Concepts** - discussion and clarification of key topics
    
 Project and community
 ---------------------
 
-AI model snaps is a member of the Ubuntu family. 
-It's an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
+The Inference Snaps project is a member of the Ubuntu family.
+It is open source and warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
 
 - `Code of conduct <https://ubuntu.com/community/docs/ethos/code-of-conduct>`__
 - :ref:`Contribute to our code <contribute-to-our-code>` 

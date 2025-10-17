@@ -1,10 +1,12 @@
 Reference
 =========
 
-These documents provide specifications for different set ups when using or modifying AI model snaps.
+These documents provide specifications for different set ups when using or modifying inference snaps.
 
 .. toctree::
    :maxdepth: 1
-   
-   Engine manifest <engine-manifest>
-   Models CLI <models-cli>
+
+   snaps
+   architecture
+   engine-manifest
+   models-cli
