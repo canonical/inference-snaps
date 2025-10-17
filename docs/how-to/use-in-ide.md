@@ -1,8 +1,8 @@
 (use-in-ide)=
-# Use an Inference Snap from your favorite IDE
+# Use an inference snap from your favorite IDE
 
-The Inference Snaps provide an API that can be integrated with other software.
-This guide explains how to integrate an Inference Snap with your favorite IDE.
+Inference snaps provide an API that can be integrated with other software.
+This guide explains how to integrate an inference snap with your favorite IDE.
 It assumes that the snap has already been installed and configured.
 
 ## Install Continue
@@ -63,13 +63,13 @@ Find the `models` list in the YAML file and add:
       - edit
 ```
 
-The values above are examples based on the `qwen-vl` Inference Snap.
+The values above are examples based on the `qwen-vl` inference snap.
 Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
 To identify the correct `apiBase` and `model` name, check out this guide on {ref}`using the snap via its OpenAI API<use-openai-api>`.
 
 For additional configuration options, visit the [Continue reference page][continue-ref].
 
-## Use the Inference Snap with Continue
+## Use the inference snap with Continue
 
 Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue chat box.
 Any requests in the chat box will be sent to the selected model.

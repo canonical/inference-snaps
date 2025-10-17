@@ -1,7 +1,7 @@
 (snaps)=
 # Available snaps
 
-This page contains a list of Inference Snaps.
+This page contains a list of currently available inference snaps.
 
 ## DeepSeek R1
 

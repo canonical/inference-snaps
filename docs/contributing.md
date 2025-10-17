@@ -11,15 +11,15 @@ You can help improve our code by:
 - Identifying and fixing bugs
 - Reporting bugs and issues by opening an issue on GitHub
 
-### Inference Snaps code bases
+### Inference snaps code bases
 Our projects' source code can be found at:
 - [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 
 ### Tooling
-The Inference Snaps use the following reusable building blocks:
-- [Inference Snaps CLI](https://github.com/canonical/inference-snaps-cli) – the command-line interface at the heart of each Inference Snap
-- [Inference Snaps Developer Tools](https://github.com/canonical/inference-snaps-dev) – GitHub Actions and utility scripts for building, testing, and publishing Inference Snaps
+Inference snaps use the following reusable building blocks:
+- [Inference Snaps CLI](https://github.com/canonical/inference-snaps-cli) – the command-line interface at the heart of each inference snap
+- [Inference Snaps Developer Tools](https://github.com/canonical/inference-snaps-dev) – GitHub Actions and utility scripts for building, testing, and publishing inference snaps
 
 
 (contribute-to-our-docs)=

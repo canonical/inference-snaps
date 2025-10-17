@@ -1,8 +1,8 @@
 (manage-snap-services)=
-# How to manage Inference Snap services
+# How to manage inference snap services
 
 
-All Inference Snaps contain a server application.
+All inference snaps contain a server application.
 The server is started as a service automatically after installation.
 To conserve computing resources, it can be stopped and started on demand by the user.
 

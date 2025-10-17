@@ -1,7 +1,7 @@
 Reference
 =========
 
-These documents provide specifications for different set ups when using or modifying Inference Snaps.
+These documents provide specifications for different set ups when using or modifying inference snaps.
 
 .. toctree::
    :maxdepth: 1

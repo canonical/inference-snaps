@@ -1,7 +1,6 @@
 # How-to guides
 
-These guides will walk you through the processes of configuring,
-deploying, and modifying Inference Snaps.
+These guides will walk you through the processes of configuring, deploying, and modifying inference snaps.
 
 Install required drivers:
 ```{toctree}

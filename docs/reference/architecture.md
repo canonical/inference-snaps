@@ -2,14 +2,14 @@
 
 <!-- Another doc should explain what problem do we solve with this architecture -->
 
-Inference Snaps provide easy access to silicon-optimized local inference. 
+Inference snaps provide easy access to silicon-optimized local inference. 
 They rely on the rich software life cycle management ecosystem of snaps to deliver the necessary components.
 
-The primary focus of Inference Snaps is on Generative AI models that are pre-trained and fine-tuned.
-Inference Snaps provide an automatic mechanism to deliver a balance of accuracy and performance tailored to the underlying silicon. 
+The primary focus of inference snaps is on Generative AI models that are pre-trained and fine-tuned.
+Inference snaps provide an automatic mechanism to deliver a balance of accuracy and performance tailored to the underlying silicon. 
 They hide the complexity of picking model quantization and runtime optimizations from the users.
 
-Each Inference Snap maps to a single, fine-tuned AI model. The snap is associated with multiple {ref}`engines <engines>`, which are optimizations for various hardware, but installs the one that is deemed most suitable.
+Each inference snap maps to a single, fine-tuned AI model. The snap is associated with multiple {ref}`engines <engines>`, which are optimizations for various hardware, but installs the one that is deemed most suitable.
 <!-- Another doc should explain the selection mechanism -->
 
 In a more technical sense, each engine consists of a manifest and one or more artifacts. 

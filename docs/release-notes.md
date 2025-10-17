@@ -7,7 +7,7 @@ Release notes for each project are published on Github, following the [keep a {s
 
 To view project-specific release notes, visit the GitHub Releases pages below:  
 
-Inference Snaps:
+Inference snaps:
 - [DeepSeek R1 snap release notes](https://github.com/canonical/deepseek-r1-snap/releases)
 - [Qwen-VL snap release notes](https://github.com/canonical/qwen-vl-snap/releases)
 

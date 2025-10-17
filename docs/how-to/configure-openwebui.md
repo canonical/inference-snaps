@@ -1,10 +1,10 @@
 (configure-openwebui)=
-# Configure Open WebUI for use with Inference Snaps
+# Configure Open WebUI for use with inference snaps
 
-[Open WebUI][open-webui-docs] provides a convenient web interface for interacting with Inference Snaps that have an OpenAI endpoint.
-This guide will help you set up and use an Inference Snap with Open WebUI.
+[Open WebUI][open-webui-docs] provides a convenient web interface for interacting with inference snaps that have an OpenAI endpoint.
+This guide will help you set up and use an inference snap with Open WebUI.
 
-You must have Open WebUI and an Inference Snap installed to continue.
+You must have Open WebUI and an inference snap installed to continue.
 
 ````{note}
 Open WebUI uses `8080` as its default HTTP port. 
@@ -12,7 +12,7 @@ This port is commonly used by other services like web servers and inference engi
 To avoid conflicts, use a different port for Open WebUI during installation.
 
 In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
-You must use `--network=host` option to allow Open WebUI to access the Inference Snap's API.
+You must use `--network=host` option to allow Open WebUI to access the inference snap's API.
 
 For example:
 ```shell
@@ -29,12 +29,12 @@ Go to `Admin Settings` and select `Connections`.
 If they are not in use, disable the OpenAI and Ollama APIs.
 Enable `Direct Connections` and save your changes.
 
-## Create a connection to the Inference Snap
+## Create a connection to the inference snap
 
 Open settings in Open WebUI, select `Connections`, and click on the **+** icon to add a new connection.
 
 In the `URL` field, enter the URL of the endpoint you want to use, then save it.
-You can find the URL using the Inference Snap's `status` command.
+You can find the URL using the inference snap's `status` command.
 Refer to {ref}`using OpenAI API <use-openai-api>` for details.
 
 ## Use the model

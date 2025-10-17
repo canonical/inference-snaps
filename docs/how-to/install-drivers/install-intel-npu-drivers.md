@@ -8,7 +8,7 @@ It is available as a snap:
 sudo snap install intel-npu-driver
 ```
 
-After installing the Inference Snap, connect the NPU driver to it:
+After installing the inference snap, connect the NPU driver to it:
 
 ```
 sudo snap connect <inference-snap>:npu-libs intel-npu-driver

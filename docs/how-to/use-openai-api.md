@@ -1,7 +1,7 @@
 (use-openai-api)=
-# Use an Inference Snap via its OpenAI API
+# Use an inference snap via its OpenAI API
 
-Some Inference Snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
+Some inference snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
 This guide shows you how to access this API.
 
 ## Identify API URL
@@ -17,7 +17,7 @@ This URL can be used to access the model from your local computer.
 
 ## Configure API interface and port
 
-The Inference Snap's OpenAI HTTP server binds to the configured host interface and port.
+The inference snap's OpenAI HTTP server binds to the configured host interface and port.
 To view these configurations:
 
 ```shell
@@ -40,7 +40,7 @@ To allow access by other machines on the network, set it to `0.0.0.0`:
 sudo snap restart <inference-snap>
 ```
 
-To access the API from another machine in the network, in the URL, use the IP address or hostname of the machine where the Inference Snap is running instead of `localhost`.
+To access the API from another machine in the network, in the URL, use the IP address or hostname of the machine where the inference snap is running instead of `localhost`.
 
 
 ## Look up model name
@@ -70,7 +70,7 @@ The response will look similar to the following, with the `id` field containing 
 
 ## Test API access with `curl`
 
-If your installed Inference Snap supports chat completions, you can use its API URL to make a test prompt.
+If your installed inference snap supports chat completions, you can use its API URL to make a test prompt.
 In this example, replace `<api-url>` and `<model-name>` with the values you obtained.
 
 ```shell
@@ -121,7 +121,7 @@ This should return a JSON response looking similar to this:
 
 ## Use other clients
 
-Other OpenAI API compatible clients can also make use of Inference Snaps.
+Other OpenAI API compatible clients can also make use of inference snaps.
 Configure these clients with the API URL and the model name obtained above.
 
 If the client requires an API key, leave this blank or enter a placeholder value.

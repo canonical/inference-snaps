@@ -3,11 +3,11 @@
 
 This document provides a complete reference for the command line interface (CLI).
 It describes all available commands, options, arguments, and expected behavior. 
-The CLI interface is the same across all Inference Snaps.
+The CLI interface is the same across all inference snaps.
 
 ## Overview
 
-The CLI is the main entry point to interact with the Inference Snap, manage engines, configure settings, and run interactive sessions. 
+The CLI is the main entry point to interact with the inference snap, manage engines, configure settings, and run interactive sessions. 
 The syntax used is:
 
 ```shell

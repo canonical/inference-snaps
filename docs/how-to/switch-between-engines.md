@@ -1,12 +1,12 @@
 (switch-between-engines)=
 # How to switch between engines
 
-The engine that best matches your system is automatically selected when you install an Inference Snap.
+The engine that best matches your system is automatically selected when you install an inference snap.
 However, you can switch to another engine after installation.
 
 ## Check available engines
 
-Use the Inference Snap CLI to list available engines:
+Use the inference snap CLI to list available engines:
 
 ```shell
 <inference-snap> list-engines
@@ -20,7 +20,7 @@ The {spellexception}`COMPAT` column shows the compatibility of each engine with 
 
 ## Switch to another engine
 
-To use a different engine with your current Inference Snap:
+To use a different engine with your current inference snap:
 
 ```shell
 sudo <inference-snap> use-engine <engine-name>
@@ -29,7 +29,7 @@ sudo <inference-snap> use-engine <engine-name>
 The selected engine will be downloaded and installed. 
 
 ## Verify selected engine
-Once the installation is complete, use the status command to confirm the Inference Snap is using the new engine:
+Once the installation is complete, use the status command to confirm the inference snap is using the new engine:
 
 ```shell
 <inference-snap> status

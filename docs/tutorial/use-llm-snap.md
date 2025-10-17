@@ -1,7 +1,7 @@
 (use-llm-snap)=
-# Get started with Qwen VL Inference Snap
+# Get started with Qwen VL inference snap
 
-This tutorial will guide you through the steps to install and use an Inference Snap.
+This tutorial will guide you through the steps to install and use an inference snap.
 We will specifically be using *Qwen 2.5 VL*, which is a multi-modal large language model.
 This model is also known as a Vision Language Model (VLM), as it can ingest and interpret images, along with text prompt.
 
@@ -79,7 +79,7 @@ docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:0.6
 ```
 
 This command has a few customizations:
-* `--network=host` is required so that the Docker container can access the URL of the Inference Snap on the host machine
+* `--network=host` is required so that the Docker container can access the URL of the inference snap on the host machine
 * `--env PORT=9099` is to change the port which Open WebUI listens on, preventing collisions with other services on your host machine using the default `8080` port
 
 After running the Open WebUI Docker container with the command above, the web interface can be accessed at [http://localhost:9099](http://localhost:9099).
@@ -115,7 +115,7 @@ In this example we can see that the model spotted something in the image that we
 
 ## Conclusion
 
-In this tutorial you learned how to install an Inference Snap.
+In this tutorial you learned how to install an inference snap.
 A suitable engine was automatically installed, and its status and functionality were verified.
 A more advanced client was installed that allows you to perform advanced queries.
 As an example an image was attached to the text prompt, allowing you to ask questions related to the image.
