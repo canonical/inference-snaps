@@ -12,7 +12,7 @@ install-drivers/index
 Use the snap:
 ```{toctree}
 :maxdepth: 1
-manage-snap
+manage-snap-services
 use-openai-api
 switch-between-engines
 ```
