@@ -5,6 +5,14 @@ This tutorial will guide you through the steps to install and use an Inference S
 We will specifically be using *Qwen 2.5 VL*, which is a multi-modal large language model.
 This model is also known as a Vision Language Model (VLM), as it can ingest and interpret images, along with text prompt.
 
+## Prepare your computer
+
+We assume you are using a computer with an operating system that supports snaps, like Ubuntu 24.04.
+You will require drivers for your hardware.
+These are often included in the operating system, but some devices require additional drivers to be installed.
+
+Have a look at {ref}`install-drivers` for guidance.
+
 ## Installing the snap
 
 We install Qwen VL from the `2.5` track, which indicates the version of the model.

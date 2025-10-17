@@ -1,3 +1,4 @@
+(install-drivers)=
 # Install drivers
 
 Install GPU and NPU drivers for Intel and Nvidia:
