@@ -78,24 +78,23 @@ func use(_ *cobra.Command, args []string) error {
 			return fmt.Errorf("error scoring engines: %v", err)
 		}
 
+		fmt.Println("Evaluating engines for optimal hardware compatibility:")
 		for _, engine := range scoredEngines {
 			if engine.Score == 0 {
-				fmt.Printf("❌ %s - not compatible: %s\n", engine.Name, strings.Join(engine.Notes, ", "))
+				fmt.Printf("✘ %s: not compatible: %s\n", engine.Name, strings.Join(engine.Notes, ", "))
 			} else if engine.Grade != "stable" {
-				fmt.Printf("🟠 %s - score = %d, grade = %s\n", engine.Name, engine.Score, engine.Grade)
+				fmt.Printf("− %s: devel, score=%d\n", engine.Name, engine.Score)
 			} else {
-				fmt.Printf("✅ %s - compatible, score = %d\n", engine.Name, engine.Score)
+				fmt.Printf("✔ %s: compatible, score=%d\n", engine.Name, engine.Score)
 			}
 		}
-
-		fmt.Println("Automatically selecting a compatible engine ...")
 
 		selectedEngine, err := selector.TopEngine(scoredEngines)
 		if err != nil {
 			return fmt.Errorf("error finding top engine: %v", err)
 		}
 
-		fmt.Printf("Selected engine for your hardware configuration: %s\n\n", selectedEngine.Name)
+		fmt.Printf("Selected engine: %s\n", selectedEngine.Name)
 
 		err = useEngine(selectedEngine.Name, useAssumeYes)
 		if err != nil {

@@ -166,9 +166,7 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 	// all
 	if len(manifest.Devices.Allof) > 0 {
 		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
-		for _, reason := range reasonsAll {
-			reasons = append(reasons, "devices allof: "+reason)
-		}
+		reasons = append(reasons, reasonsAll...)
 		if err != nil {
 			return 0, reasons, err
 		}
@@ -181,9 +179,7 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 	// any
 	if len(manifest.Devices.Anyof) > 0 {
 		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
-		for _, reason := range reasonsAny {
-			reasons = append(reasons, "devices anyof: "+reason)
-		}
+		reasons = append(reasons, reasonsAny...)
 		if err != nil {
 			return 0, reasons, err
 		}
