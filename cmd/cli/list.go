@@ -66,7 +66,7 @@ func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
 		if engine.Compatible && engine.Grade == "stable" {
 			compatibleStr = "yes"
 		} else if engine.Compatible {
-			compatibleStr = "beta"
+			compatibleStr = "devel"
 		} else {
 			compatibleStr = "no"
 		}
