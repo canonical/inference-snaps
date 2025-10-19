@@ -1,5 +1,5 @@
 (qwen-vl-tutorial)=
-# Get started with Qwen VL Inference Snap
+# Get started with Inference Snaps using Qwen VL
 
 This tutorial walks you through the process of installing and using an inference snap.
 Specifically, you will install and run *Qwen 2.5 VL*, a [multi-modal large language model (LLM)](https://www.nvidia.com/en-us/glossary/multimodal-large-language-models/).
