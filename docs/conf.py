@@ -25,7 +25,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "Inference snaps"
+project = "Inference Snaps"
 author = "Canonical Ltd."
 
 
