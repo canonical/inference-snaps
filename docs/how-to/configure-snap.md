@@ -1,3 +1,4 @@
+(configure-snap)=
 # Configure Inference Snaps
 
 Inference snaps expose a number of configurations.
