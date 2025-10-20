@@ -1,5 +1,5 @@
 (configure-snap)=
-# Configure Inference Snaps
+# Configure inference snaps
 
 Inference snaps expose a number of configurations.
 These configurations depend on the active engine.
