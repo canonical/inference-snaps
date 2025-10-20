@@ -14,6 +14,7 @@ Use the snap:
 manage-snap-services
 use-openai-api
 switch-between-engines
+configure-snap
 ```
 
 Use the snap with web clients:
