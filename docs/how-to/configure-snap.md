@@ -46,7 +46,16 @@ This requires root permission.
 sudo <inference-snap> set <key>=<new-value>
 ```
 
+After changing a configuration, the server needs to be restarted to apply the configuration changes.
+
+```shell
+sudo snap restart <inference-snap>
+```
+
 Example:
 ```{terminal}
 :input: sudo qwen-vl set http.port=9090
+
+:input: sudo snap restart qwen-vl
+Restarted.
 ```
