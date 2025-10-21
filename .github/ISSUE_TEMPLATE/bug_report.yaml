@@ -45,7 +45,7 @@ body:
       required: true
 
   - type: textarea
-    id: environment
+    id: machine
     attributes:
       label: Machine information
       description: |
