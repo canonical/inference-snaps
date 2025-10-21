@@ -22,15 +22,19 @@ body:
       required: true
 
   - type: textarea
+    id: snap-version
+    attributes:
+      label: Snap version
+      description: Provide the output of the following command: `snap list <inference-snap>`
+      render: shell
+  
+  - type: textarea
     id: environment
     attributes:
       label: Environment
       description: |
         Provide the output of the following commands:
         ```bash
-        echo -e "\nSnap information:"
-        snap list <inference-snap>`
-
         echo -e "\nSnap connections:"
         snap connections <inference-snap>
 
