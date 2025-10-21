@@ -1,11 +1,10 @@
 (install-drivers)=
 # Install drivers
-Inference snaps require certain drivers available on the host.
-The drivers should be installed before installing inference snaps to allow hardware detection and deployment of a matching {ref}`engine <engines>`. 
+Inference snaps require certain drivers available on the host in order to function correctly.
+You must install these drivers before installing inference snaps to enable hardware detection and deployment of a matching {ref}`engine <engines>`. 
 
-Refer below to find the specific instruction.
 
-In case drivers were installed after the inference snap, perhaps by mistake or after installing new hardware, run the following command to repeat the engine selection:
+In case you installed a driver after installing an inference snap, repeat the engine selection:
 ```shell
 sudo <inference-snap> use-engine --auto
 ```
@@ -22,7 +21,7 @@ Please refer [here](https://dgpu-docs.intel.com/driver/client/overview.html) for
 (install-intel-npu-drivers)=
 ## Install Intel NPU drivers
 
-If your system has an Intel NPU, and you want to make use of it, you need to install the user space driver for it.
+If your system has an Intel NPU and you want to make use of it, you need to install the user space driver for it.
 It is available as a snap:
 
 ```
