@@ -33,7 +33,7 @@ sudo snap install intel-npu-driver
 (install-nvidia-gpu-drivers)=
 ## Install NVIDIA GPU drivers
 
-You need a working CUDA set up on the host machine to use an NVIDIA GPU.
+You need a working CUDA setup on the host machine to use an NVIDIA GPU.
 
 The version of the driver and utilities might be different depending on your setup.
 On Ubuntu Server 24.04, the following commands install the appropriate packages:
