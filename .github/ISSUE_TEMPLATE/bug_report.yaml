@@ -22,18 +22,32 @@ body:
       required: true
 
   - type: textarea
-    id: snap-version
+    id: environment
     attributes:
-      label: Snap version
-      description: Provide the output of the following command `snap list <inference-snap>`
+      label: Environment
+      description: 
+        Provide the output of the following commands:
+        ```bash
+        echo -e "\nSnap information:"
+        snap list <inference-snap>`
+
+        echo -e "\nSnap connections:"
+        snap connections <inference-snap>
+
+        echo -e "\nOS version:"
+        lsb_release -a
+
+        echo -e "\nKernel and architecture:"
+        uname -rvm
+        ```
       render: shell
-    # validations:
-    #   required: true
+    validations:
+      required: true
 
   - type: textarea
     id: environment
     attributes:
-      label: System information
+      label: Machine information
       description: |
         Provide information about your hardware.
 
