@@ -81,7 +81,7 @@ func debugSelectEngine(_ *cobra.Command, args []string) error {
 	// Read json piped in from the hardware-info app
 	var hardwareInfo types.HwInfo
 
-	err := json.NewDecoder(os.Stdin).Decode(&hardwareInfo)
+	err := yaml.NewDecoder(os.Stdin).Decode(&hardwareInfo)
 	if err != nil {
 		return fmt.Errorf("error decoding hardware info: %s", err)
 	}

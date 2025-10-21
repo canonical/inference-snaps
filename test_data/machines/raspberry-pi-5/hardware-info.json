@@ -2,8 +2,8 @@
   "cpus": [
     {
       "architecture": "arm64",
-      "implementer_id": "0x41",
-      "part_number": "0xD0B",
+      "implementer-id": "0x41",
+      "part-number": "0xD0B",
       "features": [
         "fp",
         "asimd",
@@ -25,8 +25,8 @@
     }
   ],
   "memory": {
-    "total_ram": 8323276800,
-    "total_swap": 0
+    "total-ram": 8323276800,
+    "total-swap": 0
   },
   "disk": {
     "/": {
@@ -41,23 +41,23 @@
   "pci": [
     {
       "slot": "0000:00:00.0",
-      "bus_number": "0x0",
-      "device_class": "0x604",
-      "programming_interface": 0,
-      "vendor_id": "0x14E4",
-      "device_id": "0x2712",
-      "vendor_name": "Broadcom Inc. and subsidiaries",
-      "device_name": "BCM2712 PCIe Bridge"
+      "bus-number": "0x0",
+      "device-class": "0x604",
+      "programming-interface": 0,
+      "vendor-id": "0x14E4",
+      "device-id": "0x2712",
+      "vendor-name": "Broadcom Inc. and subsidiaries",
+      "device-name": "BCM2712 PCIe Bridge"
     },
     {
       "slot": "0000:01:00.0",
-      "bus_number": "0x1",
-      "device_class": "0x200",
-      "programming_interface": 0,
-      "vendor_id": "0x1DE4",
-      "device_id": "0x1",
-      "vendor_name": "Raspberry Pi Ltd",
-      "device_name": "RP1 PCIe 2.0 South Bridge"
+      "bus-number": "0x1",
+      "device-class": "0x200",
+      "programming-interface": 0,
+      "vendor-id": "0x1DE4",
+      "device-id": "0x1",
+      "vendor-name": "Raspberry Pi Ltd",
+      "device-name": "RP1 PCIe 2.0 South Bridge"
     }
   ]
 }
