@@ -5,7 +5,7 @@ These guides will walk you through the processes of configuring, deploying, and 
 Install required drivers:
 ```{toctree}
 :maxdepth: 1
-install-drivers/index
+install-drivers
 ```
 
 Use the snap:
