@@ -16,7 +16,6 @@ const (
 
 type Status struct {
 	Engine    string            `json:"engine" yaml:"engine"`
-	Status    string            `json:"status" yaml:"status"`
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
@@ -50,21 +49,6 @@ func statusStruct() (*Status, error) {
 		return nil, fmt.Errorf("error loading selected engine: %v", err)
 	}
 	statusStr.Engine = engine.Name
-
-	ssc, err := serverStatusCode(engine.Name)
-	if err != nil {
-		return nil, fmt.Errorf("error getting server status: %v", err)
-	}
-	switch ssc {
-	case 0:
-		statusStr.Status = "online"
-	case 1:
-		statusStr.Status = "starting"
-	case 2:
-		statusStr.Status = "offline"
-	default:
-		statusStr.Status = "unknown"
-	}
 
 	endpoints, err := serverApiUrls(engine)
 	if err != nil {
