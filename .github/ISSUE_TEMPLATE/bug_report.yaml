@@ -25,7 +25,7 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: 
+      description: |
         Provide the output of the following commands:
         ```bash
         echo -e "\nSnap information:"
