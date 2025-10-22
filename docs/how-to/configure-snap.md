@@ -1,12 +1,13 @@
-(configure-snap)=
+(configure-inference-snaps)=
 # Configure inference snaps
 
 Inference snaps expose a number of configurations.
-These configurations depend on the active engine.
+You can use the CLI to view these or set a new value for a configuration.
+The available configurations depend on the active engine.
 
-## Explore available configurations
+## View available configurations
 
-The CLI implements a `get` command which will show all currently available configurations:
+Use the {ref}`CLI tool's <models-cli>` `get` command to show all currently available configurations:
 
 ```
 <inference-snap> get
@@ -22,13 +23,13 @@ verbose: false
 
 ## Get a configuration value
 
-A configuration key can be passed to the `get` command to get the current value.
+To get the current value of a configuration, pass the configuration key to the `get` command:
 
 ```
 <inference-snap> get <key>
 ```
 
-Examples:
+Example:
 ```{terminal}
 :input: qwen-vl get http
 http.base-path: v1
@@ -40,14 +41,14 @@ http.port: 9999
 
 ## Set a configuration value
 
-The value of a specific configuration can be changed with the set command.
+You can change the value of a specific configuration using the set command.
 This requires root permission.
 
 ```shell
 sudo <inference-snap> set <key>=<new-value>
 ```
 
-After changing a configuration, the server needs to be restarted to apply the configuration changes.
+You'll need to restart the server to apply the changes after setting a new configuration value.
 
 ```shell
 sudo snap restart <inference-snap>
