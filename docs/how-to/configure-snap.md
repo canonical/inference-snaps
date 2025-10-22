@@ -17,7 +17,7 @@ Example:
 ```{terminal}
 :input: qwen-vl get
 http.host: 127.0.0.1
-http.port: 9999
+http.port: 8326
 verbose: false
 ```
 
@@ -41,7 +41,7 @@ http.port: 9999
 
 ## Set a configuration value
 
-You can change the value of a specific configuration using the set command.
+You can change the value of a specific configuration using the `set` command.
 This requires root permission.
 
 ```shell
