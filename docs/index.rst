@@ -1,4 +1,4 @@
-Inference Snaps
+Inference snaps
 ==========================
 
 .. In a single sentence, say what the product is.
