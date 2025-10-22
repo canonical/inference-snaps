@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
@@ -18,7 +19,7 @@ type cache struct {
 func NewCache() *cache {
 	return &cache{
 		storage:             NewSnapctlStorage(), // hardcoded since that's the only supported backend
-		machineInfoTempFile: "/tmp/machine-info.json",
+		machineInfoTempFile: "/tmp/machine-info-" + env.SnapRevision() + ".json",
 	}
 }
 
