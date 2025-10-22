@@ -11,9 +11,16 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/memory"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/pkg/utils"
 )
 
 func Get(friendlyNames bool) (*types.HwInfo, error) {
+	// Loading machine info requires root on at least Ubuntu 25.10
+	// This is so that clinfo has permission to look up vram
+	if !utils.IsRootUser() {
+		return nil, fmt.Errorf("permission denied, try again with sudo")
+	}
+
 	var hwInfo types.HwInfo
 
 	memoryInfo, err := memory.Info()
