@@ -2,7 +2,7 @@
 
 ![Status: Beta](https://img.shields.io/badge/status-beta-orange)
 
-> Install, run, and serve AI models as native Snaps — optimized for your hardware.
+> Install, run, and serve AI models as snaps — optimized for your hardware.
 
 Inference Snaps turns complex generative model deployment into a single command.
 It is built on the idea that AI runtimes should be portable, composable, and local-first.
@@ -27,9 +27,9 @@ qwen-vl chat
 
 ## What it does
 
-- **Plug-and-play AI models**: Each snap bundles the model weights, dependencies, and optimized runtimes.
-- **Hardware-aware**: Automatically selects a silicon-optimized runtime for Intel, Ampere, or NVIDIA.
-- **API-first design:** Exposes a local OpenAI-compatible REST API for integration.
+- **Plug-and-play AI models**: Each snap bundles a range of optimized model weights and runtimes. 
+- **Hardware-aware**: Automatically selects and deployes silicon-optimized runtime and model weights for your machine.
+- **API-first design:** Exposes local standard APIs for integration.
 - **Offline-ready:** Once installed, the model runs entirely on your machine.
 - **Reproducible & isolated:** Snaps guarantee consistent environments across supported Linux distros.
 
@@ -59,6 +59,3 @@ Please see [contribution guide](docs/CONTRIBUTING.md) for tooling, build instruc
 Join the discussion in our [GitHub Discussions](https://github.com/canonical/inference-snaps/discussions), or [report issues](https://github.com/canonical/inference-snaps/issues/new/choose).
 
 
-## License
-
-See [License and Copyright](https://canonical-inference-snaps-docs.readthedocs-hosted.com/contributing/#license-and-copyright) section in our documentation.
