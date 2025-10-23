@@ -15,6 +15,9 @@ Every device should be able to run intelligent software without dependency hell 
 ## Quick start
 
 ```bash
+# Install accelerator Driver
+# See https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/
+
 # Install a model snap
 sudo snap install qwen-vl --channel 2.5/beta
 
