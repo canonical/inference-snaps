@@ -85,7 +85,7 @@ func (c *cache) GetMachineInfo() (*types.HwInfo, error) {
 }
 
 func (c *cache) loadMachineInfo() (*types.HwInfo, error) {
-	machine, err := hardware_info.Get(true)
+	machine, err := hardware_info.Get(false)
 	if err != nil {
 		return nil, fmt.Errorf("error getting machine info: %v", err)
 	}
