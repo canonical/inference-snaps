@@ -2,5 +2,6 @@
 version_number: "0.1.0"
 formatted_text: "*Multi-line* text\n that uses basic **markup**."
 site_link: "[Website link](https://example.com)"
+
 explore_optimizations: |
-  Use `list-engines` and `show-engine` commands to explore the available {ref}`engines <engines>` of an installed snap.
+  Once installed, use `list-engines` and `show-engine` commands to explore the available {ref}`engines <engines>`.
