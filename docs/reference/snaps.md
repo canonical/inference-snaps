@@ -1,37 +1,55 @@
 (snaps)=
 # Available snaps
 
-This page contains a list of currently available inference snaps.
+This page contains the list of inference snaps and the available optimizations.
 
 ## DeepSeek R1
-
-[Store listing](https://snapcraft.io/deepseek-r1) | [Snap source code](https://github.com/canonical/deepseek-r1-snap)
+[![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1) 
+[![deepseek-r1 code](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/canonical/deepseek-r1-snap)
 
 DeepSeek R1 is a reasoning Large Language Model mainly meant for chat completions.
 Input and output is text-based.
 
-:Status: maintained
-:Versions: 1.0.0
-:Available vendor optimizations: Intel, Ampere
+This snap contains the following optimizations:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+| amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
+| amd64 | Intel CPU | Intel-specific CPU optimizations |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
+
+If your hardware is not covered by the above optimizations, a generic CPU {ref}`engine <engines>` may be automatically selected.
+The selection also considers compute resources such as disk space, memory, and vRAM.
+
+{{explore_optimizations}}
 
 ## Qwen VL
-
-[Store listing](https://snapcraft.io/qwen-vl) | [Snap source code](https://github.com/canonical/qwen-vl-snap)
+[![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl) 
+[![qwen-vl source](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/canonical/qwen-vl-snap)
 
 Qwen VL is a Vision Language Model which has the ability to process both visual and textual data.
 The input can be a combination of an image and text, with the output being text-based.
 
-:Status: maintained
-:Versions: 2.5
-:Available vendor optimizations: Intel, Ampere
+This snap contains the following optimizations:
 
-## Mistral 7B instruct
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+| amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
+| amd64 | Intel CPU | Intel-specific CPU optimizations |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
-Store listing | [Snap source code](https://github.com/canonical/mistral-7b-instruct-snap)
+If your hardware is not covered by the above optimizations, a generic CPU {ref}`engine <engines>` may be automatically selected.
+The selection also considers compute resources such as disk space, memory, and vRAM.
 
-Mistral 7B is a general purpose Large Language Model.
-The instruct fine-tuning is aimed at chat completions, providing text-based input and output.
+{{explore_optimizations}}
 
-:Status: *deprecated*
-:Versions: 0.3
-:Available vendor optimizations: None
+<!-- 
+## Deprecated snaps
+
+The following inference snaps are not longer maintained:
+- [mistral-7b-instruct](https://github.com/canonical/mistral-7b-instruct-snap) 
+-->
