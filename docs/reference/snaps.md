@@ -45,7 +45,7 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 <!-- 
 ## Deprecated snaps
 
-The following inference snaps are not longer maintained:
+The following inference snaps are no longer maintained:
 - [mistral-7b-instruct](https://github.com/canonical/mistral-7b-instruct-snap) 
 -->
 
