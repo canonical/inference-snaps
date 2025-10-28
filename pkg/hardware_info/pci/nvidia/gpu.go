@@ -2,14 +2,18 @@ package nvidia
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
+
+const nvidiaSmiTimeout = 30 * time.Second
 
 func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {
 	properties := make(map[string]string)
@@ -79,9 +83,15 @@ func computeCapability(device types.PciDevice) (*string, error) {
 }
 
 func nvidiaSmi(args ...string) (*string, error) {
-	cmd := exec.Command("nvidia-smi", args...)
+	ctx := context.Background()
+	cmdContext, cancel := context.WithTimeout(ctx, nvidiaSmiTimeout)
+	defer cancel()
+
+	cmd := exec.CommandContext(cmdContext, "nvidia-smi", args...)
+	cmd.WaitDelay = 1 * time.Second
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "LANG=C")
+
 	output, err := cmd.Output()
 	if err != nil {
 		if len(output) == 0 {

@@ -1,14 +1,18 @@
 package intel
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
+
+const clInfoTimeout = 10 * time.Second
 
 func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {
 	properties := make(map[string]string)
@@ -30,11 +34,18 @@ func vRam(device types.PciDevice) (*uint64, error) {
 		After installing necessary drivers for GPU, NPU, you can also use OpenVino APIs to see available devices and their properties, including VRAM.
 		`clinfo --json` reports a field `CL_DEVICE_GLOBAL_MEM_SIZE` which corresponds to the installed hardware's vRAM.
 	*/
-	command := exec.Command("clinfo", "--json")
+	ctx := context.Background()
+	cmdContext, cancel := context.WithTimeout(ctx, clInfoTimeout)
+	defer cancel()
+
+	command := exec.CommandContext(cmdContext, "clinfo", "--json")
+	command.WaitDelay = 1 * time.Second
+
 	data, err := command.Output()
 	if err != nil {
 		return nil, err
 	}
+
 	clinfo, err := parseClinfoJson(data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse clinfo json: %w", err)
