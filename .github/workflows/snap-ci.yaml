@@ -47,7 +47,7 @@ jobs:
         id: snapcraft
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{matrix.runs.architecture}}
           path: ${{ steps.snapcraft.outputs.snap }}
