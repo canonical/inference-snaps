@@ -1,7 +1,7 @@
 (snaps)=
 # Available snaps
 
-This page contains the list of inference snaps and the available optimizations.
+This page contains a list of inference snaps and the available optimizations.
 
 ## DeepSeek R1
 [![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1) 
