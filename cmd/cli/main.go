@@ -5,9 +5,20 @@ import (
 	"log"
 	"os"
 
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/spf13/cobra"
+)
+
+const (
+	openAi = "openai"
+
+	confHttpPort = "http.port"
+
+	envOpenAiBasePath = "OPENAI_BASE_PATH"
+	envOpenAIBaseUrl  = "OPENAI_BASE_URL"
+	envChat           = "CHAT"
+	envComponent      = "COMPONENT"
 )
 
 var (
@@ -49,6 +60,7 @@ func main() {
 	// other commands (help is added by default)
 	addShowMachineCommand()
 	addDebugCommand()
+	addRunCommand()
 
 	// disable logging timestamps
 	log.SetFlags(0)

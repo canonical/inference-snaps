@@ -1,17 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/url"
 	"os"
-	"os/exec"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
-)
-
-const (
-	openAi = "openai"
 )
 
 type Status struct {
@@ -34,6 +28,7 @@ func activeEngine() (*engines.ScoredManifest, error) {
 	for i := range scoredEngines {
 		if scoredEngines[i].Name == activeEngineName {
 			scoredManifest = scoredEngines[i]
+			break
 		}
 	}
 
@@ -50,7 +45,7 @@ func statusStruct() (*Status, error) {
 	}
 	statusStr.Engine = engine.Name
 
-	endpoints, err := serverApiUrls(engine)
+	endpoints, err := serverApiUrls()
 	if err != nil {
 		return nil, fmt.Errorf("error getting server api endpoints: %v", err)
 	}
@@ -59,55 +54,31 @@ func statusStruct() (*Status, error) {
 	return &statusStr, nil
 }
 
-func serverApiUrls(engine *engines.ScoredManifest) (map[string]string, error) {
-	// Build API URL
-	apiBasePath := "v1"
-	if val, ok := engine.Configurations["http.base-path"]; ok {
-		apiBasePath, ok = val.(string)
-		if !ok {
-			return nil, fmt.Errorf("unexpected type for base path: %v", val)
-		}
-
-	}
-	httpPortMap, err := config.Get("http.port")
+func serverApiUrls() (map[string]string, error) {
+	err := loadEngineEnvironment()
 	if err != nil {
-		return nil, fmt.Errorf("error getting http port: %v", err)
-	}
-	httpPort := httpPortMap["http.port"]
-	httpPortStr := ""
-
-	switch v := httpPort.(type) {
-	case int, uint, int8, uint8, int16, uint16, int32, uint32, int64, uint64:
-		httpPortStr = fmt.Sprintf("%d", v)
-	case float32, float64:
-		httpPortStr = fmt.Sprintf("%.0f", v)
-	case string:
-		httpPortStr = v
-	default:
-		return nil, fmt.Errorf("unexpected type for http port: %v", v)
+		return nil, fmt.Errorf("error loading engine environment: %v", err)
 	}
 
-	openaiHost := fmt.Sprintf("localhost:%s", httpPortStr)
-	openaiUrl := url.URL{Scheme: "http", Host: openaiHost, Path: apiBasePath}
-	return map[string]string{openAi: openaiUrl.String()}, nil
-
-	// TODO add additional api endpoints like openvino on http://localhost:8080/v1
-}
-
-func serverStatusCode(engineName string) (int, error) {
-	// Depend on existing check server scripts for status
-	checkScript := os.ExpandEnv("$SNAP/engines/" + engineName + "/check-server")
-	cmd := exec.Command(checkScript)
-	if err := cmd.Start(); err != nil {
-		return 0, fmt.Errorf("error checking server: %v", err)
+	apiBasePath, found := os.LookupEnv(envOpenAiBasePath)
+	if !found {
+		return nil, fmt.Errorf("%q env var is not set", envOpenAiBasePath)
 	}
 
-	checkExitCode := 0
-	if err := cmd.Wait(); err != nil {
-		var exitError *exec.ExitError
-		if errors.As(err, &exitError) {
-			checkExitCode = exitError.ExitCode()
-		}
+	httpPortMap, err := config.Get(confHttpPort)
+	if err != nil {
+		return nil, fmt.Errorf("error getting %q: %v", confHttpPort, err)
 	}
-	return checkExitCode, nil
+	httpPort := httpPortMap[confHttpPort]
+
+	openaiUrl := url.URL{
+		Scheme: "http",
+		Host:   fmt.Sprintf("localhost:%v", httpPort),
+		Path:   apiBasePath,
+	}
+
+	return map[string]string{
+		// TODO add additional api endpoints like openvino on http://localhost:8080/v1
+		openAi: openaiUrl.String(),
+	}, nil
 }
