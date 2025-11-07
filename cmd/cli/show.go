@@ -1,12 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	showEngineFormat string
 )
 
 func addInfoCommand() {
@@ -19,6 +24,7 @@ func addInfoCommand() {
 		ValidArgsFunction: showEngineValidArgs,
 		RunE:              showEngine,
 	}
+	cmd.PersistentFlags().StringVar(&showEngineFormat, "format", "yaml", "output format")
 	rootCmd.AddCommand(cmd)
 }
 
@@ -80,12 +86,22 @@ func engineInfo(engineName string) error {
 }
 
 func printEngineManifest(engine engines.ScoredManifest) error {
-	engineYaml, err := yaml.Marshal(engine)
-	if err != nil {
-		return fmt.Errorf("error converting engine to yaml: %v", err)
+	switch showEngineFormat {
+	case "json":
+		jsonString, err := json.MarshalIndent(engine, "", "  ")
+		if err != nil {
+			return fmt.Errorf("failed to marshal to JSON: %s", err)
+		}
+		fmt.Printf("%s\n", jsonString)
+	case "yaml", "":
+		engineYaml, err := yaml.Marshal(engine)
+		if err != nil {
+			return fmt.Errorf("failed to marshal to YAML: %s", err)
+		}
+		fmt.Print(string(engineYaml))
+	default:
+		return fmt.Errorf("unknown format %q", showEngineFormat)
 	}
-
-	fmt.Print(string(engineYaml))
 
 	return nil
 }
