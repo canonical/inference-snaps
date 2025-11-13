@@ -329,6 +329,7 @@ sudo snap install --dangerous gemma3-jane_v3_amd64.snap && \
 sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp && \
 sudo snap install --dangerous gemma3-jane+llamacpp.comp 
 ```
+````
 
 The server will
 
@@ -359,14 +360,14 @@ That worked! You have created an inference snap for Gemma 3 model with just one 
 
 ## Upload
 
-To do:
+TBA:
 - Register the name
 - Get yourself added to component uploaders list
 - Upload the snap
 
 ## Install from store
 
-To do:
+TBA:
 - Remove the locally installed snap
 - Install from store
 - Verify automatic component installation and server startup
