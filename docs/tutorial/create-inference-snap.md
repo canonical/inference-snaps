@@ -119,6 +119,7 @@ Finally, add a wrapper script for llama-server:
 :caption: components/llamacpp/server
 :language: bash
 ```
+Make the script executable: `chmod +x engines/generic-cpu/server`
 
 The `components` directory should now look like:
 ```{terminal}
@@ -208,6 +209,8 @@ In simplest cases, this simply runs the runtime component's server script:
 :caption: engines/generic-cpu/server
 :language: bash
 ```
+Make this script executable: `chmod +x engines/generic-cpu/server`
+
 
 Add a part in snapcraft file to include the engines directory in the snap:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
@@ -312,15 +315,47 @@ component model-1b-it-q4-0-gguf v3 for gemma3-jane v3 installed
 :input: sudo snap install --dangerous gemma3-jane+llamacpp.comp 
 component llamacpp v3 for gemma3-jane v3 installed
 
+:input: sudo gemma3-jane use-engine generic-cpu
+Engine successfully changed to "generic-cpu"
+
 :input: sudo snap start gemma3-jane
 Started.
 ```
 
-TODO: 
-something is broken:
-Able to access hardware info without hardware-observe interface connection: assuming dev mode installation.
-Error: error scoring engines: error getting machine info: error getting machine info: error getting pci devices: error getting host lspci data: exec: "lspci": executable file not found in $PATH
------)
+````{tip}
+If want to repeat making changes and building the snap and its components without losing your sanity, chain the comments:
+```shell
+sudo snap install --dangerous gemma3-jane_v3_amd64.snap && \ 
+sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp && \
+sudo snap install --dangerous gemma3-jane+llamacpp.comp 
+```
+
+The server will
+
+Check the logs again and make sure the server started successfully:
+```{terminal}
+:input: snap logs gemma3-jane
+...
+2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: main: server is listening on http://127.0.0.1:9090 - starting the main loop
+2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: srv  update_slots: all slots are idle
+```
+
+Make a prompt via curl:
+```{terminal}
+:input: curl -s http://localhost:9090/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+    "max_tokens": 30,
+    "temperature": 0,
+    "stream": false,
+    "messages": [
+      { "role": "system", "content": "You are a helpful assistant." },
+      { "role": "user", "content": "What are the 3 main tourist attractions in Paris?" }
+    ]                                                                                   
+  }'
+{"choices":[{"finish_reason":"length","index":0,"message":{"role":"assistant","content":"Okay, here are the 3 main tourist attractions in Paris:\n\n1.  **The Eiffel Tower:** Undoubtedly the most iconic landmark in the world"}}],"created":1763044754,"model":"gpt-3.5-turbo","system_fingerprint":"b1-6a746cf","object":"chat.completion","usage":{"completion_tokens":30,"prompt_tokens":28,"total_tokens":58},"id":"chatcmpl-PLT9wXbZiJ6XXxHCQUBsTz9wj59y2KHU","timings":{"prompt_n":28,"prompt_ms":90.995,"prompt_per_token_ms":3.249821428571429,"prompt_per_second":307.7092147920215,"predicted_n":30,"predicted_ms":833.198,"predicted_per_token_ms":27.773266666666665,"predicted_per_second":36.005847349609574}}
+```
+
+That worked! You have created an inference snap for Gemma 3 model with just one engine.
+
 
 ## Upload
 

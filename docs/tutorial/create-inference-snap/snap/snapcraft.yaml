@@ -7,13 +7,13 @@ description: |
   This is an inference snap that let's you run Gemma 3 using CPU
 
 grade: devel
-confinement: devmode
+confinement: strict
 # end metadata
 
 # start environment
 environment:
   # Workaround until it gets set by snapd
-  # SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
+  SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
   # To find shared libraries that are staged and moved to components
   ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
 # end environment
@@ -70,6 +70,10 @@ parts:
     plugin: go
     build-snaps:
       - go/1.24/stable
+    stage-packages:
+      - pciutils
+      - nvidia-utils # for Nvidia vRAM and Cuda Capability detection
+      - clinfo # for Intel GPU vRAM detection
     organize:
       bin/cli: bin/modelctl
   # end part
@@ -128,6 +132,7 @@ apps:
     plugs:
       # Needed for server app
       - network-bind
-      # For hardware detection
+      # For inference and when running some modelctl commands
       - hardware-observe
+      - opengl
   # end app
