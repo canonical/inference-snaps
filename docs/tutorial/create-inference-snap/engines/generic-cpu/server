@@ -1,0 +1,3 @@
+#!/bin/bash -eux
+
+exec "$SNAP_COMPONENTS/llamacpp/server"

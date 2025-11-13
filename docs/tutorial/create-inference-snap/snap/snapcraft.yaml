@@ -1,0 +1,133 @@
+# start metadata
+name: gemma3-jane
+base: core24
+version: 'v3'
+summary: My first inference snap
+description: |
+  This is an inference snap that let's you run Gemma 3 using CPU
+
+grade: devel
+confinement: devmode
+# end metadata
+
+# start environment
+environment:
+  # Workaround until it gets set by snapd
+  # SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
+  # To find shared libraries that are staged and moved to components
+  ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
+# end environment
+
+# start hooks
+hooks:
+  install:
+    plugs:
+      # For hardware detection
+      - hardware-observe
+      - opengl
+# end hooks
+
+parts:
+  # start component-local-files part
+  component-local-files:
+    plugin: dump
+    source: components
+    organize:
+      "llamacpp/*": (component/llamacpp)
+      "model-1b-it-q4-0-gguf/*": (component/model-1b-it-q4-0-gguf)
+    stage:
+      - -*
+  # end part
+
+  # start llamacpp part
+  llamacpp:
+    source: https://github.com/ggerganov/llama.cpp.git
+    source-tag: b5794
+    source-depth: 1
+    plugin: cmake
+    cmake-parameters:
+      - -DLLAMA_CURL=OFF
+      - -DGGML_NATIVE=OFF
+    stage-packages:
+      - libgomp1
+    organize:
+      # move everything, including the staged packages
+      "*": (component/llamacpp)
+  # end part
+
+  # start engines part
+  engines:
+    source: engines
+    plugin: dump
+    organize:
+      "*": engines/
+  # end part
+
+  # start cli part
+  cli:
+    source: https://github.com/canonical/inference-snaps-cli.git
+    source-tag: v1.0.0-beta.24
+    plugin: go
+    build-snaps:
+      - go/1.24/stable
+    organize:
+      bin/cli: bin/modelctl
+  # end part
+
+  # start scripts part
+  scripts:
+    source: scripts
+    plugin: dump
+    stage-packages:
+      - jq # used in server.sh
+    organize:
+      "server.sh": bin/
+  # end part
+
+  # start gemma license part
+  gemma-license:
+    source: https://ai.google.dev/gemma/terms.md.txt
+    source-type: file
+    plugin: dump
+    organize:
+      "terms.md.txt": LICENSE_TERMS.md
+  # end part
+  
+
+# start components
+components:
+  model-1b-it-q4-0-gguf:
+    type: standard
+    summary: Gemma 3 1B instruct QAT Q4_0 GGUF
+    description: Quantized model with 1B parameters in gguf format with Q4_0 weight encoding
+
+  llamacpp:
+    type: standard
+    summary: llama.cpp inference server
+    description: Optimized for inference on CPUs
+# end components
+
+apps:
+  # start cli app
+  gemma3-jane:
+    command: bin/modelctl
+    plugs:
+      # For hardware detection
+      - hardware-observe
+      - opengl
+      # To access server over network socket
+      - network
+    environment:
+      CHAT: $SNAP/bin/go-chat-client
+  # end app
+
+  # start server app
+  server:
+    command: bin/server.sh
+    daemon: simple
+    plugs:
+      # Needed for server app
+      - network-bind
+      # For hardware detection
+      - hardware-observe
+  # end app

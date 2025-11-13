@@ -1,0 +1,18 @@
+name: generic-cpu
+description: Use CPU, small memory footprint
+vendor: Canonical Ltd
+grade: stable
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+      flags: [sse4_2, f16c, fma, avx, avx2]
+    - type: cpu
+      architecture: arm64
+      features: [asimd]  # for ARMv8 ASIMD includes NEON instruction set
+memory: 1G
+disk-space: 2G
+components:
+  - llamacpp
+  - model-1b-it-q4-0-gguf
+# configurations:

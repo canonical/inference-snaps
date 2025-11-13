@@ -1,0 +1,7 @@
+environment:
+- OPENAI_BASE_PATH=/v1
+- SERVER_PATH=$COMPONENT/usr/local/bin/llama-server
+# Append path to llama.cpp's shared objects
+- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COMPONENT/usr/local/lib
+# Append path to the bundled shared objects, via staged debian packages
+- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COMPONENT/usr/lib/$ARCH_TRIPLET
