@@ -359,11 +359,19 @@ That worked! You have created an inference snap for Gemma 3 model with just one 
 
 ## Upload
 
+To do:
+- Register the name
+- Get yourself added to component uploaders list
+- Upload the snap
 
 ## Install from store
 
+To do:
+- Remove the locally installed snap
+- Install from store
+- Verify automatic component installation and server startup
 
 ## Next steps
 
-- Add bash tab completion
+- Add command tab completion
 - Add additional engines
