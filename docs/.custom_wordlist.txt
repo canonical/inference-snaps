@@ -18,6 +18,9 @@ fonts
 Fosstodon
 freefont
 frontend
+Gemma
+Gemma's
+GGUF
 github
 GPG
 gpu
@@ -66,10 +69,13 @@ Qwen
 readthedocs
 Rockcraft
 rst
+runtimes
 sitemapindex
+snapcraft
 Snapcraft's
 snapd
 starterpack
+subdirectory
 subproject
 subprojects
 SVG

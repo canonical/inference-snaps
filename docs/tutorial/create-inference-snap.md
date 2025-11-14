@@ -14,13 +14,13 @@ But first, we need to pick an LLM. Gemma 3 is a good choice for this tutorial be
 Gemma 3 is free and permits responsible commercial use.
 Read its terms of use [here](https://ai.google.dev/gemma/terms).
 
-Inferencing with a CPU is always a good starting point and a simple way to do that is via llama.cpp runtime. 
-The llama.cpp project is backed by a large open source community working on various silicon optimizations. 
+Inferencing with a CPU is always a good starting point and a simple way to do that is via {spellexception}`llama.cpp` runtime. 
+The {spellexception}`llama.cpp` project is backed by a large open source community working on various silicon optimizations. 
 We can use the llama-server implementation which supports model weights in the GGUF format.
 Google distributes GGUF formats for most of Gemma 3 model sizes. 
-Go with a relatively small model to speed up development times and add larger onces later.
+Go with a relatively small model to speed up development times and add larger ones later.
 
-The [gemma-3-1b-it-qat-q4_0-gguf](https://huggingface.co/google/gemma-3-1b-it-qat-q4_0-gguf) is a good first instance.
+The [`gemma-3-1b-it-qat-q4_0-gguf`](https://huggingface.co/google/gemma-3-1b-it-qat-q4_0-gguf) is a good first instance.
 Download the `.gguf` file.
 
 You may also use `tree` and `curl` which you can installed with:
@@ -48,7 +48,7 @@ Checkout the generated file:
 
 Update the snapcraft file with sensible metadata. Remove the parts.
 
-Inference snaps are usually named after the model, e.g. gemma3 for Gemma 3 model. 
+Inference snaps are usually named after the model, e.g. `gemma3` for Gemma 3 model. 
 Add your username to it as a suffix to create a unique snap name that can be uploaded to the store in order to complete this tutorial.
 
 My snapcraft file looks like this:
@@ -100,23 +100,23 @@ Move the downloaded `.gguf` file to the model directory.
 
 Add the following configuration file for the model:
 ```{literalinclude} create-inference-snap/components/model-1b-it-q4-0-gguf/component.yaml
-:caption: components/model-1b-it-q4-0-gguf/component.yaml
+:caption: {spellexception}`components/model-1b-it-q4-0-gguf/component.yaml`
 :language: yaml
 ```
 
 This is used to find the `.gguf` file within the component's directory.
 
-Now, add llamacpp's configuration file:
+Now, add `llamacpp`'s configuration file:
 ```{literalinclude} create-inference-snap/components/llamacpp/component.yaml
-:caption: components/llamacpp/component.yaml
+:caption: {spellexception}`components/llamacpp/component.yaml`
 :language: yaml
 ```
 
-These variables are passed on to the application that runs llama.cpp. 
+These variables are passed on to the application that runs {spellexception}`llama.cpp`'s server. 
 
 Finally, add a wrapper script for llama-server:
 ```{literalinclude} create-inference-snap/components/llamacpp/server
-:caption: components/llamacpp/server
+:caption: {spellexception}`components/llamacpp/server`
 :language: bash
 ```
 Make the script executable: `chmod +x engines/generic-cpu/server`
@@ -163,7 +163,7 @@ Add the following to `parts` to copy the local files in the `components` directo
 
 `(component/<component name>)` is a special syntax to reference a defined component.
 
-Furthermore, add a part to build llama.cpp from source and move the artifacts to the corresponding component:
+Furthermore, add a part to build {spellexception}`llama.cpp` from source and move the artifacts to the corresponding component:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start llamacpp part
@@ -281,7 +281,7 @@ apps:
     ...
 ```
 
-The CLI app exposes the modelctl command line tool to the user:
+The CLI app exposes the `modelctl` command line tool to the user, under the snap's name.:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start cli app
@@ -372,7 +372,7 @@ Moreover, it lets others easily install and use the snap.
 
 Uploading requires a few steps. Here is the list:
 1. Register the name
-2. Get yourself added to component uploaders list
+2. Get yourself added to component upload allow-list
 3. Upload the snap
 4. Request interface connection permission for the hardware-observe interface
 
@@ -380,8 +380,8 @@ First you need to register the snap name in the store.
 Refer to [this guide](https://snapcraft.io/docs/registering-your-app-name) to do that.
 
 Uploading snaps with components currently requires a special permission. This is needed per account.
-Request to be added to the component uploaders list by posting in the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/19).
-There is no subcategory for component uploaders, so just post without picking one.
+Request to be added to the component upload allow-list by posting in the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/19).
+There is no subcategory for component uploads, so just post without picking one.
 
 Once you have the permission, upload the snap and its components:
 ```shell
