@@ -334,24 +334,27 @@ Finally, add all license files to the snap. E.g. to add Gemma's license, add the
 :end-before: end part
 ```
 
-## Build and deploy
+## Pack and deploy
 
-With the crafting completed, it's time to build, test, and upload the snap.
+With the crafting completed, it's time to pack, test, and upload the snap.
 
 ### Test locally
 
+Pack the snap:
 ```{terminal}
 :input: snapcraft pack
 Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma3-jane+llama-cpp.comp
 
-:input: sudo snap install --devmode gemma3-jane_v3_amd64.snap
+:input: sudo snap install --dangerous gemma3-jane_v3_amd64.snap
 gemma3-jane v3 installed
 ``` 
 
-Checking `snap logs gemma3-jane` would show that the server has failed to start because no engine and components have been installed yet.
-The reason for this is that the locally built snap cannot access the component files and install them automatically.
+The server will fail to start. You can check the logs with: `snap logs gemma3-jane`.
 
-We have to install the components and select the engine manually now, but the `install` hook will take care of this automatically when the same snap is installed from the store.
+The reason for this is that the snap does not have access to detect the hardware and select the engine. Even if we bypass that, the snap will not have the necessary model and runtime components installed.
+
+We have to install the components and select the engine manually non. 
+When the snap is installed from the store, the `install` hook will take care of this automatically.
 
 ```{terminal}
 :input: sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp
@@ -409,7 +412,7 @@ Submit a request via curl:
 That worked! We have created an inference snap for Gemma 3 model, with just one engine.
 
 
-### Upload
+### Publish to the store
 
 Uploading the snap to the store unlocks the automatic engine selection and component installation functionality.
 Moreover, it lets others easily install and use the snap.
@@ -418,7 +421,7 @@ Uploading requires a few steps. Here is the list:
 1. Register the name
 2. Get yourself added to component upload allow-list
 3. Upload the snap
-4. Request interface connection permission for the hardware-observe interface
+4. Request auto connection permission for the hardware-observe interface
 
 First you need to register the snap name in the store.
 Refer to [this guide](https://snapcraft.io/docs/registering-your-app-name) to do that.
@@ -435,42 +438,43 @@ snapcraft upload gemma3-jane_v3_amd64.snap \
   --release edge
 ```
 
-At this point, the snap is in the store but it cannot access hardware information during the installation.
-We can work around this by installing it in developer mode:
-```shell
-sudo snap install --devmode gemma3-jane --edge
-```
+The snap is now in the store!
 
-The developer mode allows the snap to access many other system resources as well, which is not ideal.
-Moreover, snaps installed in developer mode cannot be updated automatically from the store.
-
-If we install the snap in normal (confined) mode at this point, it will install but skip hardware detection and engine selection.
-We can still grant permission and resume manually:
-```shell
-sudo snap install gemma3-jane --edge
-sudo snap connect gemma3-jane:hardware-observe
-sudo gemma3-jane use-engine --auto
-```
-
-But we can do better than this.
-The snap store can grant the snap permission to auto connect the hardware-observe plug.
-Submit a request on the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/privileged-interfaces/27) to get this permission for your snap.
-An example, extended request can be found [here](https://forum.snapcraft.io/t/auto-connection-of-hardware-observe-and-home-for-gemma3/49246).
-
-Once the permission is granted, you can install the snap and it will be ready to use right away.
-
-### Install and use
-
-Install the snap from the store:
+Remove the locally installed snap and install from the store and test the snap in developer mode:
 ```{terminal}
-:input: sudo snap install gemma3-jane --edge
-gemma3-jane v3 installed
+:input: sudo snap remove gemma3-jane
+gemma3-jane removed
+
+:input: sudo snap install --devmode gemma3-jane --edge
+gemma3-jane (edge) v3 from Jane Doe installed
 
 :input: gemma3-jane status
 engine: generic-cpu
 endpoints:
     openai: http://localhost:9090/v1
 ```
+
+As shown, the snap has automatically detected generic-cpu this time. 
+
+The [developer mode](https://snapcraft.io/docs/install-modes#developer-mode) allows the snap to access the system without the usual confinement constraints.
+This isn't ideal for production use.
+
+If we install the snap in normal (confined) mode at this point, it will install but skip hardware detection and engine selection.
+We can connect the [hardware-observe interface](https://snapcraft.io/docs/hardware-observe-interface) and then run the auto engine selection manually:
+```shell
+sudo snap install gemma3-jane --edge
+sudo snap connect gemma3-jane:hardware-observe
+sudo gemma3-jane use-engine --auto
+```
+
+But we can do better than that.
+
+The snap store can grant the snap permission to auto connect the hardware-observe interface. This requires a manual review by the store security team.
+
+Submit a request on the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/privileged-interfaces/27) to get this permission for your snap.
+An example, extended request can be found [here](https://forum.snapcraft.io/t/auto-connection-of-hardware-observe-and-home-for-gemma3/49246).
+
+Once the permission is granted, you can install the snap in confined mode, without setting `--devmode` and it will be ready to use right away.
 
 ## Next steps
 
