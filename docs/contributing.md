@@ -114,6 +114,12 @@ make linkcheck
 make woke       # to check for non-inclusive language
 ```
 
+If the spell check reports any false positives:
+1. Add common terms to the `.custom_wordlist.txt` file to ignore them.
+2. Ignore document-specific terms using the `` {spellexception}`special.word` `` markup.
+3. Sort the list. You can use `LC_ALL=POSIX sort --stable --ignore-case .custom_wordlist.txt --ou
+tput=.custom_wordlist.txt`.
+
 For more information about the inclusive language check, see [woke].
 
 ### Propose changes
