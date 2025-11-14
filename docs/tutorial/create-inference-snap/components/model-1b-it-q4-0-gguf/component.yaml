@@ -1,2 +1,3 @@
 environment:
+# To find the model within the component's directory
 - MODEL_FILE=$COMPONENT/gemma-3-1b-it-q4_0.gguf

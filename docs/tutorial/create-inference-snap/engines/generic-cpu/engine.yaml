@@ -13,6 +13,6 @@ devices:
 memory: 1G
 disk-space: 2G
 components:
-  - llamacpp
+  - llama-cpp
   - model-1b-it-q4-0-gguf
 # configurations:

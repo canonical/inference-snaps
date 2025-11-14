@@ -33,14 +33,12 @@ parts:
     plugin: dump
     source: components
     organize:
-      "llamacpp/*": (component/llamacpp)
-      "model-1b-it-q4-0-gguf/*": (component/model-1b-it-q4-0-gguf)
-    stage:
-      - -*
+      "llama-cpp": (component/llama-cpp)
+      "model-1b-it-q4-0-gguf": (component/model-1b-it-q4-0-gguf)
   # end part
 
-  # start llamacpp part
-  llamacpp:
+  # start llama-cpp part
+  llama-cpp:
     source: https://github.com/ggerganov/llama.cpp.git
     source-tag: b5794
     source-depth: 1
@@ -52,7 +50,7 @@ parts:
       - libgomp1
     organize:
       # move everything, including the staged packages
-      "*": (component/llamacpp)
+      "*": (component/llama-cpp)
   # end part
 
   # start engines part
@@ -105,9 +103,9 @@ components:
     summary: Gemma 3 1B instruct QAT Q4_0 GGUF
     description: Quantized model with 1B parameters in gguf format with Q4_0 weight encoding
 
-  llamacpp:
+  llama-cpp:
     type: standard
-    summary: llama.cpp inference server
+    summary: llama.cpp HTTP server
     description: Optimized for inference on CPUs
 # end components
 
