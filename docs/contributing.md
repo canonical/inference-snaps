@@ -32,7 +32,7 @@ You can help improve this documentation by:
 - Reporting documentation issues by opening an issue on GitHub.
 
 ### License and copyright
-Unless explicitly stated in the license headers of source files, all contributions to the Inference Snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/). 
+Unless explicitly stated in the license headers of source files, all contributions to the Inference Snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/). 
 You can also get a copy of this license by sending a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
 All contributors must sign the [Canonical contributor license agreement](https://canonical.com/legal/contributors), which grants Canonical permission to use the contributions. 
@@ -203,8 +203,8 @@ You can also [follow Canonical’s documentation team on Fosstodon](https://foss
 [Sphinx]: https://www.sphinx-doc.org/
 [reStructuredText]: https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
 [MyST Markdown]: https://myst-parser.readthedocs.io/en/latest/
-[starter pack guide]: https://canonical-starter-pack.readthedocs-hosted.com/latest/
-[MyST syntax guide]: https://canonical-starter-pack.readthedocs-hosted.com/latest/reference/myst-syntax-reference/
+[starter pack guide]: https://canonical-starter-pack.readthedocs-hosted.com/stable/
+[MyST syntax guide]: https://canonical-starter-pack.readthedocs-hosted.com/stable/reference/myst-syntax-reference/
 [Diátaxis]: https://diataxis.fr/
 [woke]: https://github.com/get-woke/woke
 [related issues, pull requests, and repositories]: https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls
