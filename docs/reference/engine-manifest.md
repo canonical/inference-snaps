@@ -130,9 +130,5 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
     key: value
 ```
 
-[^1]:  The comparison operators used for Compute Capability are based on
-[PEP](https://peps.python.org/pep-0440/#version-specifiers)
-and [Snapcraft’s Python plugin](https://snapcraft.io/docs/python-plugin).
-When compared to [npm’s semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
-and [Debian package’s Depend syntax](https://www.debian.org/doc/debian-policy/ch-relationships.html),
-all operators except the equal operator match.
+[^1]: The comparison operators used for Compute Capability are based on [PEP](https://peps.python.org/pep-0440/#version-specifiers).
+When compared to [npm’s semantic versioning](https://docs.npmjs.com/about-semantic-versioning) and [Debian package’s Depend syntax](https://www.debian.org/doc/debian-policy/ch-relationships.html), all operators except the equal operator match.

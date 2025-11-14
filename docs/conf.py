@@ -222,15 +222,7 @@ redirects = {}
 linkcheck_ignore = [
     "http://127.0.0.1:*",
     "http://localhost:*",
-    "https://github.com/canonical/ACME/*",
-    "https://github.com/canonical/deepseek-r1-snap",
-    "https://github.com/canonical/qwen-vl-snap",
-    "https://github.com/canonical/mistral-7b-instruct-snap",
-    "https://github.com/canonical/inference-snaps-dev",
-    "https://github.com/canonical/inference-snaps-cli",
-    "https://snapcraft.io/deepseek-r1",
-    "https://snapcraft.io/qwen-vl",
-    ]
+]
 
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
