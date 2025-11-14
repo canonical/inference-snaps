@@ -10,8 +10,8 @@ We use `snapcraft` to create snaps.
 If you don't have it installed, refer to [this guide](https://documentation.ubuntu.com/snapcraft/stable/how-to/set-up-snapcraft/)
 
 You will also need the model weights and a compatible runtime. 
-But first, we need to pick an LLM. Let's take Gemma 3 for this tutorial. 
-Gemma 3 has open weights and permits responsible commercial use.
+But first, we need to pick an LLM. Gemma 3 is a good choice for this tutorial because it is open and available in small sizes.
+Gemma 3 is free and permits responsible commercial use.
 Read its terms of use [here](https://ai.google.dev/gemma/terms).
 
 Inferencing with a CPU is always a good starting point and a simple way to do that is via llama.cpp runtime. 
@@ -23,10 +23,10 @@ Go with a relatively small model to speed up development times and add larger on
 The [gemma-3-1b-it-qat-q4_0-gguf](https://huggingface.co/google/gemma-3-1b-it-qat-q4_0-gguf) is a good first instance.
 Download the `.gguf` file.
 
-You may also use the `tree` command which you can installed with:
+You may also use `tree` and `curl` which you can installed with:
 ```shell
 sudo apt update
-sudo apt install tree
+sudo apt install tree curl
 ```
 
 ## The snapcraft.yaml
@@ -306,7 +306,9 @@ gemma3-jane v3 installed
 ``` 
 
 Checking `snap logs gemma3-jane` should show that the server has failed to start because no engine and components have been installed yet.
-We have to do this manually now, but the install hook will take care of this automatically when installed from the store.
+The reason for this is that the locally built snap cannot access the component files and install them automatically.
+
+We have to install the components and select the engine manually now, but the install hook will take care of this automatically when the same snap is installed from the store.
 
 ```{terminal}
 :input: sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp
@@ -329,11 +331,14 @@ sudo snap install --dangerous gemma3-jane_v3_amd64.snap && \
 sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp && \
 sudo snap install --dangerous gemma3-jane+llamacpp.comp 
 ```
+
+You can also use wildcards if you don't have any other snap artifacts in that directory:
+```shell
+sudo snap install --dangerous *.snap && sudo snap install --dangerous *.comp
+```
 ````
 
-The server will
-
-Check the logs again and make sure the server started successfully:
+After starting the server, check the logs again and make sure it started successfully:
 ```{terminal}
 :input: snap logs gemma3-jane
 ...
@@ -341,7 +346,9 @@ Check the logs again and make sure the server started successfully:
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: srv  update_slots: all slots are idle
 ```
 
-Make a prompt via curl:
+Looks like the server is up and running!
+
+Submit a request via curl:
 ```{terminal}
 :input: curl -s http://localhost:9090/v1/chat/completions   -H "Content-Type: application/json"   -d '{
     "max_tokens": 30,
@@ -355,24 +362,81 @@ Make a prompt via curl:
 {"choices":[{"finish_reason":"length","index":0,"message":{"role":"assistant","content":"Okay, here are the 3 main tourist attractions in Paris:\n\n1.  **The Eiffel Tower:** Undoubtedly the most iconic landmark in the world"}}],"created":1763044754,"model":"gpt-3.5-turbo","system_fingerprint":"b1-6a746cf","object":"chat.completion","usage":{"completion_tokens":30,"prompt_tokens":28,"total_tokens":58},"id":"chatcmpl-PLT9wXbZiJ6XXxHCQUBsTz9wj59y2KHU","timings":{"prompt_n":28,"prompt_ms":90.995,"prompt_per_token_ms":3.249821428571429,"prompt_per_second":307.7092147920215,"predicted_n":30,"predicted_ms":833.198,"predicted_per_token_ms":27.773266666666665,"predicted_per_second":36.005847349609574}}
 ```
 
-That worked! You have created an inference snap for Gemma 3 model with just one engine.
+That worked! We have created an inference snap for Gemma 3 model, with just one engine.
 
 
 ## Upload
 
-TBA:
-- Register the name
-- Get yourself added to component uploaders list
-- Upload the snap
+Uploading the snap to the store unlocks the automatic engine selection and component installation functionality.
+Moreover, it lets others easily install and use the snap.
 
-## Install from store
+Uploading requires a few steps. Here is the list:
+1. Register the name
+2. Get yourself added to component uploaders list
+3. Upload the snap
+4. Request interface connection permission for the hardware-observe interface
 
-TBA:
-- Remove the locally installed snap
-- Install from store
-- Verify automatic component installation and server startup
+First you need to register the snap name in the store.
+Refer to [this guide](https://snapcraft.io/docs/registering-your-app-name) to do that.
+
+Uploading snaps with components currently requires a special permission. This is needed per account.
+Request to be added to the component uploaders list by posting in the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/19).
+There is no subcategory for component uploaders, so just post without picking one.
+
+Once you have the permission, upload the snap and its components:
+```shell
+snapcraft upload gemma3-jane_v3_amd64.snap \
+  --component model-1b-it-q4-0-gguf=gemma3-jane+model-1b-it-q4-0-gguf.comp \
+  --component llamacpp=gemma3-jane+llamacpp.comp \
+  --release edge
+```
+
+At this point, the snap is in the store but it cannot access hardware information during the installation.
+We can work around this by installing it in developer mode:
+```shell
+sudo snap install --devmode gemma3-jane --edge
+```
+
+The developer mode allows the snap to access many other system resources as well, which is not ideal.
+Moreover, snaps installed in developer mode cannot be updated automatically from the store.
+
+If we install the snap in normal (confined) mode at this point, it will install but skip hardware detection and engine selection.
+We can still grant permission and resume manually:
+```shell
+sudo snap install gemma3-jane --edge
+sudo snap connect gemma3-jane:hardware-observe
+sudo gemma3-jane use-engine --auto
+```
+
+But we can do better than this.
+The snap store can grant the snap permission to auto connect the hardware-observe plug.
+Submit a request on the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/privileged-interfaces/27) to get this permission for your snap.
+An example, extended request can be found [here](https://forum.snapcraft.io/t/auto-connection-of-hardware-observe-and-home-for-gemma3/49246).
+
+Once the permission is granted, you can install the snap and it will be ready to use right away.
+
+## Install and use
+
+Install the snap from the store:
+```{terminal}
+:input: sudo snap install gemma3-jane --edge
+gemma3-jane v3 installed
+
+:input: gemma3-jane status
+engine: generic-cpu
+endpoints:
+    openai: http://localhost:9090/v1
+```
 
 ## Next steps
 
-- Add command tab completion
-- Add additional engines
+We created a basic inference snap for Gemma 3 model with a single engine. 
+You can extend it in various ways, for example:
+- Add an additional engine for GPU support
+- Add support for arm64 architecture
+
+You may also have noticed the the CLI doesn't offer tab completion.
+You can find some guidance for adding it temporarily, e.g. for Bash `gemma3-jane completion bash -h`.
+The tab completion can also be added to the snap itself.
+
+Look into {ref}`existing inference snaps <available-snaps>` to learn more about these and other advanced topics.

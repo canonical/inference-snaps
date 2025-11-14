@@ -1,4 +1,4 @@
-(snaps)=
+(available-snaps)=
 # Available snaps
 
 This page contains a list of inference snaps and the available optimizations.
