@@ -119,8 +119,6 @@ apps:
       - opengl
       # To access server over network socket
       - network
-    environment:
-      CHAT: $SNAP/bin/go-chat-client
   # end app
 
   # start server app

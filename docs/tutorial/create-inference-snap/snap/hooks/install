@@ -1,17 +1,9 @@
 #!/bin/bash -eu
 
-#
 # Set generic config
-#
-
 modelctl set --package http.port="9090"
-modelctl set --package http.host="127.0.0.1"
-modelctl set --package verbose="false"
 
-#
 # Auto select an engine
-#
-
 if snapctl is-connected hardware-observe; then
     modelctl use-engine --auto --assume-yes
 elif lscpu -V &> /dev/null; then
