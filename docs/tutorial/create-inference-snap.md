@@ -4,7 +4,11 @@ In this tutorial we will create an inference snap for a large language model (LL
 The focus is on learning the overall structure by packaging a single model and runtime, rather than making a snap that works on a wide range of machines.
 Once we learn the basics, it is easy to extend it to include other model weights and runtimes. 
 
-## What you'll need
+## Get started
+
+Start by preparing the necessary files and tools.
+
+### What you'll need
 
 We use `snapcraft` to create snaps.
 If you don't have it installed, refer to [this guide](https://documentation.ubuntu.com/snapcraft/stable/how-to/set-up-snapcraft/).
@@ -29,7 +33,7 @@ sudo apt update
 sudo apt install tree curl
 ```
 
-## The snapcraft.yaml
+### The snapcraft.yaml
 
 Start by creating the `snapcraft.yaml` file. Use the following command to create an initial project tree:
 ```shell
@@ -60,15 +64,8 @@ My snapcraft file looks like this:
 :end-before: end metadata
 ```
 
-We need to complete the snapcraft file by adding:
-- `parts`: the build logic
-- `apps`: commands and services 
-- `components`: optional building blocks
-- `environments`: global environment variables
-- `hooks`: settings for scripts that trigger on certain events
 
-
-## The project tree
+### The project tree
 
 The project files can be organized in different ways.
 There is no right or wrong way.
@@ -92,7 +89,18 @@ We organize the files in directory structure based on their purpose:
 Use the kebab-case naming convention.
 This isn't required but it makes the next steps easier as most parts of snaps support kebab-case naming only.
 
-## Global environment variables
+## Craft the snap
+
+We need to extend the snapcraft file by adding:
+- `parts`: the build logic
+- `apps`: commands and services 
+- `components`: optional building blocks
+- `environments`: global environment variables
+- `hooks`: settings for scripts that trigger on certain events
+
+We also need to add a few supporting scripts.
+
+### Global environment variables
 
 It is useful to set some variables globally. Do this only for variables that are read from different parts of the snap's runtime environment.
 
@@ -104,7 +112,7 @@ Add the following to the snapcraft file for the common environment variables:
 :end-before: end environment
 ```
 
-## The CLI app
+### The CLI app
 
 Inference snaps include a simple and powerful CLI. 
 The CLI provides hardware detection, engine selection, component installation, server startup, config management, and other functionalities.
@@ -140,7 +148,7 @@ Add the following *app*:
 ```
 This app exposes the `modelctl` command line tool to the user, under the snap's name.
 
-## Components
+### Components
 
 Runtime and model weights are considered optional building blocks of this snap. 
 This does not make perfect sense right now because we only have one for each. 
@@ -236,7 +244,7 @@ You can build the snap and verify the packages:
 Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma3-jane+llama-cpp.comp
 ```
 
-## Engine
+### Engine
 
 The runtime and model weights are tightly coupled components useful for certain host machines.
 Each inference snaps can include a range of such components. 
@@ -270,7 +278,7 @@ Add another *part* in snapcraft file to include the `engines` directory in the s
 :end-before: end part
 ```
 
-## The server app
+### The server app
 
 Now, we need to expose the engine's server to the snap. 
 We want the snap to run the server provided by the selected engine, as a background service.
@@ -296,7 +304,7 @@ Then, add a server *app* that runs `server.sh` as a background service:
 ```
 The above goes to the `apps` section of the snapcraft file.
 
-## The install hook
+### The install hook
 
 Moreover, we need a script which takes care of the installation logic.
 In snaps, the `install` hook is a script that runs when the snap is installed.
@@ -317,7 +325,7 @@ Add the following to the snapcraft file to declare the required interface for th
 :end-before: end hooks
 ```
 
-## Licensing
+### Licensing
 
 Finally, add all license files to the snap. E.g. to add Gemma's license, add the following *part*:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
@@ -326,7 +334,11 @@ Finally, add all license files to the snap. E.g. to add Gemma's license, add the
 :end-before: end part
 ```
 
-## Build and test locally
+## Build and deploy
+
+With the crafting completed, it's time to build, test, and upload the snap.
+
+### Test locally
 
 ```{terminal}
 :input: snapcraft pack
@@ -397,7 +409,7 @@ Submit a request via curl:
 That worked! We have created an inference snap for Gemma 3 model, with just one engine.
 
 
-## Upload
+### Upload
 
 Uploading the snap to the store unlocks the automatic engine selection and component installation functionality.
 Moreover, it lets others easily install and use the snap.
@@ -447,7 +459,7 @@ An example, extended request can be found [here](https://forum.snapcraft.io/t/au
 
 Once the permission is granted, you can install the snap and it will be ready to use right away.
 
-## Install and use
+### Install and use
 
 Install the snap from the store:
 ```{terminal}
