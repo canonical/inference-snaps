@@ -60,24 +60,33 @@ My snapcraft file looks like this:
 ```
 
 We need to complete the snapcraft file by adding:
-- parts: the build logic
-- apps: commands and services 
-- components: optional building blocks
-- environments: global environment variables
-- hooks: settings for scripts that trigger on certain events
-
-Start by setting the global variables, toward preparing and building project files, to the definition of apps.
+- `parts`: the build logic
+- `apps`: commands and services 
+- `components`: optional building blocks
+- `environments`: global environment variables
+- `hooks`: settings for scripts that trigger on certain events
 
 
-## The project structure
+## The project tree
 
 The project files can be organized in different ways.
 There is no right or wrong way.
 We organize the files in directory structure based on their purpose:
-- `snap` for the snapcraft file and hooks
 - `components` for the local snap component files
 - `engines` for the engine manifests and related scripts
 - `scripts` for various helper scripts
+- `snap` for the snapcraft file and hooks
+
+```{terminal}
+:input: $ tree -d -L 1
+.
+├── components
+├── engines
+├── scripts
+└── snap
+
+5 directories
+```
 
 Use the kebab-case naming convention.
 This isn't required but it makes the next steps easier as most parts of snaps support kebab-case naming only.
