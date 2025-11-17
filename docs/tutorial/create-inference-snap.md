@@ -1,4 +1,4 @@
-# Create an inference snap
+# Your first inference snap
 
 In this tutorial we will create an inference snap for a large language model (LLM).
 The focus is on learning the overall structure by packaging a single model and runtime, rather than making a snap that works on a wide range of machines.
@@ -8,9 +8,7 @@ Once we learn the basics, it is easy to extend it to include other model weights
 
 Start by preparing the necessary files and tools.
 
-### What you'll need
-
-We use `snapcraft` to create snaps.
+We use the `snapcraft` command to create snaps.
 If you don't have it installed, refer to [this guide](https://documentation.ubuntu.com/snapcraft/stable/how-to/set-up-snapcraft/).
 
 You will also need the model weights and a compatible runtime. 
@@ -35,7 +33,8 @@ sudo apt install tree curl
 
 ### The snapcraft.yaml
 
-Start by creating the `snapcraft.yaml` file. Use the following command to create an initial project tree:
+The snapcraft YAML file is where the snap's packaging logic is defined.
+Use the following command to create a template in an initial project tree:
 ```shell
 snapcraft init
 ```
@@ -259,9 +258,9 @@ Inside, create an `engine.yaml` file that defines the engine:
 :language: yaml
 ```
 
-`engine.yaml` is the {ref}`engine manifest file <engine-manifest>`. 
+That is the {ref}`engine manifest file <engine-manifest>`. 
 It describes the engine as well as its hardware and software requirements.
-It can also set default configurations for the runtime.
+The manifest file can be extended to restrict the hardware requirements and also set default configurations for the runtime.
 
 Lastly, create a wrapper script that starts the runtime for this engine. 
 In simplest cases, this simply runs a program provided by one of the components:
