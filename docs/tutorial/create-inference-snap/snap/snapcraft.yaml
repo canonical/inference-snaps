@@ -8,6 +8,11 @@ description: |
 
 grade: devel
 confinement: strict
+
+# Restrict where the snap can be built on
+platforms:
+  amd64:
+  arm64:
 # end metadata
 
 # start environment
@@ -51,14 +56,9 @@ parts:
       - -D GGML_BACKEND_DL=ON
     stage-packages:
       - libgomp1
-    organize:
-      # move the HTTP server binary
-      "usr/local/bin/llama-server": (component/llama-cpp)/bin/
-      # move the shared objects
-      "**/*.so*": (component/llama-cpp)/lib/
-    stage:
-      # Exclude everything else
-      - -*
+    organize:      
+      # move everything, including the staged packages
+      "*": (component/llama-cpp)
       
   # end part
 

@@ -340,53 +340,48 @@ With the crafting completed, it's time to pack, test, and upload the snap.
 ### Test locally
 
 Pack the snap:
-```{terminal}
-:input: snapcraft pack
-Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma3-jane+llama-cpp.comp
-
-:input: sudo snap install --dangerous gemma3-jane_v3_amd64.snap
-gemma3-jane v3 installed
-``` 
-
-The server will fail to start. You can check the logs with: `snap logs gemma3-jane`.
-
-The reason for this is that the snap does not have access to detect the hardware and select the engine. Even if we bypass that, the snap will not have the necessary model and runtime components installed.
-
-We have to install the components and select the engine manually non. 
-When the snap is installed from the store, the `install` hook will take care of this automatically.
-
-```{terminal}
-:input: sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp
-component model-1b-it-q4-0-gguf v3 for gemma3-jane v3 installed
-
-:input: sudo snap install --dangerous gemma3-jane+llama-cpp.comp 
-component llama-cpp v3 for gemma3-jane v3 installed
-
-:input: sudo gemma3-jane use-engine generic-cpu
-Engine successfully changed to "generic-cpu"
-
-:input: sudo snap start gemma3-jane
-Started.
-```
-
-````{tip}
-Chain the commands together to install all artifacts in one go when going through multiple development and build cycles:
 ```shell
-sudo snap install --dangerous gemma3-jane_v3_amd64.snap && \ 
-sudo snap install --dangerous gemma3-jane+model-1b-it-q4-0-gguf.comp && \
-sudo snap install --dangerous gemma3-jane+llama-cpp.comp 
+snapcraft pack
 ```
 
-You can also use wildcards if you don't have any other snap artifacts in that directory:
+On an amd64 host, this will create the following files:
+- `gemma3-jane_v3_amd64.snap`
+- `gemma3-jane+model-1b-it-q4-0-gguf.comp`
+- `gemma3-jane+llama-cpp.comp`
+
+Install the snap and the components:
 ```shell
 sudo snap install --dangerous *.snap && \
 sudo snap install --dangerous *.comp
 ```
-````
+
+The server will fail to start, you can check the logs with: `snap logs gemma3-jane`.
+The reason for this is that the snap does not have access to detect the hardware and select the engine.
+
+Grant the snap access to the `hardware-observe` interface:
+```shell
+sudo snap connect gemma3-jane:hardware-observe
+```
+
+Now, request auto selection of the engine:
+```{terminal}
+:input: sudo gemma3-jane use-engine --auto
+Evaluating engines for optimal hardware compatibility:
+✔ generic-cpu: compatible, score=12
+Selected engine: generic-cpu
+Engine successfully changed to "generic-cpu"
+```
+As the output shows, the snap has detected that `generic-cpu` engine is compatible with the host machine. 
+If there were other engines, it would have picked the best matching one.
+
+Start the server:
+```shell
+sudo snap start gemma3-jane
+```
 
 After starting the server, check the logs again and make sure it started successfully:
 ```{terminal}
-:input: snap logs gemma3-jane
+:input: sudo snap logs gemma3-jane
 ...
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: main: server is listening on http://127.0.0.1:9090 - starting the main loop
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: srv  update_slots: all slots are idle
@@ -485,7 +480,7 @@ You can build it for an architecture different from your host machine.
 One way to do this is via the [remote build](https://documentation.ubuntu.com/snapcraft/stable/explanation/remote-build/) feature of snapcraft.
 
 You may also have noticed the CLI doesn't offer tab completion.
-You can find some guidance for adding it temporarily, e.g. for Bash `gemma3-jane completion bash -h`.
-The tab completion can also be added to the snap itself.
+You can find some guidance for adding it temporarily, e.g. for Bash bu running `gemma3-jane completion bash -h`.
+Ideally, the tab completion should be added to the snap itself so becomes available during the installation.
 
 Look into {ref}`existing inference snaps <available-snaps>` to learn more about these and other advanced topics.
