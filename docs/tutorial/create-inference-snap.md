@@ -407,6 +407,14 @@ Submit a request via curl:
 
 That worked! We have created an inference snap for Gemma 3 model, with just one engine.
 
+````{tip}
+The {spellexception}`llama.cpp` engine we created also includes a chat web GUI.
+Access it via the port as the API: http://localhost:9090
+
+![Web GUI screenshot](create-inference-snap/gui-screenshot.png)
+
+````
+
 
 ### Publish to the store
 
