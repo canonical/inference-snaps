@@ -6,6 +6,8 @@ Once we learn the basics, it is easy to extend it to include other model weights
 
 ## Get started
 
+Prerequisite: A Linux machine with the amd64 architecture.
+
 Start by preparing the necessary files and tools.
 
 We use the `snapcraft` command to create snaps.
@@ -344,10 +346,10 @@ Pack the snap:
 snapcraft pack
 ```
 
-On an amd64 host, this will create the following files:
-- `gemma3-jane_v3_amd64.snap`
-- `gemma3-jane+model-1b-it-q4-0-gguf.comp`
-- `gemma3-jane+llama-cpp.comp`
+This will create the following files:
+- `gemma3-jane_v3_amd64.snap` - the snap package
+- `gemma3-jane+model-1b-it-q4-0-gguf.comp` - component package for the model weights
+- `gemma3-jane+llama-cpp.comp` - component package for the runtime
 
 Install the snap and the components:
 ```shell
@@ -474,10 +476,7 @@ Once the permission is granted, you can install the snap in confined mode, witho
 
 We created a basic inference snap for Gemma 3 model with a single engine. 
 You can extend it in various ways, for example to add an additional engine for GPU support.
-
-The snap that you built will only work on the same OS architecture as the one you built it on.
-You can build it for an architecture different from your host machine. 
-One way to do this is via the [remote build](https://documentation.ubuntu.com/snapcraft/stable/explanation/remote-build/) feature of snapcraft.
+This could be another build of {spellexception}`llama.cpp` targeting CUDA, or a different runtime altogether, such as [OpenVINO Model Server](https://github.com/openvinotoolkit/model_server) which supports Intel GPUs and NPUs.
 
 You may also have noticed the CLI doesn't offer tab completion.
 You can find some guidance for adding it temporarily, e.g. for Bash bu running `gemma3-jane completion bash -h`.

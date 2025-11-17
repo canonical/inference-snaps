@@ -8,11 +8,6 @@ description: |
 
 grade: devel
 confinement: strict
-
-# Restrict where the snap can be built on
-platforms:
-  amd64:
-  arm64:
 # end metadata
 
 # start environment

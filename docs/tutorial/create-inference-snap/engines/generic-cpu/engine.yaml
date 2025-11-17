@@ -6,8 +6,6 @@ devices:
   anyof:
     - type: cpu
       architecture: amd64
-    - type: cpu
-      architecture: arm64
 memory: 1G
 disk-space: 2G
 components:
