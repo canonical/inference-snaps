@@ -52,8 +52,14 @@ parts:
     stage-packages:
       - libgomp1
     organize:
-      # move everything, including the staged packages
-      "*": (component/llama-cpp)
+      # move the HTTP server binary
+      "usr/local/bin/llama-server": (component/llama-cpp)/bin/
+      # move the shared objects
+      "**/*.so*": (component/llama-cpp)/lib/
+    stage:
+      # Exclude everything else
+      - -*
+      
   # end part
 
   # start engines part
