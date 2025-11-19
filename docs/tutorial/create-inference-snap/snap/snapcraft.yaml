@@ -12,7 +12,7 @@ confinement: strict
 
 # start environment
 environment:
-  # Workaround until it gets set by snapd
+  # Set path to snap components
   SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
   # To find shared libraries that are staged and moved to components
   ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
