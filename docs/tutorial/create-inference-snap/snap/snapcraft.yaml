@@ -4,7 +4,7 @@ base: core24
 version: 'v3'
 summary: My first inference snap
 description: |
-  This is an inference snap that let's you run Gemma 3 using CPU
+  This is an inference snap that lets you run Gemma 3 using CPU
 
 grade: devel
 confinement: strict
