@@ -197,9 +197,10 @@ components/
 │   ├── component.yaml
 │   └── server
 └── model-1b-it-q4-0-gguf
-    └── component.yaml
+    ├── component.yaml
+    └── gemma-3-1b-it-q4_0.gguf
 
-3 directories, 3 files
+3 directories, 4 files
 ```
 
 We have created a couple of component directories, but the snap doesn't know anything about them yet.
