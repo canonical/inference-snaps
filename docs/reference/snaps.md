@@ -22,6 +22,24 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## Gemma3
+[![gemma3 snap](https://snapcraft.io/gemma3/badge.svg)](https://snapcraft.io/gemma3) 
+[![gemma3 code][gh-badge]](https://github.com/canonical/gemma3-snap)
+
+Gemma 3 is a Large Language Model supporting text and image inputs, with text-based outputs.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for a range of CPUs |
+| amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
+| amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+
+{{explore_optimizations}}
+
 ## Qwen VL
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl) 
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
