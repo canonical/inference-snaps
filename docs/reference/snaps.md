@@ -32,9 +32,10 @@ This inference snap is optimized for the following hardware:
 
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
-| amd64 | Generic CPU | Optimized for a range of CPUs |
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
 
