@@ -18,8 +18,8 @@ fonts
 Fosstodon
 freefont
 frontend
-github
 Gemma
+github
 GPG
 gpu
 GPUs
