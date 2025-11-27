@@ -1,0 +1,8 @@
+#!/bin/bash -eux
+
+port="$(modelctl get http.port)"
+
+exec "$SERVER_PATH" \
+  --model "$MODEL_FILE" \
+  --port "$port" \
+  "$@"
