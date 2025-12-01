@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
 )
 
 type Status struct {
@@ -13,37 +11,17 @@ type Status struct {
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
-func activeEngine() (*engines.ScoredManifest, error) {
-	activeEngineName, err := cache.GetActiveEngine()
-	if err != nil {
-		return nil, fmt.Errorf("error looking up active engine: %v", err)
-	}
-
-	scoredEngines, err := scoreEngines()
-	if err != nil {
-		return nil, fmt.Errorf("error scoring engines: %v", err)
-	}
-
-	var scoredManifest engines.ScoredManifest
-	for i := range scoredEngines {
-		if scoredEngines[i].Name == activeEngineName {
-			scoredManifest = scoredEngines[i]
-			break
-		}
-	}
-
-	return &scoredManifest, nil
-}
-
 func statusStruct() (*Status, error) {
 	var statusStr Status
 
-	// Find the selected engine
-	engine, err := activeEngine()
+	activeEngineName, err := cache.GetActiveEngine()
 	if err != nil {
-		return nil, fmt.Errorf("error loading selected engine: %v", err)
+		return nil, fmt.Errorf("error getting active engine: %v", err)
 	}
-	statusStr.Engine = engine.Name
+	if activeEngineName == "" {
+		return nil, fmt.Errorf("error no engine is active")
+	}
+	statusStr.Engine = activeEngineName
 
 	endpoints, err := serverApiUrls()
 	if err != nil {
