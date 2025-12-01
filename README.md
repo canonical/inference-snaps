@@ -1,6 +1,14 @@
 # Inference Snaps CLI
 
-This repo contains the CLI implementation for configuration and engine management.
+Configuration and engine management for inference snaps.
+
+## Resources
+
+📚 **[Documentation](https://documentation.ubuntu.com/inference-snaps/)**, learn how to use inference snaps and find the [CLI reference](https://documentation.ubuntu.com/inference-snaps/reference/models-cli/)
+
+💬 **[Discussions](https://github.com/canonical/inference-snaps/discussions)**, ask questions and share ideas
+
+🐛 **[Issues](https://github.com/canonical/inference-snaps/issues)**, report bugs and request features
 
 ## Development
 
