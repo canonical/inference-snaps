@@ -13,7 +13,7 @@ env:
 
 jobs:
   test:
-    runs-on: [ self-hosted, linux, amd64, medium, noble ]
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -31,12 +31,10 @@ jobs:
     needs: [ test ]
     strategy:
       matrix:
-        runs:
-          - architecture: amd64
-            runner: [ self-hosted, linux, amd64, medium, noble ]
-          - architecture: arm64
-            runner: [ self-hosted, linux, arm64, medium, noble ]
-    runs-on: ${{ matrix.runs.runner }}
+        runner:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout code
@@ -49,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v5
         with:
-          name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{matrix.runs.architecture}}
+          name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{runner.arch}}
           path: ${{ steps.snapcraft.outputs.snap }}
           if-no-files-found: error
 
