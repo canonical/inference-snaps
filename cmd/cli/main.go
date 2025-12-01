@@ -24,12 +24,21 @@ const (
 var (
 	enginesDir       = env.Snap() + "/engines"
 	snapInstanceName = env.SnapInstanceName()
+	verboseLogging   bool
+
 	// rootCmd is the base command
 	// It gets populated with subcommands
 	rootCmd = &cobra.Command{
 		Use:          snapInstanceName,
 		SilenceUsage: true,
 		Long:         "", // Base command description TBA
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if verboseLogging {
+				log.Println("Verbose output enabled globally.")
+				return os.Setenv("VERBOSE", "true")
+			}
+			return nil
+		},
 	}
 
 	cache  = storage.NewCache()
@@ -41,6 +50,9 @@ var (
 
 func main() {
 	cobra.EnableCommandSorting = false
+
+	// flags
+	rootCmd.PersistentFlags().BoolVarP(&verboseLogging, "verbose", "v", false, "Enable verbose logging")
 
 	// TODO: refact: functions called below add to the global rootCmd
 

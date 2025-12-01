@@ -1,7 +1,6 @@
 package cpu
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
@@ -21,21 +20,15 @@ func TestCheckCpuVendor(t *testing.T) {
 		ManufacturerId: manufacturerId,
 	}}
 
-	result, reasons, err := Match(device, hwInfoCpus)
+	result, err := Match(device, hwInfoCpus)
 	if err != nil {
-		t.Error(err)
-	}
-	if result == 0 {
-		t.Fatalf("CPU vendor should match: %s", strings.Join(reasons, ","))
+		t.Fatalf("CPU vendor should match: %v", err)
 	}
 
 	manufacturerId = "AuthenticAMD"
 
-	result, reasons, err = Match(device, hwInfoCpus)
-	if err != nil {
-		t.Error(err)
-	}
-	if result > 0 {
+	result, err = Match(device, hwInfoCpus)
+	if err == nil || result > 0 {
 		t.Fatal("CPU vendor should NOT match")
 	}
 
@@ -56,21 +49,15 @@ func TestCheckCpuFlags(t *testing.T) {
 		Flags:          []string{"avx2"},
 	}}
 
-	result, reasons, err := Match(device, hwInfoCpus)
+	result, err := Match(device, hwInfoCpus)
 	if err != nil {
-		t.Error(err)
-	}
-	if result == 0 {
-		t.Fatalf("CPU flags should match: %s", strings.Join(reasons, ","))
+		t.Fatalf("CPU flags should match: %v", err)
 	}
 
 	device.Flags = []string{"avx512"}
 
-	result, reasons, err = Match(device, hwInfoCpus)
-	if err != nil {
-		t.Error(err)
-	}
-	if result > 0 {
+	result, err = Match(device, hwInfoCpus)
+	if err == nil || result > 0 {
 		t.Fatal("CPU flags should NOT match")
 	}
 

@@ -1,6 +1,7 @@
 package selector
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -101,6 +102,9 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 	var scoredEngines []engines.ScoredManifest
 
 	for _, currentManifest := range manifests {
+		if os.Getenv("VERBOSE") == "true" {
+			fmt.Printf("Checking engine: %s\n", currentManifest.Name)
+		}
 		score, reasons, err := checkEngine(hardwareInfo, currentManifest)
 		if err != nil {
 			return nil, err
@@ -113,7 +117,14 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 		}
 
 		if score == 0 {
+			if os.Getenv("VERBOSE") == "true" {
+				fmt.Printf("Engine not compatible: %s\n", strings.Join(reasons, ", "))
+			}
 			scoredEngine.Compatible = false
+		} else {
+			if os.Getenv("VERBOSE") == "true" {
+				fmt.Printf("Engine compatible\n")
+			}
 		}
 		scoredEngine.Notes = append(scoredEngine.Notes, reasons...)
 
@@ -165,128 +176,128 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 	// Devices
 	// all
 	if len(manifest.Devices.Allof) > 0 {
-		extraScore, reasonsAll, err := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
-		reasons = append(reasons, reasonsAll...)
+
+		extraScore, err := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
 		if err != nil {
-			return 0, reasons, err
-		}
-		if extraScore == 0 {
+			reasons = append(reasons, err.Error())
 			return 0, reasons, nil
+		} else {
+			engineScore += extraScore
 		}
-		engineScore += extraScore
 	}
 
 	// any
 	if len(manifest.Devices.Anyof) > 0 {
-		extraScore, reasonsAny, err := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
-		reasons = append(reasons, reasonsAny...)
+		extraScore, err := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
 		if err != nil {
-			return 0, reasons, err
-		}
-		if extraScore == 0 {
+			reasons = append(reasons, err.Error())
 			return 0, reasons, nil
+		} else {
+			engineScore += extraScore
 		}
-		engineScore += extraScore
 	}
 
 	return engineScore, reasons, nil
 }
 
-func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string, error) {
+func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, error) {
 	devicesFound := 0
 	extraScore := 0
-	var reasons []string
 
 	for _, device := range devices {
+		if os.Getenv("VERBOSE") == "true" {
+			jsonBytes, _ := json.Marshal(device)
+			fmt.Printf("  Checking for all-of required device: %s\n", string(jsonBytes))
+		}
+
 		if device.Type == "cpu" {
-			if hardwareInfo.Cpus == nil {
-				reasons = append(reasons, "cpu device is required but host reported none")
-				return 0, reasons, nil
-			}
-			cpuScore, _, err := cpu.Match(device, hardwareInfo.Cpus)
+			cpuScore, err := cpu.Match(device, hardwareInfo.Cpus)
 			if err != nil {
-				return 0, reasons, fmt.Errorf("cpu: %v", err)
-			}
-			if cpuScore == 0 {
-				reasons = append(reasons, "required cpu device not found")
-				return 0, reasons, nil
+				return 0, fmt.Errorf("required cpu device not found: %v", err)
 			}
 			extraScore += cpuScore
 			devicesFound++
 
 		} else if device.Bus == "usb" {
 			// Not implemented
+			return 0, fmt.Errorf("usb device matching not implemented")
+
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
-			if len(hardwareInfo.PciDevices) == 0 {
-				reasons = append(reasons, "pci device is required but none found")
-				return 0, reasons, nil
-			}
-			pciScore, _, err := pci.Match(device, hardwareInfo.PciDevices)
+			pciScore, err := pci.Match(device, hardwareInfo.PciDevices)
 			if err != nil {
-				return 0, reasons, fmt.Errorf("pci: %v", err)
-			}
-			if pciScore == 0 {
-				reasons = append(reasons, "required pci device not found")
-				return 0, reasons, nil
+				return 0, fmt.Errorf("required pci device under all-of not found: %v", err)
 			}
 			extraScore += pciScore
 			devicesFound++
 		}
+
+		if os.Getenv("VERBOSE") == "true" {
+			fmt.Printf("  Device found\n")
+		}
 	}
 
-	if len(devices) > 0 && devicesFound != len(devices) {
-		reasons = append(reasons, "required device not found")
-		return 0, reasons, nil
-	}
-
-	return extraScore, reasons, nil
+	return extraScore, nil
 }
 
-func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string, error) {
+func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, error) {
 	devicesFound := 0
 	extraScore := 0
 	var reasons []string
 
 	for _, device := range devices {
+		if os.Getenv("VERBOSE") == "true" {
+			jsonBytes, _ := json.Marshal(device)
+			fmt.Printf("  Checking for any-of required device: %s\n", string(jsonBytes))
+		}
+
 		if device.Type == "cpu" {
-			if hardwareInfo.Cpus == nil {
-				continue
-			}
-			cpuScore, _, err := cpu.Match(device, hardwareInfo.Cpus)
+			cpuScore, err := cpu.Match(device, hardwareInfo.Cpus)
 			if err != nil {
-				return 0, reasons, err
-			}
-			if cpuScore > 0 {
+				if os.Getenv("VERBOSE") == "true" {
+					fmt.Println("  " + err.Error())
+				}
+				reasons = append(reasons, err.Error())
+			} else {
+				if os.Getenv("VERBOSE") == "true" {
+					fmt.Printf("  Device found\n")
+				}
 				devicesFound++
 				extraScore += cpuScore
 			}
 
 		} else if device.Bus == "usb" {
-			reasons = append(reasons, "usb: not implemented")
-			return 0, reasons, nil
+			return 0, fmt.Errorf("devices any-of: device type usb not implemented")
 
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
-			if hardwareInfo.PciDevices == nil {
-				continue
-			}
-			pciScore, _, err := pci.Match(device, hardwareInfo.PciDevices)
+			pciScore, err := pci.Match(device, hardwareInfo.PciDevices)
 			if err != nil {
-				return 0, reasons, err
-			}
-			if pciScore > 0 {
+				if os.Getenv("VERBOSE") == "true" {
+					fmt.Println("  " + err.Error())
+				}
+				reasons = append(reasons, err.Error())
+			} else {
+				if os.Getenv("VERBOSE") == "true" {
+					fmt.Printf("  Device found\n")
+				}
 				devicesFound++
 				extraScore += pciScore
 			}
 		}
+
 	}
 
 	// If any-of devices are defined, we need to find at least one
 	if len(devices) > 0 && devicesFound == 0 {
-		reasons = append(reasons, "required device not found")
-		return 0, reasons, nil
+
+		if os.Getenv("VERBOSE") == "true" {
+			for _, reason := range reasons {
+				fmt.Println("  " + reason)
+			}
+		}
+		return 0, fmt.Errorf("no devices under anyof found")
 	}
 
-	return extraScore, reasons, nil
+	return extraScore, nil
 }

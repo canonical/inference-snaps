@@ -1,24 +1,30 @@
 package pci
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
 
+	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/weights"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
-	"github.com/canonical/go-snapctl"
 )
 
-func Match(device engines.Device, pcis []types.PciDevice) (int, []string, error) {
-	var reasons []string
+func Match(device engines.Device, pcis []types.PciDevice) (int, error) {
 	maxDeviceScore := 0
 
+	if len(pcis) == 0 {
+		return 0, fmt.Errorf("no pci device on host system")
+	}
+
 	for _, pciDevice := range pcis {
-		deviceScore, deviceReasons, err := checkPciDevice(device, pciDevice)
-		reasons = append(reasons, deviceReasons...)
+		deviceScore, err := checkPciDevice(device, pciDevice)
 		if err != nil {
-			return 0, reasons, err
+			if os.Getenv("VERBOSE") == "true" {
+				fmt.Printf("    %v\n", err)
+			}
 		}
 
 		if deviceScore > 0 {
@@ -28,11 +34,14 @@ func Match(device engines.Device, pcis []types.PciDevice) (int, []string, error)
 		}
 	}
 
-	return maxDeviceScore, reasons, nil
+	if maxDeviceScore == 0 {
+		deviceJson, _ := json.Marshal(device)
+		return 0, fmt.Errorf("device not found: %v", string(deviceJson))
+	}
+	return maxDeviceScore, nil
 }
 
-func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []string, error) {
-	var reasons []string
+func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, error) {
 	currentDeviceScore := 0
 
 	// Device type: tpu, npu, gpu, etc
@@ -41,8 +50,7 @@ func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []st
 		if match {
 			currentDeviceScore += weights.PciDeviceType
 		} else {
-			reasons = append(reasons, fmt.Sprintf("pci device type mismatch: %s", device.Type))
-			return 0, reasons, nil
+			return 0, fmt.Errorf("device class 0x%04x not of required type %s", pciDevice.DeviceClass, device.Type)
 		}
 	}
 
@@ -56,8 +64,7 @@ func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []st
 		if *device.VendorId == pciDevice.VendorId {
 			currentDeviceScore += weights.PciVendorId
 		} else {
-			reasons = append(reasons, fmt.Sprintf("pci vendor id mismatch: %04x", *device.VendorId))
-			return 0, reasons, nil
+			return 0, fmt.Errorf("vendor id mismatch: 0x%04x", pciDevice.VendorId)
 		}
 
 		// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
@@ -65,23 +72,19 @@ func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []st
 			if *device.DeviceId == pciDevice.DeviceId {
 				currentDeviceScore += weights.PciDeviceId
 			} else {
-				reasons = append(reasons, fmt.Sprintf("pci device id mismatch: %04x", *device.DeviceId))
-				return 0, reasons, nil
+				return 0, fmt.Errorf("device id mismatch: 0x%04x", pciDevice.DeviceId)
 			}
 		}
 	}
 
 	// Check additional properties
 	if hasAdditionalProperties(device) {
-		propsScore, propReasons, err := checkProperties(device, pciDevice)
-		reasons = append(reasons, propReasons...)
+		propsScore, err := checkProperties(device, pciDevice)
 		if err != nil {
-			return 0, reasons, err
+			return 0, err
 		}
 		if propsScore > 0 {
 			currentDeviceScore += propsScore
-		} else {
-			return 0, reasons, nil
 		}
 	}
 
@@ -89,15 +92,14 @@ func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, []st
 	for _, connection := range device.SnapConnections {
 		connected, err := checkSnapConnection(connection)
 		if err != nil {
-			return 0, reasons, fmt.Errorf("error checking snap connection %q: %v", connection, err)
+			return 0, fmt.Errorf("error checking snap connection %q: %v", connection, err)
 		}
 		if !connected {
-			reasons = append(reasons, fmt.Sprintf("%q is not connected", connection))
-			return 0, reasons, nil
+			return 0, fmt.Errorf("%q is not connected", connection)
 		}
 	}
 
-	return currentDeviceScore, reasons, nil
+	return currentDeviceScore, nil
 }
 
 func checkType(requiredType string, pciDevice types.PciDevice) bool {

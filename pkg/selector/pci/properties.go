@@ -1,6 +1,8 @@
 package pci
 
 import (
+	"fmt"
+
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/weights"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
@@ -18,50 +20,40 @@ func hasAdditionalProperties(device engines.Device) bool {
 	return false
 }
 
-func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, []string, error) {
-	var reasons []string
+func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, error) {
 	extraScore := 0
 
 	// vram
 	if device.VRam != nil {
-		vramScore, vramReasons, err := checkVram(device, pciDevice)
-		reasons = append(reasons, vramReasons...)
+		err := checkVram(device, pciDevice)
 		if err != nil {
-			return 0, reasons, err
+			return 0, err
 		}
-		if vramScore > 0 {
-			extraScore += vramScore
-		} else {
-			return 0, reasons, nil
-		}
+		extraScore += weights.GpuVRam
 	}
 
 	// TODO compute-capability
 
-	return extraScore, reasons, nil
+	return extraScore, nil
 }
 
-func checkVram(device engines.Device, pciDevice types.PciDevice) (int, []string, error) {
-	var reasons []string
-
+func checkVram(device engines.Device, pciDevice types.PciDevice) error {
 	vramRequired, err := utils.StringToBytes(*device.VRam)
 	if err != nil {
-		return 0, reasons, err
+		return err
 	}
 	if vram, ok := pciDevice.AdditionalProperties["vram"]; ok {
 		vramAvailable, err := utils.StringToBytes(vram)
 		if err != nil {
-			return 0, reasons, err
+			return fmt.Errorf("error parsing vram: %v", err)
 		}
 		if vramAvailable >= vramRequired {
-			return weights.GpuVRam, reasons, nil
+			return nil
 		} else {
-			reasons = append(reasons, "not enough vram")
-			return 0, reasons, nil
+			return fmt.Errorf("not enough vram: %d", vramAvailable)
 		}
 	} else {
 		// Hardware Info does not list available vram
-		reasons = append(reasons, "hw-info missing additional properties field \"vram\"")
-		return 0, reasons, nil
+		return fmt.Errorf("hw-info missing additional properties field \"vram\"")
 	}
 }

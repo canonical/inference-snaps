@@ -28,30 +28,21 @@ func TestCheckGpuVendor(t *testing.T) {
 		VendorId: &gpuVendorId,
 	}
 
-	score, reasons, err := checkPciDevice(device, hwInfoGpu)
+	score, err := checkPciDevice(device, hwInfoGpu)
 	if err != nil {
-		t.Error(err)
-	}
-	if score == 0 {
-		t.Fatalf("GPU vendor should match: %v", reasons)
+		t.Fatalf("GPU vendor should match: %v", err)
 	}
 
 	// Same value, upper case string
 	gpuVendorId = types.HexInt(0xB33F)
-	score, reasons, err = checkPciDevice(device, hwInfoGpu)
+	score, err = checkPciDevice(device, hwInfoGpu)
 	if err != nil {
-		t.Error(err)
-	}
-	if score == 0 {
-		t.Fatalf("GPU vendor should match: %v", reasons)
+		t.Fatalf("GPU vendor should match: %v", err)
 	}
 
 	gpuVendorId = types.HexInt(0x1337)
-	score, reasons, err = checkPciDevice(device, hwInfoGpu)
-	if err != nil {
-		t.Error(err)
-	}
-	if score > 0 {
+	score, err = checkPciDevice(device, hwInfoGpu)
+	if err == nil || score > 0 {
 		t.Fatal("GPU vendor should NOT match")
 	}
 }
@@ -77,20 +68,14 @@ func TestCheckGpuVram(t *testing.T) {
 		VRam:     &requiredVram,
 	}
 
-	score, reasons, err := checkPciDevice(device, hwInfoGpu)
+	score, err := checkPciDevice(device, hwInfoGpu)
 	if err != nil {
-		t.Error(err)
-	}
-	if score == 0 {
-		t.Fatalf("GPU vram should be enough: %v", reasons)
+		t.Fatalf("GPU vram should be enough: %v", err)
 	}
 
 	requiredVram = "24G"
-	score, reasons, err = checkPciDevice(device, hwInfoGpu)
-	if err != nil {
-		t.Error(err)
-	}
-	if score > 0 {
+	score, err = checkPciDevice(device, hwInfoGpu)
+	if err == nil || score > 0 {
 		t.Fatal("GPU vram should NOT be enough")
 	}
 }
@@ -114,12 +99,9 @@ func TestCheckNpuDriver(t *testing.T) {
 		SnapConnections: []string{"intel-npu", "npu-libs"},
 	}
 
-	score, reasons, err := checkPciDevice(device, hwInfo)
+	_, err := checkPciDevice(device, hwInfo)
 	if err != nil {
-		t.Error(err)
-	}
-	if score == 0 {
-		t.Fatalf("NPU with driver should match: %v", reasons)
+		t.Fatalf("NPU with driver should match: %v", err)
 	}
 
 	// TODO test the negative case
