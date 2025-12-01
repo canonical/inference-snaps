@@ -32,7 +32,18 @@ parts:
     plugin: nil
     stage-packages:
       - pciutils
-      - nvidia-utils
+
+  nvidia-smi:
+    plugin: nil
+    build-packages:
+      - nvidia-utils-580
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      cp /usr/bin/nvidia-smi $CRAFT_PART_INSTALL/usr/bin/
+      
+      license_dir=$CRAFT_PART_INSTALL/usr/share/doc/nvidia-utils-580/
+      mkdir -p $license_dir
+      cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
 
   opencl:
     # Include OpenCL runtime and clinfo for looking up vRAM on Intel GPUs
@@ -107,3 +118,9 @@ apps:
       - opengl
       - network
     command: usr/bin/clinfo
+
+  nvidia-smi:
+    plugs:
+      - hardware-observe
+      - opengl
+    command: usr/bin/nvidia-smi
