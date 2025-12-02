@@ -15,9 +15,12 @@ import (
 )
 
 var (
-	debugMachineInfoFormat string
-	debugSelectFormat      string
-	debugEnginesDir        string
+	debugMachineInfoFormat  string
+	debugSelectFormat       string
+	debugEnginesDir         string
+	debugChatBaseUrl        string
+	debugChatModelName      string
+	debugChatReasoningModel bool
 )
 
 func addDebugCommand() {
@@ -45,6 +48,17 @@ func addDebugCommand() {
 	// If engines flag is set, override the globally defined engines directory
 	selectCmd.PersistentFlags().StringVar(&debugEnginesDir, "engines", enginesDir, "engine manifests directory")
 	debugCmd.AddCommand(selectCmd)
+
+	chatCmd := &cobra.Command{
+		Use:   "chat",
+		Short: "Start the chat CLI providing connection parameters",
+		Long:  "Open a text-only chat session to the OpenAI-compatible server at the provided URL, requesting the model as specified.",
+		RunE:  debugChat,
+	}
+	chatCmd.PersistentFlags().StringVar(&debugChatBaseUrl, "base-url", "", "Base URL of the OpenAI-compatible server")
+	chatCmd.PersistentFlags().StringVar(&debugChatModelName, "model", "", "Name of the model to use")
+	chatCmd.PersistentFlags().BoolVar(&debugChatReasoningModel, "reasoning", false, "Expect response from model to start with a reasoning step")
+	debugCmd.AddCommand(chatCmd)
 
 	rootCmd.AddCommand(debugCmd)
 }
@@ -139,4 +153,11 @@ func debugSelectEngine(_ *cobra.Command, args []string) error {
 
 	fmt.Println(resultStr)
 	return nil
+}
+
+func debugChat(_cmd *cobra.Command, args []string) error {
+	if debugChatBaseUrl == "" {
+		return fmt.Errorf("the --base-url parameter is required")
+	}
+	return chatClient(debugChatBaseUrl, debugChatModelName, debugChatReasoningModel)
 }
