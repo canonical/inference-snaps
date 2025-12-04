@@ -1,0 +1,13 @@
+name: generic-cpu
+description: Use CPU, small memory footprint
+vendor: Jane Doe
+grade: stable
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+memory: 1G
+disk-space: 2G
+components:
+  - llama-cpp
+  - model-1b-it-q4-0-gguf
