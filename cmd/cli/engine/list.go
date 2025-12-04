@@ -1,10 +1,11 @@
-package main
+package engine
 
 import (
 	"fmt"
 	"os"
 	"sort"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
@@ -13,27 +14,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func addListCommand() {
-	cmd := &cobra.Command{
-		Use:   "list-engines",
-		Short: "List available engines",
-		// Long:  "",
-		GroupID:           "engines",
-		Args:              cobra.NoArgs,
-		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              listEngines,
-	}
-
-	rootCmd.AddCommand(cmd)
+type listCommand struct {
+	*common.Context
 }
 
-func listEngines(_ *cobra.Command, _ []string) error {
-	scoredEngines, err := scoreEngines()
+func ListCommand(ctx *common.Context) *cobra.Command {
+	var cmd listCommand
+	cmd.Context = ctx
+
+	cobra := &cobra.Command{
+		Use:               "list-engines",
+		Short:             "List available engines",
+		GroupID:           groupID,
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              cmd.run,
+	}
+
+	return cobra
+}
+
+func (cmd *listCommand) run(_ *cobra.Command, _ []string) error {
+	scoredEngines, err := scoreEngines(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %v", err)
 	}
 
-	err = printEnginesTable(scoredEngines)
+	err = cmd.printEnginesTable(scoredEngines)
 	if err != nil {
 		return fmt.Errorf("error printing list: %v", err)
 	}
@@ -41,7 +48,7 @@ func listEngines(_ *cobra.Command, _ []string) error {
 	return nil
 }
 
-func printEnginesTable(scoredEngines []engines.ScoredManifest) error {
+func (cmd *listCommand) printEnginesTable(scoredEngines []engines.ScoredManifest) error {
 	var headerRow = []string{"engine", "vendor", "description", "compat"}
 	tableRows := [][]string{headerRow}
 

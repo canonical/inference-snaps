@@ -1,0 +1,85 @@
+package common
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/canonical/inference-snaps-cli/pkg/selector"
+	"gopkg.in/yaml.v3"
+)
+
+const componentEnv = "COMPONENT"
+
+func LoadEngineEnvironment(ctx *Context) error {
+	activeEngineName, err := ctx.Cache.GetActiveEngine()
+	if err != nil {
+		return fmt.Errorf("error looking up active engine: %v", err)
+	}
+
+	if activeEngineName == "" {
+		return fmt.Errorf("no active engine")
+	}
+
+	manifest, err := selector.LoadManifestFromDir(ctx.EnginesDir, activeEngineName)
+	if err != nil {
+		return fmt.Errorf("error loading engine manifest: %v", err)
+	}
+
+	componentsDir, found := os.LookupEnv("SNAP_COMPONENTS")
+	if !found {
+		return fmt.Errorf("SNAP_COMPONENTS env var not set")
+	}
+
+	type comp struct {
+		Environment []string `yaml:"environment"`
+	}
+
+	for _, componentName := range manifest.Components {
+		componentPath := filepath.Join(componentsDir, componentName)
+		componentYamlFile := filepath.Join(componentPath, "component.yaml")
+
+		data, err := os.ReadFile(componentYamlFile)
+		if err != nil {
+			return fmt.Errorf("error reading %s: %v", componentYamlFile, err)
+		}
+
+		var component comp
+		err = yaml.Unmarshal(data, &component)
+		if err != nil {
+			return fmt.Errorf("error unmarshaling %s: %v", componentYamlFile, err)
+		}
+
+		for i := range component.Environment {
+			// Split into key/value
+			kv := component.Environment[i]
+			parts := strings.SplitN(kv, "=", 2)
+			if len(parts) != 2 {
+				return fmt.Errorf("invalid env var %q", kv)
+			}
+			k, v := parts[0], parts[1]
+
+			// Set component path env var for expansion
+			if err := os.Setenv(componentEnv, componentPath); err != nil {
+				return fmt.Errorf("error setting %q: %v", componentEnv, err)
+			}
+
+			// Expand all env vars in value
+			v = os.ExpandEnv(v)
+
+			// Unset the component path
+			if err := os.Unsetenv(componentEnv); err != nil {
+				return fmt.Errorf("error unsetting %q: %v", componentEnv, err)
+			}
+
+			err = os.Setenv(k, v)
+			if err != nil {
+				return fmt.Errorf("error setting %q: %v", k, err)
+			}
+		}
+
+	}
+
+	return nil
+}

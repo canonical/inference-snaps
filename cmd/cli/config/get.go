@@ -1,10 +1,11 @@
-package main
+package config
 
 import (
 	"fmt"
 	"os"
 	"slices"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -20,29 +21,37 @@ var deprecatedConfig = []string{
 	"http.base-path",
 }
 
-func addGetCommand() {
-	cmd := &cobra.Command{
-		Use:               "get <key>",
+type getCommand struct {
+	*common.Context
+}
+
+func GetCommand(ctx *common.Context) *cobra.Command {
+	var cmd getCommand
+	cmd.Context = ctx
+
+	cobra := &cobra.Command{
+		Use:               "get [<key>]",
 		Short:             "Print configurations",
 		Long:              "Print one or more configurations",
-		GroupID:           "config",
+		GroupID:           groupID,
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: cobra.NoFileCompletions, // To do
-		RunE:              get,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE:              cmd.run,
 	}
-	rootCmd.AddCommand(cmd)
+
+	return cobra
 }
 
-func get(_ *cobra.Command, args []string) error {
+func (cmd *getCommand) run(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return getValues()
+		return cmd.getValues()
 	} else {
-		return getValue(args[0])
+		return cmd.getValue(args[0])
 	}
 }
 
-func getValue(key string) error {
-	value, err := config.Get(key)
+func (cmd *getCommand) getValue(key string) error {
+	value, err := cmd.Config.Get(key)
 	if err != nil {
 		return fmt.Errorf("error getting value of %q: %v", key, err)
 	}
@@ -70,9 +79,8 @@ func getValue(key string) error {
 	return nil
 }
 
-// not reachable currently due to arg requirement
-func getValues() error {
-	values, err := config.GetAll()
+func (cmd *getCommand) getValues() error {
+	values, err := cmd.Config.GetAll()
 	if err != nil {
 		return fmt.Errorf("error getting values: %v", err)
 	}

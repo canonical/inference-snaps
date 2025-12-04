@@ -1,86 +1,76 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"os"
 
 	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/basic"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/config"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/engine"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/others"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/others/debug"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/spf13/cobra"
 )
 
-const (
-	openAi = "openai"
-
-	confHttpPort = "http.port"
-
-	envOpenAiBasePath = "OPENAI_BASE_PATH"
-	envOpenAIBaseUrl  = "OPENAI_BASE_URL"
-	envChat           = "CHAT"
-	envComponent      = "COMPONENT"
-)
-
-var (
-	enginesDir       = env.Snap() + "/engines"
-	snapInstanceName = env.SnapInstanceName()
-	verboseLogging   bool
+func main() {
+	ctx := &common.Context{
+		EnginesDir: env.Snap() + "/engines",
+		Cache:      storage.NewCache(),
+		Config:     storage.NewConfig(),
+	}
 
 	// rootCmd is the base command
 	// It gets populated with subcommands
-	rootCmd = &cobra.Command{
-		Use:          snapInstanceName,
-		SilenceUsage: true,
-		Long:         "", // Base command description TBA
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			if verboseLogging {
-				log.Println("Verbose output enabled globally.")
-				return os.Setenv("VERBOSE", "true")
-			}
-			return nil
-		},
+	rootCmd := &cobra.Command{
+		SilenceUsage:      true,
+		Long:              "", // Base command description TBA
+		PersistentPreRunE: persistentPreRunE,
 	}
 
-	cache  = storage.NewCache()
-	config = storage.NewConfig()
+	// Global flags
+	rootCmd.PersistentFlags().BoolVarP(&ctx.Verbose, "verbose", "v", false, "Enable verbose logging")
 
-	// Error types
-	ErrPermissionDenied = errors.New("permission denied, try again with sudo")
-)
+	// Use snap instance name in a snap
+	if instanceName := env.SnapInstanceName(); instanceName != "" {
+		rootCmd.Use = instanceName
+	} else {
+		rootCmd.Use = "cli"
+	}
 
-func main() {
+	// Disable command sorting to keep commands sorted as added below
 	cobra.EnableCommandSorting = false
 
-	// flags
-	rootCmd.PersistentFlags().BoolVarP(&verboseLogging, "verbose", "v", false, "Enable verbose logging")
+	rootCmd.AddGroup(basic.Group("Basic Commands:"))
+	rootCmd.AddCommand(
+		basic.StatusCommand(ctx),
+		basic.ChatCommand(ctx),
+	)
 
-	// TODO: refact: functions called below add to the global rootCmd
+	rootCmd.AddGroup(config.Group("Configuration Commands:"))
+	rootCmd.AddCommand(
+		config.GetCommand(ctx),
+		config.SetCommand(ctx),
+	)
 
-	rootCmd.AddGroup(&cobra.Group{ID: "basics", Title: "Basic Commands:"})
-	addStatusCommand()
-	addChatCommand()
-
-	rootCmd.AddGroup(&cobra.Group{ID: "config", Title: "Configuration Commands:"})
-	addGetCommand()
-	addSetCommand()
-
-	rootCmd.AddGroup(&cobra.Group{ID: "engines", Title: "Management Commands:"})
-	addListCommand()
-	addInfoCommand()
-	addUseCommand()
+	rootCmd.AddGroup(engine.Group("Management Commands:"))
+	rootCmd.AddCommand(
+		engine.ListCommand(ctx),
+		engine.ShowCommand(ctx),
+		engine.UseCommand(ctx),
+	)
 
 	// other commands (help is added by default)
-	addShowMachineCommand()
-	addDebugCommand()
-	addRunCommand()
+	rootCmd.AddCommand(
+		others.ShowMachineCommand(ctx),
+		others.RunCommand(ctx),
+		debug.DebugCommand(ctx),
+	)
 
 	// disable logging timestamps
 	log.SetFlags(0)
-
-	// set a dummy root command if not in a snap
-	if rootCmd.Use == "" {
-		rootCmd.Use = "cli"
-	}
 
 	// Hide the 'completion' command from help text
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
@@ -89,4 +79,14 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func persistentPreRunE(cmd *cobra.Command, args []string) error {
+	// get value of verbose flag
+	verbose := cmd.Flags().Lookup("verbose").Value.String() == "true"
+	if verbose {
+		log.Println("Verbose output enabled globally.")
+		return os.Setenv("VERBOSE", "true")
+	}
+	return nil
 }

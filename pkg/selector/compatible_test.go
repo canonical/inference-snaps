@@ -286,7 +286,7 @@ func TestEngine(t *testing.T) {
 func testValidHw(t *testing.T, engineName string, hwName string) {
 	manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
+	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true, "../../test_data")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -317,7 +317,7 @@ func testValidHw(t *testing.T, engineName string, hwName string) {
 func testInvalidHw(t *testing.T, engineName string, hwName string) {
 	manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true)
+	hardwareInfo, err := hardware_info.GetFromRawData(t, hwName, true, "../../test_data")
 	if err != nil {
 		t.Fatal(err)
 	}

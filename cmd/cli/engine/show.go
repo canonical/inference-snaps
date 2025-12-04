@@ -1,54 +1,59 @@
-package main
+package engine
 
 import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
-var (
-	showEngineFormat string
-)
+type showCommand struct {
+	*common.Context
 
-func addInfoCommand() {
-	cmd := &cobra.Command{
-		Use:               "show-engine [<engine>]",
-		Short:             "Print information about an engine",
-		Long:              "Print information about the active engine, or the specified engine",
-		GroupID:           "engines",
-		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: showEngineValidArgs,
-		RunE:              showEngine,
-	}
-	cmd.PersistentFlags().StringVar(&showEngineFormat, "format", "yaml", "output format")
-	rootCmd.AddCommand(cmd)
+	// flags
+	format string
 }
 
-func showEngine(_ *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		currentEngine, err := cache.GetActiveEngine()
-		if err != nil {
-			return fmt.Errorf("could not get the active engine: %v", err)
-		}
-		if currentEngine == "" {
-			return fmt.Errorf("no active engine")
-		}
-		return engineInfo(currentEngine)
+func ShowCommand(ctx *common.Context) *cobra.Command {
+	var cmd showCommand
+	cmd.Context = ctx
 
+	cobra := &cobra.Command{
+		Use:     "show-engine [<engine>]",
+		Short:   "Print information about an engine",
+		Long:    "Print information about the active engine, or the specified engine",
+		GroupID: groupID,
+		// Args
+		// cli use-engine <engine> requires 1 argument
+		// cli use-engine --auto does not support any arguments
+		Args:              cobra.MaximumNArgs(1),
+		ValidArgsFunction: cmd.validateArgs,
+		RunE:              cmd.run,
+	}
+
+	// flags
+	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+
+	return cobra
+}
+
+func (cmd *showCommand) run(_ *cobra.Command, args []string) error {
+	if len(args) == 0 {
+		return cmd.showCurrentEngine()
 	} else if len(args) == 1 {
-		return engineInfo(args[0])
+		return cmd.showEngine(args[0])
 
 	} else {
 		return fmt.Errorf("invalid number of arguments")
 	}
 }
 
-func showEngineValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	manifests, err := selector.LoadManifestsFromDir(enginesDir)
+func (cmd *showCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	manifests, err := selector.LoadManifestsFromDir(cmd.EnginesDir)
 	if err != nil {
 		fmt.Printf("Error loading engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveError
@@ -62,8 +67,19 @@ func showEngineValidArgs(cmd *cobra.Command, args []string, toComplete string) (
 	return engineNames, cobra.ShellCompDirectiveNoSpace
 }
 
-func engineInfo(engineName string) error {
-	scoredEngines, err := scoreEngines()
+func (cmd *showCommand) showCurrentEngine() error {
+	currentEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		return fmt.Errorf("could not get the active engine: %v", err)
+	}
+	if currentEngine == "" {
+		return fmt.Errorf("no active engine")
+	}
+	return cmd.showEngine(currentEngine)
+}
+
+func (cmd *showCommand) showEngine(engineName string) error {
+	scoredEngines, err := scoreEngines(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %v", err)
 	}
@@ -78,15 +94,15 @@ func engineInfo(engineName string) error {
 		return fmt.Errorf(`engine "%s" does not exist`, engineName)
 	}
 
-	err = printEngineManifest(scoredManifest)
+	err = cmd.printEngineManifest(scoredManifest)
 	if err != nil {
 		return fmt.Errorf("error printing engine manifest: %v", err)
 	}
 	return nil
 }
 
-func printEngineManifest(engine engines.ScoredManifest) error {
-	switch showEngineFormat {
+func (cmd *showCommand) printEngineManifest(engine engines.ScoredManifest) error {
+	switch cmd.format {
 	case "json":
 		jsonString, err := json.MarshalIndent(engine, "", "  ")
 		if err != nil {
@@ -100,7 +116,7 @@ func printEngineManifest(engine engines.ScoredManifest) error {
 		}
 		fmt.Print(string(engineYaml))
 	default:
-		return fmt.Errorf("unknown format %q", showEngineFormat)
+		return fmt.Errorf("unknown format %q", cmd.format)
 	}
 
 	return nil
