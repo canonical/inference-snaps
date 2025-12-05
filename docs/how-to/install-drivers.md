@@ -45,8 +45,7 @@ If not installed, or if the installed version is lower than 525, you can install
 sudo apt update
 sudo apt install nvidia-driver-xxx
 ```
-
-Replace `xxx` with the desired driver version (e.g., `525`, etc.). 
+Replace `xxx` with the driver version (e.g., `525`, etc.). 
 The latest version is usually recommended and found by running: `apt list --installed nvidia-driver*`
 
 ```{tip}
