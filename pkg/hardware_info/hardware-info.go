@@ -51,10 +51,10 @@ func Get(friendlyNames bool) (*types.HwInfo, error) {
 }
 
 // GetFromRawData is mainly used during testing, but also from other packages, and therefore needs to be exported
-func GetFromRawData(t *testing.T, device string, friendlyNames bool) (*types.HwInfo, error) {
+func GetFromRawData(t *testing.T, device string, friendlyNames bool, testDir string) (*types.HwInfo, error) {
 	var hwInfo types.HwInfo
 
-	devicePath := "../../test_data/machines/" + device + "/"
+	devicePath := testDir + "/machines/" + device + "/"
 
 	// memory
 	procMemInfo, err := os.ReadFile(devicePath + "meminfo.txt")

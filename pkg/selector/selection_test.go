@@ -85,7 +85,7 @@ func TestTopEngine(t *testing.T) {
 				manifests = append(manifests, manifest)
 			}
 
-			hardwareInfo, err := hardware_info.GetFromRawData(t, testSet.machine, true)
+			hardwareInfo, err := hardware_info.GetFromRawData(t, testSet.machine, true, "../../test_data")
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -1,4 +1,4 @@
-package main
+package chat
 
 import (
 	"context"
@@ -7,59 +7,31 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"strings"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/chzyer/readline"
 	"github.com/fatih/color"
 	"github.com/openai/openai-go"
 	openaiOption "github.com/openai/openai-go/option"
 	"github.com/openai/openai-go/packages/ssestream"
-	"github.com/spf13/cobra"
 )
 
-func addChatCommand() {
-	chatPath := os.Getenv(envChat)
-	if chatPath == "" {
-		return // Add chat command only if CHAT is set
-	}
-	cmd := &cobra.Command{
-		Use:               "chat",
-		Short:             "Start the chat CLI",
-		Long:              "Chat with the server via its OpenAI API.\nThis CLI supports text-based prompting only.",
-		GroupID:           "basics",
-		Args:              cobra.NoArgs,
-		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              chat,
-	}
-	rootCmd.AddCommand(cmd)
-}
+// TODO
+// Create a client object with all the reused data (baseUrl, modelName, reasoningModel, client, verbose, ...)
+// This will avoid passing too many parameters around.
 
-func chat(_ *cobra.Command, args []string) error {
-
-	apiUrls, err := serverApiUrls()
-	if err != nil {
-		return fmt.Errorf("error getting server api urls: %v", err)
-	}
-	chatBaseUrl := apiUrls[openAi]
-
-	reasoningModel := os.Getenv("REASONING_MODEL") == "true"
-
-	return chatClient(chatBaseUrl, "", reasoningModel)
-}
-
-func chatClient(baseUrl string, modelName string, reasoningModel bool) error {
-
+func Client(baseUrl string, modelName string, reasoningModel bool, verbose bool) error {
 	fmt.Printf("Using server at %v\n", baseUrl)
 
 	if modelName == "" {
 		var err error
-		modelName, err = findModelName(baseUrl)
+		modelName, err = findModelName(baseUrl, verbose)
 		if err != nil {
 			return err
 		}
 	}
-	if verboseLogging {
+	if verbose {
 		fmt.Printf("Using model %v\n", modelName)
 		if reasoningModel {
 			fmt.Println("Reasoning model")
@@ -70,7 +42,7 @@ func chatClient(baseUrl string, modelName string, reasoningModel bool) error {
 	client := openai.NewClient(openaiOption.WithBaseURL(baseUrl))
 
 	if err := checkServer(client, modelName); err != nil {
-		if verboseLogging {
+		if verbose {
 			fmt.Printf("%v\n\n", err)
 		}
 		return fmt.Errorf("Unable to chat. Make sure the server has started successfully.")
@@ -118,7 +90,7 @@ func chatClient(baseUrl string, modelName string, reasoningModel bool) error {
 		}
 
 		if len(prompt) > 0 {
-			params, err = handlePrompt(client, params, reasoningModel, prompt)
+			params, err = handlePrompt(client, params, reasoningModel, prompt, verbose)
 			if err != nil {
 				return fmt.Errorf("error while processing prompt: %v", err)
 			}
@@ -130,7 +102,6 @@ func chatClient(baseUrl string, modelName string, reasoningModel bool) error {
 }
 
 func checkServer(client openai.Client, modelName string) error {
-
 	params := openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.SystemMessage("Are you up?"),
@@ -140,7 +111,7 @@ func checkServer(client openai.Client, modelName string) error {
 		MaxTokens:           openai.Int(1), // for runtimes that don't yet support MaxCompletionTokens
 	}
 
-	stopProgress := startProgressSpinner("Connecting to server ")
+	stopProgress := common.StartProgressSpinner("Connecting to server ")
 	defer stopProgress()
 
 	ctx := context.Background()
@@ -152,15 +123,15 @@ func checkServer(client openai.Client, modelName string) error {
 	return nil
 }
 
-func findModelName(baseUrl string) (string, error) {
-	stopProgress := startProgressSpinner("Looking up model name ")
+func findModelName(baseUrl string, verbose bool) (string, error) {
+	stopProgress := common.StartProgressSpinner("Looking up model name ")
 	defer stopProgress()
 
 	modelService := openai.NewModelService(openaiOption.WithBaseURL(baseUrl))
 	modelPage, err := modelService.List(context.Background())
 	if err != nil {
 		stopProgress()
-		if verboseLogging {
+		if verbose {
 			fmt.Printf("%v\n\n", err)
 		}
 		return "", fmt.Errorf("Failed to list available models. Make sure the server has started successfully.")
@@ -180,16 +151,16 @@ func findModelName(baseUrl string) (string, error) {
 	return modelPage.Data[0].ID, nil
 }
 
-func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, reasoningModel bool, prompt string) (openai.ChatCompletionNewParams, error) {
+func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, reasoningModel bool, prompt string, verbose bool) (openai.ChatCompletionNewParams, error) {
 	params.Messages = append(params.Messages, openai.UserMessage(prompt))
 
 	paramDebugString, _ := json.Marshal(params)
 
-	if verboseLogging {
+	if verbose {
 		fmt.Printf("Sending request: %s\n", paramDebugString)
 	}
 
-	stopProgress := startProgressSpinner("Waiting for a response ")
+	stopProgress := common.StartProgressSpinner("Waiting for a response ")
 	stream := client.Chat.Completions.NewStreaming(context.Background(), params)
 	stopProgress()
 
@@ -208,7 +179,6 @@ func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, r
 }
 
 func processStream(stream *ssestream.Stream[openai.ChatCompletionChunk], printThinking bool) (*openai.ChatCompletionMessageParamUnion, error) {
-
 	// optionally, an accumulator helper can be used
 	acc := openai.ChatCompletionAccumulator{}
 

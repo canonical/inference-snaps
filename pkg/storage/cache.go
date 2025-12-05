@@ -11,12 +11,18 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
+type Cache interface {
+	SetActiveEngine(engine string) error
+	GetActiveEngine() (string, error)
+	GetMachineInfo() (*types.HwInfo, error)
+}
+
 type cache struct {
 	storage             storage
 	machineInfoTempFile string
 }
 
-func NewCache() *cache {
+func NewCache() Cache {
 	return &cache{
 		storage:             NewSnapctlStorage(), // hardcoded since that's the only supported backend
 		machineInfoTempFile: "/tmp/machine-info-" + env.SnapRevision() + ".json",
@@ -28,7 +34,7 @@ const (
 	activeEngineKey = cacheKeyPrefix + "active-engine"
 )
 
-func (c cache) SetActiveEngine(engine string) error {
+func (c *cache) SetActiveEngine(engine string) error {
 	if engine == "" {
 		return fmt.Errorf("engine name cannot be empty")
 	}

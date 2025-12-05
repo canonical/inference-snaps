@@ -19,7 +19,7 @@ var devices = []string{
 func TestGetFromFiles(t *testing.T) {
 	for _, device := range devices {
 		t.Run(device, func(t *testing.T) {
-			hwInfo, err := GetFromRawData(t, device, true)
+			hwInfo, err := GetFromRawData(t, device, true, "../../test_data")
 			if err != nil {
 				t.Error(err)
 			}
@@ -68,7 +68,7 @@ func TestGetFromFiles(t *testing.T) {
 
 func TestDumpHwInfoFromFiles(t *testing.T) {
 	machine := "i5-3570k+arc-a580+gtx1080ti"
-	hwInfo, err := GetFromRawData(t, machine, true)
+	hwInfo, err := GetFromRawData(t, machine, true, "../../test_data")
 	if err != nil {
 		t.Error(err)
 	}

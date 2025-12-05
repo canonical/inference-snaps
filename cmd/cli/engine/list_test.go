@@ -1,4 +1,4 @@
-package main
+package engine
 
 import (
 	"testing"
@@ -8,12 +8,12 @@ import (
 )
 
 func TestList(t *testing.T) {
-	allEngines, err := selector.LoadManifestsFromDir("../../test_data/engines")
+	allEngines, err := selector.LoadManifestsFromDir("../../../test_data/engines")
 	if err != nil {
 		t.Fatalf("error loading engines: %v", err)
 	}
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-7390", true)
+	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-7390", true, "../../../test_data")
 	if err != nil {
 		t.Fatalf("error getting hardware info: %v", err)
 	}
@@ -23,7 +23,8 @@ func TestList(t *testing.T) {
 		t.Fatalf("error scoring engines: %v", err)
 	}
 
-	err = printEnginesTable(scoredEngines)
+	cmd := listCommand{}
+	err = cmd.printEnginesTable(scoredEngines)
 	if err != nil {
 		t.Fatal(err)
 	}

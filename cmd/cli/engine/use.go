@@ -1,13 +1,13 @@
-package main
+package engine
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
@@ -17,33 +17,39 @@ import (
 	"golang.org/x/term"
 )
 
-var (
-	useAuto      bool
-	useAssumeYes bool
-)
+type useCommand struct {
+	*common.Context
 
-func addUseCommand() {
-	cmd := &cobra.Command{
-		Use:   "use-engine [<engine>]",
-		Short: "Select an engine",
-		// Long:  "",
-		GroupID: "engines",
+	// flags
+	auto      bool
+	assumeYes bool
+}
+
+func UseCommand(ctx *common.Context) *cobra.Command {
+	var cmd useCommand
+	cmd.Context = ctx
+
+	cobra := &cobra.Command{
+		Use:     "use-engine [<engine>]",
+		Short:   "Select an engine",
+		GroupID: groupID,
+		// Args
 		// cli use-engine <engine> requires 1 argument
 		// cli use-engine --auto does not support any arguments
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: useValidArgs,
-		RunE:              use,
+		ValidArgsFunction: cmd.validateArgs,
+		RunE:              cmd.run,
 	}
 
 	// flags
-	cmd.PersistentFlags().BoolVar(&useAuto, "auto", false, "automatically select a compatible engine")
-	cmd.PersistentFlags().BoolVar(&useAssumeYes, "assume-yes", false, "assume yes for downloading new components")
+	cobra.Flags().BoolVar(&cmd.auto, "auto", false, "automatically select a compatible engine")
+	cobra.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for downloading new components")
 
-	rootCmd.AddCommand(cmd)
+	return cobra
 }
 
-func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	scoredEngines, err := scoreEngines()
+func (cmd *useCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	scoredEngines, err := scoreEngines(cmd.Context)
 	if err != nil {
 		fmt.Printf("Error scoring engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveNoFileComp
@@ -63,47 +69,19 @@ func useValidArgs(cmd *cobra.Command, args []string, toComplete string) ([]cobra
 	return engineNames, cobra.ShellCompDirectiveNoFileComp
 }
 
-func use(_ *cobra.Command, args []string) error {
+func (cmd *useCommand) run(_ *cobra.Command, args []string) error {
 	if !utils.IsRootUser() {
-		return ErrPermissionDenied
+		return common.ErrPermissionDenied
 	}
 
-	if useAuto {
+	if cmd.auto {
 		if len(args) != 0 {
 			return fmt.Errorf("cannot specify both engine name and --auto flag")
 		}
-
-		scoredEngines, err := scoreEngines()
-		if err != nil {
-			return fmt.Errorf("error scoring engines: %v", err)
-		}
-
-		fmt.Println("Evaluating engines for optimal hardware compatibility:")
-		for _, engine := range scoredEngines {
-			if engine.Score == 0 {
-				fmt.Printf("✘ %s: not compatible: %s\n", engine.Name, strings.Join(engine.Notes, ", "))
-			} else if engine.Grade != "stable" {
-				fmt.Printf("− %s: devel, score=%d\n", engine.Name, engine.Score)
-			} else {
-				fmt.Printf("✔ %s: compatible, score=%d\n", engine.Name, engine.Score)
-			}
-		}
-
-		selectedEngine, err := selector.TopEngine(scoredEngines)
-		if err != nil {
-			return fmt.Errorf("error finding top engine: %v", err)
-		}
-
-		fmt.Printf("Selected engine: %s\n", selectedEngine.Name)
-
-		err = useEngine(selectedEngine.Name, useAssumeYes)
-		if err != nil {
-			return fmt.Errorf("failed to use engine: %s", err)
-		}
-
+		return cmd.autoSelectEngine()
 	} else {
 		if len(args) == 1 {
-			err := useEngine(args[0], useAssumeYes)
+			err := cmd.switchEngine(args[0])
 			if err != nil {
 				return fmt.Errorf("failed to use engine: %s", err)
 			}
@@ -114,35 +92,47 @@ func use(_ *cobra.Command, args []string) error {
 	return nil
 }
 
-func scoreEngines() ([]engines.ScoredManifest, error) {
-	allEngines, err := selector.LoadManifestsFromDir(enginesDir)
+func (cmd *useCommand) autoSelectEngine() error {
+	scoredEngines, err := scoreEngines(cmd.Context)
 	if err != nil {
-		return nil, fmt.Errorf("error loading engines: %v", err)
+		return fmt.Errorf("error scoring engines: %v", err)
 	}
 
-	machineInfo, err := cache.GetMachineInfo()
-	if err != nil {
-		return nil, fmt.Errorf("error getting machine info: %v", err)
+	fmt.Println("Evaluating engines for optimal hardware compatibility:")
+	for _, engine := range scoredEngines {
+		if engine.Score == 0 {
+			fmt.Printf("✘ %s: not compatible: %s\n", engine.Name, strings.Join(engine.Notes, ", "))
+		} else if engine.Grade != "stable" {
+			fmt.Printf("− %s: devel, score=%d\n", engine.Name, engine.Score)
+		} else {
+			fmt.Printf("✔ %s: compatible, score=%d\n", engine.Name, engine.Score)
+		}
 	}
 
-	// score engines
-	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
+	selectedEngine, err := selector.TopEngine(scoredEngines)
 	if err != nil {
-		return nil, fmt.Errorf("error scoring engines: %v", err)
+		return fmt.Errorf("error finding top engine: %v", err)
 	}
 
-	return scoredEngines, nil
+	fmt.Printf("Selected engine: %s\n", selectedEngine.Name)
+
+	err = cmd.switchEngine(selectedEngine.Name)
+	if err != nil {
+		return fmt.Errorf("failed to use engine: %s", err)
+	}
+
+	return nil
 }
 
-// useEngine changes the engine that is used by the snap
-func useEngine(engineName string, assumeYes bool) error {
+// switchEngine changes the engine that is used by the snap
+func (cmd *useCommand) switchEngine(engineName string) error {
 
-	engine, err := selector.LoadManifestFromDir(enginesDir, engineName)
+	engine, err := selector.LoadManifestFromDir(cmd.EnginesDir, engineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}
 
-	components, err := missingComponents(engine.Components)
+	components, err := cmd.missingComponents(engine.Components)
 	if err != nil {
 		return fmt.Errorf("error checking installed components: %v", err)
 	}
@@ -170,9 +160,9 @@ func useEngine(engineName string, assumeYes bool) error {
 		}
 
 		// Only ask for confirmation of download if it is an interactive terminal
-		if !assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
+		if !cmd.assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
 			fmt.Println()
-			if !confirmationPrompt("Do you want to continue?") {
+			if !common.ConfirmationPrompt("Do you want to continue?") {
 				fmt.Println("Exiting. No changes applied.")
 				return nil
 			}
@@ -183,13 +173,13 @@ func useEngine(engineName string, assumeYes bool) error {
 
 		// This is blocking, but there is a timeout bug:
 		// https://github.com/canonical/inference-snaps-cli/issues/122
-		err = installComponents(engine.Components)
+		err = cmd.installComponents(engine.Components)
 		if err != nil {
 			return fmt.Errorf("error installing components: %v", err)
 		}
 	}
 
-	activeEngineName, err := cache.GetActiveEngine()
+	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("error getting active engine: %v", err)
 	}
@@ -201,7 +191,7 @@ func useEngine(engineName string, assumeYes bool) error {
 
 	// Unset active engine's configurations
 	if activeEngineName != "" {
-		err = unsetEngineConfigs(activeEngineName)
+		err = cmd.unsetEngineConfig(activeEngineName)
 		if err != nil {
 			return fmt.Errorf("error un-setting engine configurations: %v", err)
 		}
@@ -212,14 +202,14 @@ func useEngine(engineName string, assumeYes bool) error {
 		fmt.Println()
 	}
 
-	err = setEngineOptions(engine)
+	err = cmd.setEngineConfig(engine)
 	if err != nil {
 		return fmt.Errorf("error setting new engine configurations: %v", err)
 	}
 
 	// Restart if any of the services are active
 	// TODO: get this from an env var instead (e.g. ENGINE_SERVICES=server,proxy)
-	serviceName := snapInstanceName + ".server"
+	serviceName := env.SnapInstanceName() + ".server"
 	service, err := snapctl.Services(serviceName).Run()
 	if err != nil {
 		return fmt.Errorf("error checking status of service: %v", err)
@@ -237,21 +227,40 @@ func useEngine(engineName string, assumeYes bool) error {
 	return nil
 }
 
-func unsetEngineConfigs(engineName string) error {
+func (cmd *useCommand) setEngineConfig(engine *engines.Manifest) error {
+	// set engine config option
+	err := cmd.Cache.SetActiveEngine(engine.Name)
+	if err != nil {
+		return fmt.Errorf("error setting active engine: %v", err)
+	}
+
+	// set other config options
+	// TODO: clear beforehand
+	for confKey, confVal := range engine.Configurations {
+		err = cmd.Config.SetDocument(confKey, confVal, storage.EngineConfig)
+		if err != nil {
+			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
+		}
+	}
+
+	return nil
+}
+
+func (cmd *useCommand) unsetEngineConfig(engineName string) error {
 	// Unset all engine configurations
-	err := config.Unset(".", storage.EngineConfig)
+	err := cmd.Config.Unset(".", storage.EngineConfig)
 	if err != nil {
 		return fmt.Errorf("error un-setting engine configurations: %v", err)
 	}
 
-	engine, err := selector.LoadManifestFromDir(enginesDir, engineName)
+	engine, err := selector.LoadManifestFromDir(cmd.EnginesDir, engineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}
 
 	// Unset any user overrides
 	for k := range engine.Configurations {
-		err = config.Unset(k, storage.UserConfig)
+		err = cmd.Config.Unset(k, storage.UserConfig)
 		if err != nil {
 			return fmt.Errorf("error un-setting configuration %q: %v", k, err)
 		}
@@ -260,10 +269,11 @@ func unsetEngineConfigs(engineName string) error {
 	return nil
 }
 
-func missingComponents(components []string) ([]string, error) {
+// TODO: unify with similar code in run.go
+func (cmd *useCommand) missingComponents(components []string) ([]string, error) {
 	var missing []string
 	for _, component := range components {
-		isInstalled, err := componentInstalled(component)
+		isInstalled, err := cmd.componentInstalled(component)
 		if err != nil {
 			return missing, err
 		}
@@ -274,7 +284,7 @@ func missingComponents(components []string) ([]string, error) {
 	return missing, nil
 }
 
-func componentInstalled(component string) (bool, error) {
+func (*useCommand) componentInstalled(component string) (bool, error) {
 	// Check in /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION if component is mounted
 	directoryPath := fmt.Sprintf("/snap/%s/components/%s/%s", env.SnapInstanceName(), env.SnapRevision(), component)
 
@@ -295,40 +305,34 @@ func componentInstalled(component string) (bool, error) {
 	}
 }
 
-func setEngineOptions(engine *engines.Manifest) error {
-	// set engine config option
-	err := cache.SetActiveEngine(engine.Name)
-	if err != nil {
-		return fmt.Errorf("error setting active engine: %v", err)
-	}
+func (*useCommand) installComponents(components []string) error {
+	const (
+		snapdUnknownSnapError = "cannot install components for a snap that is unknown to the store"
+		snapdTimeoutError     = "timeout exceeded while waiting for response"
+	)
 
-	// set other config options
-	// TODO: clear beforehand
-	for confKey, confVal := range engine.Configurations {
-		err = config.SetDocument(confKey, confVal, storage.EngineConfig)
+	for _, component := range components {
+		stopProgress := common.StartProgressSpinner("Installing " + component + " ")
+		err := snapctl.InstallComponents(component).Run()
+		stopProgress()
 		if err != nil {
-			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
+			if strings.Contains(err.Error(), snapdUnknownSnapError) {
+				return fmt.Errorf("snap not known to the store:"+
+					"\nRerun this command after manually installing %q",
+					component)
+			} else if strings.Contains(err.Error(), snapdTimeoutError) {
+				return fmt.Errorf("timed out while installing %q:"+
+					"\nMonitor the installation progress with \"snap changes\""+
+					"\n\nRerun this command once the installation is complete",
+					component)
+			} else if strings.Contains(err.Error(), "already installed") {
+				continue
+			} else {
+				return fmt.Errorf("error installing %q: %s", component, err)
+			}
 		}
+		fmt.Println("Installed " + component)
 	}
 
 	return nil
-}
-
-// confirmationPrompt prompts the user for a yes/no answer and returns true for 'y', false for 'n'.
-func confirmationPrompt(prompt string) bool {
-	reader := bufio.NewReader(os.Stdin)
-
-	for {
-		fmt.Printf("%s [y/n] ", prompt)
-		input, _ := reader.ReadString('\n')
-		input = strings.ToLower(strings.TrimSpace(input))
-
-		if input == "y" || input == "yes" {
-			return true
-		} else if input == "n" || input == "no" {
-			return false
-		} else {
-			fmt.Println(`Invalid input. Please enter "y" or "n".`)
-		}
-	}
 }

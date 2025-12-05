@@ -6,11 +6,19 @@ import (
 	"strings"
 )
 
+type Config interface {
+	Set(key, value string, confType configType) error
+	SetDocument(key string, value any, confType configType) error
+	Get(key string) (map[string]any, error)
+	GetAll() (map[string]any, error)
+	Unset(key string, confType configType) error
+}
+
 type config struct {
 	storage storage
 }
 
-func NewConfig() *config {
+func NewConfig() Config {
 	return &config{
 		storage: NewSnapctlStorage(), // hardcoded since that's the only supported backend
 	}

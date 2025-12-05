@@ -1,34 +1,48 @@
-package main
+package others
 
 import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
-func addShowMachineCommand() {
-	cmd := &cobra.Command{
+type showMachineCommand struct {
+	*common.Context
+
+	// flags
+	format string
+}
+
+func ShowMachineCommand(ctx *common.Context) *cobra.Command {
+	var cmd showMachineCommand
+	cmd.Context = ctx
+
+	cobra := &cobra.Command{
 		Use:               "show-machine",
 		Short:             "Print information about the host machine",
 		Long:              "Print information about the host machine, including hardware and compute resources",
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              showMachine,
+		RunE:              cmd.run,
 	}
-	cmd.PersistentFlags().StringVar(&debugMachineInfoFormat, "format", "yaml", "output format")
-	rootCmd.AddCommand(cmd)
+
+	// flags
+	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+
+	return cobra
 }
 
-func showMachine(_ *cobra.Command, args []string) error {
+func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 	hwInfo, err := hardware_info.Get(true)
 	if err != nil {
 		return fmt.Errorf("failed to get machine info: %s", err)
 	}
 
-	switch debugMachineInfoFormat {
+	switch cmd.format {
 	case "json":
 		jsonString, err := json.MarshalIndent(hwInfo, "", "  ")
 		if err != nil {
@@ -42,7 +56,7 @@ func showMachine(_ *cobra.Command, args []string) error {
 		}
 		fmt.Printf("%s", yamlString)
 	default:
-		return fmt.Errorf("unknown format %q", debugMachineInfoFormat)
+		return fmt.Errorf("unknown format %q", cmd.format)
 	}
 
 	return nil
