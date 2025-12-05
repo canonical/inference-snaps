@@ -9,7 +9,7 @@ In case you installed a driver after installing an inference snap, repeat the en
 sudo <inference-snap> use-engine --auto
 ```
 
-## Install Intel GPU driver
+## Intel GPU
 
 The user space drivers for Intel GPUs (integrated and discrete) are included in the snaps.
 
@@ -17,7 +17,7 @@ Lunar Lake and Battlemage GPUs may require a hardware enablement (HWE) kernel.
 Please refer [here](https://dgpu-docs.intel.com/driver/client/overview.html) for details.
 
 
-## Install Intel NPU driver
+## Intel NPU
 
 If your system has an Intel NPU and you want to make use of it, you need to install the user space driver for it.
 It is available as a snap:
@@ -26,7 +26,7 @@ It is available as a snap:
 sudo snap install intel-npu-driver
 ```
 
-## Install NVIDIA GPU driver
+## NVIDIA GPU
 
 You need to install the NVIDIA driver on the host machine to use an NVIDIA GPU with inference snaps.
 
