@@ -17,9 +17,10 @@ Every device should be able to run intelligent software without dependency hell 
 Install the [accelerator driver](https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/).
 
 Then:
+
 ```bash
 # Install a model snap
-sudo snap install gemma3
+sudo snap install gemma3 --beta
 
 # Check status
 qwen-vl status
