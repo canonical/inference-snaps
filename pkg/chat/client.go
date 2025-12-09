@@ -12,9 +12,9 @@ import (
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/chzyer/readline"
 	"github.com/fatih/color"
-	"github.com/openai/openai-go"
-	openaiOption "github.com/openai/openai-go/option"
-	"github.com/openai/openai-go/packages/ssestream"
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/option"
+	"github.com/openai/openai-go/v3/packages/ssestream"
 )
 
 // TODO
@@ -39,7 +39,7 @@ func Client(baseUrl string, modelName string, reasoningModel bool, verbose bool)
 	}
 
 	// OpenAI API Client
-	client := openai.NewClient(openaiOption.WithBaseURL(baseUrl))
+	client := openai.NewClient(option.WithBaseURL(baseUrl))
 
 	if err := checkServer(client, modelName); err != nil {
 		if verbose {
@@ -127,7 +127,7 @@ func findModelName(baseUrl string, verbose bool) (string, error) {
 	stopProgress := common.StartProgressSpinner("Looking up model name ")
 	defer stopProgress()
 
-	modelService := openai.NewModelService(openaiOption.WithBaseURL(baseUrl))
+	modelService := openai.NewModelService(option.WithBaseURL(baseUrl))
 	modelPage, err := modelService.List(context.Background())
 	if err != nil {
 		stopProgress()
