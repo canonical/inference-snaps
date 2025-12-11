@@ -13,7 +13,7 @@ require (
 	github.com/jaypipes/pcidb v1.1.1
 	github.com/olekukonko/tablewriter v1.1.2
 	github.com/openai/openai-go/v3 v3.10.0
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	golang.org/x/sys v0.39.0
 	golang.org/x/term v0.38.0
 	gopkg.in/yaml.v3 v3.0.1
