@@ -40,7 +40,7 @@ func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 	var statusText string
 	var err error
 
-	stopProgress := common.StartProgressSpinner("Getting status ")
+	stopProgress := common.StartProgressSpinner("Getting status")
 	defer stopProgress()
 
 	switch cmd.format {

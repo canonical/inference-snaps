@@ -312,7 +312,7 @@ func (*useCommand) installComponents(components []string) error {
 	)
 
 	for _, component := range components {
-		stopProgress := common.StartProgressSpinner("Installing " + component + " ")
+		stopProgress := common.StartProgressSpinner("Installing " + component)
 		err := snapctl.InstallComponents(component).Run()
 		stopProgress()
 		if err != nil {

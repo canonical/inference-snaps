@@ -111,7 +111,7 @@ func checkServer(client openai.Client, modelName string) error {
 		MaxTokens:           openai.Int(1), // for runtimes that don't yet support MaxCompletionTokens
 	}
 
-	stopProgress := common.StartProgressSpinner("Connecting to server ")
+	stopProgress := common.StartProgressSpinner("Connecting to server")
 	defer stopProgress()
 
 	ctx := context.Background()
@@ -124,7 +124,7 @@ func checkServer(client openai.Client, modelName string) error {
 }
 
 func findModelName(baseUrl string, verbose bool) (string, error) {
-	stopProgress := common.StartProgressSpinner("Looking up model name ")
+	stopProgress := common.StartProgressSpinner("Looking up model name")
 	defer stopProgress()
 
 	modelService := openai.NewModelService(option.WithBaseURL(baseUrl))
@@ -160,7 +160,7 @@ func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, r
 		fmt.Printf("Sending request: %s\n", paramDebugString)
 	}
 
-	stopProgress := common.StartProgressSpinner("Waiting for a response ")
+	stopProgress := common.StartProgressSpinner("Waiting for a response")
 	stream := client.Chat.Completions.NewStreaming(context.Background(), params)
 	stopProgress()
 
