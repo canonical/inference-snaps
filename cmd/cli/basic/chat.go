@@ -2,7 +2,6 @@ package basic
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/chat"
@@ -37,7 +36,5 @@ func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	}
 	chatBaseUrl := apiUrls[openAi]
 
-	reasoningModel := os.Getenv("REASONING_MODEL") == "true"
-
-	return chat.Client(chatBaseUrl, "", reasoningModel, cmd.Verbose)
+	return chat.Client(chatBaseUrl, "")
 }

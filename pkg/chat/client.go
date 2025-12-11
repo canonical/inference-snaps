@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
@@ -17,11 +18,9 @@ import (
 	"github.com/openai/openai-go/v3/packages/ssestream"
 )
 
-// TODO
-// Create a client object with all the reused data (baseUrl, modelName, reasoningModel, client, verbose, ...)
-// This will avoid passing too many parameters around.
+func Client(baseUrl string, modelName string) error {
+	verbose := os.Getenv("VERBOSE") == "true"
 
-func Client(baseUrl string, modelName string, reasoningModel bool, verbose bool) error {
 	fmt.Printf("Using server at %v\n", baseUrl)
 
 	if modelName == "" {
@@ -33,9 +32,6 @@ func Client(baseUrl string, modelName string, reasoningModel bool, verbose bool)
 	}
 	if verbose {
 		fmt.Printf("Using model %v\n", modelName)
-		if reasoningModel {
-			fmt.Println("Reasoning model")
-		}
 	}
 
 	// OpenAI API Client
@@ -90,7 +86,7 @@ func Client(baseUrl string, modelName string, reasoningModel bool, verbose bool)
 		}
 
 		if len(prompt) > 0 {
-			params, err = handlePrompt(client, params, reasoningModel, prompt, verbose)
+			params, err = handlePrompt(client, params, prompt, verbose)
 			if err != nil {
 				return fmt.Errorf("error while processing prompt: %v", err)
 			}
@@ -151,7 +147,7 @@ func findModelName(baseUrl string, verbose bool) (string, error) {
 	return modelPage.Data[0].ID, nil
 }
 
-func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, reasoningModel bool, prompt string, verbose bool) (openai.ChatCompletionNewParams, error) {
+func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, prompt string, verbose bool) (openai.ChatCompletionNewParams, error) {
 	params.Messages = append(params.Messages, openai.UserMessage(prompt))
 
 	paramDebugString, _ := json.Marshal(params)
@@ -164,7 +160,7 @@ func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, r
 	stream := client.Chat.Completions.NewStreaming(context.Background(), params)
 	stopProgress()
 
-	appendParam, err := processStream(stream, reasoningModel)
+	appendParam, err := processStream(stream)
 	if err != nil {
 		return params, fmt.Errorf("error processing stream: %v", err)
 	}
@@ -178,12 +174,12 @@ func handlePrompt(client openai.Client, params openai.ChatCompletionNewParams, r
 	return params, nil
 }
 
-func processStream(stream *ssestream.Stream[openai.ChatCompletionChunk], printThinking bool) (*openai.ChatCompletionMessageParamUnion, error) {
+func processStream(stream *ssestream.Stream[openai.ChatCompletionChunk]) (*openai.ChatCompletionMessageParamUnion, error) {
 	// optionally, an accumulator helper can be used
 	acc := openai.ChatCompletionAccumulator{}
 
-	// For reasoning models we assume the first output is them thinking, because the opening <think> tag is not always present.
-	thinking := printThinking
+	// An opening <think> tag will change the output color to indicate reasoning.
+	thinking := false
 
 	for stream.Next() {
 		chunk := stream.Current()

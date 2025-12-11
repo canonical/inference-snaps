@@ -12,9 +12,8 @@ type chatCommand struct {
 	*common.Context
 
 	// flags
-	baseUrl        string
-	modelName      string
-	reasoningModel bool
+	baseUrl   string
+	modelName string
 }
 
 func ChatCommand(ctx *common.Context) *cobra.Command {
@@ -33,7 +32,6 @@ func ChatCommand(ctx *common.Context) *cobra.Command {
 	// flags
 	cobra.Flags().StringVar(&cmd.baseUrl, "base-url", "", "Base URL of the OpenAI-compatible server")
 	cobra.Flags().StringVar(&cmd.modelName, "model", "", "Name of the model to use")
-	cobra.Flags().BoolVar(&cmd.reasoningModel, "reasoning", false, "Expect response from model to start with a reasoning step")
 
 	return cobra
 }
@@ -43,5 +41,5 @@ func (cmd *chatCommand) run(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("the --base-url parameter is required")
 	}
 
-	return chat.Client(cmd.baseUrl, cmd.modelName, cmd.reasoningModel, cmd.Verbose)
+	return chat.Client(cmd.baseUrl, cmd.modelName)
 }
