@@ -35,9 +35,15 @@ func SetCommand(ctx *common.Context) *cobra.Command {
 
 	// flags
 	cobra.Flags().BoolVar(&cmd.packageConfig, "package", false, "set package configurations")
-	cobra.Flags().MarkHidden("package")
+	err := cobra.Flags().MarkHidden("package")
+	if err != nil {
+		panic(err)
+	}
 	cobra.Flags().BoolVar(&cmd.engineConfig, "engine", false, "set engine configuration")
-	cobra.Flags().MarkHidden("engine")
+	err = cobra.Flags().MarkHidden("engine")
+	if err != nil {
+		panic(err)
+	}
 
 	return cobra
 }
