@@ -70,7 +70,7 @@ func TestTopEngine(t *testing.T) {
 		t.Run(testSet.machine+"/"+testSet.topEngine, func(t *testing.T) {
 			var manifests []engines.Manifest
 			for _, engineName := range testSet.engines {
-				manifestFile := fmt.Sprintf("../../test_data/engines/%s/engine.yaml", engineName)
+				manifestFile := fmt.Sprintf("../../test_data/engines/%s/%s", engineName, engines.ManifestFilename)
 				data, err := os.ReadFile(manifestFile)
 				if err != nil {
 					t.Fatal(err)

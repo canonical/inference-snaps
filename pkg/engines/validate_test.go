@@ -38,7 +38,7 @@ func TestManifestFiles(t *testing.T) {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			engine := entry.Name()
-			manifestPath := filepath.Join(enginesDir, engine, "engine.yaml")
+			manifestPath := filepath.Join(enginesDir, engine, ManifestFilename)
 			t.Run(engine, func(t *testing.T) {
 				err = Validate(manifestPath)
 				if err != nil {

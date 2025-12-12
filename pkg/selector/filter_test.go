@@ -112,7 +112,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		// All fields are nil or zero
 	}
 
-	data, err := os.ReadFile("../../test_data/engines/cpu-avx512/engine.yaml")
+	data, err := os.ReadFile("../../test_data/engines/cpu-avx512/" + engines.ManifestFilename)
 	if err != nil {
 		t.Fatal(err)
 	}

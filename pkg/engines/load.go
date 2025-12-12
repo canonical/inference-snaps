@@ -4,18 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
 
+const ManifestFilename = "engine.yaml"
+
 func LoadManifests(manifestsDir string) ([]Manifest, error) {
 	var manifests []Manifest
-
-	// Sanitize dir path
-	if !strings.HasSuffix(manifestsDir, "/") {
-		manifestsDir += "/"
-	}
 
 	// Iterate engines
 	files, err := os.ReadDir(manifestsDir)
@@ -29,7 +26,7 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 			continue
 		}
 
-		fileName := manifestsDir + file.Name() + "/engine.yaml"
+		fileName := filepath.Join(manifestsDir, file.Name(), ManifestFilename)
 		data, err := os.ReadFile(fileName)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %s", fileName, err)
@@ -49,12 +46,8 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 var ErrManifestNotFound = errors.New("engine manifest not found")
 
 func LoadManifest(manifestsDir, engineName string) (*Manifest, error) {
-	// Sanitize dir path
-	if !strings.HasSuffix(manifestsDir, "/") {
-		manifestsDir += "/"
-	}
 
-	fileName := manifestsDir + engineName + "/engine.yaml"
+	fileName := filepath.Join(manifestsDir, engineName, ManifestFilename)
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {

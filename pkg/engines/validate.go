@@ -13,8 +13,8 @@ import (
 
 func Validate(manifestFilePath string) error {
 
-	if !strings.HasSuffix(manifestFilePath, "engine.yaml") {
-		return fmt.Errorf("manifest file must be called engine.yaml: %s", manifestFilePath)
+	if !strings.HasSuffix(manifestFilePath, ManifestFilename) {
+		return fmt.Errorf("manifest file must be called %s: %s", ManifestFilename, manifestFilePath)
 	}
 
 	_, err := os.Stat(manifestFilePath)
