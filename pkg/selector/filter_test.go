@@ -26,7 +26,7 @@ func TestFindTopEngineFromNone(t *testing.T) {
 		},
 	}
 
-	allEngines, err := LoadManifestsFromDir("../../test_data/engines")
+	allEngines, err := engines.LoadManifests("../../test_data/engines")
 	if err != nil {
 		t.Fatal(err)
 	}

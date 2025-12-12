@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"gopkg.in/yaml.v3"
 )
 
@@ -22,7 +22,7 @@ func LoadEngineEnvironment(ctx *Context) error {
 		return fmt.Errorf("no active engine")
 	}
 
-	manifest, err := selector.LoadManifestFromDir(ctx.EnginesDir, activeEngineName)
+	manifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}

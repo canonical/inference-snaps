@@ -3,12 +3,13 @@ package engine
 import (
 	"testing"
 
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 )
 
 func TestList(t *testing.T) {
-	allEngines, err := selector.LoadManifestsFromDir("../../../test_data/engines")
+	allEngines, err := engines.LoadManifests("../../../test_data/engines")
 	if err != nil {
 		t.Fatalf("error loading engines: %v", err)
 	}

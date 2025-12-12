@@ -13,7 +13,6 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/selector/pci"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
-	"gopkg.in/yaml.v3"
 )
 
 var ErrorNoCompatibleEngine = errors.New("no compatible engines found")
@@ -38,64 +37,6 @@ func TopEngine(scoredEngines []engines.ScoredManifest) (*engines.ScoredManifest,
 
 	// Top engine is the highest score
 	return &compatibleEngines[0], nil
-}
-
-func LoadManifestsFromDir(manifestsDir string) ([]engines.Manifest, error) {
-	var manifests []engines.Manifest
-
-	// Sanitize dir path
-	if !strings.HasSuffix(manifestsDir, "/") {
-		manifestsDir += "/"
-	}
-
-	// Iterate engines
-	files, err := os.ReadDir(manifestsDir)
-	if err != nil {
-		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
-	}
-
-	for _, file := range files {
-		// Engines dir should contain a dir per engine
-		if !file.IsDir() {
-			continue
-		}
-
-		fileName := manifestsDir + file.Name() + "/engine.yaml"
-		data, err := os.ReadFile(fileName)
-		if err != nil {
-			return nil, fmt.Errorf("%s: %s", fileName, err)
-		}
-
-		var manifest engines.Manifest
-		err = yaml.Unmarshal(data, &manifest)
-		if err != nil {
-			return nil, fmt.Errorf("%s: %s", manifestsDir, err)
-		}
-
-		manifests = append(manifests, manifest)
-	}
-	return manifests, nil
-}
-
-func LoadManifestFromDir(manifestsDir, engineName string) (*engines.Manifest, error) {
-	// Sanitize dir path
-	if !strings.HasSuffix(manifestsDir, "/") {
-		manifestsDir += "/"
-	}
-
-	fileName := manifestsDir + engineName + "/engine.yaml"
-	data, err := os.ReadFile(fileName)
-	if err != nil {
-		return nil, fmt.Errorf("%s: %s", fileName, err)
-	}
-
-	var manifest engines.Manifest
-	err = yaml.Unmarshal(data, &manifest)
-	if err != nil {
-		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
-	}
-
-	return &manifest, nil
 }
 
 func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {

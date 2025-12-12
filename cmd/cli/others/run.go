@@ -10,7 +10,6 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/spf13/cobra"
 )
 
@@ -95,7 +94,7 @@ func (cmd *runCommand) waitForComponents() error {
 		return fmt.Errorf("no active engine")
 	}
 
-	manifest, err := selector.LoadManifestFromDir(cmd.EnginesDir, activeEngineName)
+	manifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}

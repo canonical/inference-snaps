@@ -6,7 +6,6 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -53,7 +52,7 @@ func (cmd *showCommand) run(_ *cobra.Command, args []string) error {
 }
 
 func (cmd *showCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	manifests, err := selector.LoadManifestsFromDir(cmd.EnginesDir)
+	manifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
 		fmt.Printf("Error loading engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveError

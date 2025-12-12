@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -81,15 +82,11 @@ func (cmd *useCommand) run(_ *cobra.Command, args []string) error {
 		return cmd.autoSelectEngine()
 	} else {
 		if len(args) == 1 {
-			err := cmd.switchEngine(args[0])
-			if err != nil {
-				return fmt.Errorf("failed to use engine: %s", err)
-			}
+			return cmd.switchEngine(args[0])
 		} else {
 			return fmt.Errorf("engine name not specified")
 		}
 	}
-	return nil
 }
 
 func (cmd *useCommand) autoSelectEngine() error {
@@ -127,8 +124,14 @@ func (cmd *useCommand) autoSelectEngine() error {
 // switchEngine changes the engine that is used by the snap
 func (cmd *useCommand) switchEngine(engineName string) error {
 
-	engine, err := selector.LoadManifestFromDir(cmd.EnginesDir, engineName)
+	engine, err := engines.LoadManifest(cmd.EnginesDir, engineName)
 	if err != nil {
+		if errors.Is(err, engines.ErrManifestNotFound) {
+			if cmd.Verbose {
+				fmt.Println(err)
+			}
+			return fmt.Errorf("%q not found", engineName)
+		}
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}
 
@@ -253,7 +256,7 @@ func (cmd *useCommand) unsetEngineConfig(engineName string) error {
 		return fmt.Errorf("error un-setting engine configurations: %v", err)
 	}
 
-	engine, err := selector.LoadManifestFromDir(cmd.EnginesDir, engineName)
+	engine, err := engines.LoadManifest(cmd.EnginesDir, engineName)
 	if err != nil {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}

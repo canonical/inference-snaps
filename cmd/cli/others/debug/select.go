@@ -57,7 +57,7 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("error decoding hardware info: %s", err)
 	}
 
-	allEngines, err := selector.LoadManifestsFromDir(cmd.enginesDir)
+	allEngines, err := engines.LoadManifests(cmd.enginesDir)
 	if err != nil {
 		return fmt.Errorf("error loading engines from directory: %s", err)
 	}

@@ -19,7 +19,7 @@ func Group(title string) *cobra.Group {
 }
 
 func scoreEngines(ctx *common.Context) ([]engines.ScoredManifest, error) {
-	allEngines, err := selector.LoadManifestsFromDir(ctx.EnginesDir)
+	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
 		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
