@@ -2,7 +2,7 @@
 
 port="$(modelctl get http.port)"
 
-exec "$SERVER_PATH" \
+exec llama-server \
   --model "$MODEL_FILE" \
   --port "$port" \
   "$@"
