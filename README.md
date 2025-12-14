@@ -14,18 +14,19 @@ Every device should be able to run intelligent software without dependency hell 
 
 ## Quick start
 
-```bash
-# Install accelerator Driver
-# See https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/
+Install the [accelerator driver](https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/).
 
+Then:
+
+```bash
 # Install a model snap
-sudo snap install qwen-vl --channel 2.5/beta
+sudo snap install gemma3
 
 # Check status
-qwen-vl status
+gemma3 status
 
 # Chat with the LLM
-qwen-vl chat
+gemma3 chat
 ```
 
 ## What it does
@@ -40,6 +41,7 @@ qwen-vl chat
 
 | Model | Description | Install | Source |
 |---|---|---|---|
+| gemma3 | Vision-language model | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
 | qwen-vl | Vision-language model | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
 | deepseek-r1 | Thinking model | `snap install deepseek-r1` | [repo](https://github.com/canonical/deepseek-r1-snap)
 
