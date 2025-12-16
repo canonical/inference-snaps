@@ -44,7 +44,7 @@ Use the following command to create a template in an initial project tree:
 snapcraft init
 ```
 
-This will create a `snap` directory with a {file}`snapcraft.yaml` file inside:
+This will create a {file}`snap` directory with a {file}`snapcraft.yaml` file inside:
 ```{terminal}
 :dir: gemma3-snap
 :input: tree .
@@ -214,11 +214,11 @@ Define one *component* for the runtime, and another one for the model weights:
 
 Here, the component names must be kebab-case. 
 
-If you build the snap now, {command}`snapcraft` will create one `.snap` and two `.comp` archives. 
+If you build the snap now, {command}`snapcraft` will create one {file}`.snap` and two {file}`.comp` archives. 
 The components will be empty.
 You need to specify what gets packaged in them.
 
-Add a new *part* to copy the local files from the `components` directory to the corresponding component within the package.
+Add a new *part* to copy the local files from the {file}`components` directory to the corresponding component within the package.
 
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
@@ -253,9 +253,9 @@ Each inference snap can include a range of such components.
 In this tutorial you will create a single {ref}`engine <engines>` that uses those components. 
 Engines can reuse and customize components, for example to bundle a runtime with different model weights or to tweak the command line arguments.
 
-Create an `engines` directory, with a subdirectory for our only engine named `generic-cpu`. 
+Create an {file}`engines` directory, with a subdirectory for our only engine named `generic-cpu`. 
 
-Inside, create an `engine.yaml` file that defines the engine:
+Inside, create an {file}`engine.yaml` file that defines the engine:
 ```{literalinclude} create-inference-snap/engines/generic-cpu/engine.yaml
 :caption: engines/generic-cpu/engine.yaml
 :language: yaml
@@ -277,7 +277,7 @@ Make this script executable:
 chmod +x engines/generic-cpu/server
 ```
 
-Add another *part* in snapcraft file to include the `engines` directory in the snap:
+Add another *part* in snapcraft file to include the {file}`engines` directory in the snap:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start engines part
@@ -289,7 +289,7 @@ Add another *part* in snapcraft file to include the `engines` directory in the s
 Now, you need to expose the engine's server to the snap. 
 The snap should run the server (provided by the selected engine) as a background service.
 
-In a top level `scripts` directory, add a wrapper script that abstracts away the engine selection and runs the server script of the selected engine:
+In a top level {file}`scripts` directory, add a wrapper script that abstracts away the engine selection and runs the server script of the selected engine:
 ```{literalinclude} create-inference-snap/scripts/server.sh
 :caption: scripts/server.sh
 :language: bash
@@ -307,7 +307,7 @@ Include the directory in the package, via a new *part*:
 :end-before: end part
 ```
 
-Then, add a server *app* that runs `server.sh` as a background service:
+Then, add a server *app* that runs {file}`server.sh` as a background service:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start server app
@@ -318,16 +318,16 @@ The above goes to the `apps` section of the snapcraft file.
 ### The install hook
 
 Moreover, you need a script which takes care of the installation logic.
-In snaps, the `install` hook is a script that runs when the snap is installed.
+In snaps, the [install hook](https://snapcraft.io/docs/supported-snap-hooks) script is called when the snap is installed.
 
-The install hook should trigger hardware detection and install the best matching components and engine.
+The install hook should trigger hardware detection and deploy the best matching components and engine.
 Do this using the `modelctl` CLI tool included earlier:
 ```{literalinclude} create-inference-snap/snap/hooks/install
 :caption: snap/hooks/install
 :language: bash
 ```
 
-This script gets added automatically to the snap if placed in the `snap/hooks` directory.
+This script gets added automatically to the snap if placed in the {file}`snap/hooks` directory.
 However, you need to grant it the necessary permissions to detect hardware.
 
 Add the following to the snapcraft file to declare the required interface for the `install` hook:
