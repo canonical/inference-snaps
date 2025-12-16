@@ -239,12 +239,6 @@ Some of the {spellexception}`llama.cpp` artifacts built here are not required.
 You can refine this *part* later to only include what is necessary.
 
 The packaging logic for the components is now complete.
-You can build the snap and verify the packages:
-```{terminal}
-:dir: gemma3-snap
-:input: snapcraft pack
-Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma3-jane+llama-cpp.comp
-```
 
 ### Engine
 
@@ -346,11 +340,9 @@ Finally, add all license files to the snap. E.g. to add Gemma's license, add the
 :end-before: end part
 ```
 
-## Pack and deploy
+## Pack and test
 
-With the crafting completed, it's time to pack, test, and upload the snap.
-
-### Test locally
+With the crafting completed, it's time to pack and test the snap.
 
 Pack the snap:
 ```shell
@@ -421,23 +413,22 @@ Submit a request using {command}`curl`:
 
 That worked! You've created an inference snap for Gemma 3 model, with just one engine.
 
+## Publish to the snap store
 
-### Publish to the store
-
-Uploading the snap to the store unlocks the automatic engine selection and component installation functionality.
+Publishing the snap to the store unlocks the automatic engine selection and component installation functionality.
 Moreover, it lets others install and use the snap.
 
-Uploading requires a few steps. Here is the list:
-1. Register the name
-2. Get yourself added to component upload allow-list
-3. Upload the snap
-4. Request auto connection permission for the hardware-observe interface
+Publishing an inference snap involves several steps during the first release.
+
+### Register the name
 
 First you need to register the snap name in the store.
-Refer to [this guide](https://snapcraft.io/docs/registering-your-app-name) to do that.
+Refer to [registering your app name](https://snapcraft.io/docs/registering-your-app-name) guide.
+
+### Release
 
 Uploading snaps with components currently requires a special permission. This is needed per account.
-Request to be added to the component upload allow-list by posting in the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/19).
+Submit a request to be added to the component upload allow-list by posting in the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/19).
 There is no subcategory for component uploads, so just post without picking one.
 
 Once you have the permission, upload the snap and its components:
@@ -450,7 +441,7 @@ snapcraft upload gemma3-jane_v3_amd64.snap \
 
 The snap is now in the store!
 
-Remove the locally installed snap and install from the store and test the snap in developer mode:
+Remove the locally installed snap and install it from the store, in developer mode:
 ```{terminal}
 :dir: gemma3-snap
 :input: sudo snap remove gemma3-jane
@@ -466,6 +457,7 @@ endpoints:
 ```
 
 As shown, the snap has automatically detected generic-cpu this time. 
+The snap is ready to use.
 
 The [developer mode](https://snapcraft.io/docs/install-modes#developer-mode) allows the snap to access the system without the usual confinement constraints.
 This isn't ideal for production use.
@@ -478,9 +470,12 @@ sudo snap connect gemma3-jane:hardware-observe
 sudo gemma3-jane use-engine --auto
 ```
 
-But you can do better than that.
+To simplify this for users, you can request the snap to be granted permission to auto connect the interface.
 
-The snap store can grant the snap permission to auto connect the hardware-observe interface. This requires a manual review by the store security team.
+### Auto-connect interfaces
+
+The snap store can grant the snap permission to auto connect the hardware-observe interface.
+This requires a manual review by the store security team.
 
 Submit a request on the [Snapcraft forum](https://forum.snapcraft.io/c/store-requests/privileged-interfaces/27) to get this permission for your snap.
 An example, extended request can be found [here](https://forum.snapcraft.io/t/auto-connection-of-hardware-observe-and-home-for-gemma3/49246).
