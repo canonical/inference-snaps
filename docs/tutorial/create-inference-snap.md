@@ -35,8 +35,8 @@ The {file}`snapcraft.yaml` file is where the snap's packaging logic is defined.
 
 Create and enter a new directory for the project:
 ```shell
-mkdir inference-snap-tutorial
-cd inference-snap-tutorial
+mkdir gemma3-snap
+cd gemma3-snap
 ```
 
 Use the following command to create a template in an initial project tree:
@@ -46,6 +46,7 @@ snapcraft init
 
 This will create a `snap` directory with a {file}`snapcraft.yaml` file inside:
 ```{terminal}
+:dir: gemma3-snap
 :input: tree .
 .
 └── snap
@@ -157,7 +158,6 @@ This isn't required for the directory names but it makes the next steps easier a
 
 Move the downloaded GGUF file to the model directory.
 
-Leave the `llama-cpp` directory free of artifacts.
 The {spellexception}`llama.cpp`'s HTTP server binary will be built from source during packaging and placed in the expected location. More on that later in the same section.
 
 Add the following configuration file the model:
@@ -179,12 +179,17 @@ Finally, add a wrapper script for starting the server provided by this component
 :caption: {spellexception}`components/llama-cpp/server`
 :language: bash
 ```
-Make the script executable: `chmod +x components/llama-cpp/server`
+
+Make the script executable:
+```shell
+chmod +x components/llama-cpp/server
+```
 
 The above script loads the configurations and starts the HTTP server.
 
 At this point, the {file}`components` directory should look like this:
 ```{terminal}
+:dir: gemma3-snap
 :input: tree components/
 components/
 ├── llama-cpp
@@ -236,6 +241,7 @@ You can refine this *part* later to only include what is necessary.
 The packaging logic for the components is now complete.
 You can build the snap and verify the packages:
 ```{terminal}
+:dir: gemma3-snap
 :input: snapcraft pack
 Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma3-jane+llama-cpp.comp
 ```
@@ -265,7 +271,11 @@ In simplest cases, this simply runs a program provided by one of the components:
 :caption: engines/generic-cpu/server
 :language: bash
 ```
-Make this script executable: `chmod +x engines/generic-cpu/server`
+
+Make this script executable:
+```shell
+chmod +x engines/generic-cpu/server
+```
 
 Add another *part* in snapcraft file to include the `engines` directory in the snap:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
@@ -284,6 +294,11 @@ In a top level `scripts` directory, add a wrapper script that abstracts away the
 :caption: scripts/server.sh
 :language: bash
 ``` 
+
+Add executable permission to the script:
+```shell
+chmod +x scripts/server.sh
+```
 
 Include the directory in the package, via a new *part*:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
@@ -363,6 +378,7 @@ sudo snap connect gemma3-jane:hardware-observe
 
 Now, request auto selection of the engine:
 ```{terminal}
+:dir: gemma3-snap
 :input: sudo gemma3-jane use-engine --auto
 Evaluating engines for optimal hardware compatibility:
 ✔ generic-cpu: compatible, score=12
@@ -379,6 +395,7 @@ sudo snap start gemma3-jane
 
 Next, check the logs again and make sure the server started successfully:
 ```{terminal}
+:dir: gemma3-snap
 :input: sudo snap logs gemma3-jane
 ...
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: main: server is listening on http://127.0.0.1:9090 - starting the main loop
@@ -389,6 +406,7 @@ Looks like the server is up and running!
 
 Submit a request using {command}`curl`:
 ```{terminal}
+:dir: gemma3-snap
 :input: curl -s http://localhost:9090/v1/chat/completions   -H "Content-Type: application/json"   -d '{
     "max_tokens": 30,
     "temperature": 0,
@@ -434,6 +452,7 @@ The snap is now in the store!
 
 Remove the locally installed snap and install from the store and test the snap in developer mode:
 ```{terminal}
+:dir: gemma3-snap
 :input: sudo snap remove gemma3-jane
 gemma3-jane removed
 
