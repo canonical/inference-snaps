@@ -31,7 +31,7 @@ sudo apt install tree curl
 
 ## snapcraft.yaml
 
-The {file}`snapcraft.yaml` file is where the snap's packaging logic is defined.
+The [{file}`snapcraft.yaml` file](https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/) is where the snap's packaging logic is defined.
 
 Create and enter a new directory for the project:
 ```shell
@@ -235,7 +235,7 @@ Furthermore, add a *part* to build {spellexception}`llama.cpp` from source and m
 :end-before: end part
 ```
 
-You don't need all the {spellexception}`llama.cpp` artifacts, but that's okay for now. 
+Some of the {spellexception}`llama.cpp` artifacts built here are not required. 
 You can refine this *part* later to only include what is necessary.
 
 The packaging logic for the components is now complete.
@@ -248,25 +248,14 @@ Packed: gemma3-jane_v3_amd64.snap, gemma3-jane+model-1b-it-q4-0-gguf.comp, gemma
 
 ### Engine
 
-The runtime and model weights are tightly coupled components useful for certain host machines.
-Each inference snap can include a range of such components. 
-In this tutorial you will create a single {ref}`engine <engines>` that uses those components. 
-Engines can reuse and customize components, for example to bundle a runtime with different model weights or to tweak the command line arguments.
+So far, you've created two components: one for the model weights and another for the runtime.
+You now need to create an {ref}`engine <engines>` that uses those components. The engine defines how to run the inference server and on what hardware. 
 
-Create an {file}`engines` directory, with a subdirectory for our only engine named `generic-cpu`. 
+Create an {file}`engines` directory, with a subdirectory for an engine named `generic-cpu`.
 
-Inside, create an {file}`engine.yaml` file that defines the engine:
-```{literalinclude} create-inference-snap/engines/generic-cpu/engine.yaml
-:caption: engines/generic-cpu/engine.yaml
-:language: yaml
-```
 
-That is the {ref}`engine manifest file <engine-manifest>`. 
-It describes the engine as well as its hardware and software requirements.
-The manifest file can be extended to restrict the hardware requirements and also set default configurations for the runtime.
-
-Lastly, create a wrapper script that starts the runtime for this engine. 
-In simplest cases, this simply runs a program provided by one of the components:
+Inside, create a wrapper script that starts the runtime for this engine. 
+This runs the server program provided by the `llama-cpp` component:
 ```{literalinclude} create-inference-snap/engines/generic-cpu/server
 :caption: engines/generic-cpu/server
 :language: bash
@@ -276,6 +265,17 @@ Make this script executable:
 ```shell
 chmod +x engines/generic-cpu/server
 ```
+
+In the same directory, create an {file}`engine.yaml` file that defines the engine:
+```{literalinclude} create-inference-snap/engines/generic-cpu/engine.yaml
+:caption: engines/generic-cpu/engine.yaml
+:language: yaml
+```
+
+That is the {ref}`engine manifest file <engine-manifest>`. 
+It describes the engine as well as its hardware and software requirements.
+The manifest file can be extended to restrict the hardware requirements and also set default configurations for the runtime.
+
 
 Add another *part* in snapcraft file to include the {file}`engines` directory in the snap:
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
