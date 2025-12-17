@@ -1,0 +1,10 @@
+environment:
+# Default OpenAI base path for llama.cpp HTTP server
+- OPENAI_BASE_PATH=/v1
+# Add llama.cpp binaries
+- PATH=$PATH:$COMPONENT/usr/local/bin  
+# Add llama.cpp-built shared libraries
+- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COMPONENT/usr/local/lib
+- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COMPONENT/usr/local/bin
+# Add shared libraries added via staged debian packages
+- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COMPONENT/usr/lib/$ARCH_TRIPLET
