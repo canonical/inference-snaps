@@ -5,16 +5,9 @@ Each inference snap can include multiple runtimes and model weights optimized fo
 During installation, the snap automatically detects the hardware and picks the best matching runtime and model weights.
 Only the selected components are downloaded and installed. 
 
-In this tutorial, you will create an inference snap for the Gemma 3 LLM. 
-The tutorial uses Gemma 3 as an open source example model. 
-Gemma models are free and permit responsible commercial use.
-Read their full [terms of use](https://ai.google.dev/gemma/terms).
+In this tutorial, you'll create an inference snap for the Gemma 3 LLM, an open-source model that permits responsible commercial use (see [terms of use](https://ai.google.dev/gemma/terms)). This tutorial focuses on learning the overall structure by packaging a single model weight and runtime. Once you master the basics, you'll be able to package other model weights and runtimes for different hardware configurations. 
 
-The focus of the tutorial is on learning the overall structure of inference snaps by packaging a single model and runtime, rather than making a snap that works on a wide range of machines.
-Once you learn the basics, you'll be able to apply the newly gained skill for other model weights and runtimes. 
-
-To succeed, you should be familiar with LLMs and Linux command line. 
-You should also have access to a Linux machine with the amd64 architecture, and have at least 20GB of free disk space.
+To succeed, you should be familiar with LLMs and the Linux command line. You'll also need a Linux machine with amd64 architecture and at least 20GB of free disk space (for the build environment, model files, and snap packages).
 
 ## Get started
 
@@ -23,10 +16,10 @@ Start by preparing the necessary tools.
 The {command}`snapcraft` utility is used to create snaps.
 If you don't have it installed, refer to this [setup guide](https://documentation.ubuntu.com/snapcraft/stable/how-to/set-up-snapcraft/).
 
-You may also use {command}`tree` and {command}`curl` which you can install with:
+You may also use {command}`tree`, {command}`curl`, and {command}`jq` which you can install with:
 ```shell
 sudo apt update
-sudo apt install tree curl
+sudo apt install tree curl jq
 ```
 
 ## snapcraft.yaml
@@ -133,8 +126,7 @@ This app exposes the `modelctl` command line tool to the user, under the snap's 
 
 ### Components
 
-In inference snaps, the model weights and runtimes are packages into [snap components](https://snapcraft.io/docs/components). 
-Using snap components enables building the snap with all the building blocks but installing only what is relevant.
+Snap [components](https://snapcraft.io/docs/components) are optional, independently installable parts of a snap. In inference snaps, packaging model weights and runtimes as components enables you to build the snap with all available options while allowing users to install only what is relevant to their hardware.
 
 Start with the bare minimum: one runtime and one model weights component.
 
@@ -160,7 +152,7 @@ Move the downloaded GGUF file to the model directory.
 
 The {spellexception}`llama.cpp`'s HTTP server binary will be built from source during packaging and placed in the expected location. More on that later in the same section.
 
-Add the following configuration file the model:
+Add the following configuration file for the model:
 ```{literalinclude} create-inference-snap/components/model-1b-it-q4-0-gguf/component.yaml
 :caption: {spellexception}`components/model-1b-it-q4-0-gguf/component.yaml`
 :language: yaml
@@ -242,8 +234,7 @@ The packaging logic for the components is now complete.
 
 ### Engine
 
-So far, you've created two components: one for the model weights and another for the runtime.
-You now need to create an {ref}`engine <engines>` that uses those components. The engine defines how to run the inference server and on what hardware. 
+An {ref}`engine <engines>` combines components (runtime + model weights) with configuration for specific hardware. So far, you've created two components: one for model weights and one for the runtime. Now you need to create the engine that ties them together and defines how to run the inference server on specific hardware. 
 
 Create an {file}`engines` directory, with a subdirectory for an engine named `generic-cpu`.
 
@@ -314,7 +305,7 @@ The above goes to the `apps` section of the snapcraft file.
 Moreover, you need a script which takes care of the installation logic.
 In snaps, the [install hook](https://snapcraft.io/docs/supported-snap-hooks) script is called when the snap is installed.
 
-The install hook should trigger hardware detection and deploy the best matching components and engine.
+The install hook should trigger hardware detection and install the best matching components and engine.
 Do this using the `modelctl` CLI tool included earlier:
 ```{literalinclude} create-inference-snap/snap/hooks/install
 :caption: snap/hooks/install
@@ -360,8 +351,8 @@ sudo snap install --dangerous *.snap && \
 sudo snap install --dangerous *.comp
 ```
 
-The server will fail to start, so you can check the logs with: `snap logs gemma3-jane`.
-The reason for this is that the snap does not have access to detect the hardware and select the engine.
+The server will fail to start initially because the snap lacks permission to detect hardware and select an engine.
+You can verify this by checking the logs: `snap logs gemma3-jane`.
 
 Grant the snap access to the `hardware-observe` interface:
 ```shell
@@ -396,19 +387,57 @@ Next, check the logs again and make sure the server started successfully:
 
 Looks like the server is up and running!
 
-Submit a request using {command}`curl`:
-```{terminal}
-:dir: gemma3-snap
-:input: curl -s http://localhost:9090/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+Submit a chat completion request using {command}`curl`:
+```shell
+ curl --silent --show-error http://localhost:9090/v1
+/chat/completions   --data '{
     "max_tokens": 30,
     "temperature": 0,
     "stream": false,
     "messages": [
       { "role": "system", "content": "You are a helpful assistant." },
-      { "role": "user", "content": "What are the 3 main tourist attractions in Paris?" }
-    ]                                                                                   
-  }'
-{"choices":[{"finish_reason":"length","index":0,"message":{"role":"assistant","content":"Okay, here are the 3 main tourist attractions in Paris:\n\n1.  **The Eiffel Tower:** Undoubtedly the most iconic landmark in the world"}}],"created":1763044754,"model":"gpt-3.5-turbo","system_fingerprint":"b1-6a746cf","object":"chat.completion","usage":{"completion_tokens":30,"prompt_tokens":28,"total_tokens":58},"id":"chatcmpl-PLT9wXbZiJ6XXxHCQUBsTz9wj59y2KHU","timings":{"prompt_n":28,"prompt_ms":90.995,"prompt_per_token_ms":3.249821428571429,"prompt_per_second":307.7092147920215,"predicted_n":30,"predicted_ms":833.198,"predicted_per_token_ms":27.773266666666665,"predicted_per_second":36.005847349609574}}
+      { "role": "user", "content": "What are the 3 main tourist attractions
+ in Paris?" }
+    ]                                                                      
+             
+  }' | jq
+```
+
+This should give you a response like this:
+```json
+{
+  "choices": [
+    {
+      "finish_reason": "length",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Okay, here are the 3 main tourist attractions in Paris:\n\n1.  **The Eiffel Tower:** Undoubtedly the most iconic landmark in the world"
+      }
+    }
+  ],
+  "created": 1765964125,
+  "model": "gpt-3.5-turbo",
+  "system_fingerprint": "b1-2376b77",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 30,
+    "prompt_tokens": 28,
+    "total_tokens": 58
+  },
+  "id": "chatcmpl-0K7Hn92wHDrBOWCQnaynB3wTAKo3src3",
+  "timings": {
+    "cache_n": 27,
+    "prompt_n": 1,
+    "prompt_ms": 82.722,
+    "prompt_per_token_ms": 82.722,
+    "prompt_per_second": 12.088682575372937,
+    "predicted_n": 30,
+    "predicted_ms": 2011.104,
+    "predicted_per_token_ms": 67.0368,
+    "predicted_per_second": 14.917179817652395
+  }
+}
 ```
 
 That worked! You've created an inference snap for Gemma 3 model, with just one engine.
