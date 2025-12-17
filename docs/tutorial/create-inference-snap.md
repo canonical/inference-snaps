@@ -5,7 +5,7 @@ Each inference snap can include multiple runtimes and model weights optimized fo
 During installation, the snap automatically detects the hardware and picks the best matching runtime and model weights.
 Only the selected components are downloaded and installed. 
 
-In this tutorial, you'll create an inference snap for the Gemma 3 LLM, an open-source model that permits responsible commercial use (see [terms of use](https://ai.google.dev/gemma/terms)). This tutorial focuses on learning the overall structure by packaging a single model weight and runtime. Once you master the basics, you'll be able to package other model weights and runtimes for different hardware configurations. 
+In this tutorial, you'll create an inference snap for the Gemma 3 LLM, an open-source model that permits responsible commercial use (see [terms of use](https://ai.google.dev/gemma/terms)). This tutorial focuses on learning the overall structure by packaging a single model weight and runtime. Once you learn the basics, you'll be able to package other model weights and runtimes for different hardware configurations. 
 
 To succeed, you should be familiar with LLMs and the Linux command line. You'll also need a Linux machine with amd64 architecture and at least 20GB of free disk space (for the build environment, model files, and snap packages).
 
