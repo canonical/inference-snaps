@@ -232,9 +232,9 @@ You can refine this *part* later to only include what is necessary.
 
 The packaging logic for the components is now complete.
 
-### Engine
+### Inference engine
 
-An {ref}`engine <engines>` combines components (runtime + model weights) with configuration for specific hardware. So far, you've created two components: one for model weights and one for the runtime. Now you need to create the engine that ties them together and defines how to run the inference server on specific hardware. 
+An {ref}`inference engine <engines>` combines components (runtime + model weights) with configuration for specific hardware. So far, you've created two components: one for model weights and one for the runtime. Now you need to create the inference engine that ties them together and defines how to run the inference server on specific hardware. 
 
 Create an {file}`engines` directory, with a subdirectory for an engine named `generic-cpu`.
 
@@ -389,17 +389,13 @@ Looks like the server is up and running!
 
 Submit a chat completion request using {command}`curl`:
 ```shell
- curl --silent --show-error http://localhost:9090/v1
-/chat/completions   --data '{
-    "max_tokens": 30,
-    "temperature": 0,
-    "stream": false,
+ curl --silent --show-error http://localhost:9090/v1/chat/completions   --data '{
+    "max_tokens": 300,
+    "model": "gemma-3-1b-it-qat-q4_0",
     "messages": [
       { "role": "system", "content": "You are a helpful assistant." },
-      { "role": "user", "content": "What are the 3 main tourist attractions
- in Paris?" }
-    ]                                                                      
-             
+      { "role": "user", "content": "What are the 3 main tourist attractions in Paris?" }
+    ]                                                              
   }' | jq
 ```
 
@@ -416,27 +412,7 @@ This should give you a response like this:
       }
     }
   ],
-  "created": 1765964125,
-  "model": "gpt-3.5-turbo",
-  "system_fingerprint": "b1-2376b77",
-  "object": "chat.completion",
-  "usage": {
-    "completion_tokens": 30,
-    "prompt_tokens": 28,
-    "total_tokens": 58
-  },
-  "id": "chatcmpl-0K7Hn92wHDrBOWCQnaynB3wTAKo3src3",
-  "timings": {
-    "cache_n": 27,
-    "prompt_n": 1,
-    "prompt_ms": 82.722,
-    "prompt_per_token_ms": 82.722,
-    "prompt_per_second": 12.088682575372937,
-    "predicted_n": 30,
-    "predicted_ms": 2011.104,
-    "predicted_per_token_ms": 67.0368,
-    "predicted_per_second": 14.917179817652395
-  }
+  "..."
 }
 ```
 
@@ -471,23 +447,21 @@ snapcraft upload gemma3-jane_v3_amd64.snap \
 The snap is now in the store!
 
 Remove the locally installed snap and install it from the store, in developer mode:
+```shell
+sudo snap remove gemma3-jane
+sudo snap install --devmode gemma3-jane --edge
+```
+
+The snap should automatically select `generic-cpu` this time:
 ```{terminal}
 :dir: gemma3-snap
-:input: sudo snap remove gemma3-jane
-gemma3-jane removed
-
-:input: sudo snap install --devmode gemma3-jane --edge
-gemma3-jane (edge) v3 from Jane Doe installed
-
 :input: gemma3-jane status
 engine: generic-cpu
 endpoints:
     openai: http://localhost:9090/v1
 ```
 
-As shown, the snap has automatically detected generic-cpu this time. 
-The snap is ready to use.
-
+The inference snap is ready to use, with one caveat: it is installed in developer mode.
 The [developer mode](https://snapcraft.io/docs/install-modes#developer-mode) allows the snap to access the system without the usual confinement constraints.
 This isn't ideal for production use.
 
