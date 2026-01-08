@@ -24,7 +24,7 @@ uname -m
 ## disk.txt
 
 ```
-LC_ALL=POSIX df --portability --block-size=1 / /var/lib/snapd/snaps
+LC_ALL=POSIX df --portability --block-size=1 /var/lib/snapd/snaps
 ```
 
 ## meminfo.txt

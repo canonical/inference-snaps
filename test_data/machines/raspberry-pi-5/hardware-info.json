@@ -29,10 +29,6 @@
     "total-swap": 0
   },
   "disk": {
-    "/": {
-      "total": 62270910464,
-      "avail": 40666140672
-    },
     "/var/lib/snapd/snaps": {
       "total": 62270910464,
       "avail": 40666140672

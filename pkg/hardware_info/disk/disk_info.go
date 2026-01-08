@@ -7,7 +7,6 @@ import (
 )
 
 var directories = []string{
-	"/",
 	"/var/lib/snapd/snaps", // https://snapcraft.io/docs/system-snap-directory
 }
 

@@ -1,3 +1,2 @@
 Filesystem                    1-blocks         Used   Available Capacity Mounted on
 /dev/mapper/vgubuntu-root 500609097728 454230462464 20873912320      96% /
-/dev/mapper/vgubuntu-root 500609097728 454230462464 20873912320      96% /
