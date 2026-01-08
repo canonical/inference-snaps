@@ -3,7 +3,9 @@ package basic
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
+	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -92,6 +94,7 @@ func (cmd *statusCommand) statusJson() (string, error) {
 
 type Status struct {
 	Engine    string            `json:"engine" yaml:"engine"`
+	Services  map[string]string `json:"services" yaml:"services"`
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
@@ -106,6 +109,22 @@ func (cmd *statusCommand) statusStruct() (*Status, error) {
 		return nil, fmt.Errorf("error no engine is active")
 	}
 	statusStr.Engine = activeEngineName
+
+	services, err := snapctl.Services().Run()
+	if err != nil {
+		return nil, fmt.Errorf("error getting services: %v", err)
+	}
+	statusStr.Services = make(map[string]string)
+	for name, service := range services {
+		// The service name is in the format <snap-name>.<service-app>, we only want the service-app part.
+		_, serviceApp, found := strings.Cut(name, ".")
+		if !found {
+			return nil, fmt.Errorf("error unexpected service name format: %q", name)
+		}
+		// Append the service status exactly as snapd reports it. Often this is in the host system language, see bug:
+		// https://bugs.launchpad.net/snapd/+bug/2137543
+		statusStr.Services[serviceApp] = service.Current
+	}
 
 	endpoints, err := serverApiUrls(cmd.Context)
 	if err != nil {
