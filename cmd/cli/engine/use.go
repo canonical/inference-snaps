@@ -209,22 +209,16 @@ func (cmd *useCommand) switchEngine(engineName string) error {
 	if err != nil {
 		return fmt.Errorf("error setting new engine configurations: %v", err)
 	}
-
-	// Restart if any of the services are active
 	// TODO: get this from an env var instead (e.g. ENGINE_SERVICES=server,proxy)
 	serviceName := env.SnapInstanceName() + ".server"
 
-	// TODO: Only perform a restart if the service is active
-	// Currently we can not reliable determine if the service is active due to a snapd bug:
-	// https://bugs.launchpad.net/snapd/+bug/2137543
-	// For now, rely on systemd to restart the service, which will only be done if the service is active
-	fmt.Printf("Restarting %q (if active) ...\n", serviceName)
-	err = snapctl.Restart(serviceName).Run()
-	if err != nil {
-		return fmt.Errorf("error restarting service: %v", err)
-	}
+	fmt.Printf("Engine changed to %q.\n", engineName)
 
-	fmt.Printf("Engine successfully changed to %q\n", engineName)
+	// Currently we cannot reliably determine if the service is active to automatically restart it
+	// See https://bugs.launchpad.net/snapd/+bug/2137543
+	//
+	// Ask the user to restart the service manually
+	fmt.Printf("\nRun \"snap restart %s\" to use the new engine.\n", serviceName)
 
 	return nil
 }
