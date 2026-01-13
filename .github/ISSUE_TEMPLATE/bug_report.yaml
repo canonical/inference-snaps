@@ -27,15 +27,13 @@ body:
       label: Snap version
       description: Provide the output of the following command `snap list <inference-snap>`
       render: shell
-    # validations:
-    #   required: true
 
   - type: textarea
     id: environment
     attributes:
       label: System information
       description: |
-        Provide information about your hardware.
+        For hardware detection and engine selection bugs, provide information about your system.
 
         Run `<inference-snap> show-machine` and paste the output below.
       value: |
@@ -46,6 +44,3 @@ body:
         ```
 
         </details>
-    validations:
-      required: true
-
