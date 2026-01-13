@@ -35,7 +35,7 @@ body:
     attributes:
       label: System information
       description: |
-        For hardware detection and engine selection bugs, provide information about your hardware.
+        For hardware detection and engine selection bugs, provide information about your system.
 
         Run `<inference-snap> show-machine` and paste the output below.
       value: |
