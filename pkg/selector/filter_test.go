@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 	"gopkg.in/yaml.v3"
@@ -126,7 +127,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	// No memory in hardware info
 	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
-		t.Fatalf("No Memory in hardware_info should return err")
+		t.Fatalf("No Memory in hardware_info should return an error")
 	}
 
 	hwInfo.Memory = types.MemoryInfo{
@@ -137,17 +138,20 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	// No disk space in hardware info
 	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
-		t.Fatal("No Disk space in hardware_info should return err")
+		t.Fatal("No Disk space in hardware_info should return an error")
 	}
 
 	hwInfo.Disk = make(map[string]types.DirStats)
-	hwInfo.Disk["/"] = types.DirStats{
+	hwInfo.Disk[constants.SnapStoragePath] = types.DirStats{
 		Avail: 6000000000,
 	}
 
 	// No CPU in hardware info
-	_, _, err = checkEngine(&hwInfo, currentEngine)
-	if err == nil {
-		t.Fatal("No CPU in hardware_info should return err")
+	_, issues, err := checkEngine(&hwInfo, currentEngine)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(issues) == 0 {
+		t.Fatal("No CPU in hardware_info should result in a compatibility issue")
 	}
 }

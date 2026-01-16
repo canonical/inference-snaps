@@ -3,11 +3,12 @@ package disk
 import (
 	"fmt"
 
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
 var directories = []string{
-	"/var/lib/snapd/snaps", // https://snapcraft.io/docs/system-snap-directory
+	constants.SnapStoragePath,
 }
 
 // Info returns the total size and available size for root and snap dirs on the host system, using the statfs syscall.

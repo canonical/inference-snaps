@@ -3,10 +3,10 @@ package engines
 import "github.com/canonical/inference-snaps-cli/pkg/types"
 
 type ScoredManifest struct {
-	Manifest   `yaml:",inline"`
-	Score      int      `yaml:"score" json:"score"`
-	Compatible bool     `yaml:"compatible" json:"compatible"`
-	Notes      []string `yaml:"notes,omitempty" json:"notes,omitempty"`
+	Manifest            `yaml:",inline"`
+	Score               int      `yaml:"score" json:"score"`
+	Compatible          bool     `yaml:"compatible" json:"compatible"`
+	CompatibilityIssues []string `yaml:"compatibility-issues,omitempty" json:"compatibility-issues,omitempty"`
 }
 
 type Manifest struct {
@@ -29,6 +29,7 @@ type Devices struct {
 }
 
 type Device struct {
+	// General
 	Type string `yaml:"type,omitempty" json:"type,omitempty"` // cpu, gpu, npu or nil
 	Bus  string `yaml:"bus,omitempty" json:"bus,omitempty"`   // pci, usb or nil
 
@@ -57,6 +58,9 @@ type Device struct {
 
 	// Drivers
 	SnapConnections []string `yaml:"snap-connections,omitempty" json:"snap-connections,omitempty"`
+
+	// General
+	CompatibilityIssues []string `yaml:"compatibility-issues,omitempty" json:"compatibility-issues,omitempty"`
 }
 
 type Configurations map[string]interface{}

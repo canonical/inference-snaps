@@ -1,9 +1,7 @@
 package pci
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/canonical/go-snapctl"
@@ -12,94 +10,133 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
-func Match(device engines.Device, pcis []types.PciDevice) (int, error) {
-	maxDeviceScore := 0
+func Match(manifestDevice engines.Device, hostPciDevices []types.PciDevice) (maxDeviceScore int, deviceIssues []string) {
+	maxDeviceScore = 0
 
-	if len(pcis) == 0 {
-		return 0, fmt.Errorf("no pci device on host system")
+	if len(hostPciDevices) == 0 {
+		deviceIssues = append(deviceIssues, "no pci devices on host system")
+		return
 	}
 
-	for _, pciDevice := range pcis {
-		deviceScore, err := checkPciDevice(device, pciDevice)
-		if err != nil {
-			if os.Getenv("VERBOSE") == "true" {
-				fmt.Printf("    %v\n", err)
-			}
-		}
+	availableDevices := filterPciDevices(hostPciDevices, manifestDevice.VendorId, manifestDevice.DeviceId)
+	scoredDevices, scoreIssues := scorePciDevices(manifestDevice, availableDevices)
 
-		if deviceScore > 0 {
-			if deviceScore > maxDeviceScore {
-				maxDeviceScore = deviceScore
-			}
+	for _, pci := range scoredDevices {
+		if pci.Score > maxDeviceScore {
+			maxDeviceScore = pci.Score
 		}
 	}
-
 	if maxDeviceScore == 0 {
-		deviceJson, _ := json.Marshal(device)
-		return 0, fmt.Errorf("device not found: %v", string(deviceJson))
+		deviceIssues = append(deviceIssues, scoreIssues...)
+		return
 	}
-	return maxDeviceScore, nil
+
+	return
 }
 
-func checkPciDevice(device engines.Device, pciDevice types.PciDevice) (int, error) {
-	currentDeviceScore := 0
+// filterPciDevices returns all PCI devices from the provided list, where the Vendor ID and the Device ID match.
+//
+// Filtering does not return compatibility issues. If we did, an engine with N device on a machine with M pci devices,
+// would print NxM issues. These will all read "vendor id mismatch" or "device id mismatch" for each NxM combination.
+// In the end the reason is just "device not found".
+func filterPciDevices(pciDevices []types.PciDevice, vendorId *types.HexInt, deviceId *types.HexInt) []types.PciDevice {
+	var foundDevices []types.PciDevice
+	for _, pciDevice := range pciDevices {
+		include := true
 
-	// Device type: tpu, npu, gpu, etc
-	if device.Type != "" {
-		match := checkType(device.Type, pciDevice)
-		if match {
-			currentDeviceScore += weights.PciDeviceType
-		} else {
-			return 0, fmt.Errorf("device class 0x%04x not of required type %s", pciDevice.DeviceClass, device.Type)
-		}
-	}
-
-	// Prefer dGPU above iGPU
-	// PCI devices on bus 0 are considered internal, and anything else external/discrete
-	if pciDevice.BusNumber > 0 {
-		currentDeviceScore += weights.PciDeviceExternal
-	}
-
-	if device.VendorId != nil {
-		if *device.VendorId == pciDevice.VendorId {
-			currentDeviceScore += weights.PciVendorId
-		} else {
-			return 0, fmt.Errorf("vendor id mismatch: 0x%04x", pciDevice.VendorId)
-		}
-
-		// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
-		if device.DeviceId != nil {
-			if *device.DeviceId == pciDevice.DeviceId {
-				currentDeviceScore += weights.PciDeviceId
+		if vendorId != nil {
+			if *vendorId != pciDevice.VendorId {
+				include = false
 			} else {
-				return 0, fmt.Errorf("device id mismatch: 0x%04x", pciDevice.DeviceId)
+				// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
+				if deviceId != nil {
+					if *deviceId != pciDevice.DeviceId {
+						include = false
+					}
+				}
 			}
 		}
+
+		if include {
+			foundDevices = append(foundDevices, pciDevice)
+		}
+	}
+	return foundDevices
+}
+
+// scorePciDevices takes a list of host pci devices, which should already be filtered based on Vendor ID and Device ID,
+// performs scoring on all the devices, and returns a list of scored devices
+func scorePciDevices(manifestDevice engines.Device, hostPciDevices []types.PciDevice) ([]types.PciDevice, []string) {
+	var issues []string
+
+	if len(hostPciDevices) == 0 {
+		issues = append(issues, "device not found")
+	}
+
+	for i, pciDevice := range hostPciDevices {
+		deviceScore, deviceIssues := scorePciDevice(manifestDevice, pciDevice)
+
+		hostPciDevices[i].Score = deviceScore
+		for _, issue := range deviceIssues {
+			issues = append(issues, fmt.Sprintf("pci %s: %s", pciDevice.Slot, issue))
+		}
+	}
+	return hostPciDevices, issues
+}
+
+func scorePciDevice(manifestDevice engines.Device, hostPciDevice types.PciDevice) (deviceScore int, issues []string) {
+	deviceScore = 0
+
+	// Device type: tpu, npu, gpu, etc
+	if manifestDevice.Type != "" {
+		match := checkType(manifestDevice.Type, hostPciDevice)
+		if match {
+			deviceScore += weights.PciDeviceType
+		} else {
+			deviceScore = 0
+			// The device type does not map directly to a device class. We use a decision tree to check if the device class
+			// and subclass fall in known ranges per device type. This makes printing a direct reason here difficult.
+			// The message "device class 0x%04x not of required type %s" was chosen as best compromise here.
+			issues = append(issues,
+				fmt.Sprintf("device class 0x%04x not of required type %s",
+					hostPciDevice.DeviceClass, manifestDevice.Type))
+			return
+		}
+	}
+
+	// Prefer dGPU over iGPU
+	// PCI devices on bus 0 are considered internal, and anything else external/discrete
+	if hostPciDevice.BusNumber > 0 {
+		deviceScore += weights.PciDeviceExternal
 	}
 
 	// Check additional properties
-	if hasAdditionalProperties(device) {
-		propsScore, err := checkProperties(device, pciDevice)
+	if hasAdditionalProperties(manifestDevice) {
+		propsScore, err := checkProperties(manifestDevice, hostPciDevice)
 		if err != nil {
-			return 0, err
+			deviceScore = 0
+			issues = append(issues, err.Error())
+			return
 		}
-		if propsScore > 0 {
-			currentDeviceScore += propsScore
-		}
+		deviceScore += propsScore
 	}
 
 	// Check drivers
-	for _, connection := range device.SnapConnections {
+	for _, connection := range manifestDevice.SnapConnections {
 		connected, err := checkSnapConnection(connection)
 		if err != nil {
-			return 0, fmt.Errorf("error checking snap connection %q: %v", connection, err)
+			deviceScore = 0
+			issues = append(issues, fmt.Sprintf("error checking snap connection %q: %v", connection, err))
+			return
 		}
 		if !connected {
-			return 0, fmt.Errorf("%q is not connected", connection)
+			deviceScore = 0
+			issues = append(issues, fmt.Sprintf("%q is not connected", connection))
+			return
 		}
 	}
 
-	return currentDeviceScore, nil
+	return deviceScore, nil
 }
 
 func checkType(requiredType string, pciDevice types.PciDevice) bool {

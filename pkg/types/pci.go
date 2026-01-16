@@ -1,6 +1,7 @@
 package types
 
 type PciDevice struct {
+	Score                int     `json:"score,omitempty" yaml:"score,omitempty"`
 	Slot                 string  `json:"slot" yaml:"slot"`
 	BusNumber            HexInt  `json:"bus-number" yaml:"bus-number"`
 	DeviceClass          HexInt  `json:"device-class" yaml:"device-class"`

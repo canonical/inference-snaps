@@ -14,4 +14,6 @@ const (
 	Ppc64el = "ppc64el"
 	Riscv64 = "riscv64"
 	S390x   = "s390x"
+
+	SnapStoragePath = "/var/lib/snapd/snaps" // https://snapcraft.io/docs/system-snap-directory
 )

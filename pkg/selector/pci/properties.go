@@ -45,15 +45,15 @@ func checkVram(device engines.Device, pciDevice types.PciDevice) error {
 	if vram, ok := pciDevice.AdditionalProperties["vram"]; ok {
 		vramAvailable, err := utils.StringToBytes(vram)
 		if err != nil {
-			return fmt.Errorf("error parsing vram: %v", err)
+			return fmt.Errorf("error parsing vRAM: %v", err)
 		}
 		if vramAvailable >= vramRequired {
 			return nil
 		} else {
-			return fmt.Errorf("not enough vram: %d", vramAvailable)
+			return fmt.Errorf("not enough vRAM: %d", vramAvailable)
 		}
 	} else {
 		// Hardware Info does not list available vram
-		return fmt.Errorf("hw-info missing additional properties field \"vram\"")
+		return fmt.Errorf("unable to detect vRAM")
 	}
 }

@@ -1,13 +1,11 @@
 package selector
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"sort"
-	"strings"
 
+	"github.com/canonical/inference-snaps-cli/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/cpu"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/pci"
@@ -43,9 +41,6 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 	var scoredEngines []engines.ScoredManifest
 
 	for _, currentManifest := range manifests {
-		if os.Getenv("VERBOSE") == "true" {
-			fmt.Printf("Checking engine: %s\n", currentManifest.Name)
-		}
 		score, reasons, err := checkEngine(hardwareInfo, currentManifest)
 		if err != nil {
 			return nil, err
@@ -58,16 +53,9 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 		}
 
 		if score == 0 {
-			if os.Getenv("VERBOSE") == "true" {
-				fmt.Printf("Engine not compatible: %s\n", strings.Join(reasons, ", "))
-			}
 			scoredEngine.Compatible = false
-		} else {
-			if os.Getenv("VERBOSE") == "true" {
-				fmt.Printf("Engine compatible\n")
-			}
 		}
-		scoredEngine.Notes = append(scoredEngine.Notes, reasons...)
+		scoredEngine.CompatibilityIssues = append(scoredEngine.CompatibilityIssues, reasons...)
 
 		scoredEngines = append(scoredEngines, scoredEngine)
 	}
@@ -78,50 +66,54 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []string, error) {
 	engineScore := 0
 	var reasons []string
+	compatible := true
 
 	// Enough memory
 	if manifest.Memory != nil {
 		requiredMemory, err := utils.StringToBytes(*manifest.Memory)
 		if err != nil {
-			return 0, reasons, err
-		}
+			return 0, nil, fmt.Errorf("failed to parse required memory: %v", err)
 
-		if hardwareInfo.Memory.TotalRam == 0 {
-			return 0, reasons, fmt.Errorf("system can't have zero ram")
-		}
+		} else if hardwareInfo.Memory.TotalRam == 0 {
+			// If the TotalRam field is the Go struct Zero value, it was never set.
+			// We do not check swap for the Zero value, as swap can realistically be of size 0 bytes.
+			return 0, nil, fmt.Errorf("total memory not reported by host system")
 
-		// Checking combination of ram and swap
-		if hardwareInfo.Memory.TotalRam+hardwareInfo.Memory.TotalSwap < requiredMemory {
-			reasons = append(reasons, fmt.Sprintf("memory: system memory too small"))
-			return 0, reasons, nil
+		} else if hardwareInfo.Memory.TotalRam+hardwareInfo.Memory.TotalSwap < requiredMemory {
+			// Checking combination of ram and swap
+			compatible = false
+			reasons = append(reasons, fmt.Sprintf("host system memory too small"))
+
+		} else {
+			engineScore++
 		}
-		engineScore++
 	}
 
 	// Enough disk space
 	if manifest.DiskSpace != nil {
 		requiredDisk, err := utils.StringToBytes(*manifest.DiskSpace)
 		if err != nil {
-			return 0, reasons, err
+			return 0, nil, fmt.Errorf("failed to parse required disk space: %v", err)
+
+		} else if _, ok := hardwareInfo.Disk[constants.SnapStoragePath]; !ok {
+			return 0, nil, fmt.Errorf("disk space not reported by host system")
+
+		} else if hardwareInfo.Disk[constants.SnapStoragePath].Avail < requiredDisk {
+			compatible = false
+			reasons = append(reasons, "host system disk space too small")
+
+		} else {
+			engineScore++
 		}
-		if _, ok := hardwareInfo.Disk["/var/lib/snapd/snaps"]; !ok {
-			return 0, reasons, fmt.Errorf("disk space not reported by hardware info")
-		}
-		if hardwareInfo.Disk["/var/lib/snapd/snaps"].Avail < requiredDisk {
-			reasons = append(reasons, fmt.Sprintf("disk: system disk space too small"))
-			return 0, reasons, nil
-		}
-		engineScore++
 	}
 
 	// Devices
 	// all
 	if len(manifest.Devices.Allof) > 0 {
-
-		extraScore, err := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
-		if err != nil {
-			reasons = append(reasons, err.Error())
-			return 0, reasons, nil
+		extraScore, issues := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
+		if len(issues) > 0 {
+			compatible = false
+			reasons = append(reasons, issues...)
 		} else {
 			engineScore += extraScore
 		}
@@ -129,116 +121,109 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, []
 
 	// any
 	if len(manifest.Devices.Anyof) > 0 {
-		extraScore, err := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
-		if err != nil {
-			reasons = append(reasons, err.Error())
-			return 0, reasons, nil
+		extraScore, issues := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
+		if len(issues) > 0 {
+			compatible = false
+			reasons = append(reasons, issues...)
 		} else {
 			engineScore += extraScore
 		}
 	}
 
+	if !compatible {
+		engineScore = 0
+	}
+
 	return engineScore, reasons, nil
 }
 
-func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, error) {
-	devicesFound := 0
+func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string) {
+	var issues []string
+	compatible := true
 	extraScore := 0
 
-	for _, device := range devices {
-		if os.Getenv("VERBOSE") == "true" {
-			jsonBytes, _ := json.Marshal(device)
-			fmt.Printf("  Checking for all-of required device: %s\n", string(jsonBytes))
-		}
+	for i, _ := range devices {
 
-		if device.Type == "cpu" {
-			cpuScore, err := cpu.Match(device, hardwareInfo.Cpus)
-			if err != nil {
-				return 0, fmt.Errorf("required cpu device not found: %v", err)
+		if devices[i].Type == "cpu" {
+			cpuScore, deviceIssues := cpu.Match(devices[i], hardwareInfo.Cpus)
+			if len(deviceIssues) > 0 {
+				compatible = false
+				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, deviceIssues...)
+				issues = append(issues, "required cpu device not found")
+			} else {
+				extraScore += cpuScore
 			}
-			extraScore += cpuScore
-			devicesFound++
 
-		} else if device.Bus == "usb" {
+		} else if devices[i].Bus == "usb" {
 			// Not implemented
-			return 0, fmt.Errorf("usb device matching not implemented")
+			compatible = false
+			devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, "usb device matching not implemented")
+			issues = append(issues, "usb device matching not implemented")
 
-		} else if device.Bus == "" || device.Bus == "pci" {
+		} else if devices[i].Bus == "" || devices[i].Bus == "pci" {
 			// Fallback to PCI as default bus
-			pciScore, err := pci.Match(device, hardwareInfo.PciDevices)
-			if err != nil {
-				return 0, fmt.Errorf("required pci device under all-of not found: %v", err)
+			pciScore, pciIssues := pci.Match(devices[i], hardwareInfo.PciDevices)
+			if len(pciIssues) > 0 {
+				compatible = false
+				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, pciIssues...)
+				issues = append(issues, "required pci device not found")
+			} else {
+				extraScore += pciScore
 			}
-			extraScore += pciScore
-			devicesFound++
-		}
-
-		if os.Getenv("VERBOSE") == "true" {
-			fmt.Printf("  Device found\n")
 		}
 	}
 
-	return extraScore, nil
+	if !compatible {
+		extraScore = 0
+	}
+
+	return extraScore, issues
 }
 
-func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, error) {
-	devicesFound := 0
+func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string) {
+	var issues []string
+	compatible := true
 	extraScore := 0
-	var reasons []string
 
-	for _, device := range devices {
-		if os.Getenv("VERBOSE") == "true" {
-			jsonBytes, _ := json.Marshal(device)
-			fmt.Printf("  Checking for any-of required device: %s\n", string(jsonBytes))
-		}
+	devicesFound := 0
+
+	for i, device := range devices {
 
 		if device.Type == "cpu" {
-			cpuScore, err := cpu.Match(device, hardwareInfo.Cpus)
-			if err != nil {
-				if os.Getenv("VERBOSE") == "true" {
-					fmt.Println("  " + err.Error())
-				}
-				reasons = append(reasons, err.Error())
+			cpuScore, deviceIssues := cpu.Match(device, hardwareInfo.Cpus)
+			if len(deviceIssues) > 0 {
+				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, deviceIssues...)
 			} else {
-				if os.Getenv("VERBOSE") == "true" {
-					fmt.Printf("  Device found\n")
-				}
 				devicesFound++
 				extraScore += cpuScore
 			}
 
 		} else if device.Bus == "usb" {
-			return 0, fmt.Errorf("devices any-of: device type usb not implemented")
+			compatible = false
+			device.CompatibilityIssues = append(device.CompatibilityIssues, "device type usb not implemented")
+			issues = append(issues, "usb device matching not implemented")
 
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
-			pciScore, err := pci.Match(device, hardwareInfo.PciDevices)
-			if err != nil {
-				if os.Getenv("VERBOSE") == "true" {
-					fmt.Println("  " + err.Error())
-				}
-				reasons = append(reasons, err.Error())
+			pciScore, pciIssues := pci.Match(device, hardwareInfo.PciDevices)
+			if len(pciIssues) > 0 {
+				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, pciIssues...)
 			} else {
-				if os.Getenv("VERBOSE") == "true" {
-					fmt.Printf("  Device found\n")
-				}
 				devicesFound++
 				extraScore += pciScore
 			}
 		}
-
 	}
 
 	// If any-of devices are defined, we need to find at least one
 	if len(devices) > 0 && devicesFound == 0 {
-
-		if os.Getenv("VERBOSE") == "true" {
-			for _, reason := range reasons {
-				fmt.Println("  " + reason)
-			}
-		}
-		return 0, fmt.Errorf("no devices under anyof found")
+		compatible = false
+		issues = append(issues, "required device not found")
 	}
 
-	return extraScore, nil
+	if !compatible {
+		extraScore = 0
+	}
+
+	return extraScore, issues
 }
