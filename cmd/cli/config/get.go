@@ -29,7 +29,7 @@ func GetCommand(ctx *common.Context) *cobra.Command {
 	var cmd getCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "get [<key>]",
 		Short:             "Print configurations",
 		Long:              "Print one or more configurations",
@@ -39,7 +39,7 @@ func GetCommand(ctx *common.Context) *cobra.Command {
 		RunE:              cmd.run,
 	}
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *getCommand) run(_ *cobra.Command, args []string) error {

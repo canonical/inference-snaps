@@ -20,7 +20,7 @@ func ChatCommand(ctx *common.Context) *cobra.Command {
 	var cmd chatCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "chat",
 		Short:             "Start the chat CLI providing connection parameters",
 		Long:              "Open a text-only chat session to the OpenAI-compatible server at the provided URL, requesting the model as specified.",
@@ -30,10 +30,10 @@ func ChatCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().StringVar(&cmd.baseUrl, "base-url", "", "Base URL of the OpenAI-compatible server")
-	cobra.Flags().StringVar(&cmd.modelName, "model", "", "Name of the model to use")
+	cobraCmd.Flags().StringVar(&cmd.baseUrl, "base-url", "", "Base URL of the OpenAI-compatible server")
+	cobraCmd.Flags().StringVar(&cmd.modelName, "model", "", "Name of the model to use")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *chatCommand) run(_ *cobra.Command, args []string) error {

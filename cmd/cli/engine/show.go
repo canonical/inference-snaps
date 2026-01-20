@@ -21,7 +21,7 @@ func ShowCommand(ctx *common.Context) *cobra.Command {
 	var cmd showCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:     "show-engine [<engine>]",
 		Short:   "Print information about an engine",
 		Long:    "Print information about the active engine, or the specified engine",
@@ -35,9 +35,9 @@ func ShowCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *showCommand) run(_ *cobra.Command, args []string) error {

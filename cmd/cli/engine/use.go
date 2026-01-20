@@ -30,7 +30,7 @@ func UseCommand(ctx *common.Context) *cobra.Command {
 	var cmd useCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:     "use-engine [<engine>]",
 		Short:   "Select an engine",
 		GroupID: groupID,
@@ -43,10 +43,10 @@ func UseCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().BoolVar(&cmd.auto, "auto", false, "automatically select a compatible engine")
-	cobra.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for downloading new components")
+	cobraCmd.Flags().BoolVar(&cmd.auto, "auto", false, "automatically select a compatible engine")
+	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for downloading new components")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *useCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {

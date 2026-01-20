@@ -24,7 +24,7 @@ func RunCommand(ctx *common.Context) *cobra.Command {
 	var cmd runCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "run <path>",
 		Short:             "Run a subprocess",
 		Hidden:            true,
@@ -34,9 +34,9 @@ func RunCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().BoolVar(&cmd.waitForComponentsFlag, "wait-for-components", false, "wait for engine components to be installed before running")
+	cobraCmd.Flags().BoolVar(&cmd.waitForComponentsFlag, "wait-for-components", false, "wait for engine components to be installed before running")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *runCommand) run(_ *cobra.Command, args []string) error {

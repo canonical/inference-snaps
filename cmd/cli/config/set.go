@@ -23,7 +23,7 @@ func SetCommand(ctx *common.Context) *cobra.Command {
 	var cmd setCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "set <key=value>",
 		Short:             "Set configurations",
 		Long:              "Set a configuration",
@@ -34,18 +34,18 @@ func SetCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().BoolVar(&cmd.packageConfig, "package", false, "set package configurations")
-	err := cobra.Flags().MarkHidden("package")
+	cobraCmd.Flags().BoolVar(&cmd.packageConfig, "package", false, "set package configurations")
+	err := cobraCmd.Flags().MarkHidden("package")
 	if err != nil {
 		panic(err)
 	}
-	cobra.Flags().BoolVar(&cmd.engineConfig, "engine", false, "set engine configuration")
-	err = cobra.Flags().MarkHidden("engine")
+	cobraCmd.Flags().BoolVar(&cmd.engineConfig, "engine", false, "set engine configuration")
+	err = cobraCmd.Flags().MarkHidden("engine")
 	if err != nil {
 		panic(err)
 	}
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *setCommand) run(_ *cobra.Command, args []string) error {

@@ -22,7 +22,7 @@ func StatusCommand(ctx *common.Context) *cobra.Command {
 	var cmd statusCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "status",
 		Short:             "Show the status",
 		Long:              "Show the status of the inference snap",
@@ -33,9 +33,9 @@ func StatusCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {

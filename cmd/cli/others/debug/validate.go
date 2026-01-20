@@ -16,7 +16,7 @@ func ValidateCommand(ctx *common.Context) *cobra.Command {
 	var cmd validateCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "validate-engines",
 		Short:             "Validate engine manifest files",
 		Args:              cobra.MinimumNArgs(1),
@@ -24,7 +24,7 @@ func ValidateCommand(ctx *common.Context) *cobra.Command {
 		RunE:              cmd.run,
 	}
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *validateCommand) run(_ *cobra.Command, args []string) error {

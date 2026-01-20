@@ -22,7 +22,7 @@ func ListCommand(ctx *common.Context) *cobra.Command {
 	var cmd listCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "list-engines",
 		Short:             "List available engines",
 		GroupID:           groupID,
@@ -31,7 +31,7 @@ func ListCommand(ctx *common.Context) *cobra.Command {
 		RunE:              cmd.run,
 	}
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *listCommand) run(_ *cobra.Command, _ []string) error {

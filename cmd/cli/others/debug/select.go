@@ -32,7 +32,7 @@ func SelectCommand(ctx *common.Context) *cobra.Command {
 	var cmd selectCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "select-engine",
 		Short:             "Test which engine will be chosen",
 		Long:              "Test which engine will be chosen from a directory of engines, given the machine information piped in via stdin",
@@ -42,10 +42,10 @@ func SelectCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "engine selection results format")
-	cobra.Flags().StringVar(&cmd.enginesDir, "engines", ctx.EnginesDir, "engine manifests directory")
+	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "engine selection results format")
+	cobraCmd.Flags().StringVar(&cmd.enginesDir, "engines", ctx.EnginesDir, "engine manifests directory")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {

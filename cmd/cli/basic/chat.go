@@ -16,7 +16,7 @@ func ChatCommand(ctx *common.Context) *cobra.Command {
 	var cmd chatCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "chat",
 		Short:             "Start the chat CLI",
 		Long:              "Chat with the server via its OpenAI API.\nThis CLI supports text-based prompting only.",
@@ -26,7 +26,7 @@ func ChatCommand(ctx *common.Context) *cobra.Command {
 		RunE:              cmd.run,
 	}
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {

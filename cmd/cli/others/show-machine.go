@@ -21,7 +21,7 @@ func ShowMachineCommand(ctx *common.Context) *cobra.Command {
 	var cmd showMachineCommand
 	cmd.Context = ctx
 
-	cobra := &cobra.Command{
+	cobraCmd := &cobra.Command{
 		Use:               "show-machine",
 		Short:             "Print information about the host machine",
 		Long:              "Print information about the host machine, including hardware and compute resources",
@@ -31,9 +31,9 @@ func ShowMachineCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobra.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
 
-	return cobra
+	return cobraCmd
 }
 
 func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
