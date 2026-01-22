@@ -3,3 +3,4 @@ packaging
 sphinxcontrib-svg2pdfconverter[CairoSVG]
 sphinx-last-updated-by-git
 sphinx-sitemap
+myst-parser~=4.0 # See https://github.com/canonical/sphinx-docs-starter-pack/pull/496
