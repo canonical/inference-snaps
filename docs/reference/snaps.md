@@ -41,6 +41,24 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## Nemotron 3 Nano
+[![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano) 
+[![nemotron-3-nano source][gh-badge]](https://github.com/canonical/nemotron-3-nano-snap)
+
+Nemotron 3 Nano is an LLM designed for both reasoning and non-reasoning tasks.
+The input and output are text-based.
+
+The inference snap for Nemotron 3 Nano has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+
+{{explore_optimizations}}
+
 ## Qwen VL
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl) 
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
