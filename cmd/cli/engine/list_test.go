@@ -3,12 +3,20 @@ package engine
 import (
 	"testing"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/pkg/storage"
 )
 
 func TestList(t *testing.T) {
+	cache := storage.NewMockCache()
+	err := cache.SetActiveEngine("engine-name")
+	if err != nil {
+		t.Fatalf("Error setting active engine name: %v", err)
+	}
+
 	allEngines, err := engines.LoadManifests("../../../test_data/engines")
 	if err != nil {
 		t.Fatalf("error loading engines: %v", err)
@@ -24,7 +32,15 @@ func TestList(t *testing.T) {
 		t.Fatalf("error scoring engines: %v", err)
 	}
 
-	cmd := listCommand{}
+	// cmd.printEnginesTable needs to call `cmd.Cache.GetActiveEngine()` to get the current active engine
+	// We therefore need to pass in the cache as context to `cmd`
+	ctx := &common.Context{
+		EnginesDir: "",
+		Cache:      cache,
+		Config:     nil,
+	}
+	cmd := listCommand{Context: ctx}
+
 	err = cmd.printEnginesTable(scoredEngines)
 	if err != nil {
 		t.Fatal(err)
