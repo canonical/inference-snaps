@@ -62,7 +62,18 @@ func (cmd *listCommand) printEnginesTable(scoredEngines []engines.ScoredManifest
 	})
 
 	var engineNameMaxLen, engineVendorMaxLen int
+
+	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		return fmt.Errorf("could not determine active engine: %v", err)
+	}
+
 	for _, engine := range scoredEngines {
+		// Mark active engine with "*"
+		if engine.Name == activeEngine {
+			engine.Name = engine.Name + "*"
+		}
+
 		// Find max name and vendor lengths
 		engineNameMaxLen = max(engineNameMaxLen, len(engine.Name))
 		engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor))
@@ -88,15 +99,13 @@ func (cmd *listCommand) printEnginesTable(scoredEngines []engines.ScoredManifest
 	}
 
 	tableMaxWidth := 80
-
 	// Increase column widths to account for paddings
-	engineNameMaxLen += 2
+	engineNameMaxLen += 1
 	engineVendorMaxLen += 2
 	// Description column fills the remaining space
 	engineDescriptionMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
 	// Reserve space for Compatible column
 	engineDescriptionMaxLen -= len(headerRow[3]) + 1
-
 	options := []tablewriter.Option{
 		tablewriter.WithRenderer(renderer.NewColorized(renderer.ColorizedConfig{
 			Header: renderer.Tint{
@@ -156,7 +165,7 @@ func (cmd *listCommand) printEnginesTable(scoredEngines []engines.ScoredManifest
 
 	table := tablewriter.NewTable(os.Stdout, options...)
 	table.Header(tableRows[0])
-	err := table.Bulk(tableRows[1:])
+	err = table.Bulk(tableRows[1:])
 	if err != nil {
 		return fmt.Errorf("error adding data to table: %v", err)
 	}
