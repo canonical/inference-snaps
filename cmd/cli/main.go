@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
+	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/basic"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
@@ -22,23 +24,37 @@ func main() {
 		Config:     storage.NewConfig(),
 	}
 
+	// Get snap name for dynamic commands
+	instanceName := env.SnapInstanceName()
+	if instanceName == "" {
+		instanceName = "cli"
+	}
+
 	// rootCmd is the base command
 	// It gets populated with subcommands
 	rootCmd := &cobra.Command{
-		SilenceUsage:      true,
-		Long:              "", // Base command description TBA
+		SilenceUsage: true,
+		Long: instanceName + " runs an engine that is optimized for your host machine,\n" +
+			"providing a local service endpoint.\n\n" +
+			"Use this command to configure the active engine, or switch to an alternative engine.",
 		PersistentPreRunE: persistentPreRunE,
+		Use:               instanceName,
+	}
+
+	// Add custom text after the help message - only show service management if snap has services
+	if env.Snap() != "" {
+		services, err := snapctl.Services().Run()
+		if err != nil {
+			fmt.Printf("Error: could not retrieve snap services: %v\n", err)
+			return
+		}
+		if len(services) > 0 {
+			rootCmd.SetUsageTemplate(rootCmd.UsageTemplate() + common.SuggestServiceManagement())
+		}
 	}
 
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&ctx.Verbose, "verbose", "v", false, "Enable verbose logging")
-
-	// Use snap instance name in a snap
-	if instanceName := env.SnapInstanceName(); instanceName != "" {
-		rootCmd.Use = instanceName
-	} else {
-		rootCmd.Use = "cli"
-	}
 
 	// Disable command sorting to keep commands sorted as added below
 	cobra.EnableCommandSorting = false
