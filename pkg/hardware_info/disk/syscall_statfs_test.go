@@ -20,8 +20,8 @@ func TestDirStats(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			t.Log("Total:", utils.FmtGigabytes(diskStats.Total))
-			t.Log("Avail:", utils.FmtGigabytes(diskStats.Avail))
+			t.Log("Total:", utils.FmtBytes(diskStats.Total))
+			t.Log("Avail:", utils.FmtBytes(diskStats.Avail))
 		})
 	}
 }
