@@ -15,6 +15,8 @@ You can help improve our code by:
 Our projects' source code can be found at:
 - [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
+- [Gemma3 snap](https://github.com/canonical/gemma3-snap)
+- [Nemotron 3 Nano snap](https://github.com/canonical/nemotron-3-nano-snap)
 
 ### Tooling
 Inference snaps use the following reusable building blocks:

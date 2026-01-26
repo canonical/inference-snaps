@@ -3,14 +3,12 @@
 # Release Notes
 
 This documentation covers multiple projects.
-Release notes for each project are published on Github, following the [keep a {spellexception}`changelog`](https://keepachangelog.com/en) specification.
 
-To view project-specific release notes, visit the GitHub Releases pages below:  
+Release notes for the tooling are published on Github, following the [keep a {spellexception}`changelog`](https://keepachangelog.com/en) specification.
 
-Inference snaps:
-- [DeepSeek R1 snap release notes](https://github.com/canonical/deepseek-r1-snap/releases)
-- [Qwen-VL snap release notes](https://github.com/canonical/qwen-vl-snap/releases)
+To view those release notes, visit the GitHub Releases pages below:
 
-Tooling:
 - [CLI release notes](https://github.com/canonical/inference-snaps-cli/releases)
 - [Developer Tools release notes](https://github.com/canonical/inference-snaps-dev/releases)
+
+The inference snaps currently do not have separate release notes.

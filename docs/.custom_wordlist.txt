@@ -49,7 +49,9 @@ localhost
 multimodal
 Multipass
 MyST
+Nano
 NDA
+Nemotron
 npm's
 npu
 NPUs
