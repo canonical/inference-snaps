@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"syscall"
 	"time"
@@ -25,9 +24,7 @@ import (
 	"github.com/openai/openai-go/v3/packages/ssestream"
 )
 
-func Client(baseUrl string, modelName string) error {
-	verbose := os.Getenv("VERBOSE") == "true"
-
+func Client(baseUrl string, modelName string, verbose bool) error {
 	if env.SnapInstanceName() != "" {
 		// TODO: get app name dynamically
 		serviceName := env.SnapInstanceName() + ".server"

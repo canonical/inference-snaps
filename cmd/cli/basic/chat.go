@@ -3,8 +3,8 @@ package basic
 import (
 	"fmt"
 
+	"github.com/canonical/inference-snaps-cli/cmd/cli/basic/chat"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/chat"
 	"github.com/spf13/cobra"
 )
 
@@ -36,5 +36,5 @@ func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	}
 	chatBaseUrl := apiUrls[openAi]
 
-	return chat.Client(chatBaseUrl, "")
+	return chat.Client(chatBaseUrl, "", cmd.Verbose)
 }
