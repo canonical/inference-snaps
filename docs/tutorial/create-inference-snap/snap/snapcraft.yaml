@@ -40,12 +40,10 @@ parts:
   # start llama-cpp part
   llama-cpp:
     source: https://github.com/ggerganov/llama.cpp.git
-    source-tag: b7083
+    source-tag: b7837
     source-depth: 1
     plugin: cmake
     cmake-parameters:
-      # Don't embed curl, since we aren't going to download models from a URL
-      - -D LLAMA_CURL=OFF
       # Enable GGML backend with all CPU variants and dynamic loading
       - -D GGML_CPU_ALL_VARIANTS=ON
       - -D GGML_BACKEND_DL=ON

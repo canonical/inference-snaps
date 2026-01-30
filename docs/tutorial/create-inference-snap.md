@@ -230,6 +230,8 @@ Furthermore, add a *part* to build {spellexception}`llama.cpp` from source and m
 Some of the {spellexception}`llama.cpp` artifacts built here are not required. 
 You can refine this *part* later to only include what is necessary.
 
+The `source-tag` variable pins the build to a specific release of the {spellexception}`llama.cpp` project that has been tested for this tutorial. 
+
 The packaging logic for the components is now complete.
 
 ### Inference engine
@@ -391,7 +393,6 @@ Submit a chat completion request using {command}`curl`:
 ```shell
  curl --silent --show-error http://localhost:9090/v1/chat/completions   --data '{
     "max_tokens": 300,
-    "model": "gemma-3-1b-it-qat-q4_0",
     "messages": [
       { "role": "system", "content": "You are a helpful assistant." },
       { "role": "user", "content": "What are the 3 main tourist attractions in Paris?" }
