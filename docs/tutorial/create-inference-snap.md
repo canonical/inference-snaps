@@ -230,6 +230,7 @@ Furthermore, add a *part* to build {spellexception}`llama.cpp` from source and m
 Some of the {spellexception}`llama.cpp` artifacts built here are not required. 
 You can refine this *part* later to only include what is necessary.
 
+The `source-tag` variable fixes the build to a specific commit in the {spellexception}`llama.cpp` repository. More recent commits may be compatible, but validation and testing were performed against the specified commit.
 The packaging logic for the components is now complete.
 
 ### Inference engine
