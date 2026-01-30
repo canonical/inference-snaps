@@ -391,7 +391,6 @@ Submit a chat completion request using {command}`curl`:
 ```shell
  curl --silent --show-error http://localhost:9090/v1/chat/completions   --data '{
     "max_tokens": 300,
-    "model": "gemma-3-1b-it-qat-q4_0",
     "messages": [
       { "role": "system", "content": "You are a helpful assistant." },
       { "role": "user", "content": "What are the 3 main tourist attractions in Paris?" }
