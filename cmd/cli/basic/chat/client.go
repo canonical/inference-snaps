@@ -199,13 +199,31 @@ func findModelName(baseUrl string, verbose bool) (string, error) {
 
 	const (
 		retryInterval = 5 * time.Second
-		waitTimeout   = 10 * time.Second
+		waitTimeout   = 60 * time.Second
 	)
 	start := time.Now()
 	for {
 		modelPage, err := modelService.List(context.Background())
 		if err != nil {
-			return "", err
+			var apiError *openai.Error
+			if errors.As(err, &apiError) {
+				// llama-server starting up
+				// Error: GET "http://localhost:8330/v1/models": 503 Service Unavailable {"message":"Loading model","type":"unavailable_error","code":503}
+				if apiError.StatusCode == http.StatusServiceUnavailable && apiError.Type == "unavailable_error" {
+					if time.Since(start) > waitTimeout {
+						// Stop waiting
+						return "", fmt.Errorf("no models available on server\n\n%s\n%s",
+							common.SuggestServerStartup(),
+							common.SuggestServerLogs())
+					}
+					time.Sleep(retryInterval)
+					continue
+				}
+				return "", fmt.Errorf("api: %s", apiError.Error())
+			}
+
+			return "", fmt.Errorf("%s\n\n%s", err,
+				common.SuggestServerLogs())
 		}
 
 		if len(modelPage.Data) == 0 {
