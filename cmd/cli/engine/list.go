@@ -45,6 +45,8 @@ func (cmd *listCommand) run(_ *cobra.Command, _ []string) error {
 		return fmt.Errorf("error printing list: %v", err)
 	}
 
+	fmt.Printf("\n%s\n", common.SuggestEngineInfo())
+
 	return nil
 }
 

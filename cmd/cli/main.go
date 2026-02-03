@@ -49,7 +49,7 @@ func main() {
 			return
 		}
 		if len(services) > 0 {
-			rootCmd.SetUsageTemplate(rootCmd.UsageTemplate() + common.SuggestServiceManagement())
+			rootCmd.SetUsageTemplate(rootCmd.UsageTemplate() + "\n" + common.SuggestServiceManagement() + "\n")
 		}
 	}
 
