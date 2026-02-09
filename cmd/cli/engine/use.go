@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
@@ -316,30 +317,56 @@ func (*useCommand) componentInstalled(component string) (bool, error) {
 
 func (*useCommand) installComponents(components []string) error {
 	const (
-		snapdUnknownSnapError = "cannot install components for a snap that is unknown to the store"
-		snapdTimeoutError     = "timeout exceeded while waiting for response"
+		snapdAlreadyInstalledError = "already installed"
+		snapdUnknownSnapError      = "cannot install components for a snap that is unknown to the store"
+		snapdTimeoutError          = "timeout exceeded while waiting for response"
+		snapdChangeInProgressError = "change in progress"
+		timeout                    = 60 * time.Minute
+		retryDelay                 = 10 * time.Second
 	)
+	startTime := time.Now()
 
 	for _, component := range components {
 		stopProgress := common.StartProgressSpinner("Installing " + component)
 		err := snapctl.InstallComponents(component).Run()
-		stopProgress()
-		if err != nil {
-			if strings.Contains(err.Error(), snapdUnknownSnapError) {
-				return fmt.Errorf("snap not known to the store:"+
-					"\nRerun this command after manually installing %q",
-					component)
-			} else if strings.Contains(err.Error(), snapdTimeoutError) {
+		defer stopProgress()
+
+		for err != nil {
+			// Only retry up to the set timeout
+			if time.Since(startTime) > timeout {
 				return fmt.Errorf("timed out while installing %q:"+
 					"\nMonitor the installation progress with \"snap changes\""+
 					"\n\nRerun this command once the installation is complete",
 					component)
-			} else if strings.Contains(err.Error(), "already installed") {
-				continue
+			}
+
+			if strings.Contains(err.Error(), snapdAlreadyInstalledError) {
+				// All good. Continue installing next component.
+				break
+
+			} else if strings.Contains(err.Error(), snapdUnknownSnapError) {
+				// Install component manually
+				return fmt.Errorf("snap not known to the store:"+
+					"\nRerun this command after manually installing %q",
+					component)
+
+			} else if strings.Contains(err.Error(), snapdTimeoutError) {
+				// Snapd timed out while installing this component
+				time.Sleep(retryDelay)
+				err = snapctl.InstallComponents(component).Run()
+
+			} else if strings.Contains(err.Error(), snapdChangeInProgressError) {
+				// Snapd is busy with installing this component or busy with an unrelated change
+				time.Sleep(retryDelay)
+				err = snapctl.InstallComponents(component).Run()
+
 			} else {
+				// Any other error we do not specifically handle will stop installing components
 				return fmt.Errorf("error installing %q: %s", component, err)
 			}
 		}
+
+		stopProgress()
 		fmt.Println("Installed " + component)
 	}
 
