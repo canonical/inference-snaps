@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
@@ -41,7 +42,13 @@ func ListCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobraCmd.Flags().StringVar(&cmd.format, "format", "table", "output format")
+	supportedFormats := []string{"table", "json"}
+	cobraCmd.Flags().StringVar(
+		&cmd.format,
+		"format",
+		"table",
+		fmt.Sprintf("output format (%s)", strings.Join(supportedFormats, ", ")),
+	)
 
 	return cobraCmd
 }

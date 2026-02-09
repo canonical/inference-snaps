@@ -3,6 +3,7 @@ package others
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
@@ -31,7 +32,13 @@ func ShowMachineCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+	supportedFormats := []string{"json", "yaml"}
+	cobraCmd.Flags().StringVar(
+		&cmd.format,
+		"format",
+		"yaml",
+		fmt.Sprintf("output format (%s)", strings.Join(supportedFormats, ", ")),
+	)
 
 	return cobraCmd
 }

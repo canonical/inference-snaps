@@ -33,7 +33,13 @@ func StatusCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "output format")
+	supportedFormats := []string{"json", "yaml"}
+	cobraCmd.Flags().StringVar(
+		&cmd.format,
+		"format",
+		"yaml",
+		fmt.Sprintf("output format (%s)", strings.Join(supportedFormats, ", ")),
+	)
 
 	return cobraCmd
 }
