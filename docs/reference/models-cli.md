@@ -131,7 +131,7 @@ Show engine details.
 <inference-snap> show-engine <engine> [flags]
 ```
 
-The default output format is a `yaml`. 
+The default output format is `yaml`. 
 For JSON serialization, set `--format=json`. 
 
 The command's output includes information such as:
@@ -184,7 +184,7 @@ To remove all cached data of the snap, including data of all inactive engines:
 <inference-snap> prune-cache 
 ```
 
-To remove cached data of the currently active engine:
+To remove cached data of a specific engine:
 ```shell
 <inference-snap> prune-cache --engine=<engine>
 ```
