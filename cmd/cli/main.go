@@ -81,6 +81,7 @@ func main() {
 	// other commands (help is added by default)
 	rootCmd.AddCommand(
 		others.ShowMachineCommand(ctx),
+		others.PruneCommand(ctx),
 		others.RunCommand(ctx),
 		debug.DebugCommand(ctx),
 	)

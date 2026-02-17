@@ -10,3 +10,7 @@ devices:
       architecture: arm64
 memory: 1G
 disk-space: 2G
+components:
+  - dummy-component-1
+  - dummy-component-2 
+  - dummy-component-3

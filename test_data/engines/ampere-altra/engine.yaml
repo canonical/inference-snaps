@@ -13,9 +13,3 @@ devices:
       device-id: e100 # Altra PCI Express Root Complex A
 memory: 4G
 disk-space: 5G
-components:
-  - llamaaio
-  - model-q4-k-m-ggu
-configurations:
-  engine: llamaaio
-  model: model-q4-k-m-gguf

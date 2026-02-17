@@ -202,7 +202,7 @@ func (cmd *useCommand) switchEngine(engineName string) error {
 
 	// Unset active engine's configurations
 	if activeEngineName != "" {
-		err = cmd.unsetEngineConfig(activeEngineName)
+		err = common.UnsetEngineConfig(activeEngineName, cmd.Context)
 		if err != nil {
 			return fmt.Errorf("error un-setting engine configurations: %v", err)
 		}
@@ -250,40 +250,11 @@ func (cmd *useCommand) setEngineConfig(engine *engines.Manifest) error {
 	return nil
 }
 
-func (cmd *useCommand) unsetEngineConfig(engineName string) error {
-	// Unset all engine configurations
-	err := cmd.Config.Unset(".", storage.EngineConfig)
-	if err != nil {
-		return fmt.Errorf("error un-setting engine configurations: %v", err)
-	}
-
-	engine, err := engines.LoadManifest(cmd.EnginesDir, engineName)
-	if err != nil {
-		if errors.Is(err, engines.ErrManifestNotFound) {
-			// TODO: remove this when implementing per-engine configuration
-			// We can't know what user overrides were set if the manifest is missing
-			fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
-			return nil
-		}
-		return fmt.Errorf("error loading engine manifest: %v", err)
-	} else {
-		// Unset any user overrides
-		for k := range engine.Configurations {
-			err = cmd.Config.Unset(k, storage.UserConfig)
-			if err != nil {
-				return fmt.Errorf("error un-setting configuration %q: %v", k, err)
-			}
-		}
-	}
-
-	return nil
-}
-
 // TODO: unify with similar code in run.go
 func (cmd *useCommand) missingComponents(components []string) ([]string, error) {
 	var missing []string
 	for _, component := range components {
-		isInstalled, err := cmd.componentInstalled(component)
+		isInstalled, err := common.ComponentInstalled(component)
 		if err != nil {
 			return missing, err
 		}
@@ -292,27 +263,6 @@ func (cmd *useCommand) missingComponents(components []string) ([]string, error) 
 		}
 	}
 	return missing, nil
-}
-
-func (*useCommand) componentInstalled(component string) (bool, error) {
-	// Check in /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION if component is mounted
-	directoryPath := fmt.Sprintf("/snap/%s/components/%s/%s", env.SnapInstanceName(), env.SnapRevision(), component)
-
-	info, err := os.Stat(directoryPath)
-
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false, nil
-		} else {
-			return false, fmt.Errorf("error checking component directory %q: %v", component, err)
-		}
-	} else {
-		if info.IsDir() {
-			return true, nil
-		} else {
-			return false, fmt.Errorf("component %q exists but is not a directory", component)
-		}
-	}
 }
 
 func (*useCommand) installComponents(components []string) error {

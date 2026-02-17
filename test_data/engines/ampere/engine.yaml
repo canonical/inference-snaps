@@ -9,9 +9,3 @@ devices:
       implementer-id: 0xc0 # Ampere
 memory: 4G
 disk-space: 5G
-components:
-  - llamaaio
-  - model-q4-k-m-gguf
-configurations:
-  engine: llamaaio
-  model: model-q4-k-m-gguf

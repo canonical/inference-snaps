@@ -1,2 +1,4 @@
 *.snap
+*.comp
+squashfs-root
 /cli

@@ -15,4 +15,7 @@ devices:
       # compute-capability: 5.0
 memory: 2G
 disk-space: 5G
+components:
+  - dummy-component-1
+  - dummy-component-2
 

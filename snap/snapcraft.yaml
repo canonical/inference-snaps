@@ -82,6 +82,13 @@ parts:
       fi # End of intel-opencl driver installation
       
       craftctl default
+  
+  dummy-components:
+    plugin: nil
+    override-prime: |
+      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
+      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_2_PRIME/component.yaml"
+      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_3_PRIME/component.yaml"
 
   # To use `version: git` in this file, we require git as a build dependency.
   # This is fixed but not published yet. See https://github.com/canonical/snapcraft/issues/4944
@@ -103,6 +110,17 @@ parts:
     organize:
       "*": engines/
 
+components:
+  dummy-component-1: &test-component
+    type: standard
+    summary: Just a test component
+    description: Component for testing purposes
+  dummy-component-2:
+    <<: *test-component
+  dummy-component-3:
+    <<: *test-component
+
+      
 apps:
   stack-utils:
     plugs:
