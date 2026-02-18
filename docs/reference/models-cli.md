@@ -53,6 +53,8 @@ Flags:
   -v, --verbose   Enable verbose logging
 
 Use "gemma3 [command] --help" for more information about a command.
+
+Use "snap logs|start|stop|restart gemma3" for service management.
 ```
 
 ## Basic commands
