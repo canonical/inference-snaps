@@ -126,7 +126,7 @@ This app exposes the `modelctl` command line tool to the user, under the snap's 
 
 ### Components
 
-Snap [components](https://snapcraft.io/docs/components) are optional, independently installable parts of a snap. In inference snaps, packaging model weights and runtimes as components enables you to build the snap with all available options while allowing users to install only what is relevant to their hardware.
+Snap [components](https://snapcraft.io/docs/explanation/how-snaps-work/snap-components/) are optional, independently installable parts of a snap. In inference snaps, packaging model weights and runtimes as components enables you to build the snap with all available options while allowing users to install only what is relevant to their hardware.
 
 Start with the bare minimum: one runtime and one model weights component.
 
@@ -305,7 +305,7 @@ The above goes to the `apps` section of the snapcraft file.
 ### The install hook
 
 Moreover, you need a script which takes care of the installation logic.
-In snaps, the [install hook](https://snapcraft.io/docs/supported-snap-hooks) script is called when the snap is installed.
+In snaps, the [install hook](https://snapcraft.io/docs/reference/development/supported-snap-hooks/) script is called when the snap is installed.
 
 The install hook should trigger hardware detection and install the best matching components and engine.
 Do this using the `modelctl` CLI tool included earlier:
@@ -429,7 +429,7 @@ Publishing an inference snap involves several steps during the first release.
 ### Register the name
 
 First you need to register the snap name in the store.
-Refer to [registering your app name](https://snapcraft.io/docs/registering-your-app-name) guide.
+Refer to [registering your app name](https://snapcraft.io/docs/reference/development/registering-your-app-name/) guide.
 
 ### Release
 
@@ -463,11 +463,11 @@ endpoints:
 ```
 
 The inference snap is ready to use, with one caveat: it is installed in developer mode.
-The [developer mode](https://snapcraft.io/docs/install-modes#developer-mode) allows the snap to access the system without the usual confinement constraints.
+The [developer mode](https://snapcraft.io/docs/explanation/snap-development/install-modes/#developer-mode) allows the snap to access the system without the usual confinement constraints.
 This isn't ideal for production use.
 
 If you install the snap in normal (confined) mode at this point, it will install but skip hardware detection and engine selection.
-You can connect the [hardware-observe interface](https://snapcraft.io/docs/hardware-observe-interface) and then run the auto engine selection manually:
+You can connect the [hardware-observe interface](https://snapcraft.io/docs/reference/interfaces/hardware-observe-interface/) and then run the auto engine selection manually:
 ```shell
 sudo snap install gemma3-jane --edge
 sudo snap connect gemma3-jane:hardware-observe

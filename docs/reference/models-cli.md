@@ -20,18 +20,23 @@ To show usage information about any of the commands, set the `--help` flag.
 
 For example:
 ```{terminal}
-:input: qwen-vl --help
+:input: gemma3 --help
+
+gemma3 runs an engine that is optimized for your host machine,
+providing a local service endpoint.
+
+Use this command to configure the active engine, or switch to an alternative engine.
 
 Usage:
-  qwen-vl [command]
+  gemma3 [command]
 
 Basic Commands:
   status       Show the status
   chat         Start the chat CLI
 
 Configuration Commands:
-  get          Print configuration option
-  set          Set configuration option
+  get          Print configurations
+  set          Set configurations
 
 Management Commands:
   list-engines List available engines
@@ -39,13 +44,17 @@ Management Commands:
   use-engine   Select an engine
 
 Additional Commands:
-  show-machine Print info about the host machine
+  show-machine Print information about the host machine
+  prune-cache  Remove cached data
   help         Help about any command
 
 Flags:
-  -h, --help   help for qwen-vl
+  -h, --help      help for cli
+  -v, --verbose   Enable verbose logging
 
-Use "qwen-vl [command] --help" for more information about a command.
+Use "gemma3 [command] --help" for more information about a command.
+
+Use "snap logs|start|stop|restart gemma3" for service management.
 ```
 
 ## Basic commands
@@ -62,11 +71,11 @@ Displays information about the server and runtime environment.
 
 Details shown:
 
-* Server status and active endpoints
+* Service status and active endpoints
 * Currently selected engine
-* Availability of better engines, e.g., after attaching new hardware or installing drivers.
+<!-- * Availability of better engines, e.g., after attaching new hardware or installing drivers.
 * Missing drivers for available hardware
-* Resource usage by engines, including cached data
+* Resource usage by engines, including cached data -->
 
 ### `chat`
 
@@ -87,7 +96,7 @@ Set configuration values.
 <inference-snap> set <key>=<value>
 ```
 
-The `Set` command overrides configuration values. 
+The `set` command overrides configuration values. 
 Unknown keys are rejected.
 
 ### `get`
@@ -112,6 +121,11 @@ List engines with details including name, description, vendor, and compatibility
 <inference-snap> list-engines
 ```
 
+The currently active engine is signified with an asterisk (*).
+
+The default output format is `table`. 
+For JSON serialization, set `--format=json`. 
+
 ### `show-engine`
 
 Show engine details.
@@ -119,14 +133,14 @@ Show engine details.
 <inference-snap> show-engine <engine> [flags]
 ```
 
-YAML is the default output format, but JSON is also available.
-You can use the `--format <output-type>` flag to specify a format.
+The default output format is `yaml`. 
+For JSON serialization, set `--format=json`. 
 
-Output includes:
+The command's output includes information such as:
 
 * Supported devices
 * Default configurations
-
+* Host compatibility
 
 ### `use-engine`
 
@@ -135,7 +149,7 @@ To switch to a specific engine:
 <inference-snap> use-engine <engine>
 ```
 
-To automatically select the best engine:
+To automatically select the best match, considering the hardware and compute capabilities of the host machine:
 ```shell
 <inference-snap> use-engine --auto
 ```
@@ -143,10 +157,12 @@ To automatically select the best engine:
 Switching engines will trigger the download of engine resources (as snap components).
 A confirmation prompt will appear before downloading.
 
-For regular installations, the `--auto` flag is applied by default.
-This command can also be used to revert to the original engine after manual changes,
-or to {spellexception}`reselect` the best engine after driver updates, or new hardware installation.
 
+```{tip}
+The `use-engine --auto` command is usually called during the inference snap installation.
+This command can also be used to revert to the original engine after manual changes,
+or to select the best engine match after driver updates, or new hardware installation.
+```
 
 ## Additional commands
 
@@ -158,5 +174,23 @@ Show information about the host machine.
 <inference-snap> show-machine [flags]
 ```
 
-YAML is the default output format, but JSON is also available.
-You can use the `--format <output-type>` flag to specify the output format as `yaml` or `json`.
+The default output format is `yaml`. 
+For JSON serialization, set `--format=json`.
+
+### `prune-cache`
+
+Remove cached resources of the snap or an engine.
+
+To remove all cached data of the snap, including data of all inactive engines:
+```shell
+<inference-snap> prune-cache 
+```
+
+To remove cached data of a specific engine:
+```shell
+<inference-snap> prune-cache --engine=<engine>
+```
+
+The cache pruning typically involves removal of unused components, configurations, and temporary files.
+Keep in mind that removal of components does not immediately free up disk space.
+The components are marked for deletion and will be removed by the snap system at a later time.
