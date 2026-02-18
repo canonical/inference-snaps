@@ -27,7 +27,6 @@ jobs:
         run: go test -v ./...
 
   build:
-    name: Build
     needs: [ test ]
     strategy:
       matrix:
@@ -44,18 +43,40 @@ jobs:
         uses: snapcore/action-build@v1
         id: snapcraft
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{env.SNAP_NAME}}_${{github.run_number}}_${{runner.arch}}
-          path: ${{ steps.snapcraft.outputs.snap }}
-          if-no-files-found: error
-
+      # Upload snap with components
+      # Adapted from https://github.com/canonical/inference-snaps-dev/blob/f744b98984a29c377b61d3f7141df79cbad1f67d/.github/workflows/build-publish-snap.yaml#L54-L86
       - name: Publish snap
-        uses: snapcore/action-publish@v1
         if: github.ref == 'refs/heads/main'
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
-        with:
-          snap: ${{ steps.snapcraft.outputs.snap }}
-          release: latest/edge/ci
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}  
+          CHANNEL: latest/edge
+        run: |
+          channel="${{ env.CHANNEL }}"
+          echo -e "Channel:\n\t$channel"
+
+          snap_file="$(ls *.snap)"
+          snap_size=$(du -h "$snap_file" | cut -f1)
+          echo -e "Snap file:\n\t$snap_file $snap_size"
+
+          # Build components argument list
+          component_args=()
+          echo "Snap components:"
+          for comp_file in *.comp; do
+              comp_size=$(du -h "$comp_file" | cut -f1)
+
+              # Component file name patterns:
+              # <snap_name>+<comp_name>_<comp_version>.comp
+              # <snap_name>+<comp_name>.comp
+              comp_name=$(echo "$comp_file" | 
+                  cut -d'+' -f2 | # drop snap name
+                  cut -d'.' -f1 | # drop file extension
+                  cut -d'_' -f1) # split by _, take 1st part
+
+              echo -e "\t$comp_file $comp_size"
+
+              component_args+=(--component "$comp_name=$comp_file")
+          done
+
+          echo -e "\nUploading snap..."
+          set -x
+          snapcraft upload "$snap_file" "${component_args[@]}" --release="$channel"
