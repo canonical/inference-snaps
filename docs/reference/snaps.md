@@ -15,9 +15,9 @@ This inference snap is optimized for the following hardware:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
-| amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
-| amd64 | Intel CPU | Intel-specific CPU optimizations |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+|       | Intel NPU | Intel Neural Processing Unit acceleration |
+|       | Intel CPU | Intel-specific CPU optimizations |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
@@ -33,11 +33,11 @@ This inference snap is optimized for the following hardware:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
-| amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
-| amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+|       | Intel CPU | Optimized for best performance on Intel CPUs |
+|       | Intel GPU | Optimized for Intel integrated and discrete graphics |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
 
 {{explore_optimizations}}
 
@@ -53,9 +53,9 @@ The inference snap for Nemotron 3 Nano has been optimized for the following:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
 
 {{explore_optimizations}}
 
@@ -72,9 +72,9 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
-| amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
-| amd64 | Intel CPU | Intel-specific CPU optimizations |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+|       | Intel NPU | Intel Neural Processing Unit acceleration |
+|       | Intel CPU | Intel-specific CPU optimizations |
+|       | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
