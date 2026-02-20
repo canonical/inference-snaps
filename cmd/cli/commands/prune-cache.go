@@ -1,4 +1,4 @@
-package others
+package commands
 
 import (
 	"errors"
@@ -17,15 +17,15 @@ import (
 	"golang.org/x/term"
 )
 
-type pruneCommand struct {
+type pruneCacheCommand struct {
 	*common.Context
 
 	// flags
 	engine string
 }
 
-func PruneCommand(ctx *common.Context) *cobra.Command {
-	var cmd pruneCommand
+func PruneCache(ctx *common.Context) *cobra.Command {
+	var cmd pruneCacheCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
@@ -40,7 +40,7 @@ func PruneCommand(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *pruneCommand) run(_ *cobra.Command, _ []string) error {
+func (cmd *pruneCacheCommand) run(_ *cobra.Command, _ []string) error {
 	if !utils.IsRootUser() {
 		return common.ErrPermissionDenied
 	}
@@ -105,7 +105,7 @@ func (cmd *pruneCommand) run(_ *cobra.Command, _ []string) error {
 	}
 }
 
-func (cmd *pruneCommand) calculateRemovableComponents(enginesToCheck []engines.Manifest, activeEngineManifest engines.Manifest) (map[string][]string, error) {
+func (cmd *pruneCacheCommand) calculateRemovableComponents(enginesToCheck []engines.Manifest, activeEngineManifest engines.Manifest) (map[string][]string, error) {
 	componentsEnginesMap := make(map[string][]string)
 
 	activeSet := make(map[string]bool, len(activeEngineManifest.Components))
@@ -132,7 +132,7 @@ func (cmd *pruneCommand) calculateRemovableComponents(enginesToCheck []engines.M
 	return componentsEnginesMap, nil
 }
 
-func (cmd *pruneCommand) getAllComponentsToRemove(activeEngineManifest engines.Manifest) (map[string][]string, error) {
+func (cmd *pruneCacheCommand) getAllComponentsToRemove(activeEngineManifest engines.Manifest) (map[string][]string, error) {
 	enginesToCheck, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load manifests: %w", err)
@@ -140,7 +140,7 @@ func (cmd *pruneCommand) getAllComponentsToRemove(activeEngineManifest engines.M
 	return cmd.calculateRemovableComponents(enginesToCheck, activeEngineManifest)
 }
 
-func (cmd *pruneCommand) pruneEngine(componentsToRemove []string, engine engines.Manifest) error {
+func (cmd *pruneCacheCommand) pruneEngine(componentsToRemove []string, engine engines.Manifest) error {
 	if err := common.UnsetEngineConfig(engine.Name, cmd.Context); err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func (cmd *pruneCommand) pruneEngine(componentsToRemove []string, engine engines
 	return nil
 }
 
-func (cmd *pruneCommand) pruneAllInactiveEngines(componentsToRemove []string) error {
+func (cmd *pruneCacheCommand) pruneAllInactiveEngines(componentsToRemove []string) error {
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return err
@@ -183,7 +183,7 @@ func (cmd *pruneCommand) pruneAllInactiveEngines(componentsToRemove []string) er
 	return nil
 }
 
-func (cmd *pruneCommand) printComponentsAndConfirm(componentsWithEngines map[string][]string, isSingleEngine bool) (bool, error) {
+func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsWithEngines map[string][]string, isSingleEngine bool) (bool, error) {
 	if len(componentsWithEngines) == 0 {
 		fmt.Println("No components to remove.")
 	} else {
@@ -232,7 +232,7 @@ func (cmd *pruneCommand) printComponentsAndConfirm(componentsWithEngines map[str
 	return true, nil
 }
 
-func (cmd *pruneCommand) inactiveEngines() ([]string, error) {
+func (cmd *pruneCacheCommand) inactiveEngines() ([]string, error) {
 	enginesManifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
 		return nil, err

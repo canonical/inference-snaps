@@ -1,4 +1,4 @@
-package config
+package commands
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type setCommand struct {
 	engineConfig  bool
 }
 
-func SetCommand(ctx *common.Context) *cobra.Command {
+func Set(ctx *common.Context) *cobra.Command {
 	var cmd setCommand
 	cmd.Context = ctx
 
@@ -27,7 +27,6 @@ func SetCommand(ctx *common.Context) *cobra.Command {
 		Use:               "set <key=value>",
 		Short:             "Set configurations",
 		Long:              "Set a configuration",
-		GroupID:           groupID,
 		Args:              cobra.ExactArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,

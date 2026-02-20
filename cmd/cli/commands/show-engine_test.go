@@ -1,4 +1,4 @@
-package engine
+package commands
 
 import (
 	"testing"
@@ -13,7 +13,7 @@ func TestInfoLong(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	cmd := showCommand{
+	cmd := showEngineCommand{
 		format: "yaml",
 	}
 	err = cmd.printEngineManifest(scoredEngine)
@@ -29,7 +29,7 @@ func TestInfoShort(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	cmd := showCommand{
+	cmd := showEngineCommand{
 		format: "yaml",
 	}
 	err = cmd.printEngineManifest(scoredEngine)

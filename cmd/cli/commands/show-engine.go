@@ -1,4 +1,4 @@
-package engine
+package commands
 
 import (
 	"encoding/json"
@@ -11,22 +11,21 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type showCommand struct {
+type showEngineCommand struct {
 	*common.Context
 
 	// flags
 	format string
 }
 
-func ShowCommand(ctx *common.Context) *cobra.Command {
-	var cmd showCommand
+func ShowEngine(ctx *common.Context) *cobra.Command {
+	var cmd showEngineCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:     "show-engine [<engine>]",
-		Short:   "Print information about an engine",
-		Long:    "Print information about the active engine, or the specified engine",
-		GroupID: groupID,
+		Use:   "show-engine [<engine>]",
+		Short: "Print information about an engine",
+		Long:  "Print information about the active engine, or the specified engine",
 		// Args
 		// cli use-engine <engine> requires 1 argument
 		// cli use-engine --auto does not support any arguments
@@ -47,7 +46,7 @@ func ShowCommand(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *showCommand) run(_ *cobra.Command, args []string) error {
+func (cmd *showEngineCommand) run(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return cmd.showCurrentEngine()
 	} else if len(args) == 1 {
@@ -58,7 +57,7 @@ func (cmd *showCommand) run(_ *cobra.Command, args []string) error {
 	}
 }
 
-func (cmd *showCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+func (cmd *showEngineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 	manifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
 		fmt.Printf("Error loading engines: %v\n", err)
@@ -73,7 +72,7 @@ func (cmd *showCommand) validateArgs(_ *cobra.Command, args []string, toComplete
 	return engineNames, cobra.ShellCompDirectiveNoSpace
 }
 
-func (cmd *showCommand) showCurrentEngine() error {
+func (cmd *showEngineCommand) showCurrentEngine() error {
 	currentEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("could not get the active engine: %v", err)
@@ -84,8 +83,8 @@ func (cmd *showCommand) showCurrentEngine() error {
 	return cmd.showEngine(currentEngine)
 }
 
-func (cmd *showCommand) showEngine(engineName string) error {
-	scoredEngines, err := scoreEngines(cmd.Context)
+func (cmd *showEngineCommand) showEngine(engineName string) error {
+	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %v", err)
 	}
@@ -107,7 +106,7 @@ func (cmd *showCommand) showEngine(engineName string) error {
 	return nil
 }
 
-func (cmd *showCommand) printEngineManifest(engine engines.ScoredManifest) error {
+func (cmd *showEngineCommand) printEngineManifest(engine engines.ScoredManifest) error {
 	switch cmd.format {
 	case "json":
 		jsonString, err := json.MarshalIndent(engine, "", "  ")

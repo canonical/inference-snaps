@@ -1,4 +1,4 @@
-package engine
+package commands
 
 import (
 	"errors"
@@ -19,7 +19,7 @@ import (
 	"golang.org/x/term"
 )
 
-type useCommand struct {
+type useEngineCommand struct {
 	*common.Context
 
 	// flags
@@ -28,14 +28,13 @@ type useCommand struct {
 	assumeYes bool
 }
 
-func UseCommand(ctx *common.Context) *cobra.Command {
-	var cmd useCommand
+func UseEngine(ctx *common.Context) *cobra.Command {
+	var cmd useEngineCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:     "use-engine [<engine>]",
-		Short:   "Select an engine",
-		GroupID: groupID,
+		Use:   "use-engine [<engine>]",
+		Short: "Select an engine",
 		// Args
 		// cli use-engine <engine> requires 1 argument
 		// cli use-engine --auto does not support any arguments
@@ -52,8 +51,8 @@ func UseCommand(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *useCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	scoredEngines, err := scoreEngines(cmd.Context)
+func (cmd *useEngineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
 		fmt.Printf("Error scoring engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveNoFileComp
@@ -73,7 +72,7 @@ func (cmd *useCommand) validateArgs(_ *cobra.Command, args []string, toComplete 
 	return engineNames, cobra.ShellCompDirectiveNoFileComp
 }
 
-func (cmd *useCommand) run(_ *cobra.Command, args []string) error {
+func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 	if !utils.IsRootUser() {
 		return common.ErrPermissionDenied
 	}
@@ -97,8 +96,8 @@ func (cmd *useCommand) run(_ *cobra.Command, args []string) error {
 	}
 }
 
-func (cmd *useCommand) autoSelectEngine() error {
-	scoredEngines, err := scoreEngines(cmd.Context)
+func (cmd *useEngineCommand) autoSelectEngine() error {
+	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %v", err)
 	}
@@ -130,7 +129,7 @@ func (cmd *useCommand) autoSelectEngine() error {
 }
 
 // switchEngine changes the engine that is used by the snap
-func (cmd *useCommand) switchEngine(engineName string) error {
+func (cmd *useEngineCommand) switchEngine(engineName string) error {
 
 	engine, err := engines.LoadManifest(cmd.EnginesDir, engineName)
 	if err != nil {
@@ -231,7 +230,7 @@ func (cmd *useCommand) switchEngine(engineName string) error {
 	return nil
 }
 
-func (cmd *useCommand) setEngineConfig(engine *engines.Manifest) error {
+func (cmd *useEngineCommand) setEngineConfig(engine *engines.Manifest) error {
 	// set engine config option
 	err := cmd.Cache.SetActiveEngine(engine.Name)
 	if err != nil {
@@ -251,7 +250,7 @@ func (cmd *useCommand) setEngineConfig(engine *engines.Manifest) error {
 }
 
 // TODO: unify with similar code in run.go
-func (cmd *useCommand) missingComponents(components []string) ([]string, error) {
+func (cmd *useEngineCommand) missingComponents(components []string) ([]string, error) {
 	var missing []string
 	for _, component := range components {
 		isInstalled, err := common.ComponentInstalled(component)
@@ -265,7 +264,7 @@ func (cmd *useCommand) missingComponents(components []string) ([]string, error) 
 	return missing, nil
 }
 
-func (*useCommand) installComponents(components []string) error {
+func (*useEngineCommand) installComponents(components []string) error {
 	const (
 		snapdAlreadyInstalledError = "already installed"
 		snapdUnknownSnapError      = "cannot install components for a snap that is unknown to the store"
@@ -323,7 +322,7 @@ func (*useCommand) installComponents(components []string) error {
 	return nil
 }
 
-func (cmd *useCommand) fixActiveEngine() error {
+func (cmd *useEngineCommand) fixActiveEngine() error {
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("error getting active engine: %v", err)

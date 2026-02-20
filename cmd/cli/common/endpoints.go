@@ -1,31 +1,20 @@
-package basic
+package common
 
 import (
 	"fmt"
 	"net/url"
 	"os"
-
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/spf13/cobra"
 )
 
-const (
-	groupID = "basic"
+const OpenAiEndpointKey = "openai"
 
-	openAi            = "openai"
-	confHttpPort      = "http.port"
-	envOpenAiBasePath = "OPENAI_BASE_PATH"
-)
+func ServerApiUrls(ctx *Context) (map[string]string, error) {
+	const (
+		confHttpPort      = "http.port"
+		envOpenAiBasePath = "OPENAI_BASE_PATH"
+	)
 
-func Group(title string) *cobra.Group {
-	return &cobra.Group{
-		ID:    groupID,
-		Title: title,
-	}
-}
-
-func serverApiUrls(ctx *common.Context) (map[string]string, error) {
-	err := common.LoadEngineEnvironment(ctx)
+	err := LoadEngineEnvironment(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error loading engine environment: %v", err)
 	}
@@ -49,6 +38,6 @@ func serverApiUrls(ctx *common.Context) (map[string]string, error) {
 
 	return map[string]string{
 		// TODO add additional api endpoints like openvino on http://localhost:8080/v1
-		openAi: openaiUrl.String(),
+		OpenAiEndpointKey: openaiUrl.String(),
 	}, nil
 }

@@ -1,4 +1,4 @@
-package basic
+package commands
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type statusCommand struct {
 	format string
 }
 
-func StatusCommand(ctx *common.Context) *cobra.Command {
+func Status(ctx *common.Context) *cobra.Command {
 	var cmd statusCommand
 	cmd.Context = ctx
 
@@ -26,7 +26,6 @@ func StatusCommand(ctx *common.Context) *cobra.Command {
 		Use:               "status",
 		Short:             "Show the status",
 		Long:              "Show the status of the inference snap",
-		GroupID:           groupID,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,
@@ -98,14 +97,14 @@ func (cmd *statusCommand) statusJson() (string, error) {
 	return string(jsonStr), nil
 }
 
-type Status struct {
+type status struct {
 	Engine    string            `json:"engine" yaml:"engine"`
 	Services  map[string]string `json:"services" yaml:"services"`
 	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
 }
 
-func (cmd *statusCommand) statusStruct() (*Status, error) {
-	var statusStr Status
+func (cmd *statusCommand) statusStruct() (*status, error) {
+	var statusStr status
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
@@ -132,7 +131,7 @@ func (cmd *statusCommand) statusStruct() (*Status, error) {
 		statusStr.Services[serviceApp] = service.Current
 	}
 
-	endpoints, err := serverApiUrls(cmd.Context)
+	endpoints, err := common.ServerApiUrls(cmd.Context)
 	if err != nil {
 		return nil, fmt.Errorf("error getting server api endpoints: %v", err)
 	}

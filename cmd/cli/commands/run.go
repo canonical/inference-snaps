@@ -1,4 +1,4 @@
-package others
+package commands
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ type runCommand struct {
 	waitForComponentsFlag bool
 }
 
-func RunCommand(ctx *common.Context) *cobra.Command {
+func Run(ctx *common.Context) *cobra.Command {
 	var cmd runCommand
 	cmd.Context = ctx
 

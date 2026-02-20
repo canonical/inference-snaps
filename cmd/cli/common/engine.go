@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"gopkg.in/yaml.v3"
 )
@@ -113,4 +114,24 @@ func UnsetEngineConfig(engineName string, ctx *Context) error {
 	}
 
 	return nil
+}
+
+func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, error) {
+	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
+	if err != nil {
+		return nil, fmt.Errorf("error loading engines: %v", err)
+	}
+
+	machineInfo, err := ctx.Cache.GetMachineInfo()
+	if err != nil {
+		return nil, fmt.Errorf("error getting machine info: %v", err)
+	}
+
+	// score engines
+	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
+	if err != nil {
+		return nil, fmt.Errorf("error scoring engines: %v", err)
+	}
+
+	return scoredEngines, nil
 }

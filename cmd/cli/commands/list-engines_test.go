@@ -1,4 +1,4 @@
-package engine
+package commands
 
 import (
 	"testing"
@@ -39,7 +39,7 @@ func TestList(t *testing.T) {
 		Cache:      cache,
 		Config:     nil,
 	}
-	cmd := listCommand{Context: ctx}
+	cmd := listEnginesCommand{Context: ctx}
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 

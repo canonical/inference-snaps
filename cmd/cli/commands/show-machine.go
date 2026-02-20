@@ -1,4 +1,4 @@
-package others
+package commands
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type showMachineCommand struct {
 	format string
 }
 
-func ShowMachineCommand(ctx *common.Context) *cobra.Command {
+func ShowMachine(ctx *common.Context) *cobra.Command {
 	var cmd showMachineCommand
 	cmd.Context = ctx
 

@@ -1,4 +1,4 @@
-package engine
+package commands
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type listCommand struct {
+type listEnginesCommand struct {
 	*common.Context
 
 	// flags
@@ -28,14 +28,13 @@ type outputEngines struct {
 	Engines      []engines.ScoredManifest `json:"engines"`
 }
 
-func ListCommand(ctx *common.Context) *cobra.Command {
-	var cmd listCommand
+func ListEngines(ctx *common.Context) *cobra.Command {
+	var cmd listEnginesCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
 		Use:               "list-engines",
 		Short:             "List available engines",
-		GroupID:           groupID,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,
@@ -53,8 +52,8 @@ func ListCommand(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *listCommand) run(_ *cobra.Command, _ []string) error {
-	scoredEngines, err := scoreEngines(cmd.Context)
+func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
+	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error scoring engines: %v", err)
 	}
@@ -87,7 +86,7 @@ func (cmd *listCommand) run(_ *cobra.Command, _ []string) error {
 	return nil
 }
 
-func (cmd *listCommand) printEnginesJson(enginesList outputEngines) error {
+func (cmd *listEnginesCommand) printEnginesJson(enginesList outputEngines) error {
 	jsonString, err := json.MarshalIndent(enginesList, "", "  ")
 	if err != nil {
 		return fmt.Errorf("error marshalling engines to json: %v", err)
@@ -96,7 +95,7 @@ func (cmd *listCommand) printEnginesJson(enginesList outputEngines) error {
 	return nil
 }
 
-func (cmd *listCommand) printEnginesTable(enginesList outputEngines) error {
+func (cmd *listEnginesCommand) printEnginesTable(enginesList outputEngines) error {
 	var headerRow = []string{"engine", "vendor", "description", "compat"}
 	tableRows := [][]string{headerRow}
 

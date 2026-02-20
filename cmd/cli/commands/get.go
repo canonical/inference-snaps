@@ -1,4 +1,4 @@
-package config
+package commands
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ type getCommand struct {
 	*common.Context
 }
 
-func GetCommand(ctx *common.Context) *cobra.Command {
+func Get(ctx *common.Context) *cobra.Command {
 	var cmd getCommand
 	cmd.Context = ctx
 
@@ -33,7 +33,6 @@ func GetCommand(ctx *common.Context) *cobra.Command {
 		Use:               "get [<key>]",
 		Short:             "Print configurations",
 		Long:              "Print one or more configurations",
-		GroupID:           groupID,
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,

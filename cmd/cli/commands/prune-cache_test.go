@@ -1,4 +1,4 @@
-package others
+package commands
 
 import (
 	"os"
@@ -40,7 +40,7 @@ func TestPrune(t *testing.T) {
 		t.Fatalf("error loading engines: %v", err)
 	}
 
-	cmd := pruneCommand{Context: ctx}
+	cmd := pruneCacheCommand{Context: ctx}
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		t.Fatalf("error getting active engine: %v", err)

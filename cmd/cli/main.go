@@ -7,12 +7,9 @@ import (
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/basic"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/commands"
+	"github.com/canonical/inference-snaps-cli/cmd/cli/commands/debug"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/config"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/engine"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/others"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/others/debug"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/spf13/cobra"
 )
@@ -65,30 +62,30 @@ func main() {
 	// Disable command sorting to keep commands sorted as added below
 	cobra.EnableCommandSorting = false
 
-	rootCmd.AddGroup(basic.Group("Basic Commands:"))
-	rootCmd.AddCommand(
-		basic.StatusCommand(ctx),
-		basic.ChatCommand(ctx),
+	addCommandGroup(rootCmd, "basic", "Basic Commands:",
+		commands.Status(ctx),
+		commands.Chat(ctx),
 	)
 
-	rootCmd.AddGroup(config.Group("Configuration Commands:"))
-	rootCmd.AddCommand(
-		config.GetCommand(ctx),
-		config.SetCommand(ctx),
+	addCommandGroup(rootCmd, "config", "Configuration Commands:",
+		commands.Get(ctx),
+		commands.Set(ctx),
 	)
 
-	rootCmd.AddGroup(engine.Group("Management Commands:"))
-	rootCmd.AddCommand(
-		engine.ListCommand(ctx),
-		engine.ShowCommand(ctx),
-		engine.UseCommand(ctx),
+	addCommandGroup(rootCmd, "engine", "Management Commands:",
+		commands.ListEngines(ctx),
+		commands.ShowEngine(ctx),
+		commands.UseEngine(ctx),
 	)
 
-	// other commands (help is added by default)
-	rootCmd.AddCommand(
-		others.ShowMachineCommand(ctx),
-		others.PruneCommand(ctx),
-		others.RunCommand(ctx),
+	addCommands(rootCmd,
+		commands.ShowMachine(ctx),
+		commands.PruneCache(ctx),
+	)
+
+	// Hidden commands
+	addCommands(rootCmd,
+		commands.Run(ctx),
 		debug.DebugCommand(ctx),
 	)
 
@@ -112,4 +109,25 @@ func persistentPreRunE(cmd *cobra.Command, args []string) error {
 		return os.Setenv("VERBOSE", "true")
 	}
 	return nil
+}
+
+// addCommandGroup adds a group of commands to the root command
+func addCommandGroup(rootCmd *cobra.Command, groupID, groupTitle string, commands ...*cobra.Command) {
+	group := &cobra.Group{
+		ID:    groupID,
+		Title: groupTitle,
+	}
+	rootCmd.AddGroup(group)
+	for _, cmd := range commands {
+		cmd.GroupID = groupID
+		rootCmd.AddCommand(cmd)
+	}
+}
+
+// addCommands adds commands to the root command without a group
+// These commands will be shown in the "Additional Commands" section of the help text
+func addCommands(rootCmd *cobra.Command, commands ...*cobra.Command) {
+	for _, cmd := range commands {
+		rootCmd.AddCommand(cmd)
+	}
 }
