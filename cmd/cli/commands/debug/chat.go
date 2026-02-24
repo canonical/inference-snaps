@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common/chat"
 	"github.com/spf13/cobra"
 )
 
@@ -41,5 +40,6 @@ func (cmd *chatCommand) run(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("the --base-url parameter is required")
 	}
 
-	return chat.Client(cmd.baseUrl, cmd.modelName, cmd.Verbose)
+	chatClient := common.ChatClient(cmd.baseUrl, cmd.modelName, cmd.Verbose)
+	return chatClient.Start()
 }

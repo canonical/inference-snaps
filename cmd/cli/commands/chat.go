@@ -3,8 +3,9 @@ package commands
 import (
 	"fmt"
 
+	"github.com/canonical/go-snapctl"
+	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common/chat"
 	"github.com/spf13/cobra"
 )
 
@@ -35,5 +36,20 @@ func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	}
 	chatBaseUrl := apiUrls[common.OpenAiEndpointKey]
 
-	return chat.Client(chatBaseUrl, "", cmd.Verbose)
+	if env.SnapInstanceName() != "" {
+		// TODO: get app name dynamically
+		serviceName := env.SnapInstanceName() + ".server"
+		services, err := snapctl.Services(serviceName).Run()
+		if err != nil {
+			return fmt.Errorf("error getting services: %v", err)
+		}
+		if services[serviceName].Current == "inactive" {
+			return fmt.Errorf("server not active\n\n%s",
+				common.SuggestStartServer())
+		}
+	}
+
+	chatClient := common.ChatClient(chatBaseUrl, "", cmd.Verbose)
+
+	return chatClient.Start()
 }
