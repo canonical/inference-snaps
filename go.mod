@@ -6,7 +6,7 @@ toolchain go1.24.6
 
 require (
 	github.com/briandowns/spinner v1.23.2
-	github.com/canonical/go-snapctl v1.0.0-beta.5
+	github.com/canonical/go-snapctl v1.0.0-beta.6
 	github.com/chzyer/readline v1.5.1
 	github.com/creack/pty v1.1.24
 	github.com/fatih/color v1.18.0

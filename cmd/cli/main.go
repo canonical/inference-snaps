@@ -81,6 +81,7 @@ func main() {
 	addCommands(rootCmd,
 		commands.ShowMachine(ctx),
 		commands.PruneCache(ctx),
+		commands.Version(ctx),
 	)
 
 	// Hidden commands
