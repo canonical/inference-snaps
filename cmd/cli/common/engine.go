@@ -87,28 +87,42 @@ func LoadEngineEnvironment(ctx *Context) error {
 	return nil
 }
 
-func UnsetEngineConfig(engineName string, ctx *Context) error {
+// SetEngineConfig sets configurations of the given engine.
+// It does not unset previous engine configurations.
+func SetEngineConfig(engine *engines.Manifest, ctx *Context) error {
+	for confKey, confVal := range engine.Configurations {
+		err := ctx.Config.SetDocument(confKey, confVal, storage.EngineConfig)
+		if err != nil {
+			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
+		}
+	}
+	return nil
+}
+
+func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context) error {
 	// Unset all engine configurations
 	err := ctx.Config.Unset(".", storage.EngineConfig)
 	if err != nil {
 		return fmt.Errorf("error un-setting engine configurations: %v", err)
 	}
 
-	engine, err := engines.LoadManifest(ctx.EnginesDir, engineName)
-	if err != nil {
-		if errors.Is(err, engines.ErrManifestNotFound) {
-			// TODO: remove this when implementing per-engine configuration
-			// We can't know what user overrides were set if the manifest is missing
-			fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
-			return nil
-		}
-		return fmt.Errorf("error loading engine manifest: %v", err)
-	} else {
-		// Unset any user overrides
-		for k := range engine.Configurations {
-			err = ctx.Config.Unset(k, storage.UserConfig)
-			if err != nil {
-				return fmt.Errorf("error un-setting configuration %q: %v", k, err)
+	if unsetUserOverrides {
+		engine, err := engines.LoadManifest(ctx.EnginesDir, engineName)
+		if err != nil {
+			if errors.Is(err, engines.ErrManifestNotFound) {
+				// TODO: remove this when implementing per-engine configuration
+				// We can't know what user overrides were set if the manifest is missing
+				fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
+				return nil
+			}
+			return fmt.Errorf("error loading engine manifest: %v", err)
+		} else {
+			// Unset any user overrides
+			for k := range engine.Configurations {
+				err = ctx.Config.Unset(k, storage.UserConfig)
+				if err != nil {
+					return fmt.Errorf("error un-setting configuration %q: %v", k, err)
+				}
 			}
 		}
 	}

@@ -141,7 +141,7 @@ func (cmd *pruneCacheCommand) getAllComponentsToRemove(activeEngineManifest engi
 }
 
 func (cmd *pruneCacheCommand) pruneEngine(componentsToRemove []string, engine engines.Manifest) error {
-	if err := common.UnsetEngineConfig(engine.Name, cmd.Context); err != nil {
+	if err := common.UnsetEngineConfig(engine.Name, true, cmd.Context); err != nil {
 		return err
 	}
 

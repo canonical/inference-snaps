@@ -13,7 +13,6 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -142,46 +141,9 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		return fmt.Errorf("error loading engine manifest: %v", err)
 	}
 
-	missingComponents, err := cmd.missingComponents(engine.Components)
+	componentsInstalled, err := cmd.installMissingComponents(engine)
 	if err != nil {
-		return fmt.Errorf("error checking installed components: %v", err)
-	}
-	if len(missingComponents) > 0 {
-		// Look up component sizes from the snap store
-		componentSizes, err := snap_store.ComponentSizes()
-		if err != nil {
-			// If component size lookup failed, continue but log the error
-			fmt.Fprintf(os.Stderr, "Warning: unable to get component sizes: %v\n", err)
-		}
-
-		// Format list of components, adding size if it is known
-		fmt.Println("Need to install the following components:")
-		for _, componentName := range missingComponents {
-			line := fmt.Sprintf("- %s", componentName)
-			if size, ok := componentSizes[componentName]; ok {
-				line += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
-			}
-			fmt.Println(line)
-		}
-
-		// Only ask for confirmation of download if it is an interactive terminal
-		if !cmd.assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
-			fmt.Println()
-			if !common.ConfirmationPrompt("Do you want to continue?") {
-				fmt.Println("Exiting. No changes applied.")
-				return nil
-			}
-		}
-
-		// Leave a blank line after printing component list and optional confirmation, before printing component installation progress
-		fmt.Println()
-
-		// This is blocking, but there is a timeout bug:
-		// https://github.com/canonical/inference-snaps-cli/issues/122
-		err = cmd.installComponents(missingComponents)
-		if err != nil {
-			return fmt.Errorf("error installing components: %v", err)
-		}
+		return fmt.Errorf("error installing missing components: %v", err)
 	}
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
@@ -196,50 +158,35 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 
 	// Unset active engine's configurations
 	if activeEngineName != "" {
-		err = common.UnsetEngineConfig(activeEngineName, cmd.Context)
+		err = common.UnsetEngineConfig(activeEngineName, true, cmd.Context)
 		if err != nil {
 			return fmt.Errorf("error un-setting engine configurations: %v", err)
 		}
 	}
 
-	if len(missingComponents) > 0 {
-		// Leave a blank line if components were installed, before continuing
+	if componentsInstalled {
+		// Leave a blank line before continuing
 		fmt.Println()
 	}
 
-	err = cmd.setEngineConfig(engine)
-	if err != nil {
+	if err = cmd.Cache.SetActiveEngine(engine.Name); err != nil {
+		return fmt.Errorf("error setting active engine: %v", err)
+	}
+
+	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
 		return fmt.Errorf("error setting new engine configurations: %v", err)
 	}
-	// TODO: get this from an env var instead (e.g. ENGINE_SERVICES=server,proxy)
-	serviceName := env.SnapInstanceName() + ".server"
 
 	fmt.Printf("Engine changed to %q.\n", engineName)
+
+	// TODO: get this from an env var instead (e.g. ENGINE_SERVICES=server,proxy)
+	serviceName := env.SnapInstanceName() + ".server"
 
 	// Currently we cannot reliably determine if the service is active to automatically restart it
 	// See https://bugs.launchpad.net/snapd/+bug/2137543
 	//
 	// Ask the user to restart the service manually
 	fmt.Printf("\nRun \"snap restart %s\" to use the new engine.\n", serviceName)
-
-	return nil
-}
-
-func (cmd *useEngineCommand) setEngineConfig(engine *engines.Manifest) error {
-	// set engine config option
-	err := cmd.Cache.SetActiveEngine(engine.Name)
-	if err != nil {
-		return fmt.Errorf("error setting active engine: %v", err)
-	}
-
-	// set other config options
-	// TODO: clear beforehand
-	for confKey, confVal := range engine.Configurations {
-		err = cmd.Config.SetDocument(confKey, confVal, storage.EngineConfig)
-		if err != nil {
-			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
-		}
-	}
 
 	return nil
 }
@@ -327,7 +274,7 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 	}
 
 	// If active engine no longer exist, auto select another one
-	_, err = engines.LoadManifest(cmd.EnginesDir, activeEngineName)
+	engine, err := engines.LoadManifest(cmd.EnginesDir, activeEngineName)
 	if errors.Is(err, engines.ErrManifestNotFound) {
 		fmt.Printf("Active engine %q not found, performing auto selection instead.\n", activeEngineName)
 		return cmd.autoSelectEngine()
@@ -335,5 +282,64 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 		return fmt.Errorf("error loading active engine manifest: %v", err)
 	}
 
-	return cmd.switchEngine(activeEngineName)
+	// If engine exists, make sure it is correctly installed and configured
+	if _, err = cmd.installMissingComponents(engine); err != nil {
+		return fmt.Errorf("error installing missing components: %v", err)
+	}
+	if err = common.UnsetEngineConfig(activeEngineName, false, cmd.Context); err != nil {
+		return fmt.Errorf("error un-setting engine configurations: %v", err)
+	}
+	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
+		return fmt.Errorf("error setting engine configurations: %v", err)
+	}
+
+	return nil
+}
+
+func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) (installed bool, err error) {
+	missingComponents, err := cmd.missingComponents(engine.Components)
+	if err != nil {
+		return false, fmt.Errorf("error checking installed components: %v", err)
+	}
+	if len(missingComponents) == 0 {
+		return false, nil
+	}
+
+	// Look up component sizes from the snap store
+	componentSizes, err := snap_store.ComponentSizes()
+	if err != nil {
+		// If component size lookup failed, continue but log the error
+		fmt.Fprintf(os.Stderr, "Warning: unable to get component sizes: %v\n", err)
+	}
+
+	// Format list of components, adding size if it is known
+	fmt.Println("Need to install the following components:")
+	for _, componentName := range missingComponents {
+		line := fmt.Sprintf("- %s", componentName)
+		if size, found := componentSizes[componentName]; found {
+			line += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
+		}
+		fmt.Println(line)
+	}
+
+	// Only ask for confirmation if it is an interactive terminal
+	if !cmd.assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
+		fmt.Println()
+		if !common.ConfirmationPrompt("Do you want to continue?") {
+			fmt.Println("Exiting. No changes applied.")
+			return false, nil
+		}
+	}
+
+	// Leave a blank line after printing component list and optional confirmation, before printing component installation progress
+	fmt.Println()
+
+	// This is blocking, but there is a timeout bug:
+	// https://github.com/canonical/inference-snaps-cli/issues/122
+	err = cmd.installComponents(missingComponents)
+	if err != nil {
+		return false, fmt.Errorf("error installing components: %v", err)
+	}
+
+	return true, nil
 }
