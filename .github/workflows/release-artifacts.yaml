@@ -1,0 +1,60 @@
+name: Build and upload release artifacts
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-release:
+    permissions:
+      contents: write # to upload release assets
+
+    strategy:
+      matrix:
+        runner:
+          - name: linux-amd64
+            runs-on: ubuntu-24.04
+            goos: linux
+            goarch: amd64
+
+          - name: linux-arm64
+            runs-on: ubuntu-24.04-arm
+            goos: linux
+            goarch: arm64
+
+    env:
+      ARTIFACT_NAME: "inference-snaps-cli-${{ matrix.runner.name }}.tar.xz"
+
+    runs-on: ${{ matrix.runner.runs-on }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.24.x'
+          cache: true
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.runner.goos }}
+          GOARCH: ${{ matrix.runner.goarch }}
+        run: |
+          go build -ldflags="-s -w" -o ./cli ./cmd/cli
+
+      - name: Generate artifact
+        run: |
+          tar -Jcvf ${{ env.ARTIFACT_NAME }} ./cli ./LICENSE
+
+      - name: Upload release asset
+        run: |
+          # --clobber overwrite existing assets of the same name
+          gh release upload ${{ github.event.release.tag_name }} ${{ env.ARTIFACT_NAME }} --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
