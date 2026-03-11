@@ -1,12 +1,27 @@
 package engines
 
-import "github.com/canonical/inference-snaps-cli/pkg/types"
+import (
+	"github.com/canonical/inference-snaps-cli/pkg/types"
+)
+
+type CompatibilityReport struct {
+	CompatibleMemory bool
+	RequiredMemory   uint64
+	TotalRAM         uint64
+	TotalSwap        uint64
+
+	CompatibleDisk     bool
+	RequiredDiskSpace  uint64
+	AvailableDiskSpace uint64
+
+	CompatibleDevices bool
+	MissingDevices    []string
+}
 
 type ScoredManifest struct {
 	Manifest            `yaml:",inline"`
-	Score               int      `yaml:"score" json:"score"`
-	Compatible          bool     `yaml:"compatible" json:"compatible"`
-	CompatibilityIssues []string `yaml:"compatibility-issues,omitempty" json:"compatibility-issues,omitempty"`
+	Score               int                 `yaml:"score" json:"score"`
+	CompatibilityReport CompatibilityReport `yaml:"-" json:"-"`
 }
 
 type Manifest struct {
@@ -64,3 +79,7 @@ type Device struct {
 }
 
 type Configurations map[string]interface{}
+
+func (c CompatibilityReport) EngineCompatible() bool {
+	return c.CompatibleMemory && c.CompatibleDisk && c.CompatibleDevices
+}

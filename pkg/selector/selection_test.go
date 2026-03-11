@@ -3,7 +3,6 @@ package selector
 import (
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
@@ -102,7 +101,7 @@ func TestTopEngine(t *testing.T) {
 
 			if topEngine.Name != testSet.topEngine {
 				for _, engine := range scoredEngines {
-					t.Logf("%s=%d %s", engine.Name, engine.Score, strings.Join(engine.CompatibilityIssues, ", "))
+					t.Logf("%s=%d %v", engine.Name, engine.Score, engine.CompatibilityReport)
 				}
 				t.Errorf("Top engine name: %s, expected: %s", topEngine.Name, testSet.topEngine)
 			}
@@ -134,14 +133,15 @@ func TestMatchReasonsCpu(t *testing.T) {
 	}
 
 	if len(scoredEngines) != 1 {
-		t.Errorf("Score engines count: %d, expected 1", len(scoredEngines))
+		t.Fatalf("Scored engines count: %d, expected 1", len(scoredEngines))
 	}
 
-	if scoredEngines[0].Compatible {
-		t.Errorf("Score engines should not be compatible")
+	var engine engines.ScoredManifest = scoredEngines[0]
+	if engine.CompatibilityReport.EngineCompatible() {
+		t.Errorf("Engine should NOT be compatible, but it was marked as compatible: %+v", engine.CompatibilityReport)
 	}
 
-	scoredYaml, _ := yaml.Marshal(scoredEngines[0])
+	scoredYaml, _ := yaml.Marshal(engine)
 	t.Log(string(scoredYaml))
 }
 
@@ -169,13 +169,14 @@ func TestMatchReasonsPci(t *testing.T) {
 	}
 
 	if len(scoredEngines) != 1 {
-		t.Errorf("Score engines count: %d, expected 1", len(scoredEngines))
+		t.Fatalf("Scored engines count: %d, expected 1", len(scoredEngines))
 	}
 
-	if !scoredEngines[0].Compatible {
-		t.Errorf("Score engines should be compatible")
+	var engine engines.ScoredManifest = scoredEngines[0]
+	if !engine.CompatibilityReport.EngineCompatible() {
+		t.Errorf("Engine should be compatible, but it was marked as incompatible: %+v", engine.CompatibilityReport)
 	}
 
-	scoredYaml, _ := yaml.Marshal(scoredEngines[0])
+	scoredYaml, _ := yaml.Marshal(engine)
 	t.Log(string(scoredYaml))
 }

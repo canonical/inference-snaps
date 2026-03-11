@@ -45,7 +45,10 @@ func TestList(t *testing.T) {
 
 	enginesList := outputEngines{
 		ActiveEngine: activeEngine,
-		Engines:      scoredEngines,
+	}
+
+	for _, se := range scoredEngines {
+		enginesList.Engines = append(enginesList.Engines, common.NewEngineDetails(se))
 	}
 
 	err = cmd.printEnginesJson(enginesList)

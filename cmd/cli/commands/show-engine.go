@@ -107,15 +107,17 @@ func (cmd *showEngineCommand) showEngine(engineName string) error {
 }
 
 func (cmd *showEngineCommand) printEngineManifest(engine engines.ScoredManifest) error {
+	var output common.EngineDetails = common.NewEngineDetails(engine)
+
 	switch cmd.format {
 	case "json":
-		jsonString, err := json.MarshalIndent(engine, "", "  ")
+		jsonString, err := json.MarshalIndent(output, "", "  ")
 		if err != nil {
 			return fmt.Errorf("failed to marshal to JSON: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml", "":
-		engineYaml, err := yaml.Marshal(engine)
+		engineYaml, err := yaml.Marshal(output)
 		if err != nil {
 			return fmt.Errorf("failed to marshal to YAML: %s", err)
 		}

@@ -57,12 +57,12 @@ func TestDiskCheck(t *testing.T) {
 	manifestDisk := "300M"
 	engine := engines.Manifest{DiskSpace: &manifestDisk}
 
-	result, reasons, err := checkEngine(&hwInfo, engine)
+	_, report, err := checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result == 0 {
-		t.Fatalf("disk should be enough: %v", reasons)
+	if !report.EngineCompatible() {
+		t.Fatalf("engine should be compatible: %+v", report)
 	}
 
 	dirStat = types.DirStats{
@@ -70,12 +70,12 @@ func TestDiskCheck(t *testing.T) {
 		Avail: 100000000,
 	}
 	hwInfo.Disk["/var/lib/snapd/snaps"] = dirStat
-	result, reasons, err = checkEngine(&hwInfo, engine)
+	_, report, err = checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result > 0 {
-		t.Fatalf("disk should NOT be enough: %v", reasons)
+	if report.EngineCompatible() {
+		t.Fatalf("engine should NOT be compatible: %+v", report)
 	}
 }
 
@@ -90,21 +90,21 @@ func TestMemoryCheck(t *testing.T) {
 	engineMemory := "300M"
 	engine := engines.Manifest{Memory: &engineMemory}
 
-	result, reasons, err := checkEngine(&hwInfo, engine)
+	_, report, err := checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result == 0 {
-		t.Fatalf("memory should be enough: %v", reasons)
+	if !report.EngineCompatible() {
+		t.Fatalf("engine should be compatible: %+v", report)
 	}
 
 	hwInfo.Memory.TotalRam = 100000000
-	result, reasons, err = checkEngine(&hwInfo, engine)
+	_, report, err = checkEngine(&hwInfo, engine)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result > 0 {
-		t.Fatal("memory should NOT be enough")
+	if report.EngineCompatible() {
+		t.Fatalf("engine should NOT be compatible: %+v", report)
 	}
 }
 
@@ -127,7 +127,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	// No memory in hardware info
 	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
-		t.Fatalf("No Memory in hardware_info should return an error")
+		t.Fatal("Missing Memory info in hardware_info should return an error")
 	}
 
 	hwInfo.Memory = types.MemoryInfo{
@@ -138,7 +138,7 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	// No disk space in hardware info
 	_, _, err = checkEngine(&hwInfo, currentEngine)
 	if err == nil {
-		t.Fatal("No Disk space in hardware_info should return an error")
+		t.Fatal("Missing Disk space info in hardware_info should return an error")
 	}
 
 	hwInfo.Disk = make(map[string]types.DirStats)
@@ -147,11 +147,11 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	}
 
 	// No CPU in hardware info
-	_, issues, err := checkEngine(&hwInfo, currentEngine)
+	_, report, err := checkEngine(&hwInfo, currentEngine)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(issues) == 0 {
-		t.Fatal("No CPU in hardware_info should result in a compatibility issue")
+	if report.EngineCompatible() {
+		t.Fatal("Missing CPU info in hardware_info should result in an incompatible engine")
 	}
 }

@@ -59,7 +59,7 @@ func (cmd *useEngineCommand) validateArgs(_ *cobra.Command, args []string, toCom
 
 	var engineNames []cobra.Completion
 	for i := range scoredEngines {
-		if scoredEngines[i].Compatible {
+		if scoredEngines[i].CompatibilityReport.EngineCompatible() {
 			engineNames = append(engineNames, scoredEngines[i].Name)
 		}
 	}
@@ -104,9 +104,17 @@ func (cmd *useEngineCommand) autoSelectEngine() error {
 	fmt.Println("Evaluating engines for optimal hardware compatibility:")
 	for _, engine := range scoredEngines {
 		if engine.Score == 0 {
-			fmt.Printf("✘ %s: not compatible: %s\n", engine.Name, strings.Join(engine.CompatibilityIssues, ", "))
+			fmt.Printf("✘ %s: not compatible\n", engine.Name)
+
+			// Only print incompatibility reasons if verbose flag is set
+			if cmd.Verbose {
+				reasons := cmd.verboseIncompatibilityReasons(engine.CompatibilityReport)
+				for _, reason := range reasons {
+					fmt.Printf("  - %s\n", reason)
+				}
+			}
 		} else if engine.Grade != "stable" {
-			fmt.Printf("− %s: devel, score=%d\n", engine.Name, engine.Score)
+			fmt.Printf("• %s: devel, score=%d\n", engine.Name, engine.Score)
 		} else {
 			fmt.Printf("✔ %s: compatible, score=%d\n", engine.Name, engine.Score)
 		}
@@ -342,4 +350,22 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	}
 
 	return true, nil
+}
+
+func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.CompatibilityReport) []string {
+	var reasons []string
+	if !report.CompatibleMemory {
+		reasons = append(reasons, fmt.Sprintf("requires %s memory, has %s (RAM + swap)", utils.FmtBytes(report.RequiredMemory), utils.FmtBytes(report.TotalRAM+report.TotalSwap)))
+	}
+	if !report.CompatibleDisk {
+		reasons = append(reasons, fmt.Sprintf("requires %s disk space, has %s", utils.FmtBytes(report.RequiredDiskSpace), utils.FmtBytes(report.AvailableDiskSpace)))
+	}
+	if !report.CompatibleDevices {
+		if len(report.MissingDevices) > 0 {
+			reasons = append(reasons, fmt.Sprintf("required device not found: %s", strings.Join(report.MissingDevices, ", ")))
+		} else {
+			reasons = append(reasons, "required device not found")
+		}
+	}
+	return reasons
 }

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"
@@ -24,8 +23,8 @@ type listEnginesCommand struct {
 }
 
 type outputEngines struct {
-	ActiveEngine string                   `json:"active-engine"`
-	Engines      []engines.ScoredManifest `json:"engines"`
+	ActiveEngine string                 `json:"active-engine"`
+	Engines      []common.EngineDetails `json:"engines"`
 }
 
 func ListEngines(ctx *common.Context) *cobra.Command {
@@ -65,7 +64,10 @@ func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
 
 	enginesList := outputEngines{
 		ActiveEngine: activeEngine,
-		Engines:      scoredEngines,
+	}
+
+	for _, se := range scoredEngines {
+		enginesList.Engines = append(enginesList.Engines, common.NewEngineDetails(se))
 	}
 
 	switch cmd.format {
