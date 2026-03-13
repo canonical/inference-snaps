@@ -46,7 +46,7 @@ sudo apt update
 sudo apt install nvidia-driver-xxx
 ```
 Replace `xxx` with the driver version (e.g., `525`, etc.). 
-The latest version is usually recommended and found by running: `apt list --installed nvidia-driver*`
+The latest version is usually recommended and found by running: `apt list nvidia-driver*`
 
 ```{tip}
 On Ubuntu Desktop, you can also install the driver using the "Additional Drivers" tool.
