@@ -87,6 +87,29 @@ func scorePciDevices(manifestDevice engines.Device, hostPciDevices []types.PciDe
 func scorePciDevice(manifestDevice engines.Device, hostPciDevice types.PciDevice) (deviceScore int, issues []string) {
 	deviceScore = 0
 
+	// Check if a specific device vendor or id is specified and adjust the score
+	if manifestDevice.VendorId != nil {
+
+		if *manifestDevice.VendorId == hostPciDevice.VendorId {
+			deviceScore += weights.PciVendorId
+
+			// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
+			if manifestDevice.DeviceId != nil {
+				if *manifestDevice.DeviceId == hostPciDevice.DeviceId {
+					deviceScore += weights.PciDeviceId
+				} else {
+					deviceScore = 0
+					issues = append(issues, fmt.Sprintf("device id mismatch: 0x%04x", hostPciDevice.DeviceId))
+					return
+				}
+			}
+		} else {
+			deviceScore = 0
+			issues = append(issues, fmt.Sprintf("vendor id mismatch: 0x%04x", hostPciDevice.VendorId))
+			return
+		}
+	}
+
 	// Device type: tpu, npu, gpu, etc
 	if manifestDevice.Type != "" {
 		match := checkType(manifestDevice.Type, hostPciDevice)
@@ -134,6 +157,12 @@ func scorePciDevice(manifestDevice engines.Device, hostPciDevice types.PciDevice
 			issues = append(issues, fmt.Sprintf("%q is not connected", connection))
 			return
 		}
+	}
+
+	if deviceScore == 0 && len(issues) == 0 {
+		// The device was found, but did not match on any criteria that we score on
+		issues = append(issues, "no criteria met")
+		return
 	}
 
 	return deviceScore, nil
