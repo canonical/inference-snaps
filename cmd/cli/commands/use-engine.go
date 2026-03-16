@@ -361,11 +361,7 @@ func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.Compat
 		reasons = append(reasons, fmt.Sprintf("requires %s disk space, has %s", utils.FmtBytes(report.RequiredDiskSpace), utils.FmtBytes(report.AvailableDiskSpace)))
 	}
 	if !report.CompatibleDevices {
-		if len(report.MissingDevices) > 0 {
-			reasons = append(reasons, fmt.Sprintf("required device not found: %s", strings.Join(report.MissingDevices, ", ")))
-		} else {
-			reasons = append(reasons, "required device not found")
-		}
+		reasons = append(reasons, "required device not found")
 	}
 	return reasons
 }

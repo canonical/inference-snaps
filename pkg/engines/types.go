@@ -15,7 +15,6 @@ type CompatibilityReport struct {
 	AvailableDiskSpace uint64
 
 	CompatibleDevices bool
-	MissingDevices    []string
 }
 
 type ScoredManifest struct {

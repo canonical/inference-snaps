@@ -120,23 +120,21 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 
 	// all
 	if len(manifest.Devices.Allof) > 0 {
-		extraScore, issues := checkDevicesAll(hardwareInfo, manifest.Devices.Allof)
-		if len(issues) > 0 {
+		deviceCompatibilityScore := scoreDevicesAll(hardwareInfo, manifest.Devices.Allof)
+		if deviceCompatibilityScore == 0 {
 			compatibilityReport.CompatibleDevices = false
-			compatibilityReport.MissingDevices = append(compatibilityReport.MissingDevices, issues...)
 		} else {
-			engineScore += extraScore
+			engineScore += deviceCompatibilityScore
 		}
 	}
 
 	// any
 	if len(manifest.Devices.Anyof) > 0 {
-		extraScore, issues := checkDevicesAny(hardwareInfo, manifest.Devices.Anyof)
-		if len(issues) > 0 {
+		deviceCompatibilityScore := scoreDevicesAny(hardwareInfo, manifest.Devices.Anyof)
+		if deviceCompatibilityScore == 0 {
 			compatibilityReport.CompatibleDevices = false
-			compatibilityReport.MissingDevices = append(compatibilityReport.MissingDevices, issues...)
 		} else {
-			engineScore += extraScore
+			engineScore += deviceCompatibilityScore
 		}
 	}
 
@@ -147,10 +145,9 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 	return engineScore, compatibilityReport, nil
 }
 
-func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string) {
-	var issues []string
+func scoreDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 	compatible := true
-	extraScore := 0
+	compatibilityScore := 0
 
 	for i, _ := range devices {
 
@@ -159,16 +156,14 @@ func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 			if len(deviceIssues) > 0 {
 				compatible = false
 				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, deviceIssues...)
-				issues = append(issues, "required cpu device not found")
 			} else {
-				extraScore += cpuScore
+				compatibilityScore += cpuScore
 			}
 
 		} else if devices[i].Bus == "usb" {
 			// Not implemented
 			compatible = false
 			devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, "usb device matching not implemented")
-			issues = append(issues, "usb device matching not implemented")
 
 		} else if devices[i].Bus == "" || devices[i].Bus == "pci" {
 			// Fallback to PCI as default bus
@@ -176,25 +171,22 @@ func checkDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 			if len(pciIssues) > 0 {
 				compatible = false
 				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, pciIssues...)
-				issues = append(issues, "required pci device not found")
 			} else {
-				extraScore += pciScore
+				compatibilityScore += pciScore
 			}
 		}
 	}
 
 	if !compatible {
-		extraScore = 0
+		compatibilityScore = 0
 	}
 
-	return extraScore, issues
+	return compatibilityScore
 }
 
-func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int, []string) {
-	var issues []string
+func scoreDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 	compatible := true
-	extraScore := 0
-
+	compatibilityScore := 0
 	devicesFound := 0
 
 	for i, device := range devices {
@@ -205,13 +197,12 @@ func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, deviceIssues...)
 			} else {
 				devicesFound++
-				extraScore += cpuScore
+				compatibilityScore += cpuScore
 			}
 
 		} else if device.Bus == "usb" {
 			compatible = false
 			device.CompatibilityIssues = append(device.CompatibilityIssues, "device type usb not implemented")
-			issues = append(issues, "usb device matching not implemented")
 
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
@@ -220,7 +211,7 @@ func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, pciIssues...)
 			} else {
 				devicesFound++
-				extraScore += pciScore
+				compatibilityScore += pciScore
 			}
 		}
 	}
@@ -228,12 +219,11 @@ func checkDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) (int,
 	// If any-of devices are defined, we need to find at least one
 	if len(devices) > 0 && devicesFound == 0 {
 		compatible = false
-		issues = append(issues, "required device not found")
 	}
 
 	if !compatible {
-		extraScore = 0
+		compatibilityScore = 0
 	}
 
-	return extraScore, issues
+	return compatibilityScore
 }

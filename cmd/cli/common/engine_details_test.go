@@ -16,7 +16,6 @@ func TestFillIncompatibilityIssues(t *testing.T) {
 		RequiredDiskSpace:  100 * 1024 * 1024 * 1024, // 100 GiB
 		AvailableDiskSpace: 50 * 1024 * 1024 * 1024,  // 50 GiB
 		CompatibleDevices:  false,
-		MissingDevices:     []string{"cpu"},
 	}
 
 	expectedReasons := []string{
