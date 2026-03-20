@@ -3,41 +3,75 @@ package common
 import (
 	"fmt"
 	"net/url"
-	"os"
+	"strings"
 )
 
-const OpenAiEndpointKey = "openai"
+const (
+	OpenAiEndpointKey = "openai"
+	protocolKey       = "protocol"
+	basePathKey       = "base-path"
+)
 
-func ServerApiUrls(ctx *Context) (map[string]string, error) {
-	const (
-		confHttpPort      = "http.port"
-		envOpenAiBasePath = "OPENAI_BASE_PATH"
-	)
-
-	err := LoadEngineEnvironment(ctx)
+func ServerEndpoints(ctx *Context) (map[string]string, error) {
+	settings, err := EngineComponentSettings(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error loading engine environment: %v", err)
 	}
+	return serverEndpoints(ctx, settings)
+}
 
-	apiBasePath, found := os.LookupEnv(envOpenAiBasePath)
-	if !found {
-		return nil, fmt.Errorf("%q env var is not set", envOpenAiBasePath)
+func serverEndpoints(ctx *Context, settingsCollection []ComponentSettings) (map[string]string, error) {
+	endpoints := make(map[string]string)
+	for _, settings := range settingsCollection {
+
+		// TODO: Remove this check in a future release
+		for _, env := range settings.Environment {
+			if strings.HasPrefix(env, "OPENAI_BASE_PATH") {
+				return nil, fmt.Errorf("OPENAI_BASE_PATH env in component %q is deprecated; set server settings in \"servers\".",
+					settings.componentName)
+			}
+		}
+
+		for serverName, serverSettings := range settings.Servers {
+			switch serverSettings[protocolKey] {
+			case "http", "https":
+				httpUrl, err := serverHttpUrl(ctx, serverSettings)
+				if err != nil {
+					return nil, fmt.Errorf("error getting server HTTP URL: %v", err)
+				}
+				endpoints[serverName] = httpUrl
+			default:
+				return nil, fmt.Errorf("unsupported protocol %q for server %q in component %q",
+					serverSettings["protocol"], serverName, settings.componentName)
+			}
+		}
 	}
+
+	return endpoints, nil
+}
+
+func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error) {
+	const (
+		confHttpPort    = "http.port"
+		defaultBasePath = "/"
+	)
 
 	httpPortMap, err := ctx.Config.Get(confHttpPort)
 	if err != nil {
-		return nil, fmt.Errorf("error getting %q: %v", confHttpPort, err)
+		return "", fmt.Errorf("error getting %q: %v", confHttpPort, err)
 	}
 	httpPort := httpPortMap[confHttpPort]
 
-	openaiUrl := url.URL{
-		Scheme: "http",
-		Host:   fmt.Sprintf("localhost:%v", httpPort),
-		Path:   apiBasePath,
+	basePath, found := serverConfig[basePathKey]
+	if !found {
+		basePath = defaultBasePath
 	}
 
-	return map[string]string{
-		// TODO add additional api endpoints like openvino on http://localhost:8080/v1
-		OpenAiEndpointKey: openaiUrl.String(),
-	}, nil
+	endpointUrl := url.URL{
+		Scheme: serverConfig[protocolKey],
+		Host:   fmt.Sprintf("localhost:%v", httpPort),
+		Path:   basePath,
+	}
+
+	return endpointUrl.String(), nil
 }

@@ -100,7 +100,7 @@ func (cmd *statusCommand) statusJson() (string, error) {
 type status struct {
 	Engine    string            `json:"engine" yaml:"engine"`
 	Services  map[string]string `json:"services" yaml:"services"`
-	Endpoints map[string]string `json:"endpoints" yaml:"endpoints"`
+	Endpoints map[string]string `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 }
 
 func (cmd *statusCommand) statusStruct() (*status, error) {
@@ -131,7 +131,7 @@ func (cmd *statusCommand) statusStruct() (*status, error) {
 		statusStr.Services[serviceApp] = service.Current
 	}
 
-	endpoints, err := common.ServerApiUrls(cmd.Context)
+	endpoints, err := common.ServerEndpoints(cmd.Context)
 	if err != nil {
 		return nil, fmt.Errorf("error getting server api endpoints: %v", err)
 	}

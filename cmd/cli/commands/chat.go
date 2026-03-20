@@ -29,12 +29,16 @@ func Chat(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
+func ChatEnabled() bool {
+	features := common.AdditionalFeatures()
+	return features.Chat
+}
+
 func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
-	apiUrls, err := common.ServerApiUrls(cmd.Context)
+	chatBaseUrl, err := chatBaseURL(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error getting server api urls: %v", err)
+		return fmt.Errorf("error getting OpenAI base URL: %v", err)
 	}
-	chatBaseUrl := apiUrls[common.OpenAiEndpointKey]
 
 	if env.SnapInstanceName() != "" {
 		// TODO: get app name dynamically
@@ -52,4 +56,16 @@ func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	chatClient := common.ChatClient(chatBaseUrl, "", cmd.Verbose)
 
 	return chatClient.Start()
+}
+
+func chatBaseURL(ctx *common.Context) (string, error) {
+	serverEndpoints, err := common.ServerEndpoints(ctx)
+	if err != nil {
+		return "", fmt.Errorf("error getting server endpoints: %v", err)
+	}
+	chatBaseUrl, found := serverEndpoints[common.OpenAiEndpointKey]
+	if !found {
+		return "", fmt.Errorf("%q not found in server endpoints", common.OpenAiEndpointKey)
+	}
+	return chatBaseUrl, nil
 }

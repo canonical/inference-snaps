@@ -89,8 +89,16 @@ parts:
     plugin: nil
     override-prime: |
       cat <<EOF > "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
-      environment:
-        - OPENAI_BASE_PATH=/v1
+      servers:
+        openvino:
+          protocol: http
+          base-path: /v1
+        kserve:
+          protocol: http
+          base-path: /2
+        openai:
+          protocol: http
+          base-path: /v3
       EOF
       touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_2_PRIME/component.yaml"
       touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_3_PRIME/component.yaml"
@@ -141,6 +149,8 @@ apps:
       - home
       - network
       - opengl
+    environment:
+      ADDITIONAL_FEATURES: chat
 
   clinfo:
     plugs:

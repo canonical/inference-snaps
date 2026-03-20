@@ -19,19 +19,61 @@ const (
 	ProgressScoring = "Checking engines"
 )
 
-func LoadEngineEnvironment(ctx *Context) error {
+type ComponentSettings struct {
+	componentName string
+	Servers       map[string]map[string]string `yaml:"servers"`
+	Environment   []string                     `yaml:"environment"`
+}
+
+func EngineComponentSettings(ctx *Context) ([]ComponentSettings, error) {
 	activeEngineName, err := ctx.Cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("error looking up active engine: %v", err)
+		return nil, fmt.Errorf("error looking up active engine: %v", err)
 	}
 
 	if activeEngineName == "" {
-		return fmt.Errorf("no active engine")
+		return nil, fmt.Errorf("no active engine")
 	}
 
 	manifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngineName)
 	if err != nil {
-		return fmt.Errorf("error loading engine manifest: %v", err)
+		return nil, fmt.Errorf("error loading engine manifest: %v", err)
+	}
+
+	componentsDir, found := os.LookupEnv("SNAP_COMPONENTS")
+	if !found {
+		return nil, fmt.Errorf("SNAP_COMPONENTS env var not set")
+	}
+
+	var settingsCollection []ComponentSettings
+	for _, componentName := range manifest.Components {
+		componentPath := filepath.Join(componentsDir, componentName)
+		componentYamlFile := filepath.Join(componentPath, "component.yaml")
+
+		data, err := os.ReadFile(componentYamlFile)
+		if err != nil {
+			return nil, fmt.Errorf("error reading %s: %v", componentYamlFile, err)
+		}
+
+		var settings ComponentSettings
+		err = yaml.Unmarshal(data, &settings)
+		if err != nil {
+			return nil, fmt.Errorf("error unmarshaling %s: %v", componentYamlFile, err)
+		}
+
+		settings.componentName = componentName
+
+		settingsCollection = append(settingsCollection, settings)
+	}
+
+	return settingsCollection, nil
+}
+
+// LoadEngineEnvironment sets env vars of the active engine's components for the current process
+func LoadEngineEnvironment(ctx *Context) error {
+	settingsCollection, err := EngineComponentSettings(ctx)
+	if err != nil {
+		return fmt.Errorf("error loading engine component settings: %v", err)
 	}
 
 	componentsDir, found := os.LookupEnv("SNAP_COMPONENTS")
@@ -39,28 +81,10 @@ func LoadEngineEnvironment(ctx *Context) error {
 		return fmt.Errorf("SNAP_COMPONENTS env var not set")
 	}
 
-	type comp struct {
-		Environment []string `yaml:"environment"`
-	}
-
-	for _, componentName := range manifest.Components {
-		componentPath := filepath.Join(componentsDir, componentName)
-		componentYamlFile := filepath.Join(componentPath, "component.yaml")
-
-		data, err := os.ReadFile(componentYamlFile)
-		if err != nil {
-			return fmt.Errorf("error reading %s: %v", componentYamlFile, err)
-		}
-
-		var component comp
-		err = yaml.Unmarshal(data, &component)
-		if err != nil {
-			return fmt.Errorf("error unmarshaling %s: %v", componentYamlFile, err)
-		}
-
-		for i := range component.Environment {
+	for _, settings := range settingsCollection {
+		for i := range settings.Environment {
 			// Split into key/value
-			kv := component.Environment[i]
+			kv := settings.Environment[i]
 			parts := strings.SplitN(kv, "=", 2)
 			if len(parts) != 2 {
 				return fmt.Errorf("invalid env var %q", kv)
@@ -68,6 +92,7 @@ func LoadEngineEnvironment(ctx *Context) error {
 			k, v := parts[0], parts[1]
 
 			// Set component path env var for expansion
+			componentPath := filepath.Join(componentsDir, settings.componentName)
 			if err := os.Setenv(componentEnv, componentPath); err != nil {
 				return fmt.Errorf("error setting %q: %v", componentEnv, err)
 			}

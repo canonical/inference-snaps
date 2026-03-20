@@ -64,8 +64,15 @@ func main() {
 
 	addCommandGroup(rootCmd, "basic", "Basic Commands:",
 		commands.Status(ctx),
-		commands.Chat(ctx),
+		// Chat is added conditionally
 	)
+	if commands.ChatEnabled() {
+		err := appendCommandToGroup(rootCmd, "basic", commands.Chat(ctx))
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			return
+		}
+	}
 
 	addCommandGroup(rootCmd, "config", "Configuration Commands:",
 		commands.Get(ctx),
@@ -123,6 +130,20 @@ func addCommandGroup(rootCmd *cobra.Command, groupID, groupTitle string, command
 		cmd.GroupID = groupID
 		rootCmd.AddCommand(cmd)
 	}
+}
+
+// appendCommandToGroup adds a command to an existing group in the root command
+func appendCommandToGroup(rootCmd *cobra.Command, groupID string, cmd *cobra.Command) error {
+	// Make sure the group exists
+	for _, existingCmd := range rootCmd.Commands() {
+		if existingCmd.GroupID == groupID {
+			// Add command to the root command with the specified group ID
+			cmd.GroupID = groupID
+			rootCmd.AddCommand(cmd)
+			return nil
+		}
+	}
+	return fmt.Errorf("group with ID %q not found", groupID)
 }
 
 // addCommands adds commands to the root command without a group
