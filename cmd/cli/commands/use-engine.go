@@ -51,24 +51,18 @@ func UseEngine(ctx *common.Context) *cobra.Command {
 }
 
 func (cmd *useEngineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	scoredEngines, err := common.ScoreEngines(cmd.Context)
+	manifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
-		fmt.Printf("Error scoring engines: %v\n", err)
-		return nil, cobra.ShellCompDirectiveNoFileComp
+		fmt.Printf("Error loading engines: %v\n", err)
+		return nil, cobra.ShellCompDirectiveError
 	}
 
 	var engineNames []cobra.Completion
-	for i := range scoredEngines {
-		if scoredEngines[i].CompatibilityReport.EngineCompatible() {
-			engineNames = append(engineNames, scoredEngines[i].Name)
-		}
-	}
-	if len(engineNames) == 0 {
-		// No engines flagged as compatible
-		return nil, cobra.ShellCompDirectiveNoFileComp
+	for i := range manifests {
+		engineNames = append(engineNames, manifests[i].Name)
 	}
 
-	return engineNames, cobra.ShellCompDirectiveNoFileComp
+	return engineNames, cobra.ShellCompDirectiveNoSpace
 }
 
 func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
@@ -96,10 +90,14 @@ func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 }
 
 func (cmd *useEngineCommand) autoSelectEngine() error {
+	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
+	defer stopProgress()
+
 	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error scoring engines: %v", err)
+		return fmt.Errorf("error checking engines: %v", err)
 	}
+	stopProgress()
 
 	fmt.Println("Evaluating engines for optimal hardware compatibility:")
 	for _, engine := range scoredEngines {

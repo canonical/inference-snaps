@@ -84,10 +84,14 @@ func (cmd *showEngineCommand) showCurrentEngine() error {
 }
 
 func (cmd *showEngineCommand) showEngine(engineName string) error {
+	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
+	defer stopProgress()
+
 	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error scoring engines: %v", err)
+		return fmt.Errorf("error checking engines: %v", err)
 	}
+	stopProgress()
 
 	var scoredManifest engines.ScoredManifest
 	for i := range scoredEngines {

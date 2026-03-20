@@ -8,12 +8,16 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"gopkg.in/yaml.v3"
 )
 
-const componentEnv = "COMPONENT"
+const (
+	componentEnv    = "COMPONENT"
+	ProgressScoring = "Checking engines"
+)
 
 func LoadEngineEnvironment(ctx *Context) error {
 	activeEngineName, err := ctx.Cache.GetActiveEngine()
@@ -130,18 +134,23 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 	return nil
 }
 
+/*
+ScoreEngines loads all engine manifests, looks up the host machine information,
+and scores the engines according to their compatibility with the host.
+
+Warning: calls to this function can block for a number of seconds while the host machine information is being looked up.
+*/
 func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, error) {
 	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
 		return nil, fmt.Errorf("error loading engines: %v", err)
 	}
 
-	machineInfo, err := ctx.Cache.GetMachineInfo()
+	machineInfo, err := hardware_info.Get(false)
 	if err != nil {
 		return nil, fmt.Errorf("error getting machine info: %v", err)
 	}
 
-	// score engines
 	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
 	if err != nil {
 		return nil, fmt.Errorf("error scoring engines: %v", err)

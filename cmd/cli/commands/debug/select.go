@@ -61,10 +61,15 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error loading engines from directory: %s", err)
 	}
+
+	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
+	defer stopProgress()
+
 	scoredEngines, err := selector.ScoreEngines(&hardwareInfo, allEngines)
 	if err != nil {
-		return fmt.Errorf("error scoring engines: %s", err)
+		return fmt.Errorf("error checking engines: %s", err)
 	}
+	stopProgress()
 
 	var engineSelection EngineSelection
 

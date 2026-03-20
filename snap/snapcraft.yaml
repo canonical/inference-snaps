@@ -27,12 +27,26 @@ layout:
   # NVIDIA icd specifies only the shared object name: libnvidia-opencl.so.1
   # libnvidia-opencl.so.1 is inside /snap/stack-utils/x3/usr/lib/x86_64-linux-gnu/, which is already in LD_LIBRARY_PATH
 
+environment:
+  # Path to access current revision of components
+  SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
+
 parts:
+  scripts:
+    source: snap/local
+    plugin: dump
+    organize:
+      "server.sh": bin/
+      "completion.bash": bin/
+
   system-utilities:
     plugin: nil
     stage-packages:
-      - pciutils
+      - pciutils # lspci
+      - clinfo # used for Intel GPU vRAM detection. It depends on intel-opencl-icd
 
+  # Used for NVIDIA vRAM and CUDA Capability detection.
+  # Only the binary is included to avoid staging libraries, which should instead be provided by the host through the opengl interface.
   nvidia-smi:
     plugin: nil
     build-packages:
@@ -45,48 +59,39 @@ parts:
       mkdir -p $license_dir
       cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
 
-  opencl:
-    # Include OpenCL runtime and clinfo for looking up vRAM on Intel GPUs
+  # OpenCL ICD and libigdgmm are required for Intel GPU vRAM lookup with clinfo
+  intel-opencl-icd:
     plugin: nil
-    stage-packages:
-      - clinfo
     build-packages:
       - wget
     override-build: |
-      # Only install intel opencl drivers on amd64
       if [ "$CRAFT_ARCH_BUILD_FOR" == "amd64" ]; then
-        # Legacy Intel OpenCL Runtime
-        mkdir -p $CRAFT_PART_BUILD/opencl-intel-legacy1
-        cd $CRAFT_PART_BUILD/opencl-intel-legacy1
-        wget https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-level-zero-gpu-legacy1_1.5.30872.36_amd64.deb
-        wget https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb
+        # Legacy
+        wget -nv https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb
+        wget -nv https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/libigdgmm12_22.5.0_amd64.deb
+      
+        # Latest
+        wget -nv https://github.com/intel/compute-runtime/releases/download/26.01.36711.4/intel-opencl-icd_26.01.36711.4-0_amd64.deb
+        wget -nv https://github.com/intel/compute-runtime/releases/download/26.01.36711.4/libigdgmm12_22.9.0_amd64.deb
+      
         dpkg --root=$CRAFT_PART_INSTALL --force-all -i *.deb
       
-        # Recent Intel OpenCL Runtime
-        mkdir -p $CRAFT_PART_BUILD/opencl-intel
-        cd $CRAFT_PART_BUILD/opencl-intel
-        wget https://github.com/intel/intel-graphics-compiler/releases/download/v2.5.6/intel-igc-core-2_2.5.6+18417_amd64.deb
-        wget https://github.com/intel/intel-graphics-compiler/releases/download/v2.5.6/intel-igc-opencl-2_2.5.6+18417_amd64.deb
-        wget https://github.com/intel/compute-runtime/releases/download/24.52.32224.5/intel-level-zero-gpu_1.6.32224.5_amd64.deb
-        wget https://github.com/intel/compute-runtime/releases/download/24.52.32224.5/intel-opencl-icd_24.52.32224.5_amd64.deb
-        wget https://github.com/intel/compute-runtime/releases/download/24.52.32224.5/libigdgmm12_22.5.5_amd64.deb
-        dpkg --root=$CRAFT_PART_INSTALL --force-all -i *.deb
-        
-        # Two symlinks are created by installing opencl: 
-        # etc/alternatives/ocloc -> /usr/bin/ocloc-24.52.1, usr/bin/ocloc -> /etc/alternatives/ocloc
-        # These point to outside of the snap and fail store review. They are not required, so remove them:
+        # Two symlinks are created when installing intel-opencl-icd-legacy: 
+        # etc/alternatives/ocloc -> /usr/bin/ocloc-24.35.0, usr/bin/ocloc -> /etc/alternatives/ocloc
+        # These point to outside of the snap and fails store review. They are not required, so remove it.
         rm $CRAFT_PART_INSTALL/etc/alternatives/ocloc
         rm $CRAFT_PART_INSTALL/usr/bin/ocloc
-      
-        cd $CRAFT_PART_BUILD
-      fi # End of intel-opencl driver installation
+      fi
       
       craftctl default
   
   dummy-components:
     plugin: nil
     override-prime: |
-      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
+      cat <<EOF > "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
+      environment:
+        - OPENAI_BASE_PATH=/v1
+      EOF
       touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_2_PRIME/component.yaml"
       touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_3_PRIME/component.yaml"
 
@@ -97,12 +102,18 @@ parts:
     build-packages:
       - git
 
-  go-clis:
+  cli:
     plugin: go
     build-snaps:
       - go/1.26/stable
     source: .
     source-type: local
+    override-build: |
+      craftctl default
+      # For tab completion
+      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/stack-utils
+    organize:
+      bin/cli: bin/modelctl
 
   engines:
     plugin: dump
@@ -123,12 +134,13 @@ components:
       
 apps:
   stack-utils:
+    command: bin/modelctl
+    completer: bin/completion.bash
     plugs:
       - hardware-observe
       - home
       - network
       - opengl
-    command: bin/cli
 
   clinfo:
     plugs:
@@ -142,3 +154,7 @@ apps:
       - hardware-observe
       - opengl
     command: usr/bin/nvidia-smi
+
+  server:
+    command: bin/server.sh
+    daemon: simple

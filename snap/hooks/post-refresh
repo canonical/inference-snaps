@@ -1,0 +1,21 @@
+#!/bin/bash -eu
+
+tag="snap.$SNAP_INSTANCE_NAME.hook.post-refresh"
+
+# Redirect stdout to stdout+syslog
+exec 1> >(tee >(logger --tag=$tag))
+# Redirect stderr to stderr+syslog
+exec 2> >(logger --stderr --priority error --tag=$tag)
+
+# Refresh the active engine
+# This involves applying changes to configurations and required snap components.
+# If the active engine has been removed, another engine will be auto selected.
+# The automatic selection requires access to hardware information on the system.
+if snapctl is-connected hardware-observe; then
+    modelctl use-engine --fix --assume-yes
+elif lscpu -V &> /dev/null; then
+    echo "Able to access hardware info without hardware-observe interface connection: assuming dev mode installation."
+    modelctl use-engine --fix --assume-yes
+else
+    echo "hardware-observe interface not connected. Skip fixing the active engine."
+fi

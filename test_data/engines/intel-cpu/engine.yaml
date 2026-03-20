@@ -11,3 +11,5 @@ devices:
 memory: 5G
 disk-space: 10G
 
+components:
+  - dummy-component-1
