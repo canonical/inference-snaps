@@ -47,3 +47,27 @@ If any additional properties need to be added to PCI devices, add it to this fil
   }
 }
 ```
+
+## machine-root
+
+### AMD GPU testing
+Navigate to the desired machine directory and create a `machine-root` directory.
+```
+mkdir -p machine-root/sys/class/kfd/kfd/topology/nodes
+cp -ra /sys/class/kfd/kfd/topology/nodes/* machine-root/sys/class/kfd/kfd/topology/nodes/
+mkdir -p machine-root/sys/class/drm
+cp -a --parent /sys/class/drm/renderD* machine-root
+```
+Now find the file pointed by the symlink(s) `machine-root/sys/class/drm/renderD*`:
+`ls -lah machine-root/sys/class/drm/renderD*`
+And create the same symlink(s) in the test environment:
+`mkdir -p machine-root/sys/class/drm/{PATH_RETRIEVED_FROM_ABOVE_COMMAND}`
+e.g. `mkdir -p machine-root/sys/class/drm/../../devices/pci0000:00/0000:00:08.1/0000:c4:00.0/drm/renderD128`
+To complete the setup, copy the file `mem_info_vram_total`:
+`cp -a --parent /sys/bus/pci/devices/0000\:c4\:00.0/mem_info_vram_total machine-root/`
+Substitute the pciSlot in the above command with the one corresponding to the GPU being tested, which can be found in the `lspci.txt` file.
+In case the directory `machine-root/sys/class/drm/renderD128` is empty:
+```
+cd machine-root/sys/class/drm/renderD128
+ln -s ../.. device
+```

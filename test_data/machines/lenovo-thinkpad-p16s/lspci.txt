@@ -1,0 +1,340 @@
+Slot:	0000:00:00.0
+Class:	0600
+Vendor:	1022
+Device:	1122
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+
+Slot:	0000:00:00.2
+Class:	0806
+Vendor:	1022
+Device:	1123
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+
+Slot:	0000:00:01.0
+Class:	0600
+Vendor:	1022
+Device:	1124
+ProgIf:	00
+IOMMUGroup:	1
+
+Slot:	0000:00:01.1
+Class:	0604
+Vendor:	1022
+Device:	1125
+SVendor:	1022
+SDevice:	1125
+ProgIf:	00
+IOMMUGroup:	2
+
+Slot:	0000:00:01.2
+Class:	0604
+Vendor:	1022
+Device:	1125
+SVendor:	1022
+SDevice:	1125
+ProgIf:	00
+IOMMUGroup:	3
+
+Slot:	0000:00:02.0
+Class:	0600
+Vendor:	1022
+Device:	1124
+ProgIf:	00
+IOMMUGroup:	4
+
+Slot:	0000:00:02.1
+Class:	0604
+Vendor:	1022
+Device:	1126
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	5
+
+Slot:	0000:00:02.3
+Class:	0604
+Vendor:	1022
+Device:	1126
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	6
+
+Slot:	0000:00:02.4
+Class:	0604
+Vendor:	1022
+Device:	1126
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	7
+
+Slot:	0000:00:03.0
+Class:	0600
+Vendor:	1022
+Device:	1124
+ProgIf:	00
+IOMMUGroup:	8
+
+Slot:	0000:00:08.0
+Class:	0600
+Vendor:	1022
+Device:	1124
+ProgIf:	00
+IOMMUGroup:	9
+
+Slot:	0000:00:08.1
+Class:	0604
+Vendor:	1022
+Device:	1110
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	10
+
+Slot:	0000:00:08.2
+Class:	0604
+Vendor:	1022
+Device:	1111
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	11
+
+Slot:	0000:00:08.3
+Class:	0604
+Vendor:	1022
+Device:	1112
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	12
+
+Slot:	0000:00:14.0
+Class:	0c05
+Vendor:	1022
+Device:	790b
+SVendor:	17aa
+SDevice:	512e
+Rev:	71
+ProgIf:	00
+IOMMUGroup:	13
+
+Slot:	0000:00:14.3
+Class:	0601
+Vendor:	1022
+Device:	790e
+SVendor:	17aa
+SDevice:	512e
+Rev:	51
+ProgIf:	00
+IOMMUGroup:	13
+
+Slot:	0000:00:18.0
+Class:	0600
+Vendor:	1022
+Device:	1248
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.1
+Class:	0600
+Vendor:	1022
+Device:	1249
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.2
+Class:	0600
+Vendor:	1022
+Device:	124a
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.3
+Class:	0600
+Vendor:	1022
+Device:	124b
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.4
+Class:	0600
+Vendor:	1022
+Device:	124c
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.5
+Class:	0600
+Vendor:	1022
+Device:	124d
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.6
+Class:	0600
+Vendor:	1022
+Device:	124e
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:00:18.7
+Class:	0600
+Vendor:	1022
+Device:	124f
+ProgIf:	00
+IOMMUGroup:	14
+
+Slot:	0000:c1:00.0
+Class:	0108
+Vendor:	1c5c
+Device:	1959
+SVendor:	1c5c
+SDevice:	1959
+ProgIf:	02
+IOMMUGroup:	15
+
+Slot:	0000:c2:00.0
+Class:	0280
+Vendor:	14c3
+Device:	7925
+SVendor:	17aa
+SDevice:	e025
+ProgIf:	00
+IOMMUGroup:	16
+
+Slot:	0000:c3:00.0
+Class:	0200
+Vendor:	10ec
+Device:	8168
+SVendor:	17aa
+SDevice:	512e
+Rev:	0e
+ProgIf:	00
+IOMMUGroup:	17
+
+Slot:	0000:c4:00.0
+Class:	0380
+Vendor:	1002
+Device:	1114
+SVendor:	17aa
+SDevice:	512f
+Rev:	d2
+ProgIf:	00
+IOMMUGroup:	18
+
+Slot:	0000:c4:00.1
+Class:	0403
+Vendor:	1002
+Device:	1640
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	19
+
+Slot:	0000:c4:00.2
+Class:	1080
+Vendor:	1022
+Device:	17e0
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	20
+
+Slot:	0000:c4:00.4
+Class:	0c03
+Vendor:	1022
+Device:	1128
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	30
+IOMMUGroup:	21
+
+Slot:	0000:c4:00.5
+Class:	0480
+Vendor:	1022
+Device:	15e2
+SVendor:	17aa
+SDevice:	512f
+Rev:	71
+ProgIf:	00
+IOMMUGroup:	22
+
+Slot:	0000:c4:00.6
+Class:	0403
+Vendor:	1022
+Device:	15e3
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	23
+
+Slot:	0000:c5:00.0
+Class:	1300
+Vendor:	1022
+Device:	1116
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	00
+IOMMUGroup:	24
+
+Slot:	0000:c5:00.1
+Class:	1180
+Vendor:	1022
+Device:	17f0
+SVendor:	17aa
+SDevice:	512e
+Rev:	20
+ProgIf:	00
+IOMMUGroup:	25
+
+Slot:	0000:c6:00.0
+Class:	0c03
+Vendor:	1022
+Device:	1118
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	30
+IOMMUGroup:	26
+
+Slot:	0000:c6:00.3
+Class:	0c03
+Vendor:	1022
+Device:	111c
+SVendor:	17aa
+SDevice:	512e
+ProgIf:	30
+IOMMUGroup:	27
+
+Slot:	0000:c6:00.4
+Class:	0c03
+Vendor:	1022
+Device:	111e
+SVendor:	1022
+SDevice:	111e
+ProgIf:	30
+IOMMUGroup:	28
+
+Slot:	0000:c6:00.5
+Class:	0c03
+Vendor:	1022
+Device:	1120
+SVendor:	1022
+SDevice:	1120
+ProgIf:	40
+IOMMUGroup:	29
+
+Slot:	0000:c6:00.6
+Class:	0c03
+Vendor:	1022
+Device:	1121
+SVendor:	1022
+SDevice:	1121
+ProgIf:	40
+IOMMUGroup:	30
+

@@ -38,6 +38,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 	},
 
@@ -63,6 +64,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 	},
 
@@ -88,6 +90,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 	},
 
@@ -103,6 +106,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
@@ -127,6 +131,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"system76-addw4",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
@@ -145,6 +150,7 @@ var validInvalidSets = map[string]testValidInvalid{
 		ValidMachines: []string{
 			"hp-pavilion-15-cs-3037nl",
 			"i7-1165G7",
+			"lenovo-thinkpad-p16s",
 		},
 		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
@@ -172,6 +178,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"mustang",
 			"system76-addw4",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 		InvalidMachines: []string{
 			"ampere-one-m-banshee-12",
@@ -213,6 +220,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
 			"xps13-9350",
+			"lenovo-thinkpad-p16s",
 		},
 	},
 
@@ -238,6 +246,7 @@ var validInvalidSets = map[string]testValidInvalid{
 			"raspberry-pi-5",
 			"raspberry-pi-5+hailo-8",
 			"xps13-7390",
+			"lenovo-thinkpad-p16s",
 		},
 	},
 
@@ -263,6 +272,60 @@ var validInvalidSets = map[string]testValidInvalid{
 			"raspberry-pi-5+hailo-8",
 			"system76-addw4",
 			"xps13-7390",
+			"lenovo-thinkpad-p16s",
+		},
+	},
+
+	"amd-gpu": {
+		ValidMachines: []string{
+			"hp-zbook-i712850HX+RadeonPROW6600M",
+		},
+		InvalidMachines: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"asus-ux301l",
+			"hp-pavilion-15-cs-3037nl",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+			"hp-zbook-power-16-inch-g11",
+			"i5-3570k+arc-a580+gtx1080ti",
+			"i7-1165G7",
+			"i7-2600k+arc-a580",
+			"i7-10510U",
+			"mustang",
+			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
+			"xps13-7390",
+			"xps13-9350",
+			"lenovo-thinkpad-p16s",
+		},
+	},
+	"rocm-generic": {
+		ValidMachines: []string{
+			"lenovo-thinkpad-p16s",
+		},
+		InvalidMachines: []string{
+			"ampere-one-m-banshee-12",
+			"ampere-one-siryn",
+			"ampere-one-x-banshee-8",
+			"asus-ux301l",
+			"hp-pavilion-15-cs-3037nl",
+			"hp-proliant-rl300-gen11-altra",
+			"hp-proliant-rl300-gen11-altra-max",
+			"hp-zbook-power-16-inch-g11",
+			"i5-3570k+arc-a580+gtx1080ti",
+			"i7-1165G7",
+			"i7-2600k+arc-a580",
+			"i7-10510U",
+			"mustang",
+			"raspberry-pi-5",
+			"raspberry-pi-5+hailo-8",
+			"system76-addw4",
+			"xps13-7390",
+			"xps13-9350",
+			"hp-zbook-i712850HX+RadeonPROW6600M",
 		},
 	},
 }

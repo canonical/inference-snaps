@@ -9,17 +9,6 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 )
 
-func hasAdditionalProperties(device engines.Device) bool {
-	if device.VRam != nil {
-		return true
-	}
-	if device.ComputeCapability != nil {
-		return true
-	}
-
-	return false
-}
-
 func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, error) {
 	extraScore := 0
 
@@ -32,6 +21,14 @@ func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, err
 		extraScore += weights.GpuVRam
 	}
 
+	// microarchitecture
+	if device.Microarchitecture != nil {
+		err := checkMicroarchitecture(*device.Microarchitecture, pciDevice)
+		if err != nil {
+			return 0, err
+		}
+		extraScore += weights.GpuMicroarchitecture
+	}
 	// TODO compute-capability
 
 	return extraScore, nil
@@ -55,5 +52,18 @@ func checkVram(device engines.Device, pciDevice types.PciDevice) error {
 	} else {
 		// Hardware Info does not list available vram
 		return fmt.Errorf("unable to detect vRAM")
+	}
+}
+
+func checkMicroarchitecture(microArchRequired string, pciDevice types.PciDevice) error {
+	if microArch, ok := pciDevice.AdditionalProperties["microarchitecture"]; ok {
+		if microArch == microArchRequired {
+			return nil
+		} else {
+			return fmt.Errorf("microarchitecture does not match: %s", microArch)
+		}
+	} else {
+		// Hardware Info does not list available microarchitecture
+		return fmt.Errorf("unable to detect microarchitecture")
 	}
 }

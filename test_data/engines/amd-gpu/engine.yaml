@@ -1,0 +1,17 @@
+name: amd-gpu
+description: AMD specific engine targeting only one microarchitecture.
+vendor: Canonical Ltd
+grade: stable
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+    - type: gpu
+      vendor-id: 0x1002 # AMD Corporation
+      microarchitecture: gfx1032
+memory: 2G
+disk-space: 5G
+components:
+  - dummy-component-1
+  - dummy-component-2
+

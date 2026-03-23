@@ -1,0 +1,21 @@
+name: rocm-generic
+description: AMD GPUs using ROCm. All major ROCm versions are targeted.
+vendor: Canonical Ltd
+grade: stable
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+  anyof:
+    - type: gpu
+      vendor-id: 0x1002 # AMD Corporation
+      microarchitecture: gfx1152
+    - type: gpu
+      vendor-id: 0x1002 # AMD Corporation
+      microarchitecture: gfx1030
+memory: 2G
+disk-space: 5G
+components:
+  - dummy-component-1
+  - dummy-component-2
+

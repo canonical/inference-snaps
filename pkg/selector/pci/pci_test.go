@@ -113,3 +113,34 @@ func TestCheckNpuDriver(t *testing.T) {
 
 	// TODO test the negative case
 }
+
+func TestCheckMicroarchitecture(t *testing.T) {
+
+	hwInfoGpu := types.PciDevice{
+		DeviceClass: 0x0300,
+		AdditionalProperties: map[string]string{
+			"microarchitecture": "gfx1152",
+		},
+	}
+
+	requiredMicroarchitecture := "gfx1152"
+	device := engines.Device{
+		Type:              "gpu",
+		Bus:               "pci",
+		VendorId:          nil,
+		Microarchitecture: &requiredMicroarchitecture,
+	}
+
+	availableDevices := filterPciDevices([]types.PciDevice{hwInfoGpu}, device.VendorId, device.DeviceId)
+	scoredDevices, scoreIssues := scorePciDevices(device, availableDevices)
+	if len(scoreIssues) != 0 {
+		t.Fatalf("GPU microarchitecture should match: %s", strings.Join(scoreIssues, ", "))
+	}
+
+	requiredMicroarchitecture = "gfx2200"
+	availableDevices = filterPciDevices([]types.PciDevice{hwInfoGpu}, device.VendorId, device.DeviceId)
+	scoredDevices, scoreIssues = scorePciDevices(device, availableDevices)
+	if len(scoreIssues) == 0 || scoredDevices[0].Score != 0 {
+		t.Fatalf("GPU microarchitecture should NOT match")
+	}
+}

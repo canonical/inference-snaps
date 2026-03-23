@@ -134,15 +134,13 @@ func scorePciDevice(manifestDevice engines.Device, hostPciDevice types.PciDevice
 	}
 
 	// Check additional properties
-	if hasAdditionalProperties(manifestDevice) {
-		propsScore, err := checkProperties(manifestDevice, hostPciDevice)
-		if err != nil {
-			deviceScore = 0
-			issues = append(issues, err.Error())
-			return
-		}
-		deviceScore += propsScore
+	propsScore, err := checkProperties(manifestDevice, hostPciDevice)
+	if err != nil {
+		deviceScore = 0
+		issues = append(issues, err.Error())
+		return
 	}
+	deviceScore += propsScore
 
 	// Check drivers
 	for _, connection := range manifestDevice.SnapConnections {
