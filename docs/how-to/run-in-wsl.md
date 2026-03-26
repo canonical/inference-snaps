@@ -1,3 +1,4 @@
+(run-in-wsl)=
 # Run an inference snap in WSL
 
 Inference snaps can be installed in WSL just like on a native Ubuntu installation.
