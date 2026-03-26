@@ -15,6 +15,7 @@ manage-snap-services
 use-openai-api
 switch-between-engines
 configure-snap
+run-in-wsl
 ```
 
 Use the snap with web clients:
