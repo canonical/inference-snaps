@@ -5,9 +5,9 @@ import (
 )
 
 type EngineDetails struct {
-	engines.ScoredManifest
-	Compatible          bool     `yaml:"compatible" json:"compatible"`
-	CompatibilityIssues []string `yaml:"compatibility-issues,omitempty" json:"compatibility-issues,omitempty"`
+	engines.ScoredManifest `yaml:",inline"`
+	Compatible             bool     `yaml:"compatible" json:"compatible"`
+	CompatibilityIssues    []string `yaml:"compatibility-issues,omitempty" json:"compatibility-issues,omitempty"`
 }
 
 func NewEngineDetails(scoredManifest engines.ScoredManifest) EngineDetails {
