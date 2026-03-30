@@ -118,6 +118,9 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
         # device-id:
         vram: 4G
         compute-capability: ["==5.3", ">=6.2"]
+      - type: gpu
+        vendor-id: "0x1002" # Advanced Micro Devices, Inc.
+        microarchitecture: gfx1010
   memory: 4G
   disk-space: 15G
 
