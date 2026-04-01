@@ -13,6 +13,15 @@ Refer to {ref}`available snaps <available-snaps>` to see which inference snaps a
 The GPU drivers in Windows need to be updated to a recent version that supports exposing the GPU to WSL.
 Refer to your GPU vendor's documentation for instructions on how to do this.
 
+The rest of this how-to assumes you have followed Microsoft's guide to [install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and create the Ubuntu Linux distribution.
+
+Fully updated and perform a restart of the Ubuntu distribution before continuing:
+```shell
+sudo apt update
+sudo apt upgrade
+sudo reboot
+```
+
 ## Verify GPU availability in WSL
 
 For NVIDIA GPUs, you can verify access using the `nvidia-smi` tool in WSL.
