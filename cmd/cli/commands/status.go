@@ -15,7 +15,8 @@ type statusCommand struct {
 	*common.Context
 
 	// flags
-	format string
+	format            string
+	waitForComponents bool
 }
 
 func Status(ctx *common.Context) *cobra.Command {
@@ -39,6 +40,7 @@ func Status(ctx *common.Context) *cobra.Command {
 		"yaml",
 		fmt.Sprintf("output format (%s)", strings.Join(supportedFormats, ", ")),
 	)
+	cobraCmd.Flags().BoolVar(&cmd.waitForComponents, "wait-for-components", false, "wait for engine components to be installed before reporting status")
 
 	return cobraCmd
 }
@@ -46,6 +48,12 @@ func Status(ctx *common.Context) *cobra.Command {
 func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 	var statusText string
 	var err error
+
+	if cmd.waitForComponents {
+		if err := common.WaitForComponents(cmd.Context); err != nil {
+			return fmt.Errorf("waiting for component: %s", err)
+		}
+	}
 
 	stopProgress := common.StartProgressSpinner("Getting status")
 	defer stopProgress()
