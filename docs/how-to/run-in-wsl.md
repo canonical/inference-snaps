@@ -2,7 +2,7 @@
 # Run an inference snap in WSL
 
 Inference snaps can be installed in WSL just like on a native Ubuntu installation.
-The hardware detection will not detect GPUs or any other accelerators.
+Because of the way GPUs are exposed on WSL, the hardware detection in inference snaps is not able detect the GPUs.
 A CPU engine will therefore be automatically selected.
 
 If your Windows machine has a GPU that is supported by {spellexception}`WSL's` GPU passthrough mechanism, some inference snaps can also use it.
@@ -36,21 +36,9 @@ clinfo
 
 ## Run inference snap
 
-After installing the relevant inference snap, verify which engine was automatically selected:
-```shell
-<inference-snap> status
-```
+Install a supported inference snap.
 
-You should see a CPU engine.
-
-Use `<inference-snap> list-engines` to find the engine with a description that matches your GPU.
-Switch to that engine and restart the snap.
-
-```shell
-<inference-snap> list-engines
-sudo <inference-snap> use-engine <engine-name>
-sudo snap restart <inference-snap>
-```
+From the list of engines, find the engine with a description that matches your GPU:
 
 You can verify that the engine is running by looking at the snap logs:
 ```shell
