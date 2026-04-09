@@ -123,6 +123,13 @@ parts:
     organize:
       bin/cli: bin/modelctl
 
+  webui:
+    plugin: dump
+    source: https://github.com/canonical/inference-snaps-ui.git
+    source-tag: v1.0.0-beta.1
+    organize:
+      "static": etc/webui/
+
   engines:
     plugin: dump
     source: test_data/engines
@@ -148,6 +155,7 @@ apps:
       - hardware-observe
       - home
       - network
+      - network-bind # for serving webui 
       - opengl
     environment:
       ADDITIONAL_FEATURES: chat

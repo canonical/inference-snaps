@@ -94,6 +94,7 @@ func main() {
 	// Hidden commands
 	addCommands(rootCmd,
 		commands.Run(ctx),
+		commands.ServeUI(ctx),
 		debug.DebugCommand(ctx),
 	)
 

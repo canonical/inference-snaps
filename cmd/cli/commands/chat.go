@@ -35,7 +35,7 @@ func ChatEnabled() bool {
 }
 
 func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
-	chatBaseUrl, err := chatBaseURL(cmd.Context)
+	chatBaseUrl, err := common.OpenAiEndpoint(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("error getting OpenAI base URL: %v", err)
 	}
@@ -56,16 +56,4 @@ func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	chatClient := common.ChatClient(chatBaseUrl, "", cmd.Verbose)
 
 	return chatClient.Start()
-}
-
-func chatBaseURL(ctx *common.Context) (string, error) {
-	serverEndpoints, err := common.ServerEndpoints(ctx)
-	if err != nil {
-		return "", fmt.Errorf("error getting server endpoints: %v", err)
-	}
-	chatBaseUrl, found := serverEndpoints[common.OpenAiEndpointKey]
-	if !found {
-		return "", fmt.Errorf("%q not found in server endpoints", common.OpenAiEndpointKey)
-	}
-	return chatBaseUrl, nil
 }

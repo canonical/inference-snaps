@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	OpenAiEndpointKey = "openai"
+	openAiEndpointKey = "openai"
 	protocolKey       = "protocol"
 	basePathKey       = "base-path"
 )
@@ -74,4 +74,16 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 	}
 
 	return endpointUrl.String(), nil
+}
+
+func OpenAiEndpoint(ctx *Context) (string, error) {
+	serverEndpoints, err := ServerEndpoints(ctx)
+	if err != nil {
+		return "", fmt.Errorf("error getting server endpoints: %v", err)
+	}
+	openaiEndpoint, found := serverEndpoints[openAiEndpointKey]
+	if !found {
+		return "", fmt.Errorf("%q not found in server endpoints", openAiEndpointKey)
+	}
+	return openaiEndpoint, nil
 }

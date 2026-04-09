@@ -1,8 +1,6 @@
 module github.com/canonical/inference-snaps-cli
 
-go 1.26.0
-
-toolchain go1.26.1
+go 1.26.1
 
 require (
 	github.com/briandowns/spinner v1.23.2
