@@ -5,3 +5,6 @@ site_link: "[Website link](https://example.com)"
 
 explore_optimizations: |
   Once installed, use `list-engines` and `show-engine` commands to explore the available {ref}`engines <engines>`.
+
+wsl_support: |
+  This snap is supported on Windows Subsystem for Linux (WSL) 2. See {ref}`Run in WSL <run-in-wsl>` for more details.
