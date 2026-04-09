@@ -39,6 +39,15 @@ clinfo
 Install a supported inference snap.
 
 From the list of engines, find the engine with a description that matches your GPU:
+```shell
+<inference-snap> list-engines
+```
+
+Switch to that engine and restart the snap:
+```shell
+sudo <inference-snap> use-engine <engine-name>
+sudo snap restart <inference-snap>
+```
 
 You can verify that the engine is running by looking at the snap logs:
 ```shell
