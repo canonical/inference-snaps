@@ -7,7 +7,7 @@ require (
 	github.com/canonical/go-snapctl v1.0.0-beta.6
 	github.com/chzyer/readline v1.5.1
 	github.com/creack/pty v1.1.24
-	github.com/fatih/color v1.18.0
+	github.com/fatih/color v1.19.0
 	github.com/go-test/deep v1.1.1
 	github.com/jaypipes/pcidb v1.1.1
 	github.com/olekukonko/tablewriter v1.1.4
