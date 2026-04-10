@@ -147,9 +147,13 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		return fmt.Errorf("loading engine manifest: %v", err)
 	}
 
-	componentsInstalled, err := cmd.installMissingComponents(engine)
+	cancelledByUser, err := cmd.installMissingComponents(engine)
 	if err != nil {
 		return fmt.Errorf("installing missing components: %v", err)
+	}
+
+	if cancelledByUser {
+		return nil
 	}
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
@@ -168,11 +172,6 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		if err != nil {
 			return fmt.Errorf("un-setting engine configurations: %v", err)
 		}
-	}
-
-	if componentsInstalled {
-		// Leave a blank line before continuing
-		fmt.Println()
 	}
 
 	if err = cmd.Cache.SetActiveEngine(engine.Name); err != nil {
@@ -302,7 +301,7 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 	return nil
 }
 
-func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) (installed bool, err error) {
+func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) (cancelledByUser bool, err error) {
 	missingComponents, err := cmd.missingComponents(engine.Components)
 	if err != nil {
 		return false, fmt.Errorf("checking installed components: %v", err)
@@ -332,8 +331,8 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	if !cmd.assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
 		fmt.Println()
 		if !common.ConfirmationPrompt("Do you want to continue?") {
-			fmt.Println("Exiting. No changes applied.")
-			return false, nil
+			fmt.Println("Cancelled. No changes applied.")
+			return true, nil
 		}
 	}
 
@@ -347,7 +346,7 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 		return false, fmt.Errorf("installing components: %v", err)
 	}
 
-	return true, nil
+	return false, nil
 }
 
 func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.CompatibilityReport) []string {
