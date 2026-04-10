@@ -310,10 +310,8 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 		return false, nil
 	}
 
-	// Look up component sizes from the snap store
 	componentSizes, err := snap_store.ComponentSizes()
-	if err != nil {
-		// If component size lookup failed, continue but log the error
+	if err != nil && cmd.Verbose {
 		fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
 	}
 

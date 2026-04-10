@@ -190,7 +190,7 @@ func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsWithEngines ma
 		fmt.Println("Removing components:")
 
 		componentSizes, err := snap_store.ComponentSizes()
-		if err != nil {
+		if err != nil && cmd.Verbose {
 			fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
 		}
 
