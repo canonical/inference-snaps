@@ -57,13 +57,13 @@ func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
 
 	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error checking engines: %v", err)
+		return fmt.Errorf("checking engines: %v", err)
 	}
 	stopProgress()
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("could not determine active engine: %v", err)
+		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
 	}
 
 	enginesList := outputEngines{
@@ -78,12 +78,12 @@ func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
 	case "table":
 		err = cmd.printEnginesTable(enginesList)
 		if err != nil {
-			return fmt.Errorf("error printing list: %v", err)
+			return fmt.Errorf("printing table: %v", err)
 		}
 	case "json":
 		err = cmd.printEnginesJson(enginesList)
 		if err != nil {
-			return fmt.Errorf("error printing list: %v", err)
+			return fmt.Errorf("printing json: %v", err)
 		}
 	default:
 		return fmt.Errorf("unknown format %q", cmd.format)
@@ -95,7 +95,7 @@ func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
 func (cmd *listEnginesCommand) printEnginesJson(enginesList outputEngines) error {
 	jsonString, err := json.MarshalIndent(enginesList, "", "  ")
 	if err != nil {
-		return fmt.Errorf("error marshalling engines to json: %v", err)
+		return fmt.Errorf("marshalling engines: %v", err)
 	}
 	fmt.Printf("%s\n", jsonString)
 	return nil
@@ -215,11 +215,11 @@ func (cmd *listEnginesCommand) printEnginesTable(enginesList outputEngines) erro
 	table.Header(tableRows[0])
 	err := table.Bulk(tableRows[1:])
 	if err != nil {
-		return fmt.Errorf("error adding data to table: %v", err)
+		return fmt.Errorf("adding data: %v", err)
 	}
 	err = table.Render()
 	if err != nil {
-		return fmt.Errorf("error rendering table: %v", err)
+		return fmt.Errorf("rendering: %v", err)
 	}
 	return nil
 }

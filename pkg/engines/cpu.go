@@ -40,7 +40,7 @@ func (device Device) validateAmd64() error {
 		fieldValue := v.FieldByName(fieldName)
 		if fieldValue.IsValid() && !fieldValue.IsZero() {
 			if !slices.Contains(validFields, fieldName) {
-				return fmt.Errorf("cpu amd64: invalid field: %s", fieldName)
+				return fmt.Errorf("amd64: invalid field: %s", fieldName)
 			}
 		}
 	}
@@ -66,7 +66,7 @@ func (device Device) validateArm64() error {
 		fieldValue := v.FieldByName(fieldName)
 		if fieldValue.IsValid() && !fieldValue.IsZero() {
 			if !slices.Contains(validFields, fieldName) {
-				return fmt.Errorf("cpu arm64: invalid field: %s", fieldName)
+				return fmt.Errorf("arm64: invalid field: %s", fieldName)
 			}
 		}
 	}

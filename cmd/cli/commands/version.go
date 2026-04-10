@@ -55,13 +55,13 @@ func (cmd *versionCommand) run(_ *cobra.Command, _ []string) error {
 	case "json":
 		jsonString, err := json.MarshalIndent(versionData, "", "  ")
 		if err != nil {
-			return fmt.Errorf("failed to marshal to JSON: %s", err)
+			return fmt.Errorf("marshalling json: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml":
 		yamlString, err := yaml.Marshal(versionData)
 		if err != nil {
-			return fmt.Errorf("failed to marshal to YAML: %s", err)
+			return fmt.Errorf("marshalling yaml: %s", err)
 		}
 		fmt.Printf("%s", yamlString)
 	default:

@@ -45,12 +45,12 @@ func parseDf(dfData string) ([]types.DirStats, error) {
 
 		totalSize, err := strconv.ParseUint(fields[1], 10, 64)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing 'total blocks' field: %v", err)
+			return nil, fmt.Errorf("parsing \"total blocks\" field: %v", err)
 		}
 		//usedSize, err := strconv.ParseUint(fields[2], 10, 64)
 		availableSize, err := strconv.ParseUint(fields[3], 10, 64)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing 'available blocks' field: %v", err)
+			return nil, fmt.Errorf("parsing \"available blocks\" field: %v", err)
 		}
 
 		var thisDir = types.DirStats{

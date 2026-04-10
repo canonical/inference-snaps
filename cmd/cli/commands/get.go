@@ -52,7 +52,7 @@ func (cmd *getCommand) run(_ *cobra.Command, args []string) error {
 func (cmd *getCommand) getValue(key string) error {
 	value, err := cmd.Config.Get(key)
 	if err != nil {
-		return fmt.Errorf("error getting value of %q: %v", key, err)
+		return fmt.Errorf("getting value of %q: %v", key, err)
 	}
 
 	if len(value) == 0 {
@@ -65,7 +65,7 @@ func (cmd *getCommand) getValue(key string) error {
 		// print as yaml
 		yamlOutput, err := yaml.Marshal(value)
 		if err != nil {
-			return fmt.Errorf("error serializing value: %v", err)
+			return fmt.Errorf("serializing value: %v", err)
 		}
 		fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
 	}
@@ -81,7 +81,7 @@ func (cmd *getCommand) getValue(key string) error {
 func (cmd *getCommand) getValues() error {
 	values, err := cmd.Config.GetAll()
 	if err != nil {
-		return fmt.Errorf("error getting values: %v", err)
+		return fmt.Errorf("getting values: %v", err)
 	}
 
 	// Drop deprecated configurations. The user doesn't need to see them.
@@ -94,7 +94,7 @@ func (cmd *getCommand) getValues() error {
 	// print config value
 	yamlOutput, err := yaml.Marshal(values)
 	if err != nil {
-		return fmt.Errorf("error serializing values: %v", err)
+		return fmt.Errorf("serializing values: %v", err)
 	}
 	fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
 

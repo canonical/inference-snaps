@@ -42,6 +42,9 @@ func TestList(t *testing.T) {
 	cmd := listEnginesCommand{Context: ctx}
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		t.Fatalf("%s: %v", common.LookingUpActiveEngine, err)
+	}
 
 	enginesList := outputEngines{
 		ActiveEngine: activeEngine,

@@ -60,7 +60,7 @@ func (cmd *showEngineCommand) run(_ *cobra.Command, args []string) error {
 func (cmd *showEngineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 	manifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
-		fmt.Printf("Error loading engines: %v\n", err)
+		fmt.Printf("Error: loading engines: %v\n", err)
 		return nil, cobra.ShellCompDirectiveError
 	}
 
@@ -75,10 +75,10 @@ func (cmd *showEngineCommand) validateArgs(_ *cobra.Command, args []string, toCo
 func (cmd *showEngineCommand) showCurrentEngine() error {
 	currentEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("could not get the active engine: %v", err)
+		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
 	}
 	if currentEngine == "" {
-		return fmt.Errorf("no active engine")
+		return common.ErrNoActiveEngine
 	}
 	return cmd.showEngine(currentEngine)
 }
@@ -89,7 +89,7 @@ func (cmd *showEngineCommand) showEngine(engineName string) error {
 
 	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error checking engines: %v", err)
+		return fmt.Errorf("checking engines: %v", err)
 	}
 	stopProgress()
 
@@ -105,7 +105,7 @@ func (cmd *showEngineCommand) showEngine(engineName string) error {
 
 	err = cmd.printEngineManifest(scoredManifest)
 	if err != nil {
-		return fmt.Errorf("error printing engine manifest: %v", err)
+		return fmt.Errorf("printing engine manifest: %v", err)
 	}
 	return nil
 }
@@ -117,13 +117,13 @@ func (cmd *showEngineCommand) printEngineManifest(engine engines.ScoredManifest)
 	case "json":
 		jsonString, err := json.MarshalIndent(output, "", "  ")
 		if err != nil {
-			return fmt.Errorf("failed to marshal to JSON: %s", err)
+			return fmt.Errorf("json: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml", "":
 		engineYaml, err := yaml.Marshal(output)
 		if err != nil {
-			return fmt.Errorf("failed to marshal to YAML: %s", err)
+			return fmt.Errorf("yaml: %s", err)
 		}
 		fmt.Print(string(engineYaml))
 	default:

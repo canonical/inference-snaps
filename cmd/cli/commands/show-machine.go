@@ -46,20 +46,20 @@ func ShowMachine(ctx *common.Context) *cobra.Command {
 func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 	hwInfo, err := hardware_info.Get(true)
 	if err != nil {
-		return fmt.Errorf("failed to get machine info: %s", err)
+		return fmt.Errorf("getting machine info: %s", err)
 	}
 
 	switch cmd.format {
 	case "json":
 		jsonString, err := json.MarshalIndent(hwInfo, "", "  ")
 		if err != nil {
-			return fmt.Errorf("failed to marshal to JSON: %s", err)
+			return fmt.Errorf("json: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml":
 		yamlString, err := yaml.Marshal(hwInfo)
 		if err != nil {
-			return fmt.Errorf("failed to marshal to YAML: %s", err)
+			return fmt.Errorf("yaml: %s", err)
 		}
 		fmt.Printf("%s", yamlString)
 	default:

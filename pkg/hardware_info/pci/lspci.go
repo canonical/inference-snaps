@@ -80,7 +80,7 @@ func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevic
 			friendlyNames, err := friendlyNames(device)
 			if err != nil {
 				// This is not a fatal error, so just logging it
-				fmt.Fprintln(os.Stderr, "Error looking up friendly name:", err)
+				fmt.Fprintln(os.Stderr, "Warning: unable to get friendly name for pci device:", err)
 			} else {
 				device.PciFriendlyNames = friendlyNames
 			}

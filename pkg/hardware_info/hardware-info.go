@@ -18,25 +18,25 @@ func Get(friendlyNames bool) (*types.HwInfo, error) {
 
 	memoryInfo, err := memory.Info()
 	if err != nil {
-		return nil, fmt.Errorf("error getting memory info: %v", err)
+		return nil, fmt.Errorf("getting memory info: %v", err)
 	}
 	hwInfo.Memory = memoryInfo
 
 	cpus, err := cpu.Info()
 	if err != nil {
-		return nil, fmt.Errorf("error getting cpu info: %v", err)
+		return nil, fmt.Errorf("getting cpu info: %v", err)
 	}
 	hwInfo.Cpus = cpus
 
 	diskInfo, err := disk.Info()
 	if err != nil {
-		return nil, fmt.Errorf("error getting disk info: %v", err)
+		return nil, fmt.Errorf("getting disk info: %v", err)
 	}
 	hwInfo.Disk = diskInfo
 
 	pciDevices, err := pci.Devices(friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("error getting pci devices: %v", err)
+		return nil, fmt.Errorf("getting pci devices: %v", err)
 	}
 	hwInfo.PciDevices = pciDevices
 

@@ -180,19 +180,19 @@ func TestGetGfxTargetVersion(t *testing.T) {
 		{
 			name:          "unexpected major format non numeric",
 			input:         "gfx_target_version ab1234",
-			errContains:   "error parsing major version from gfx_target_version",
+			errContains:   "invalid syntax",
 			expectFailure: true,
 		},
 		{
 			name:          "unexpected minor format non numeric",
 			input:         "gfx_target_version 12ab34",
-			errContains:   "error parsing minor version from gfx_target_version",
+			errContains:   "invalid syntax",
 			expectFailure: true,
 		},
 		{
 			name:          "unexpected revision format non numeric",
 			input:         "gfx_target_version 1234ab",
-			errContains:   "error parsing revision from gfx_target_version",
+			errContains:   "invalid syntax",
 			expectFailure: true,
 		},
 		{

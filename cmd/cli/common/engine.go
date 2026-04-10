@@ -28,16 +28,16 @@ type ComponentSettings struct {
 func EngineComponentSettings(ctx *Context) ([]ComponentSettings, error) {
 	activeEngineName, err := ctx.Cache.GetActiveEngine()
 	if err != nil {
-		return nil, fmt.Errorf("error looking up active engine: %v", err)
+		return nil, fmt.Errorf("%s: %w", LookingUpActiveEngine, err)
 	}
 
 	if activeEngineName == "" {
-		return nil, fmt.Errorf("no active engine")
+		return nil, ErrNoActiveEngine
 	}
 
 	manifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngineName)
 	if err != nil {
-		return nil, fmt.Errorf("error loading engine manifest: %v", err)
+		return nil, fmt.Errorf("loading engine manifest: %v", err)
 	}
 
 	componentsDir, found := os.LookupEnv("SNAP_COMPONENTS")
@@ -52,13 +52,13 @@ func EngineComponentSettings(ctx *Context) ([]ComponentSettings, error) {
 
 		data, err := os.ReadFile(componentYamlFile)
 		if err != nil {
-			return nil, fmt.Errorf("error reading %s: %v", componentYamlFile, err)
+			return nil, fmt.Errorf("reading %s: %v", componentYamlFile, err)
 		}
 
 		var settings ComponentSettings
 		err = yaml.Unmarshal(data, &settings)
 		if err != nil {
-			return nil, fmt.Errorf("error unmarshaling %s: %v", componentYamlFile, err)
+			return nil, fmt.Errorf("unmarshaling %s: %v", componentYamlFile, err)
 		}
 
 		settings.componentName = componentName
@@ -73,7 +73,7 @@ func EngineComponentSettings(ctx *Context) ([]ComponentSettings, error) {
 func LoadEngineEnvironment(ctx *Context) error {
 	settingsCollection, err := EngineComponentSettings(ctx)
 	if err != nil {
-		return fmt.Errorf("error loading engine component settings: %v", err)
+		return fmt.Errorf("loading engine component settings: %v", err)
 	}
 
 	componentsDir, found := os.LookupEnv("SNAP_COMPONENTS")
@@ -94,7 +94,7 @@ func LoadEngineEnvironment(ctx *Context) error {
 			// Set component path env var for expansion
 			componentPath := filepath.Join(componentsDir, settings.componentName)
 			if err := os.Setenv(componentEnv, componentPath); err != nil {
-				return fmt.Errorf("error setting %q: %v", componentEnv, err)
+				return fmt.Errorf("setting env var %q: %v", componentEnv, err)
 			}
 
 			// Expand all env vars in value
@@ -102,12 +102,12 @@ func LoadEngineEnvironment(ctx *Context) error {
 
 			// Unset the component path
 			if err := os.Unsetenv(componentEnv); err != nil {
-				return fmt.Errorf("error unsetting %q: %v", componentEnv, err)
+				return fmt.Errorf("unsetting env var %q: %v", componentEnv, err)
 			}
 
 			err = os.Setenv(k, v)
 			if err != nil {
-				return fmt.Errorf("error setting %q: %v", k, err)
+				return fmt.Errorf("setting env var %q: %v", k, err)
 			}
 		}
 
@@ -122,7 +122,7 @@ func SetEngineConfig(engine *engines.Manifest, ctx *Context) error {
 	for confKey, confVal := range engine.Configurations {
 		err := ctx.Config.SetDocument(confKey, confVal, storage.EngineConfig)
 		if err != nil {
-			return fmt.Errorf("error setting engine configuration %q: %v", confKey, err)
+			return fmt.Errorf("setting engine configuration %q: %v", confKey, err)
 		}
 	}
 	return nil
@@ -132,7 +132,7 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 	// Unset all engine configurations
 	err := ctx.Config.Unset(".", storage.EngineConfig)
 	if err != nil {
-		return fmt.Errorf("error un-setting engine configurations: %v", err)
+		return fmt.Errorf("un-setting engine configurations: %v", err)
 	}
 
 	if unsetUserOverrides {
@@ -144,13 +144,13 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 				fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
 				return nil
 			}
-			return fmt.Errorf("error loading engine manifest: %v", err)
+			return fmt.Errorf("loading engine manifest: %v", err)
 		} else {
 			// Unset any user overrides
 			for k := range engine.Configurations {
 				err = ctx.Config.Unset(k, storage.UserConfig)
 				if err != nil {
-					return fmt.Errorf("error un-setting configuration %q: %v", k, err)
+					return fmt.Errorf("un-setting configuration %q: %v", k, err)
 				}
 			}
 		}
@@ -168,17 +168,17 @@ Warning: calls to this function can block for a number of seconds while the host
 func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, error) {
 	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
-		return nil, fmt.Errorf("error loading engines: %v", err)
+		return nil, fmt.Errorf("loading engines: %v", err)
 	}
 
 	machineInfo, err := hardware_info.Get(false)
 	if err != nil {
-		return nil, fmt.Errorf("error getting machine info: %v", err)
+		return nil, fmt.Errorf("getting machine info: %v", err)
 	}
 
 	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
 	if err != nil {
-		return nil, fmt.Errorf("error scoring engines: %v", err)
+		return nil, fmt.Errorf("scoring engines: %v", err)
 	}
 
 	return scoredEngines, nil

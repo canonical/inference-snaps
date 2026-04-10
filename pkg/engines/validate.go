@@ -22,12 +22,12 @@ func Validate(manifestFilePath string) error {
 		if errors.Is(err, os.ErrNotExist) {
 			return fmt.Errorf("manifest file does not exist: %s", manifestFilePath)
 		}
-		return fmt.Errorf("error getting file info: %v", err)
+		return fmt.Errorf("getting file info: %v", err)
 	}
 
 	yamlData, err := os.ReadFile(manifestFilePath)
 	if err != nil {
-		return fmt.Errorf("error reading file: %v", err)
+		return fmt.Errorf("reading file: %v", err)
 	}
 
 	// Get engine name from path
@@ -59,7 +59,7 @@ func validateManifestYaml(expectedName string, yamlData []byte) error {
 
 	// We depend on the yaml unmarshal to check field types
 	if err := yamlDecoder.Decode(&manifest); err != nil {
-		return fmt.Errorf("error decoding: %v", err)
+		return fmt.Errorf("decoding manifest: %v", err)
 	}
 
 	return manifest.validate(expectedName)
@@ -95,14 +95,14 @@ func (manifest Manifest) validate(expectedEngineName string) error {
 	if manifest.Memory != nil {
 		_, err := utils.StringToBytes(*manifest.Memory)
 		if err != nil {
-			return fmt.Errorf("error parsing memory: %v", err)
+			return fmt.Errorf("parsing memory: %v", err)
 		}
 	}
 
 	if manifest.DiskSpace != nil {
 		_, err := utils.StringToBytes(*manifest.DiskSpace)
 		if err != nil {
-			return fmt.Errorf("error parsing disk space: %v", err)
+			return fmt.Errorf("parsing disk space: %v", err)
 		}
 	}
 

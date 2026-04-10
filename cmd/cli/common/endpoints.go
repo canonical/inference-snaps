@@ -15,7 +15,7 @@ const (
 func ServerEndpoints(ctx *Context) (map[string]string, error) {
 	settings, err := EngineComponentSettings(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error loading engine environment: %v", err)
+		return nil, fmt.Errorf("loading engine environment: %v", err)
 	}
 	return serverEndpoints(ctx, settings)
 }
@@ -37,7 +37,7 @@ func serverEndpoints(ctx *Context, settingsCollection []ComponentSettings) (map[
 			case "http", "https":
 				httpUrl, err := serverHttpUrl(ctx, serverSettings)
 				if err != nil {
-					return nil, fmt.Errorf("error getting server HTTP URL: %v", err)
+					return nil, fmt.Errorf("getting server HTTP URL: %v", err)
 				}
 				endpoints[serverName] = httpUrl
 			default:
@@ -58,7 +58,7 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 
 	httpPortMap, err := ctx.Config.Get(confHttpPort)
 	if err != nil {
-		return "", fmt.Errorf("error getting %q: %v", confHttpPort, err)
+		return "", fmt.Errorf("getting config %q: %v", confHttpPort, err)
 	}
 	httpPort := httpPortMap[confHttpPort]
 
@@ -79,7 +79,7 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 func OpenAiEndpoint(ctx *Context) (string, error) {
 	serverEndpoints, err := ServerEndpoints(ctx)
 	if err != nil {
-		return "", fmt.Errorf("error getting server endpoints: %v", err)
+		return "", fmt.Errorf("getting server endpoints: %v", err)
 	}
 	openaiEndpoint, found := serverEndpoints[openAiEndpointKey]
 	if !found {

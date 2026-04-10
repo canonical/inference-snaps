@@ -20,7 +20,7 @@ func (device Device) validateBus(extraFields []string) error {
 }
 
 func (device Device) validateUsb(extraFields []string) error {
-	return fmt.Errorf("usb device validation not implemented")
+	return fmt.Errorf("usb: device validation not implemented")
 }
 
 func (device Device) validatePci(extraFields []string) error {
@@ -42,7 +42,7 @@ func (device Device) validatePci(extraFields []string) error {
 		fieldValue := v.FieldByName(fieldName)
 		if fieldValue.IsValid() && !fieldValue.IsZero() {
 			if !slices.Contains(validFields, fieldName) {
-				return fmt.Errorf("pci device: invalid field: %s", fieldName)
+				return fmt.Errorf("pci: invalid field: %s", fieldName)
 			}
 		}
 	}

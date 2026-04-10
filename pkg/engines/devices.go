@@ -59,7 +59,7 @@ func (device Device) validateGpu() error {
 
 	err := device.validateBus(extraFields)
 	if err != nil {
-		return fmt.Errorf("gpu: %v", err)
+		return fmt.Errorf("bus: %v", err)
 	}
 	return nil
 }
@@ -67,7 +67,7 @@ func (device Device) validateGpu() error {
 func (device Device) validateNpu() error {
 	err := device.validateBus(nil)
 	if err != nil {
-		return fmt.Errorf("npu: %v", err)
+		return fmt.Errorf("bus: %v", err)
 	}
 	return nil
 }
@@ -75,7 +75,7 @@ func (device Device) validateNpu() error {
 func (device Device) validateTypelessDevice() error {
 	err := device.validateBus(nil)
 	if err != nil {
-		return fmt.Errorf("typeless device: %v", err)
+		return fmt.Errorf("bus: %v", err)
 	}
 	return nil
 }

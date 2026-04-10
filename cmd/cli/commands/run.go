@@ -41,13 +41,13 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	}
 	if cmd.waitForComponents {
 		if err := common.WaitForComponents(cmd.Context); err != nil {
-			return fmt.Errorf("error waiting for component: %s", err)
+			return fmt.Errorf("waiting for component: %s", err)
 		}
 	}
 
 	err := common.LoadEngineEnvironment(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error loading engine environment: %v", err)
+		return fmt.Errorf("loading engine environment: %v", err)
 	}
 
 	path := args[0]

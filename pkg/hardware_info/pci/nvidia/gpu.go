@@ -21,7 +21,7 @@ func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {
 
 	vRamVal, err := vRam(pciDevice)
 	if err != nil {
-		return nil, fmt.Errorf("error looking up vRAM: %v", err)
+		return nil, fmt.Errorf("looking up vram: %v", err)
 	}
 	if vRamVal != nil {
 		properties["vram"] = strconv.FormatUint(*vRamVal, 10)
@@ -29,7 +29,7 @@ func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {
 
 	ccVal, err := computeCapability(pciDevice)
 	if err != nil {
-		return nil, fmt.Errorf("error looking up compute capability: %v", err)
+		return nil, fmt.Errorf("looking up compute capability: %v", err)
 	}
 	if ccVal != nil {
 		properties["compute-capability"] = *ccVal
@@ -49,13 +49,13 @@ func vRam(device types.PciDevice) (*uint64, error) {
 	*/
 	output, err := nvidiaSmi("--id="+device.Slot, "--query-gpu=memory.total", "--format=csv,noheader")
 	if err != nil {
-		return nil, fmt.Errorf("error executing nvidia-smi: %s", err)
+		return nil, fmt.Errorf("executing nvidia-smi: %v", err)
 	}
 
 	valueStr, unit, hasUnit := strings.Cut(*output, " ")
 	vramValue, err := strconv.ParseUint(valueStr, 10, 64)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parsing nvidia-smi output: %v", err)
 	}
 
 	if hasUnit {
@@ -77,7 +77,7 @@ func computeCapability(device types.PciDevice) (*string, error) {
 	// nvidia-smi --query-gpu=compute_cap --format=csv,noheader
 	output, err := nvidiaSmi("--id="+device.Slot, "--query-gpu=compute_cap", "--format=csv,noheader")
 	if err != nil {
-		return nil, fmt.Errorf("error executing nvidia-smi: %s", err)
+		return nil, fmt.Errorf("executing nvidia-smi: %v", err)
 	}
 
 	return output, nil

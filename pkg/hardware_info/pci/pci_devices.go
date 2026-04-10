@@ -25,11 +25,11 @@ func Devices(friendlyNames bool) ([]types.PciDevice, error) {
 
 	hostLsPciData, err := hostLsPci()
 	if err != nil {
-		return nil, fmt.Errorf("error getting host lspci data: %v", err)
+		return nil, fmt.Errorf("executing lspci: %v", err)
 	}
 	devices, err := ParseLsPci(hostLsPciData, friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing lspci data: %v", err)
+		return nil, fmt.Errorf("parsing lspci output: %v", err)
 	}
 
 	// Additional properties are obtained by running vendor specific tools on the host
@@ -42,7 +42,7 @@ func Devices(friendlyNames bool) ([]types.PciDevice, error) {
 func DevicesFromRawData(lspciData string, friendlyNames bool) ([]types.PciDevice, error) {
 	devices, err := ParseLsPci(lspciData, friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing lspci data: %v", err)
+		return nil, fmt.Errorf("parsing lspci output: %v", err)
 	}
 
 	return devices, nil
@@ -59,7 +59,7 @@ func friendlyNames(device types.PciDevice) (types.PciFriendlyNames, error) {
 		var err error
 		pciDb, err = pcidb.New(pcidb.WithEnableNetworkFetch())
 		if err != nil {
-			return friendlyNames, fmt.Errorf("error opening pci database: %v", err)
+			return friendlyNames, fmt.Errorf("opening pci database: %v", err)
 		}
 	}
 
@@ -122,7 +122,7 @@ func addAdditionalProperties(devices []types.PciDevice) []types.PciDevice {
 			if errors.Is(err, ErrorVendorNotSupported) {
 				// We do not log unsupported vendors, as that would be the majority of PCI devices
 			} else {
-				fmt.Fprintf(os.Stderr, "Error getting additional properties for pci device: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Warning: unable to get additional properties for pci device: %v\n", err)
 			}
 		}
 		devices[i].AdditionalProperties = properties

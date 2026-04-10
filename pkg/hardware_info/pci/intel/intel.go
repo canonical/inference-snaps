@@ -20,7 +20,7 @@ func AdditionalProperties(pciDevice types.PciDevice) (map[string]string, error) 
 	if pciDevice.DeviceClass == 0x0001 || pciDevice.DeviceClass&0xFF00 == 0x0300 {
 		properties, err = gpuProperties(pciDevice)
 		if err != nil {
-			return nil, fmt.Errorf("error getting gpu properties: %v", err)
+			return nil, fmt.Errorf("getting gpu properties: %v", err)
 		}
 	}
 

@@ -79,7 +79,7 @@ func (cmd *setCommand) setValue(keyValue string) error {
 		err = cmd.Config.Set(key, value, storage.UserConfig)
 	}
 	if err != nil {
-		return fmt.Errorf("error setting value %q for %q: %v", value, key, err)
+		return fmt.Errorf("setting %q to %q: %v", key, value, err)
 	}
 
 	return nil

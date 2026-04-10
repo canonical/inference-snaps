@@ -147,7 +147,7 @@ func scorePciDevice(manifestDevice engines.Device, hostPciDevice types.PciDevice
 		connected, err := checkSnapConnection(connection)
 		if err != nil {
 			deviceScore = 0
-			issues = append(issues, fmt.Sprintf("error checking snap connection %q: %v", connection, err))
+			issues = append(issues, fmt.Sprintf("checking snap connection %q: %v", connection, err))
 			return
 		}
 		if !connected {

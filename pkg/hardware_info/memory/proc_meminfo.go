@@ -13,7 +13,7 @@ func hostProcMemInfo() (string, error) {
 	// cat /proc/meminfo
 	memInfoBytes, err := os.ReadFile("/proc/meminfo")
 	if err != nil {
-		return "", fmt.Errorf("error reading /proc/meminfo: %v", err)
+		return "", fmt.Errorf("reading /proc/meminfo: %v", err)
 	}
 	return string(memInfoBytes), nil
 }
@@ -41,13 +41,13 @@ func parseProcMemInfo(memInfoString string) (types.MemoryInfo, error) {
 		case "MemTotal":
 			valueBytes, err := procStringToBytes(value)
 			if err != nil {
-				return memInfo, fmt.Errorf("error parsing MemTotal: %v", err)
+				return memInfo, fmt.Errorf("parsing MemTotal: %v", err)
 			}
 			memInfo.TotalRam = uint64(valueBytes)
 		case "SwapTotal":
 			valueBytes, err := procStringToBytes(value)
 			if err != nil {
-				return memInfo, fmt.Errorf("error parsing SwapTotal: %v", err)
+				return memInfo, fmt.Errorf("parsing SwapTotal: %v", err)
 			}
 			memInfo.TotalSwap = uint64(valueBytes)
 		}
@@ -63,13 +63,13 @@ func procStringToBytes(s string) (int64, error) {
 		s = strings.TrimSpace(s)
 		kbValue, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
-			return 0, fmt.Errorf("error parsing kB value: %v", err)
+			return 0, fmt.Errorf("parsing kB value: %v", err)
 		}
 		return kbValue * 1024, nil
 	} else {
 		bValue, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
-			return 0, fmt.Errorf("error parsing byte value: %v", err)
+			return 0, fmt.Errorf("parsing byte value: %v", err)
 		}
 		return bValue, nil
 	}

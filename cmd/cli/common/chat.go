@@ -81,7 +81,7 @@ func (c *chatClient) Start() error {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("error initializing readline: %v", err)
+		return fmt.Errorf("initializing readline: %v", err)
 	}
 	defer rl.Close()
 	//rl.CaptureExitSignal() // Should readline capture and handle the exit signal? - Can be used to interrupt the chat response stream.

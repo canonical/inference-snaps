@@ -9,23 +9,23 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 )
 
-func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, error) {
+func checkProperties(manifestDevice engines.Device, hostPciDevice types.PciDevice) (int, error) {
 	extraScore := 0
 
 	// vram
-	if device.VRam != nil {
-		err := checkVram(device, pciDevice)
+	if manifestDevice.VRam != nil {
+		err := checkVram(manifestDevice, hostPciDevice)
 		if err != nil {
-			return 0, err
+			return 0, fmt.Errorf("checking vram: %v", err)
 		}
 		extraScore += weights.GpuVRam
 	}
 
 	// microarchitecture
-	if device.Microarchitecture != nil {
-		err := checkMicroarchitecture(*device.Microarchitecture, pciDevice)
+	if manifestDevice.Microarchitecture != nil {
+		err := checkMicroarchitecture(*manifestDevice.Microarchitecture, hostPciDevice)
 		if err != nil {
-			return 0, err
+			return 0, fmt.Errorf("checking microarchitecture: %v", err)
 		}
 		extraScore += weights.GpuMicroarchitecture
 	}
@@ -34,29 +34,29 @@ func checkProperties(device engines.Device, pciDevice types.PciDevice) (int, err
 	return extraScore, nil
 }
 
-func checkVram(device engines.Device, pciDevice types.PciDevice) error {
-	vramRequired, err := utils.StringToBytes(*device.VRam)
+func checkVram(manifestDevice engines.Device, hostPciDevice types.PciDevice) error {
+	vramRequired, err := utils.StringToBytes(*manifestDevice.VRam)
 	if err != nil {
 		return err
 	}
-	if vram, ok := pciDevice.AdditionalProperties["vram"]; ok {
+	if vram, ok := hostPciDevice.AdditionalProperties["vram"]; ok {
 		vramAvailable, err := utils.StringToBytes(vram)
 		if err != nil {
-			return fmt.Errorf("error parsing vRAM: %v", err)
+			return fmt.Errorf("parsing vram: %v", err)
 		}
 		if vramAvailable >= vramRequired {
 			return nil
 		} else {
-			return fmt.Errorf("not enough vRAM: %d", vramAvailable)
+			return fmt.Errorf("not enough vram: %d", vramAvailable)
 		}
 	} else {
 		// Hardware Info does not list available vram
-		return fmt.Errorf("unable to detect vRAM")
+		return fmt.Errorf("vram not reported")
 	}
 }
 
-func checkMicroarchitecture(microArchRequired string, pciDevice types.PciDevice) error {
-	if microArch, ok := pciDevice.AdditionalProperties["microarchitecture"]; ok {
+func checkMicroarchitecture(microArchRequired string, hostPciDevice types.PciDevice) error {
+	if microArch, ok := hostPciDevice.AdditionalProperties["microarchitecture"]; ok {
 		if microArch == microArchRequired {
 			return nil
 		} else {
@@ -64,6 +64,6 @@ func checkMicroarchitecture(microArchRequired string, pciDevice types.PciDevice)
 		}
 	} else {
 		// Hardware Info does not list available microarchitecture
-		return fmt.Errorf("unable to detect microarchitecture")
+		return fmt.Errorf("microarchitecture not reported")
 	}
 }

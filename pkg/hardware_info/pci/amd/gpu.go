@@ -19,14 +19,14 @@ func gpuPropertiesFromDir(pciDevice types.PciDevice, rootDir string) (map[string
 
 	vRamVal, err := vRam(pciDevice, rootDir)
 	if err != nil {
-		return nil, fmt.Errorf("error looking up vRAM: %v", err)
+		return nil, fmt.Errorf("looking up vram: %v", err)
 	}
 	if vRamVal != nil {
 		properties["vram"] = strconv.FormatUint(*vRamVal, 10)
 	}
 	gfxArchitecture, err := gfxArchitecture(pciDevice, rootDir)
 	if err != nil {
-		return nil, fmt.Errorf("error looking up gfx architecture: %v", err)
+		return nil, fmt.Errorf("looking up gfx architecture: %v", err)
 	}
 	if len(gfxArchitecture) > 0 {
 		properties["microarchitecture"] = gfxArchitecture
@@ -137,19 +137,19 @@ func parseGfxTargetVersion(gfxTargetVersionLine string) (string, error) {
 
 		majorInt, err := strconv.Atoi(deviceLower[0:2])
 		if err != nil {
-			return "", fmt.Errorf("error parsing major version from gfx_target_version: %v", err)
+			return "", fmt.Errorf("parsing major version from gfx_target_version: %v", err)
 		}
 		major := strconv.Itoa(majorInt)
 
 		minorInt, err := strconv.Atoi(deviceLower[2:4])
 		if err != nil {
-			return "", fmt.Errorf("error parsing minor version from gfx_target_version: %v", err)
+			return "", fmt.Errorf("parsing minor version from gfx_target_version: %v", err)
 		}
 		minor := strconv.Itoa(minorInt)
 
 		revisionInt, err := strconv.Atoi(deviceLower[4:6])
 		if err != nil {
-			return "", fmt.Errorf("error parsing revision from gfx_target_version: %v", err)
+			return "", fmt.Errorf("parsing revision from gfx_target_version: %v", err)
 		}
 		revision := strconv.Itoa(revisionInt)
 

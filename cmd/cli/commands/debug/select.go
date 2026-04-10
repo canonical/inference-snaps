@@ -54,12 +54,12 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 
 	err := yaml.NewDecoder(os.Stdin).Decode(&hardwareInfo)
 	if err != nil {
-		return fmt.Errorf("error decoding hardware info: %s", err)
+		return fmt.Errorf("decoding hardware info: %s", err)
 	}
 
 	allEngines, err := engines.LoadManifests(cmd.enginesDir)
 	if err != nil {
-		return fmt.Errorf("error loading engines from directory: %s", err)
+		return fmt.Errorf("loading engines from directory: %s", err)
 	}
 
 	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
@@ -67,7 +67,7 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 
 	scoredEngines, err := selector.ScoreEngines(&hardwareInfo, allEngines)
 	if err != nil {
-		return fmt.Errorf("error checking engines: %s", err)
+		return fmt.Errorf("checking engines: %s", err)
 	}
 	stopProgress()
 
@@ -89,7 +89,7 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 
 	selectedEngine, err := selector.TopEngine(scoredEngines)
 	if err != nil {
-		return fmt.Errorf("error finding top engine: %v", err)
+		return fmt.Errorf("finding top engine: %v", err)
 	}
 	engineSelection.TopEngine = selectedEngine.Name
 
@@ -101,13 +101,13 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 	case "json":
 		jsonString, err := json.MarshalIndent(engineSelection, "", "  ")
 		if err != nil {
-			return fmt.Errorf("failed to marshal to JSON: %s", err)
+			return fmt.Errorf("marshalling json: %s", err)
 		}
 		resultStr = string(jsonString)
 	case "yaml":
 		yamlString, err := yaml.Marshal(engineSelection)
 		if err != nil {
-			return fmt.Errorf("failed to marshal to YAML: %s", err)
+			return fmt.Errorf("marshalling yaml: %s", err)
 		}
 		resultStr = string(yamlString)
 	default:

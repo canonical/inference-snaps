@@ -95,7 +95,7 @@ func (cmd *useEngineCommand) autoSelectEngine() error {
 
 	scoredEngines, err := common.ScoreEngines(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("error checking engines: %v", err)
+		return fmt.Errorf("checking engines: %v", err)
 	}
 	stopProgress()
 
@@ -120,14 +120,14 @@ func (cmd *useEngineCommand) autoSelectEngine() error {
 
 	selectedEngine, err := selector.TopEngine(scoredEngines)
 	if err != nil {
-		return fmt.Errorf("error finding top engine: %v", err)
+		return fmt.Errorf("finding top engine: %v", err)
 	}
 
 	fmt.Printf("Selected engine: %s\n", selectedEngine.Name)
 
 	err = cmd.switchEngine(selectedEngine.Name)
 	if err != nil {
-		return fmt.Errorf("failed to use engine: %s", err)
+		return fmt.Errorf("use engine: %s", err)
 	}
 
 	return nil
@@ -144,17 +144,17 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 			}
 			return fmt.Errorf("%q not found", engineName)
 		}
-		return fmt.Errorf("error loading engine manifest: %v", err)
+		return fmt.Errorf("loading engine manifest: %v", err)
 	}
 
 	componentsInstalled, err := cmd.installMissingComponents(engine)
 	if err != nil {
-		return fmt.Errorf("error installing missing components: %v", err)
+		return fmt.Errorf("installing missing components: %v", err)
 	}
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("error getting active engine: %v", err)
+		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
 	}
 
 	if activeEngineName == engineName {
@@ -166,7 +166,7 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 	if activeEngineName != "" {
 		err = common.UnsetEngineConfig(activeEngineName, true, cmd.Context)
 		if err != nil {
-			return fmt.Errorf("error un-setting engine configurations: %v", err)
+			return fmt.Errorf("un-setting engine configurations: %v", err)
 		}
 	}
 
@@ -176,11 +176,11 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 	}
 
 	if err = cmd.Cache.SetActiveEngine(engine.Name); err != nil {
-		return fmt.Errorf("error setting active engine: %v", err)
+		return fmt.Errorf("setting active engine: %v", err)
 	}
 
 	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
-		return fmt.Errorf("error setting new engine configurations: %v", err)
+		return fmt.Errorf("setting new engine configurations: %v", err)
 	}
 
 	fmt.Printf("Engine changed to %q.\n", engineName)
@@ -259,7 +259,7 @@ func (*useEngineCommand) installComponents(components []string) error {
 
 			} else {
 				// Any other error we do not specifically handle will stop installing components
-				return fmt.Errorf("error installing %q: %s", component, err)
+				return fmt.Errorf("installing %q: %s", component, err)
 			}
 		}
 
@@ -273,10 +273,10 @@ func (*useEngineCommand) installComponents(components []string) error {
 func (cmd *useEngineCommand) fixActiveEngine() error {
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		return fmt.Errorf("error getting active engine: %v", err)
+		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
 	}
 	if activeEngineName == "" {
-		return fmt.Errorf("no active engine to fix")
+		return common.ErrNoActiveEngine
 	}
 
 	// If active engine no longer exist, auto select another one
@@ -285,18 +285,18 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 		fmt.Printf("Active engine %q not found, performing auto selection instead.\n", activeEngineName)
 		return cmd.autoSelectEngine()
 	} else if err != nil {
-		return fmt.Errorf("error loading active engine manifest: %v", err)
+		return fmt.Errorf("loading active engine manifest: %v", err)
 	}
 
 	// If engine exists, make sure it is correctly installed and configured
 	if _, err = cmd.installMissingComponents(engine); err != nil {
-		return fmt.Errorf("error installing missing components: %v", err)
+		return fmt.Errorf("installing missing components: %v", err)
 	}
 	if err = common.UnsetEngineConfig(activeEngineName, false, cmd.Context); err != nil {
-		return fmt.Errorf("error un-setting engine configurations: %v", err)
+		return fmt.Errorf("un-setting engine configurations: %v", err)
 	}
 	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
-		return fmt.Errorf("error setting engine configurations: %v", err)
+		return fmt.Errorf("setting engine configurations: %v", err)
 	}
 
 	return nil
@@ -305,7 +305,7 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) (installed bool, err error) {
 	missingComponents, err := cmd.missingComponents(engine.Components)
 	if err != nil {
-		return false, fmt.Errorf("error checking installed components: %v", err)
+		return false, fmt.Errorf("checking installed components: %v", err)
 	}
 	if len(missingComponents) == 0 {
 		return false, nil
@@ -315,7 +315,7 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	componentSizes, err := snap_store.ComponentSizes()
 	if err != nil {
 		// If component size lookup failed, continue but log the error
-		fmt.Fprintf(os.Stderr, "Warning: unable to get component sizes: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
 	}
 
 	// Format list of components, adding size if it is known
@@ -344,7 +344,7 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	// https://github.com/canonical/inference-snaps-cli/issues/122
 	err = cmd.installComponents(missingComponents)
 	if err != nil {
-		return false, fmt.Errorf("error installing components: %v", err)
+		return false, fmt.Errorf("installing components: %v", err)
 	}
 
 	return true, nil

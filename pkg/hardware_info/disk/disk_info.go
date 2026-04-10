@@ -18,7 +18,7 @@ func Info() (map[string]types.DirStats, error) {
 	for _, dir := range directories {
 		dirInfo, err := statFs(dir)
 		if err != nil {
-			return nil, fmt.Errorf("error getting directory info: %v", err)
+			return nil, fmt.Errorf("getting directory info for %s: %v", dir, err)
 		}
 		info[dir] = dirInfo
 	}
@@ -31,7 +31,7 @@ func Info() (map[string]types.DirStats, error) {
 func InfoFromRawData(dfData string) (map[string]types.DirStats, error) {
 	dirInfos, err := parseDf(dfData)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing df: %v", err)
+		return nil, fmt.Errorf("parsing df: %v", err)
 	}
 
 	if len(dirInfos) != len(directories) {

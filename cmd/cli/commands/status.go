@@ -62,13 +62,13 @@ func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 	case "json":
 		statusText, err = cmd.statusJson()
 		if err != nil {
-			return fmt.Errorf("error getting json status: %v", err)
+			return fmt.Errorf("getting json status: %v", err)
 		}
 		statusText += "\n"
 	case "yaml":
 		statusText, err = cmd.statusYaml()
 		if err != nil {
-			return fmt.Errorf("error getting yaml status: %v", err)
+			return fmt.Errorf("getting yaml status: %v", err)
 		}
 	default:
 		return fmt.Errorf("unknown format %q", cmd.format)
@@ -84,11 +84,11 @@ func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 func (cmd *statusCommand) statusYaml() (string, error) {
 	statusStr, err := cmd.statusStruct()
 	if err != nil {
-		return "", fmt.Errorf("error getting status: %v", err)
+		return "", fmt.Errorf("getting status: %v", err)
 	}
 	yamlStr, err := yaml.Marshal(statusStr)
 	if err != nil {
-		return "", fmt.Errorf("error marshalling yaml: %v", err)
+		return "", fmt.Errorf("marshalling yaml: %v", err)
 	}
 	return string(yamlStr), nil
 }
@@ -96,11 +96,11 @@ func (cmd *statusCommand) statusYaml() (string, error) {
 func (cmd *statusCommand) statusJson() (string, error) {
 	statusStr, err := cmd.statusStruct()
 	if err != nil {
-		return "", fmt.Errorf("error getting status: %v", err)
+		return "", fmt.Errorf("getting status: %v", err)
 	}
 	jsonStr, err := json.MarshalIndent(statusStr, "", "  ")
 	if err != nil {
-		return "", fmt.Errorf("error marshalling json: %v", err)
+		return "", fmt.Errorf("marshalling json: %v", err)
 	}
 	return string(jsonStr), nil
 }
@@ -116,23 +116,23 @@ func (cmd *statusCommand) statusStruct() (*status, error) {
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		return nil, fmt.Errorf("error getting active engine: %v", err)
+		return nil, fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
 	}
 	if activeEngineName == "" {
-		return nil, fmt.Errorf("error no engine is active")
+		return nil, common.ErrNoActiveEngine
 	}
 	statusStr.Engine = activeEngineName
 
 	services, err := snapctl.Services().Run()
 	if err != nil {
-		return nil, fmt.Errorf("error getting services: %v", err)
+		return nil, fmt.Errorf("getting list of services: %v", err)
 	}
 	statusStr.Services = make(map[string]string)
 	for name, service := range services {
 		// The service name is in the format <snap-name>.<service-app>, we only want the service-app part.
 		_, serviceApp, found := strings.Cut(name, ".")
 		if !found {
-			return nil, fmt.Errorf("error unexpected service name format: %q", name)
+			return nil, fmt.Errorf("unexpected service name format: %q", name)
 		}
 		// Append the service status exactly as snapd reports it. Often this is in the host system language, see bug:
 		// https://bugs.launchpad.net/snapd/+bug/2137543
@@ -141,7 +141,7 @@ func (cmd *statusCommand) statusStruct() (*status, error) {
 
 	endpoints, err := common.ServerEndpoints(cmd.Context)
 	if err != nil {
-		return nil, fmt.Errorf("error getting server api endpoints: %v", err)
+		return nil, fmt.Errorf("getting server api endpoints: %v", err)
 	}
 	statusStr.Endpoints = endpoints
 

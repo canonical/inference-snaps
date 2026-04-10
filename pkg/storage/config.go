@@ -48,7 +48,7 @@ func (c *config) Set(key, value string, confType configType) error {
 	if confType == UserConfig {
 		valMap, err := c.Get(key)
 		if err != nil {
-			return fmt.Errorf("error checking existing keys: %s", err)
+			return fmt.Errorf("checking existing keys: %s", err)
 		}
 		if len(valMap) == 0 {
 			return fmt.Errorf("unknown key")

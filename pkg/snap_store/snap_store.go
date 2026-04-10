@@ -13,7 +13,7 @@ import (
 func ComponentSizes() (map[string]int64, error) {
 	components, err := componentsOfCurrentSnap()
 	if err != nil {
-		return nil, fmt.Errorf("error finding components of current snap: %v", err)
+		return nil, fmt.Errorf("finding snap components: %v", err)
 	}
 
 	componentSizes := make(map[string]int64)
@@ -41,17 +41,17 @@ func componentsOfCurrentSnap() ([]snapResources, error) {
 
 	snapRevision, err := strconv.ParseInt(snapRevisionStr, 10, 64)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing snap revision: %v", err)
+		return nil, fmt.Errorf("parsing snap revision: %v", err)
 	}
 
 	info, err := snapInfo(snapName)
 	if err != nil {
-		return nil, fmt.Errorf("error getting snap info: %v", err)
+		return nil, fmt.Errorf("getting snap info: %v", err)
 	}
 
 	components, err := snapComponents(info.SnapId, int(snapRevision), os.Getenv("SNAP_ARCH"))
 	if err != nil {
-		return nil, fmt.Errorf("error getting components: %v", err)
+		return nil, fmt.Errorf("getting components: %v", err)
 	}
 
 	return components, nil
@@ -64,7 +64,7 @@ func snapInfo(snapName string) (*snapInfoResponse, error) {
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error creating new http request: %v", err)
+		return nil, fmt.Errorf("creating http request: %v", err)
 	}
 
 	req.Header.Add("Snap-Device-Series", "16")
@@ -73,18 +73,18 @@ func snapInfo(snapName string) (*snapInfoResponse, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error making HTTP request: %v", err)
+		return nil, fmt.Errorf("making http request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP status not OK: %d", resp.StatusCode)
+		return nil, fmt.Errorf("http status not OK: %d", resp.StatusCode)
 	}
 
 	info := snapInfoResponse{}
 	err = json.NewDecoder(resp.Body).Decode(&info)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding JSON: %v", err)
+		return nil, fmt.Errorf("decoding json: %v", err)
 	}
 
 	return &info, nil
@@ -97,7 +97,7 @@ func snapComponents(snapId string, revision int, snapArch string) ([]snapResourc
 	*/
 	refreshResponse, err := snapRefresh(snapId, revision, snapArch)
 	if err != nil {
-		return nil, fmt.Errorf("error fetching refresh data from store: %v", err)
+		return nil, fmt.Errorf("fetching refresh data from store: %v", err)
 	}
 
 	if len(refreshResponse.Results) == 0 {
@@ -136,14 +136,14 @@ func snapRefresh(snapId string, revision int, snapArch string) (*snapRefreshResp
 	}
 	requestJson, err := json.Marshal(request)
 	if err != nil {
-		return nil, fmt.Errorf("error marshalling request to json: %v", err)
+		return nil, fmt.Errorf("marshalling request: %v", err)
 	}
 
 	url := "https://api.snapcraft.io/v2/snaps/refresh"
 
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
 	if err != nil {
-		return nil, fmt.Errorf("error creating new http request: %v", err)
+		return nil, fmt.Errorf("creating http request: %v", err)
 	}
 
 	req.Header.Add("Snap-Device-Series", "16")
@@ -154,18 +154,18 @@ func snapRefresh(snapId string, revision int, snapArch string) (*snapRefreshResp
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error making HTTP request: %v", err)
+		return nil, fmt.Errorf("making http request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP status not OK: %d", resp.StatusCode)
+		return nil, fmt.Errorf("http status not OK: %d", resp.StatusCode)
 	}
 
 	var response snapRefreshResponse
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding JSON: %v", err)
+		return nil, fmt.Errorf("decoding json: %v", err)
 	}
 
 	return &response, nil
