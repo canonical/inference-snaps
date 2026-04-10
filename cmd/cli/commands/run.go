@@ -45,10 +45,14 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 		}
 	}
 
-	err := common.LoadEngineEnvironment(cmd.Context)
+	clean, err := common.LoadEngineEnvironment(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("loading engine environment: %v", err)
 	}
+
+	// NOTE: defer does not run on SIGTERM or SIGKILL. It only runs when the child process exits.
+	// TODO: add signal handling to intercept SIGTERM and invoke clean() before exiting.
+	defer clean()
 
 	path := args[0]
 
