@@ -12,7 +12,7 @@ import (
 func setupTestComponent(t *testing.T) (symlinkPath string) {
 	t.Helper()
 
-	componentsDir := t.TempDir()
+	componentsDir := t.TempDir() // always use temp dir to avoid unexpected file removal
 	t.Setenv("SNAP_COMPONENTS", componentsDir)
 
 	componentPath := filepath.Join(componentsDir, "dummy-component-2")
@@ -133,24 +133,24 @@ func TestSnapComponentsNotSet(t *testing.T) {
 	}
 }
 
-func TestCannotCreateDir(t *testing.T) {
-	_ = setupTestComponent(t)
+func TestRejectsLayoutOutsideTmp(t *testing.T) {
+	setupTestComponent(t)
 	settings := []ComponentSettings{
 		{
 			componentName: "dummy-component-2",
 			Layout: map[string]ComponentLayout{
-				"/NOT/EXISTENT": {
+				"/not/tmp": {
 					Symlink: "$SNAP_COMPONENTS/dummy-component-2/non_existent_file.txt",
 				},
-			},
-			Environment: []string{
-				"TEST_ENV_VAR=test",
 			},
 		},
 	}
 
 	err := loadEngineEnvironmentFromSettingsCollection(settings)
-	if err != nil && !strings.Contains(err.Error(), "error creating directory for symlink") {
-		t.Fatalf("expected skipping symlink creation due to path different from /tmp, got: %v", err)
+	if err == nil {
+		t.Fatal("expected error for layout path outside /tmp, got nil")
+	}
+	if !strings.Contains(err.Error(), "layout path outside of /tmp") {
+		t.Fatalf("expected outside /tmp error, got: %v", err)
 	}
 }
