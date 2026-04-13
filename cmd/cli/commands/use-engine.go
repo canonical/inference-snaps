@@ -15,7 +15,6 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 type useEngineCommand struct {
@@ -326,7 +325,7 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	}
 
 	// Only ask for confirmation if it is an interactive terminal
-	if !cmd.assumeYes && term.IsTerminal(int(os.Stdin.Fd())) {
+	if !cmd.assumeYes && utils.IsTerminalOutput() {
 		fmt.Println()
 		if !common.ConfirmationPrompt("Do you want to continue?") {
 			fmt.Println("Cancelled. No changes applied.")

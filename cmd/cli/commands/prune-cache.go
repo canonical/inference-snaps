@@ -14,7 +14,6 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 type pruneCacheCommand struct {
@@ -222,7 +221,7 @@ func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsWithEngines ma
 		confirmationPromptSentence = fmt.Sprintf("Continue pruning [%v] engines?", strings.Join(engineList, ", "))
 	}
 
-	if term.IsTerminal(int(os.Stdin.Fd())) {
+	if utils.IsTerminalOutput() {
 		fmt.Println()
 		if !common.ConfirmationPrompt(confirmationPromptSentence) {
 			return false, nil
