@@ -51,8 +51,15 @@ func vRam(device types.PciDevice) (*uint64, error) {
 	if err != nil {
 		return nil, fmt.Errorf("executing nvidia-smi: %v", err)
 	}
+	return parseVramAmount(output)
+}
 
-	valueStr, unit, hasUnit := strings.Cut(*output, " ")
+func parseVramAmount(smiOutputString *string) (*uint64, error) {
+	if *smiOutputString == "[N/A]" {
+		return nil, nil
+	}
+
+	valueStr, unit, hasUnit := strings.Cut(*smiOutputString, " ")
 	vramValue, err := strconv.ParseUint(valueStr, 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf("parsing nvidia-smi output: %v", err)
@@ -70,7 +77,6 @@ func vRam(device types.PciDevice) (*uint64, error) {
 	}
 
 	return &vramValue, nil
-
 }
 
 func computeCapability(device types.PciDevice) (*string, error) {
