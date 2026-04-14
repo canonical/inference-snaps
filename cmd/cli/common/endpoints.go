@@ -45,6 +45,15 @@ func serverEndpoints(ctx *Context, settingsCollection []ComponentSettings) (map[
 					serverSettings["protocol"], serverName, settings.componentName)
 			}
 		}
+
+		// If builtin webui is enabled, also list it as an endpoint
+		if WebUiEnabled() {
+			webUiUrl, err := UiServerHttpUrl(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("getting web UI url: %v", err)
+			}
+			endpoints["webui"] = webUiUrl
+		}
 	}
 
 	return endpoints, nil
@@ -86,4 +95,25 @@ func OpenAiEndpoint(ctx *Context) (string, error) {
 		return "", fmt.Errorf("%q not found in server endpoints", openAiEndpointKey)
 	}
 	return openaiEndpoint, nil
+}
+
+func UiServerHttpUrl(ctx *Context) (string, error) {
+	const (
+		confWebuiHttpPort = "webui.http.port"
+		defaultBasePath   = "/"
+	)
+
+	httpPortMap, err := ctx.Config.Get(confWebuiHttpPort)
+	if err != nil {
+		return "", fmt.Errorf("getting config %q: %v", confWebuiHttpPort, err)
+	}
+	httpPort := httpPortMap[confWebuiHttpPort]
+
+	endpointUrl := url.URL{
+		Scheme: "http",
+		Host:   fmt.Sprintf("localhost:%v", httpPort),
+		Path:   defaultBasePath,
+	}
+
+	return endpointUrl.String(), nil
 }

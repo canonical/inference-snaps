@@ -7,7 +7,30 @@ exec 1> >(tee >(logger --tag=$tag))
 # Redirect stderr to stderr+syslog
 exec 2> >(logger --stderr --priority error --tag=$tag)
 
+#
+# New default configurations
+#
+# Set default configurations for new options added after the initial release.
+# This ensures that default values are present in upgraded snaps.
+if ! modelctl get webui &> /dev/null; then
+    modelctl set --package webui.http.port="8081"
+    modelctl set --package webui.http.host="127.0.0.1"
+fi
+
+#
+# WSL workaround
+#
+# With a layout we bind $SNAP_COMMON/usr/lib/wsl to /usr/lib/wsl.
+# The layout automatically creates the source directory if it does not exist.
+# We then create symlinks in this dir for the lib and drivers subdirectories,
+# so they appear at /usr/lib/wsl/lib and /usr/lib/wsl/drivers in the layout.
+# When refreshing, these symlinks might already exist, so force create.
+ln -sfn /var/lib/snapd/hostfs/usr/lib/wsl/lib $SNAP_COMMON/usr/lib/wsl/lib
+ln -sfn /var/lib/snapd/hostfs/usr/lib/wsl/drivers $SNAP_COMMON/usr/lib/wsl/drivers
+
+#
 # Refresh the active engine
+#
 # This involves applying changes to configurations and required snap components.
 # If the active engine has been removed, another engine will be auto selected.
 # The automatic selection requires access to hardware information on the system.

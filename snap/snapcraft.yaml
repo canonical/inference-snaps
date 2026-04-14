@@ -24,8 +24,9 @@ layout:
   # Intel icd files use an absolute path to Intel OpenCL shared objects. Use a layout to mount the so files at the expected location
   /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl:
     bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl
-  # NVIDIA icd specifies only the shared object name: libnvidia-opencl.so.1
-  # libnvidia-opencl.so.1 is inside /snap/stack-utils/x3/usr/lib/x86_64-linux-gnu/, which is already in LD_LIBRARY_PATH
+  # Under wsl the libraries are expected in /usr/lib/wsl
+  /usr/lib/wsl:
+    bind: $SNAP_COMMON/usr/lib/wsl
 
 environment:
   # Path to access current revision of components
@@ -36,8 +37,9 @@ parts:
     source: snap/local
     plugin: dump
     organize:
-      "server.sh": bin/
       "completion.bash": bin/
+      "server.sh": bin/
+      "server-webui.sh": bin/
 
   system-utilities:
     plugin: nil
@@ -136,6 +138,12 @@ parts:
     organize:
       "*": engines/
 
+  mock-openai-server:
+    plugin: dump
+    source: test_data/mock-openai-server
+    organize:
+      "*": bin/mock-openai-server/
+
 components:
   dummy-component-1: &test-component
     type: standard
@@ -157,8 +165,9 @@ apps:
       - network
       - network-bind # for serving webui 
       - opengl
+      - desktop # for xdg-open
     environment:
-      ADDITIONAL_FEATURES: chat
+      ADDITIONAL_FEATURES: chat, webui
 
   clinfo:
     plugs:
@@ -176,3 +185,11 @@ apps:
   server:
     command: bin/server.sh
     daemon: simple
+    plugs:
+      - network-bind
+
+  server-webui:
+    command: bin/server-webui.sh
+    daemon: simple
+    plugs:
+      - network-bind

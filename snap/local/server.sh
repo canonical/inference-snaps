@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
-# This is a dummy server. It will run until it is terminated.
+port="$(modelctl get http.port)"
+host="$(modelctl get http.host)"
 
-sleep inf
+echo "Starting mock OpenAI server on $host:$port"
+exec "$SNAP"/bin/mock-openai-server/server.py --port "$port" --host "$host"

@@ -45,23 +45,8 @@ func (c *chatClient) Start() error {
 
 	fmt.Printf("Using server at %v\n", c.baseUrl)
 
-	// Check if server is reachable
-	if err := c.handshake(); err != nil {
-		return err
-	}
-
-	if c.modelName == "" {
-		var err error
-		if err = c.lookupModelName(); err != nil {
-			return err
-		}
-	}
-	if c.verbose {
-		fmt.Printf("Using model %v\n", c.modelName)
-	}
-
-	// Check if server is ready to accept chat completion requests
-	if err := c.checkServerReady(); err != nil {
+	err := c.WaitChatServerReady()
+	if err != nil {
 		return err
 	}
 
@@ -117,6 +102,31 @@ func (c *chatClient) Start() error {
 		}
 	}
 	fmt.Println("Closing chat")
+
+	return nil
+}
+
+func (c *chatClient) WaitChatServerReady() error {
+
+	// Check if server is reachable
+	if err := c.handshake(); err != nil {
+		return err
+	}
+
+	if c.modelName == "" {
+		var err error
+		if err = c.lookupModelName(); err != nil {
+			return err
+		}
+	}
+	if c.verbose {
+		fmt.Printf("Using model %v\n", c.modelName)
+	}
+
+	// Check if server is ready to accept chat completion requests
+	if err := c.checkServerReady(); err != nil {
+		return err
+	}
 
 	return nil
 }

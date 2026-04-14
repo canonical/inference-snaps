@@ -29,11 +29,6 @@ func Chat(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func ChatEnabled() bool {
-	features := common.AdditionalFeatures()
-	return features.Chat
-}
-
 func (cmd *chatCommand) run(_ *cobra.Command, _ []string) error {
 	chatBaseUrl, err := common.OpenAiEndpoint(cmd.Context)
 	if err != nil {
