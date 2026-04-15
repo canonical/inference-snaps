@@ -45,11 +45,18 @@ docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:latest
 `````
 ``````
 
-## Create a connection to the inference snap
+## Enable direct connections in Open WebUI
 
 Open the Open WebUI interface on your browser: `http://localhost:<port>`.
+Register and log in, then click on your account icon and open `Settings`. 
 
-Open **Settings** in Open WebUI and enter the **Admin Settings** page, then select the **Connections** tab. Ensure that **OpenAI API** is enabled, and click the **+** button next to _Manage OpenAI API Connections_ to add a new connection.
+Go to `Admin Settings` and select `Connections`.
+If they are not in use, disable the OpenAI and Ollama APIs.
+Enable `Direct Connections` and save your changes.
+
+## Create a connection to the inference snap
+
+Open settings in Open WebUI, select `Connections`, and click on the **+** icon to add a new connection.
 
 In the `URL` field, enter the URL of the endpoint you want to use, then save it.
 You can find the URL using the inference snap's `status` command.
