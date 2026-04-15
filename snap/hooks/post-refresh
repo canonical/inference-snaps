@@ -13,7 +13,7 @@ exec 2> >(logger --stderr --priority error --tag=$tag)
 # Set default configurations for new options added after the initial release.
 # This ensures that default values are present in upgraded snaps.
 if ! modelctl get webui &> /dev/null; then
-    modelctl set --package webui.http.port="8081"
+    modelctl set --package webui.http.port="8323"
     modelctl set --package webui.http.host="127.0.0.1"
 fi
 
