@@ -16,7 +16,7 @@ func DebugCommand(ctx *common.Context) *cobra.Command {
 		ValidateCommand(ctx),
 		SelectCommand(ctx),
 		ChatCommand(ctx),
-		ServeUICommand(ctx),
+		ServeWebUiCommand(ctx),
 	)
 
 	return debugCmd

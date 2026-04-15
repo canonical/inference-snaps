@@ -6,11 +6,11 @@ import (
 
 	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/ui"
+	"github.com/canonical/inference-snaps-cli/pkg/webui"
 	"github.com/spf13/cobra"
 )
 
-type serveUICommand struct {
+type serveWebUiCommand struct {
 	*common.Context
 
 	// flags
@@ -19,29 +19,29 @@ type serveUICommand struct {
 	capabilities string
 }
 
-func ServeUI(ctx *common.Context) *cobra.Command {
-	var cmd serveUICommand
+func ServeWebUi(ctx *common.Context) *cobra.Command {
+	var cmd serveWebUiCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:               "serve-ui <static-files-dir>",
-		Short:             "Run a debug web server to serve the Web UI",
+		Use:               "serve-webui <static-files-dir>",
+		Short:             "Serve static files and configurations for the web UI",
 		Hidden:            true,
 		Args:              cobra.ExactArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              cmd.serveUI,
+		RunE:              cmd.serveWebUi,
 	}
 
 	// flags
 	cobraCmd.Flags().IntVar(&cmd.port, "port", 8081, "HTTP bind port")
 	cobraCmd.Flags().StringVar(&cmd.host, "host", "localhost", "HTTP bind address")
 	cobraCmd.Flags().StringVar(&cmd.capabilities, "capabilities", "text",
-		fmt.Sprintf("Comma-separated list of capabilities (%s)", strings.Join(ui.SupportedCapabilities(), ", ")))
+		fmt.Sprintf("Comma-separated list of capabilities (%s)", strings.Join(webui.SupportedCapabilities(), ", ")))
 
 	return cobraCmd
 }
 
-func (cmd *serveUICommand) serveUI(_ *cobra.Command, args []string) error {
+func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error {
 	staticDir := args[0]
 
 	baseURL, err := common.OpenAiEndpoint(cmd.Context)
@@ -62,7 +62,7 @@ func (cmd *serveUICommand) serveUI(_ *cobra.Command, args []string) error {
 		capabilities = append(capabilities, strings.TrimSpace(cap))
 	}
 
-	config := ui.Config{
+	config := webui.Config{
 		OpenAIBaseURL: baseURL,
 		Capabilities:  capabilities,
 		InstanceName:  env.SnapInstanceName(),
@@ -81,5 +81,5 @@ func (cmd *serveUICommand) serveUI(_ *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("Serving %q on http://localhost:%d\n", staticDir, cmd.port)
-	return ui.Serve(config, staticDir, cmd.port, cmd.host)
+	return webui.Serve(config, staticDir, cmd.port, cmd.host)
 }

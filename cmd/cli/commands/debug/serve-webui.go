@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/ui"
+	"github.com/canonical/inference-snaps-cli/pkg/webui"
 	"github.com/spf13/cobra"
 )
 
-type serveUICommand struct {
+type serveWebUiCommand struct {
 	*common.Context
 
 	// flags
@@ -19,17 +19,17 @@ type serveUICommand struct {
 	htmlDir string
 }
 
-func ServeUICommand(ctx *common.Context) *cobra.Command {
-	var cmd serveUICommand
+func ServeWebUiCommand(ctx *common.Context) *cobra.Command {
+	var cmd serveWebUiCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:               "serve-ui <static-files-dir>",
-		Short:             "Run a debug web server to serve the Web UI",
+		Use:               "serve-webui <static-files-dir>",
+		Short:             "Serve web UI static files and configurations for debugging",
 		Hidden:            true,
 		Args:              cobra.ExactArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,
-		RunE:              cmd.serveUI,
+		RunE:              cmd.serveWebUi,
 	}
 
 	// flags
@@ -40,12 +40,12 @@ func ServeUICommand(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *serveUICommand) serveUI(_ *cobra.Command, args []string) error {
+func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error {
 	staticDir := args[0]
 
-	config := ui.Config{
+	config := webui.Config{
 		OpenAIBaseURL: cmd.baseUrl,
-		Capabilities:  ui.SupportedCapabilities(), // set all capabilities for debugging
+		Capabilities:  webui.SupportedCapabilities(), // set all capabilities for debugging
 		InstanceName:  "debug",
 		EngineName:    "unset",
 	}
@@ -54,5 +54,5 @@ func (cmd *serveUICommand) serveUI(_ *cobra.Command, args []string) error {
 	fmt.Printf("Config: %s\n", j)
 
 	fmt.Printf("Serving %q on http://localhost:%d\n", staticDir, cmd.port)
-	return ui.Serve(config, staticDir, cmd.port, cmd.host)
+	return webui.Serve(config, staticDir, cmd.port, cmd.host)
 }
