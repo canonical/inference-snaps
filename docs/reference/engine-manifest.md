@@ -81,7 +81,7 @@ field is  mandatory. The remaining fields are architecture specific.
 * `compute-capability` - applicable to NVIDIA (vendor-id `0x10de`) only. A list
 of MAJOR.MINOR version strings prefixed with a comparison operator (==, \<=, \>=, \>, \<[^1]).
 MAJOR and MINOR must both be integers.
-* `microarchitecture` - applicable to AMD (vendor-id `0x1002`). A list of supported AMD GPU {spellexception}`microarchitectures`, e.g., `gfx1030`, `gfx1100`, `gfx1102`.
+* `microarchitecture` - applicable to AMD (vendor-id `0x1002`) only. The supported AMD GPU `microarchitecture`, e.g., `gfx1030`
 
 When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-peripherals>` fields.
 
