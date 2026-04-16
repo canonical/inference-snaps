@@ -48,7 +48,7 @@ docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:latest
 ## Enable direct connections in Open WebUI
 
 Open the Open WebUI interface on your browser: `http://localhost:<port>`.
-Register and log in, then click on your account icon and open `Settings`. 
+Register and log in, then click on your account icon and open `Settings`.
 
 Go to `Admin Settings` and select `Connections`.
 If they are not in use, disable the OpenAI and Ollama APIs.
