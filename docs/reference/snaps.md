@@ -42,6 +42,8 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+{{wsl_support}}
+
 ## Nemotron 3 Nano
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano) 
 [![nemotron-3-nano source][gh-badge]](https://github.com/canonical/nemotron-3-nano-snap)

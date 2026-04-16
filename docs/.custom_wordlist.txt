@@ -61,6 +61,7 @@ OpenAI
 OpenVINO
 optimized
 otf
+passthrough
 PCI
 plantuml
 PNG
