@@ -7,21 +7,48 @@ import (
 	"strings"
 )
 
-// ConfirmationPrompt prompts the user for a yes/no answer and returns true for 'y', false for 'n'.
-func ConfirmationPrompt(prompt string) bool {
+// Prompt prompts the user and returns true for 'y', false for 'n'.
+func PromptYN(prompt string, defaultResponse bool) bool {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Printf("%s [y/n] ", prompt)
-		input, _ := reader.ReadString('\n')
-		input = strings.ToLower(strings.TrimSpace(input))
-
-		if input == "y" || input == "yes" {
-			return true
-		} else if input == "n" || input == "no" {
-			return false
+		if defaultResponse == true {
+			fmt.Printf("%s [Y/n] ", prompt) // default is yes
 		} else {
+			fmt.Printf("%s [y/N] ", prompt) // default is no
+		}
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Printf("Error reading input: %v\n", err)
+			continue
+		}
+
+		input = strings.ToLower(strings.TrimSpace(input))
+		switch input {
+		case "": // default on empty input
+			return defaultResponse
+		case "Y", "y":
+			return true
+		case "N", "n":
+			return false
+		default:
 			fmt.Println(`Invalid input. Please enter "y" or "n".`)
 		}
 	}
+}
+
+// PromptlnEnter prompts the user for Enter in a new line
+func PromptlnEnter(action string) bool {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Printf("Press [Enter] to %s, or [Ctrl+C] to abort. ", action)
+
+	_, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Printf("\nError reading input: %v\n", err)
+		return false
+	}
+
+	return true
 }

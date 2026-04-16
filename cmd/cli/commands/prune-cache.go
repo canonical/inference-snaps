@@ -223,7 +223,8 @@ func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsWithEngines ma
 
 	if utils.IsTerminalOutput() {
 		fmt.Println()
-		if !common.ConfirmationPrompt(confirmationPromptSentence) {
+		if !common.PromptYN(confirmationPromptSentence, false) {
+			fmt.Println("Cancelled. No changes applied.")
 			return false, nil
 		}
 	}

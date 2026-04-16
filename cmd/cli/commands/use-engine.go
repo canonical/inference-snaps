@@ -327,7 +327,7 @@ func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) 
 	// Only ask for confirmation if it is an interactive terminal
 	if !cmd.assumeYes && utils.IsTerminalOutput() {
 		fmt.Println()
-		if !common.ConfirmationPrompt("Do you want to continue?") {
+		if !common.PromptYN("Do you want to continue?", true) {
 			fmt.Println("Cancelled. No changes applied.")
 			return true, nil
 		}
