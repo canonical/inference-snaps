@@ -38,6 +38,7 @@ This inference snap is optimized for the following hardware:
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
 

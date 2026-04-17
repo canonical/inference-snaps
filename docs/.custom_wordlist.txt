@@ -46,6 +46,8 @@ llamafile
 LLM
 LLMs
 localhost
+microarchitecture
+microarchitectures
 multimodal
 Multipass
 MyST
