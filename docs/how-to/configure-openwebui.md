@@ -6,24 +6,21 @@ This guide will help you set up and use an inference snap with Open WebUI, hoste
 
 You must have Open WebUI and an inference snap installed to continue.
 
-````{note}
-Open WebUI uses `8080` as its default HTTP port. 
-This port is commonly used by other services like web servers and inference engines.
-To avoid conflicts, use a different port for Open WebUI during installation.
+````{tip}
 
-In case you are using docker to run Open WebUI, you can set a different port using the `PORT` environment variable.
-You must use `--network=host` option to allow Open WebUI to access the inference snap's API.
+Open WebUI is also available as a snap.
+To install [the snap](https://snapcraft.io/open-webui), run:
 
-For example:
 ```shell
-docker run --network=host --env PORT=9099 ghcr.io/open-webui/open-webui:0.6
+sudo snap install open-webui
 ```
+
 ````
 
 ## Enable direct connections in Open WebUI
 
 Open the Open WebUI interface on your browser: `http://localhost:<port>`.
-Register and log in, then click on your account icon and open `Settings`. 
+Register and log in, then click on your account icon and open `Settings`.
 
 Go to `Admin Settings` and select `Connections`.
 If they are not in use, disable the OpenAI and Ollama APIs.
