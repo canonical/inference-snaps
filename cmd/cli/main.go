@@ -10,6 +10,7 @@ import (
 	"github.com/canonical/inference-snaps-cli/cmd/cli/commands"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/commands/debug"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +20,7 @@ func main() {
 		EnginesDir: env.Snap() + "/engines",
 		Cache:      storage.NewCache(),
 		Config:     storage.NewConfig(),
+		Snap:       snap.New(),
 	}
 
 	// Get snap name for dynamic commands

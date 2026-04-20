@@ -16,6 +16,8 @@ type setCommand struct {
 	// flags
 	packageConfig bool
 	engineConfig  bool
+	assumeYes     bool
+	noRestart     bool
 }
 
 func Set(ctx *common.Context) *cobra.Command {
@@ -33,15 +35,15 @@ func Set(ctx *common.Context) *cobra.Command {
 
 	// flags
 	cobraCmd.Flags().BoolVar(&cmd.packageConfig, "package", false, "set package configurations")
-	err := cobraCmd.Flags().MarkHidden("package")
-	if err != nil {
+	if err := cobraCmd.Flags().MarkHidden("package"); err != nil {
 		panic(err)
 	}
 	cobraCmd.Flags().BoolVar(&cmd.engineConfig, "engine", false, "set engine configuration")
-	err = cobraCmd.Flags().MarkHidden("engine")
-	if err != nil {
+	if err := cobraCmd.Flags().MarkHidden("engine"); err != nil {
 		panic(err)
 	}
+	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for all prompts")
+	cobraCmd.Flags().BoolVar(&cmd.noRestart, "no-restart", false, "do not restart the snap after setting the configuration")
 
 	return cobraCmd
 }
@@ -50,6 +52,7 @@ func (cmd *setCommand) run(_ *cobra.Command, args []string) error {
 	if !utils.IsRootUser() {
 		return common.ErrPermissionDenied
 	}
+
 	return cmd.setValue(args[0])
 }
 
@@ -70,11 +73,42 @@ func (cmd *setCommand) setValue(keyValue string) error {
 		err = cmd.Config.Set(key, value, storage.PackageConfig)
 	} else if cmd.engineConfig {
 		err = cmd.Config.Set(key, value, storage.EngineConfig)
-	} else {
+	} else { // configurations set by the user
+
+		// User configs are overrides, reject unknown keys
+		currValMap, err := cmd.Config.Get(key)
+		if err != nil {
+			return fmt.Errorf("checking existing keys: %s", err)
+		}
+		currVal, found := currValMap[key]
+		if !found {
+			return fmt.Errorf("unknown key: %q", key)
+		}
+
+		if fmt.Sprint(currVal) == value {
+			return nil // no change needed
+		}
+
+		if !cmd.noRestart {
+			msg := fmt.Sprintf("Apply changes and restart %s?", cmd.Snap.InstanceName())
+			if !(cmd.assumeYes || common.PromptYN(msg, true)) {
+				fmt.Println("Cancelled. Changes not applied.")
+				return nil
+			}
+		}
+
 		err = cmd.Config.Set(key, value, storage.UserConfig)
 	}
 	if err != nil {
 		return fmt.Errorf("setting %q to %q: %v", key, value, err)
+	}
+
+	if cmd.noRestart {
+		fmt.Println(common.SuggestRestartToApplyChanges())
+	} else {
+		if err := cmd.Snap.Restart(); err != nil {
+			return fmt.Errorf("restarting snap: %v", err)
+		}
 	}
 
 	return nil
