@@ -1,3 +1,4 @@
+(tutorials-index)=
 # Tutorials
 
 Tutorials for creating and using inference snaps for developers and end users.

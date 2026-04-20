@@ -1,3 +1,4 @@
+(how-to-guides-index)=
 # How-to guides
 
 These guides will walk you through the processes of configuring, deploying, and modifying inference snaps.
