@@ -81,7 +81,7 @@ func (cmd *setCommand) setValue(keyValue string) error {
 			return fmt.Errorf("checking existing keys: %s", err)
 		}
 		currVal, found := currValMap[key]
-		if !found {
+		if !found && !strings.HasPrefix(key, "passthrough.") {
 			return fmt.Errorf("unknown key: %q", key)
 		}
 

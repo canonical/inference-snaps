@@ -1,6 +1,9 @@
 package utils
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestStringToBytesGigabytes(t *testing.T) {
 	sizeBytes, err := StringToBytes("4G")
@@ -82,5 +85,22 @@ func TestIsRootUser(t *testing.T) {
 		t.Log("User is root!")
 	} else {
 		t.Log("User is not root")
+	}
+}
+
+func TestSetEnvironmentVariables(t *testing.T) {
+	defer os.Unsetenv("TEST_VAR")
+
+	envVars := map[string]any{
+		"TEST_VAR": "test-value",
+	}
+
+	err := SetEnvironmentVariables(envVars)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if value := os.Getenv("TEST_VAR"); value != "test-value" {
+		t.Fatalf("expected TEST_VAR to be 'test-value', got '%s'", value)
 	}
 }

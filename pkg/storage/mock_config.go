@@ -1,6 +1,9 @@
 package storage
 
-import "maps"
+import (
+	"maps"
+	"strings"
+)
 
 type mockConfig struct {
 	values map[string]any
@@ -24,11 +27,14 @@ func (c *mockConfig) SetDocument(key string, value any, confType configType) err
 }
 
 func (c *mockConfig) Get(key string) (map[string]any, error) {
-	if value, found := c.values[key]; found {
-		return map[string]any{key: value}, nil
+	result := make(map[string]any)
+	for k, v := range c.values {
+		if k == key || strings.HasPrefix(k, key+".") {
+			result[k] = v
+		}
 	}
 
-	return map[string]any{}, nil
+	return result, nil
 }
 
 func (c *mockConfig) GetAll() (map[string]any, error) {

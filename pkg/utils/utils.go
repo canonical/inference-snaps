@@ -111,3 +111,13 @@ func IsRootUser() bool {
 func IsTerminalOutput() bool {
 	return term.IsTerminal(int(os.Stdout.Fd()))
 }
+
+func SetEnvironmentVariables(envVars map[string]any) error {
+	for k, v := range envVars {
+		err := os.Setenv(k, fmt.Sprintf("%v", v))
+		if err != nil {
+			return fmt.Errorf("setting environment variable for passthrough config %q: %v", k, err)
+		}
+	}
+	return nil
+}
