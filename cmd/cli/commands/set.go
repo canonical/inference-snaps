@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
@@ -72,10 +71,6 @@ func (cmd *setCommand) setValue(keyValue string) error {
 	} else if cmd.engineConfig {
 		err = cmd.Config.Set(key, value, storage.EngineConfig)
 	} else {
-		// Reject use of internal keys by the user
-		if slices.Contains(deprecatedConfig, key) {
-			return fmt.Errorf("%q is read-only", key)
-		}
 		err = cmd.Config.Set(key, value, storage.UserConfig)
 	}
 	if err != nil {

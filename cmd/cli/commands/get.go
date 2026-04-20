@@ -2,24 +2,11 @@ package commands
 
 import (
 	"fmt"
-	"os"
-	"slices"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
-
-// Deprecated configurations from the user
-var deprecatedConfig = []string{
-	"model",
-	"model-name",
-	"multimodel-projector",
-	"server",
-	"target-device",
-	"http.base-path",
-}
 
 type getCommand struct {
 	*common.Context
@@ -70,11 +57,6 @@ func (cmd *getCommand) getValue(key string) error {
 		fmt.Printf("%s", yamlOutput) // the yaml output ends with a newline
 	}
 
-	// Warn the user about deprecated fields. These are still consumed by the engines.
-	if slices.Contains(deprecatedConfig, key) && utils.IsTerminalOutput() {
-		fmt.Fprintf(os.Stderr, "Note: %q configuration field is deprecated!\n", key)
-	}
-
 	return nil
 }
 
@@ -82,13 +64,6 @@ func (cmd *getCommand) getValues() error {
 	values, err := cmd.Config.GetAll()
 	if err != nil {
 		return fmt.Errorf("getting values: %v", err)
-	}
-
-	// Drop deprecated configurations. The user doesn't need to see them.
-	for k := range values {
-		if slices.Contains(deprecatedConfig, k) {
-			delete(values, k)
-		}
 	}
 
 	// print config value
