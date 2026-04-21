@@ -60,6 +60,7 @@ NPUs
 Nvidia
 Ollama
 OpenAI
+OpenClaw
 OpenVINO
 optimized
 otf

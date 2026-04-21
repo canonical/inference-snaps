@@ -1,7 +1,7 @@
 (configure-openclaw)=
 # Configure OpenClaw for use with inference snaps
 
-Inference snaps that support tool calling can be used with local agents like OpenClaw, PicoClaw, NemoClaw, etc.
+Inference snap that support tool calling can be used with local agents like OpenClaw, {spellexception}`PicoClaw`, {spellexception}`NemoClaw`, etc.
 Refer to {ref}`available snaps <available-snaps>` to see which inference snaps support tool calling.
 
 ## Look up base URL and model ID
@@ -53,7 +53,7 @@ These questions can change over time, so we list the key answers here to help yo
 Where will the Gateway run?
 ~ Most likely "Local (this machine)", but it depends on your setup
 
-Model/auth provider
+Model/{spellexception}`auth` provider
 ~ Choose "Custom Provider" 
 
 API Base URL
