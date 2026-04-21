@@ -10,19 +10,19 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
 )
 
-func TestSetValueValidation(t *testing.T) {
-	config := storage.NewMockConfig(map[string]any{})
-	cmd := setCommand{
-		noRestart: true,
-		Context: &common.Context{
-			Config: config,
-			Snap:   snap.Mock(),
-		},
-	}
+func TestParseKeyValue(t *testing.T) {
+	cmd := setCommand{}
+
 	tests := map[string]struct {
 		input       string
+		wantKey     string
+		wantValue   string
 		errContains string
 	}{
+		"empty input": {
+			input:       "",
+			errContains: "expected key=value",
+		},
 		"missing equal sign": {
 			input:       "model",
 			errContains: "expected key=value",
@@ -31,16 +31,37 @@ func TestSetValueValidation(t *testing.T) {
 			input:       "=value",
 			errContains: "key must not start with an equal sign",
 		},
+		"simple pair": {
+			input:     "model=llama",
+			wantKey:   "model",
+			wantValue: "llama",
+		},
+		"value keeps equal signs": {
+			input:     "api.endpoint=https://example.com?a=b",
+			wantKey:   "api.endpoint",
+			wantValue: "https://example.com?a=b",
+		},
 	}
 
 	for testName, testCase := range tests {
 		t.Run(testName, func(t *testing.T) {
-			err := cmd.setValue(testCase.input)
-			if err == nil {
-				t.Fatalf("expected error containing %q, got nil", testCase.errContains)
+			gotKey, gotValue, err := cmd.parseKeyValue(testCase.input)
+			if testCase.errContains != "" {
+				if err == nil {
+					t.Fatalf("expected error containing %q, got nil", testCase.errContains)
+				}
+				if !strings.Contains(err.Error(), testCase.errContains) {
+					t.Fatalf("expected error containing %q, got %q", testCase.errContains, err.Error())
+				}
+				return
 			}
-			if !strings.Contains(err.Error(), testCase.errContains) {
-				t.Fatalf("expected error containing %q, got %q", testCase.errContains, err.Error())
+
+			if err != nil {
+				t.Fatalf("parseKeyValue returned an unexpected error: %v", err)
+			}
+
+			if gotKey != testCase.wantKey || gotValue != testCase.wantValue {
+				t.Fatalf("expected (%q, %q), got (%q, %q)", testCase.wantKey, testCase.wantValue, gotKey, gotValue)
 			}
 		})
 	}
@@ -56,7 +77,7 @@ func TestSetValueSuccessForUserConfig(t *testing.T) {
 		},
 	}
 
-	err := cmd.setValue("api.endpoint=https://example.com?x=1=y")
+	err := cmd.setValue("api.endpoint=https://new.example.com")
 	if err != nil {
 		t.Fatalf("setValue returned an unexpected error: %v", err)
 	}
@@ -66,8 +87,28 @@ func TestSetValueSuccessForUserConfig(t *testing.T) {
 		t.Fatalf("Get returned an unexpected error: %v", err)
 	}
 
-	if value, found := values["api.endpoint"]; !found || value != "https://example.com?x=1=y" {
+	if value, found := values["api.endpoint"]; !found || value != "https://new.example.com" {
 		t.Fatalf("expected api.endpoint to be set to full value, got %#v", values)
+	}
+}
+
+func TestSetValueRejectsUnknownKeys(t *testing.T) {
+	config := storage.NewMockConfig(map[string]any{})
+	cmd := setCommand{
+		noRestart: true,
+		Context: &common.Context{
+			Config: config,
+			Snap:   snap.Mock(),
+		},
+	}
+
+	err := cmd.setValue("api.endpoint=https://example.com")
+	if err == nil {
+		t.Fatal("expected error for unknown key, got nil")
+	} else {
+		if !strings.Contains(err.Error(), "unknown key") {
+			t.Fatalf("expected unknown key error, got: %s", err)
+		}
 	}
 }
 
@@ -87,7 +128,7 @@ func TestSetNoPromptIfValueNotChanged(t *testing.T) {
 	}
 }
 
-func ExampleSet_noRestartSuggestsRestart() {
+func ExampleSet_assumeYesRestartServices() {
 	if err := os.Setenv("SNAP_INSTANCE_NAME", "example-snap"); err != nil {
 		panic(err)
 	}
@@ -97,7 +138,7 @@ func ExampleSet_noRestartSuggestsRestart() {
 
 	config := storage.NewMockConfig(map[string]any{"api.endpoint": "https://old.example.com"})
 	cmd := setCommand{
-		noRestart: true,
+		assumeYes: true,
 		Context: &common.Context{
 			Config: config,
 			Snap:   snap.Mock(),
@@ -109,5 +150,5 @@ func ExampleSet_noRestartSuggestsRestart() {
 	}
 
 	// Output:
-	// Run "snap restart example-snap" to apply the changes.
+	// [mock] Restarting all services
 }

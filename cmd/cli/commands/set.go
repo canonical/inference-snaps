@@ -57,59 +57,69 @@ func (cmd *setCommand) run(_ *cobra.Command, args []string) error {
 }
 
 func (cmd *setCommand) setValue(keyValue string) error {
+	key, value, err := cmd.parseKeyValue(keyValue)
+	if err != nil {
+		return err
+	}
+
+	if cmd.packageConfig {
+		if err := cmd.Config.Set(key, value, storage.PackageConfig); err != nil {
+			return fmt.Errorf("setting %q to %q: %v", key, value, err)
+		}
+	} else if cmd.engineConfig {
+		if err := cmd.Config.Set(key, value, storage.EngineConfig); err != nil {
+			return fmt.Errorf("setting %q to %q: %v", key, value, err)
+		}
+	}
+
+	return cmd.setUserConfig(key, value)
+}
+
+func (cmd *setCommand) parseKeyValue(keyValue string) (key, value string, err error) {
+	if keyValue == "" {
+		return "", "", fmt.Errorf("expected key=value, got %q", keyValue)
+	}
+
 	if keyValue[0] == '=' {
-		return fmt.Errorf("key must not start with an equal sign")
+		return "", "", fmt.Errorf("key must not start with an equal sign")
 	}
 
 	// The value itself can contain an equal sign, so we split only on the first occurrence
 	parts := strings.SplitN(keyValue, "=", 2)
 	if len(parts) != 2 {
-		return fmt.Errorf("expected key=value, got %q", keyValue)
+		return "", "", fmt.Errorf("expected key=value, got %q", keyValue)
 	}
-	key, value := parts[0], parts[1]
+	return parts[0], parts[1], nil
+}
 
-	var err error
-	if cmd.packageConfig {
-		err = cmd.Config.Set(key, value, storage.PackageConfig)
-	} else if cmd.engineConfig {
-		err = cmd.Config.Set(key, value, storage.EngineConfig)
-	} else { // configurations set by the user
+// setUserConfig overrides existing package and engine configurations.
+// Unknown keys are rejected, except for passthrough keys.
+func (cmd *setCommand) setUserConfig(key, value string) error {
 
-		// User configs are overrides, reject unknown keys
-		currValMap, err := cmd.Config.Get(key)
-		if err != nil {
-			return fmt.Errorf("checking existing keys: %s", err)
-		}
-		currVal, found := currValMap[key]
-		if !found && !strings.HasPrefix(key, "passthrough.") {
-			return fmt.Errorf("unknown key: %q", key)
-		}
-
-		if fmt.Sprint(currVal) == value {
-			return nil // no change needed
-		}
-
-		if !cmd.noRestart {
-			msg := fmt.Sprintf("Apply changes and restart %s?", cmd.Snap.InstanceName())
-			if !(cmd.assumeYes || common.PromptYN(msg, true)) {
-				fmt.Println("Cancelled. Changes not applied.")
-				return nil
-			}
-		}
-
-		err = cmd.Config.Set(key, value, storage.UserConfig)
-	}
+	currValMap, err := cmd.Config.Get(key)
 	if err != nil {
+		return fmt.Errorf("checking existing keys: %s", err)
+	}
+	currVal, found := currValMap[key]
+	if !found && !strings.HasPrefix(key, "passthrough.") {
+		return fmt.Errorf("unknown key: %q", key)
+	}
+
+	if fmt.Sprint(currVal) == value {
+		return nil // no change needed
+	}
+
+	if err := cmd.Config.Set(key, value, storage.UserConfig); err != nil {
 		return fmt.Errorf("setting %q to %q: %v", key, value, err)
 	}
 
-	if cmd.noRestart {
-		fmt.Println(common.SuggestRestartToApplyChanges())
-	} else {
-		if err := cmd.Snap.Restart(); err != nil {
-			return fmt.Errorf("restarting snap: %v", err)
+	if !cmd.noRestart {
+		msg := fmt.Sprintf("Restart %s to apply the changes?", cmd.Snap.InstanceName())
+		if cmd.assumeYes || common.PromptYN(msg, true) {
+			if err := cmd.Snap.Restart(); err != nil {
+				return fmt.Errorf("restarting snap: %v", err)
+			}
 		}
 	}
-
 	return nil
 }

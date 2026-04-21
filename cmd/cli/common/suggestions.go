@@ -66,12 +66,3 @@ func SuggestEngineInfo() string {
 
 	return fmt.Sprintf("Use \"%v show-engine <engine>\" for more information about an engine.", instanceName)
 }
-
-func SuggestRestartToApplyChanges() string {
-	instanceName := env.SnapInstanceName()
-	if instanceName == "" { // not a snap
-		instanceName = "<snap-instance-name>"
-	}
-
-	return fmt.Sprintf("Run \"snap restart %s\" to apply the changes.", instanceName)
-}
