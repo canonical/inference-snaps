@@ -40,6 +40,7 @@ func Run(ctx *common.Context) *cobra.Command {
 
 	// flags
 	cobraCmd.Flags().BoolVar(&cmd.waitForComponents, "wait-for-components", false, "wait for engine components to be installed before running")
+	cobraCmd.Flags().MarkDeprecated("wait-for-components", "\"run\" always waits for components.")
 
 	return cobraCmd
 }
@@ -48,10 +49,10 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	if len(args) < 1 {
 		return fmt.Errorf("unexpected number of arguments, expected at least 1 got %d", len(args))
 	}
-	if cmd.waitForComponents {
-		if err := common.WaitForComponents(cmd.Context); err != nil {
-			return fmt.Errorf("waiting for component: %s", err)
-		}
+
+	// Components are required for loading the engine environment
+	if err := common.WaitForComponents(cmd.Context); err != nil {
+		return fmt.Errorf("waiting for component: %s", err)
 	}
 
 	clean, err := common.LoadEngineEnvironment(cmd.Context)
