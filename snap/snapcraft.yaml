@@ -127,10 +127,9 @@ parts:
 
   webui:
     plugin: dump
-    source: https://github.com/canonical/inference-snaps-ui.git
-    source-tag: v1.0.0-beta.1
+    source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.0.0-beta.3/inference-snaps-webui.tar.xz
     organize:
-      "static": etc/webui/
+      "*": webui/
 
   engines:
     plugin: dump
