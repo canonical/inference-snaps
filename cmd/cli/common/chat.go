@@ -295,7 +295,6 @@ func (c *chatClient) processStream(stream *ssestream.Stream[openai.ChatCompletio
 	// optionally, an accumulator helper can be used
 	acc := openai.ChatCompletionAccumulator{}
 
-	// An opening <think> tag will change the output color to indicate reasoning.
 	thinking := false
 
 	for stream.Next() {
@@ -317,21 +316,33 @@ func (c *chatClient) processStream(stream *ssestream.Stream[openai.ChatCompletio
 
 		// Print chunks as they are received
 		if len(chunk.Choices) > 0 {
-			lastChunk := chunk.Choices[0].Delta.Content
 
-			if strings.Contains(lastChunk, "<think>") {
-				thinking = true
-				fmt.Printf("%s", color.BlueString(lastChunk))
-			} else if strings.Contains(lastChunk, "</think>") {
-				thinking = false
-				fmt.Printf("%s", color.BlueString(lastChunk))
-
-			} else if thinking {
-				fmt.Printf("%s", color.BlueString(lastChunk))
-
-			} else {
-				fmt.Printf("%s", lastChunk)
+			// Gemma-4 and Nemotron-3 set a `reasoning_content` field for thinking output.
+			// The OpenAI library does not contain it, so parse it manually.
+			var rawDelta struct {
+				ReasoningContent string `json:"reasoning_content"`
 			}
+			err := json.Unmarshal([]byte(chunk.Choices[0].Delta.RawJSON()), &rawDelta)
+			if err != nil {
+				return nil, fmt.Errorf("unmarshalling response chunk: %v", err)
+			}
+
+			contentChunk := chunk.Choices[0].Delta.Content
+			reasoningChunk := rawDelta.ReasoningContent
+
+			// Print thinking
+			if reasoningChunk != "" {
+				thinking = true
+				fmt.Printf("%s", color.BlueString(reasoningChunk))
+			}
+			// If the response has main content, but we were printing reasoning, add a new line to split them
+			if thinking && contentChunk != "" {
+				thinking = false
+				fmt.Print("\n\n")
+			}
+
+			// Main response
+			fmt.Printf("%s", contentChunk)
 		}
 	}
 
