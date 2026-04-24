@@ -30,8 +30,8 @@ sudo snap install intel-npu-driver
 
 You need to install the NVIDIA driver on the host machine to use an NVIDIA GPU with inference snaps.
 
-Inference snaps use CUDA 12 and depend on NVIDIA driver version **525 or higher**.
-Refer to [CUDA Minor Version Compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html) for more details.
+Inference snaps use CUDA Toolkit 12.9 and therefore require NVIDIA driver version **575 or higher**.
+Refer to [CUDA Toolkit Release Notes](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#id7) for more details.
 
 The driver may be pre-installed on your system. You can check the installed version with:
 ```shell
