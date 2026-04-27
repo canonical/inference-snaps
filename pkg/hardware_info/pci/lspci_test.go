@@ -31,7 +31,10 @@ func TestParseLsCpu(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			_, err = ParseLsPci(string(lsPci), true)
+			_, warnings, err := ParseLsPci(string(lsPci), true)
+			if len(warnings) > 0 {
+				t.Logf("Warnings: %v", warnings)
+			}
 			if err != nil {
 				t.Fatal(err)
 			}

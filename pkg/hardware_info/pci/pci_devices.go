@@ -3,7 +3,6 @@ package pci
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/canonical/inference-snaps-cli/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci/amd"
@@ -21,31 +20,32 @@ var (
 /*
 Devices returns a slice of PciDevices that is detected on the current system and reported by lspci.
 */
-func Devices(friendlyNames bool) ([]types.PciDevice, error) {
+func Devices(friendlyNames bool) ([]types.PciDevice, []string, error) {
 
 	hostLsPciData, err := hostLsPci()
 	if err != nil {
-		return nil, fmt.Errorf("executing lspci: %v", err)
+		return nil, nil, fmt.Errorf("executing lspci: %v", err)
 	}
-	devices, err := ParseLsPci(hostLsPciData, friendlyNames)
+	devices, lsPciWarnings, err := ParseLsPci(hostLsPciData, friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("parsing lspci output: %v", err)
+		return nil, nil, fmt.Errorf("parsing lspci output: %v", err)
 	}
 
 	// Additional properties are obtained by running vendor specific tools on the host
 	// Errors are not fatal, and are printed to stderr
-	devices = addAdditionalProperties(devices)
+	devices, additionalPropWarnings := addAdditionalProperties(devices)
 
-	return devices, nil
+	warnings := append(lsPciWarnings, additionalPropWarnings...)
+	return devices, warnings, nil
 }
 
-func DevicesFromRawData(lspciData string, friendlyNames bool) ([]types.PciDevice, error) {
-	devices, err := ParseLsPci(lspciData, friendlyNames)
+func DevicesFromRawData(lspciData string, friendlyNames bool) ([]types.PciDevice, []string, error) {
+	devices, warnings, err := ParseLsPci(lspciData, friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("parsing lspci output: %v", err)
+		return nil, nil, fmt.Errorf("parsing lspci output: %v", err)
 	}
 
-	return devices, nil
+	return devices, warnings, nil
 }
 
 /*
@@ -115,20 +115,22 @@ Additional properties are obtained by running vendor specific tools on the host 
 No error is returned as a failure to look up properties is considered non-fatal, and likely due to missing drivers.
 Errors are instead logged to STDERR.
 */
-func addAdditionalProperties(devices []types.PciDevice) []types.PciDevice {
+func addAdditionalProperties(devices []types.PciDevice) ([]types.PciDevice, []string) {
+	var warnings []string
+
 	for i, device := range devices {
 		properties, err := deviceAdditionalProperties(device)
 		if err != nil {
 			if errors.Is(err, ErrorVendorNotSupported) {
 				// We do not log unsupported vendors, as that would be the majority of PCI devices
 			} else {
-				fmt.Fprintf(os.Stderr, "Warning: unable to get additional properties for pci device: %v\n", err)
+				warnings = append(warnings, fmt.Sprintf("unable to get additional properties for pci device: %s", err))
 			}
 		}
 		devices[i].AdditionalProperties = properties
 	}
 
-	return devices
+	return devices, warnings
 }
 
 func deviceAdditionalProperties(device types.PciDevice) (map[string]string, error) {

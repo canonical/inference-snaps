@@ -2,7 +2,6 @@ package pci
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -19,8 +18,9 @@ func hostLsPci() (string, error) {
 	return string(out), nil
 }
 
-func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevice, error) {
+func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevice, []string, error) {
 	var devices []types.PciDevice
+	var warnings []string
 
 	for _, section := range strings.Split(inputString, "\n\n") {
 		// Ignore empty devices, e.g. extra blank line at end
@@ -37,11 +37,11 @@ func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevic
 				// Parse slot value into bus number: 0000:3b:00.0 -> 3B
 				parts := strings.Split(value, ":")
 				if len(parts) != 3 {
-					return nil, fmt.Errorf("unexpected format for pci slot: %s", value)
+					return nil, nil, fmt.Errorf("unexpected format for pci slot: %s", value)
 				}
 				busNumber, err := strconv.ParseUint(parts[1], 16, 8)
 				if err != nil {
-					return nil, fmt.Errorf("cannot parse pci bus number: %s", parts[1])
+					return nil, nil, fmt.Errorf("cannot parse pci bus number: %s", parts[1])
 				}
 				device.BusNumber = types.HexInt(busNumber)
 			case "Class":
@@ -79,8 +79,8 @@ func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevic
 		if includeFriendlyNames {
 			friendlyNames, err := friendlyNames(device)
 			if err != nil {
-				// This is not a fatal error, so just logging it
-				fmt.Fprintln(os.Stderr, "Warning: unable to get friendly name for pci device:", err)
+				// This is not a fatal error, record a warning and continue
+				warnings = append(warnings, fmt.Sprintf("unable to get friendly name for pci device: %s", err))
 			} else {
 				device.PciFriendlyNames = friendlyNames
 			}
@@ -88,5 +88,5 @@ func ParseLsPci(inputString string, includeFriendlyNames bool) ([]types.PciDevic
 		devices = append(devices, device)
 	}
 
-	return devices, nil
+	return devices, warnings, nil
 }

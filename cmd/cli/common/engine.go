@@ -16,8 +16,7 @@ import (
 )
 
 const (
-	componentEnv    = "COMPONENT"
-	ProgressScoring = "Checking engines"
+	componentEnv = "COMPONENT"
 )
 
 type ComponentLayout struct {
@@ -209,21 +208,37 @@ and scores the engines according to their compatibility with the host.
 
 Warning: calls to this function can block for a number of seconds while the host machine information is being looked up.
 */
-func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, error) {
+func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, []string, error) {
 	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
-		return nil, fmt.Errorf("loading engines: %v", err)
+		return nil, nil, fmt.Errorf("loading engines: %v", err)
 	}
 
-	machineInfo, err := hardware_info.Get(false)
+	machineInfo, warnings, err := hardware_info.Get(false)
 	if err != nil {
-		return nil, fmt.Errorf("getting machine info: %v", err)
+		return nil, nil, fmt.Errorf("getting machine info: %v", err)
 	}
 
 	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
 	if err != nil {
-		return nil, fmt.Errorf("scoring engines: %v", err)
+		return nil, nil, fmt.Errorf("scoring engines: %v", err)
 	}
 
-	return scoredEngines, nil
+	return scoredEngines, warnings, nil
+}
+
+// ScoreEnginesWithSpinner is same as ScoreEngines but with a progress spinner.
+// It prints the warnings to stderr.
+func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, error) {
+	stopProgress := StartProgressSpinner("Checking engine compatibility")
+	scoredEngines, warnings, err := ScoreEngines(ctx)
+	stopProgress()
+
+	if len(warnings) > 0 {
+		for _, warning := range warnings {
+			fmt.Fprintf(os.Stderr, "Warning: %s\n", warning)
+		}
+	}
+
+	return scoredEngines, err
 }

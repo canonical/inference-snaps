@@ -13,37 +13,37 @@ import (
 	"github.com/canonical/inference-snaps-cli/pkg/types"
 )
 
-func Get(friendlyNames bool) (*types.HwInfo, error) {
+func Get(friendlyNames bool) (*types.HwInfo, []string, error) {
 	var hwInfo types.HwInfo
 
 	memoryInfo, err := memory.Info()
 	if err != nil {
-		return nil, fmt.Errorf("getting memory info: %v", err)
+		return nil, nil, fmt.Errorf("getting memory info: %v", err)
 	}
 	hwInfo.Memory = memoryInfo
 
 	cpus, err := cpu.Info()
 	if err != nil {
-		return nil, fmt.Errorf("getting cpu info: %v", err)
+		return nil, nil, fmt.Errorf("getting cpu info: %v", err)
 	}
 	hwInfo.Cpus = cpus
 
 	diskInfo, err := disk.Info()
 	if err != nil {
-		return nil, fmt.Errorf("getting disk info: %v", err)
+		return nil, nil, fmt.Errorf("getting disk info: %v", err)
 	}
 	hwInfo.Disk = diskInfo
 
-	pciDevices, err := pci.Devices(friendlyNames)
+	pciDevices, warnings, err := pci.Devices(friendlyNames)
 	if err != nil {
-		return nil, fmt.Errorf("getting pci devices: %v", err)
+		return nil, nil, fmt.Errorf("getting pci devices: %v", err)
 	}
 	hwInfo.PciDevices = pciDevices
 
-	return &hwInfo, nil
+	return &hwInfo, warnings, nil
 }
 
-// GetFromRawData is mainly used during testing, but also from other packages, and therefore needs to be exported
+// GetFromRawData is a test helper
 func GetFromRawData(t *testing.T, device string, friendlyNames bool, testDir string) (*types.HwInfo, error) {
 	var hwInfo types.HwInfo
 
@@ -91,7 +91,10 @@ func GetFromRawData(t *testing.T, device string, friendlyNames bool, testDir str
 	if err != nil {
 		t.Fatal(err)
 	}
-	pciDevices, err := pci.DevicesFromRawData(string(pciData), friendlyNames)
+	pciDevices, warnings, err := pci.DevicesFromRawData(string(pciData), friendlyNames)
+	if len(warnings) > 0 {
+		t.Logf("Warnings: %v", warnings)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}

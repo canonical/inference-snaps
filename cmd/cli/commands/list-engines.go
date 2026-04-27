@@ -52,14 +52,10 @@ func ListEngines(ctx *common.Context) *cobra.Command {
 }
 
 func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
-	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
-	defer stopProgress()
-
-	scoredEngines, err := common.ScoreEngines(cmd.Context)
+	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("checking engines: %v", err)
+		return fmt.Errorf("scoring engines: %v", err)
 	}
-	stopProgress()
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {

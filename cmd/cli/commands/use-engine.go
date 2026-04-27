@@ -89,14 +89,10 @@ func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 }
 
 func (cmd *useEngineCommand) autoSelectEngine() error {
-	stopProgress := common.StartProgressSpinner(common.ProgressScoring)
-	defer stopProgress()
-
-	scoredEngines, err := common.ScoreEngines(cmd.Context)
+	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
-		return fmt.Errorf("checking engines: %v", err)
+		return fmt.Errorf("scoring engines: %v", err)
 	}
-	stopProgress()
 
 	fmt.Println("Evaluating engines for optimal hardware compatibility:")
 	for _, engine := range scoredEngines {

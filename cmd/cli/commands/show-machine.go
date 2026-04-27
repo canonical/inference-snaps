@@ -3,10 +3,12 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/pkg/types"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -44,20 +46,20 @@ func ShowMachine(ctx *common.Context) *cobra.Command {
 }
 
 func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
-	hwInfo, err := hardware_info.Get(true)
+	info, err := cmd.fetchMachineInfoWithSpinner()
 	if err != nil {
-		return fmt.Errorf("getting machine info: %s", err)
+		return err
 	}
 
 	switch cmd.format {
 	case "json":
-		jsonString, err := json.MarshalIndent(hwInfo, "", "  ")
+		jsonString, err := json.MarshalIndent(info, "", "  ")
 		if err != nil {
 			return fmt.Errorf("json: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml":
-		yamlString, err := yaml.Marshal(hwInfo)
+		yamlString, err := yaml.Marshal(info)
 		if err != nil {
 			return fmt.Errorf("yaml: %s", err)
 		}
@@ -67,4 +69,22 @@ func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 	}
 
 	return nil
+}
+
+func (cmd *showMachineCommand) fetchMachineInfoWithSpinner() (*types.HwInfo, error) {
+	stopProgress := common.StartProgressSpinner("Gathering machine information")
+	hwInfo, warnings, err := hardware_info.Get(true)
+	stopProgress()
+
+	if len(warnings) > 0 {
+		for _, warning := range warnings {
+			fmt.Fprintf(os.Stderr, "Warning: %s\n", warning)
+		}
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("getting machine info: %s", err)
+	}
+
+	return hwInfo, nil
 }
