@@ -17,6 +17,7 @@ Our projects' source code can be found at:
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 - [Gemma3 snap](https://github.com/canonical/gemma3-snap)
 - [Nemotron 3 Nano snap](https://github.com/canonical/nemotron-3-nano-snap)
+- [Nemotron 3 Nano Omni snap](https://github.com/canonical/nemotron-3-nano-omni-snap)
 
 ### Tooling
 Inference snaps use the following reusable building blocks:
