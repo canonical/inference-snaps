@@ -14,12 +14,13 @@ type Config struct {
 }
 
 const (
-	capabilityText   string = "text"
-	capabilityVision string = "vision"
+	capabilityText         string = "text"
+	capabilityTextMarkdown string = "text:markdown"
+	capabilityVision       string = "vision"
 )
 
 func SupportedCapabilities() []string {
-	return []string{capabilityText, capabilityVision}
+	return []string{capabilityText, capabilityTextMarkdown, capabilityVision}
 }
 
 func (c Config) Validate() error {
