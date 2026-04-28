@@ -54,12 +54,12 @@ MyST
 Nano
 NDA
 Nemotron
-Omni
 npm's
 npu
 NPUs
 Nvidia
 Ollama
+Omni
 OpenAI
 OpenVINO
 optimized
