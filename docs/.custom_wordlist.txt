@@ -54,6 +54,7 @@ MyST
 Nano
 NDA
 Nemotron
+Omni
 npm's
 npu
 NPUs
