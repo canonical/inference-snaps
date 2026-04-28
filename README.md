@@ -41,6 +41,7 @@ gemma3 chat
 
 | Model | Description | Install | Source |
 |---|---|---|---|
+| nemotron-3-nano-omni | Reasoning and non-reasoning LLM with image, video and audio support | `snap install nemotron-3-nano-omni` | [repo](http://github.com/canonical/nemotron-3-nano-omni-snap)
 | nemotron-3-nano | Reasoning and non-reasoning LLM | `snap install nemotron-3-nano` | [repo](http://github.com/canonical/nemotron-3-nano-snap)
 | gemma3 | Vision-language model | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
 | qwen-vl | Vision-language model | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)

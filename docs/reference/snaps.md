@@ -4,7 +4,7 @@
 This page contains a list of inference snaps and the available optimizations.
 
 ## DeepSeek R1
-[![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1) 
+[![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1)
 [![deepseek-r1 code][gh-badge]](https://github.com/canonical/deepseek-r1-snap)
 
 DeepSeek R1 is a reasoning Large Language Model mainly meant for chat completions.
@@ -23,7 +23,7 @@ This inference snap is optimized for the following hardware:
 {{explore_optimizations}}
 
 ## Gemma3
-[![gemma3 snap](https://snapcraft.io/gemma3/badge.svg)](https://snapcraft.io/gemma3) 
+[![gemma3 snap](https://snapcraft.io/gemma3/badge.svg)](https://snapcraft.io/gemma3)
 [![gemma3 code][gh-badge]](https://github.com/canonical/gemma3-snap)
 
 Gemma 3 is a Large Language Model supporting text and image inputs, with text-based outputs.
@@ -45,7 +45,7 @@ This inference snap is optimized for the following hardware:
 {{wsl_support}}
 
 ## Nemotron 3 Nano
-[![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano) 
+[![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)
 [![nemotron-3-nano source][gh-badge]](https://github.com/canonical/nemotron-3-nano-snap)
 
 Nemotron 3 Nano is an LLM designed for both reasoning and non-reasoning tasks.
@@ -62,8 +62,26 @@ The inference snap for Nemotron 3 Nano has been optimized for the following:
 
 {{explore_optimizations}}
 
+## Nemotron 3 Nano Omni
+[![nemotron-3-nano-omni snap](https://snapcraft.io/nemotron-3-nano-omni/badge.svg)](https://snapcraft.io/nemotron-3-nano-omni)
+[![nemotron-3-nano-omni source][gh-badge]](https://github.com/canonical/nemotron-3-nano-omni-snap)
+
+Nemotron 3 Nano Omni is an LLM designed for both reasoning and non-reasoning tasks.
+The input can be a combination of text, image, video and audio, with the output being text-based.
+
+The inference snap for Nemotron 3 Nano Omni supports text and image, and has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+
+{{explore_optimizations}}
+
 ## Qwen VL
-[![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl) 
+[![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
 
 
@@ -82,11 +100,11 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 
 {{explore_optimizations}}
 
-<!-- 
+<!--
 ## Deprecated snaps
 
 The following inference snaps are no longer maintained:
-- [mistral-7b-instruct](https://github.com/canonical/mistral-7b-instruct-snap) 
+- [mistral-7b-instruct](https://github.com/canonical/mistral-7b-instruct-snap)
 -->
 
 

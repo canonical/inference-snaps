@@ -59,6 +59,7 @@ npu
 NPUs
 Nvidia
 Ollama
+Omni
 OpenAI
 OpenVINO
 optimized
