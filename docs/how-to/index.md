@@ -22,6 +22,7 @@ Use the snap with web clients:
 ```{toctree}
 :maxdepth: 1
 configure-openwebui
+configure-openclaw
 ```
 
 Use the snap with your IDE:
