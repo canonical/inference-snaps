@@ -51,23 +51,35 @@ func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
+	return cmd.printMachineInfo(info)
+}
+
+func (cmd *showMachineCommand) printMachineInfo(info *types.HwInfo) error {
 	switch cmd.format {
 	case "json":
-		jsonString, err := json.MarshalIndent(info, "", "  ")
-		if err != nil {
-			return fmt.Errorf("json: %s", err)
-		}
-		fmt.Printf("%s\n", jsonString)
+		return cmd.printMachineInfoJson(info)
 	case "yaml":
-		yamlString, err := yaml.Marshal(info)
-		if err != nil {
-			return fmt.Errorf("yaml: %s", err)
-		}
-		fmt.Printf("%s", yamlString)
+		return cmd.printMachineInfoYaml(info)
 	default:
 		return fmt.Errorf("unknown format %q", cmd.format)
 	}
+}
 
+func (cmd *showMachineCommand) printMachineInfoJson(info *types.HwInfo) error {
+	jsonString, err := json.MarshalIndent(info, "", "  ")
+	if err != nil {
+		return fmt.Errorf("json: %s", err)
+	}
+	fmt.Printf("%s\n", jsonString)
+	return nil
+}
+
+func (cmd *showMachineCommand) printMachineInfoYaml(info *types.HwInfo) error {
+	yamlString, err := yaml.Marshal(info)
+	if err != nil {
+		return fmt.Errorf("yaml: %s", err)
+	}
+	fmt.Printf("%s", yamlString)
 	return nil
 }
 

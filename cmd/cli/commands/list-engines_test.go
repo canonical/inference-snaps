@@ -22,7 +22,7 @@ func TestList(t *testing.T) {
 		t.Fatalf("error loading engines: %v", err)
 	}
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-7390", true, "../../../test_data")
+	hardwareInfo, err := hardware_info.GetFromRawData("xps13-7390", true, "../../../test_data")
 	if err != nil {
 		t.Fatalf("error getting hardware info: %v", err)
 	}

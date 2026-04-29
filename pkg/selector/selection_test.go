@@ -84,7 +84,7 @@ func TestTopEngine(t *testing.T) {
 				manifests = append(manifests, manifest)
 			}
 
-			hardwareInfo, err := hardware_info.GetFromRawData(t, testSet.machine, true, "../../test_data")
+			hardwareInfo, err := hardware_info.GetFromRawData(testSet.machine, true, "../../test_data")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -122,7 +122,7 @@ func TestMatchReasonsCpu(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-9350", true, "../../test_data")
+	hardwareInfo, err := hardware_info.GetFromRawData("xps13-9350", true, "../../test_data")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -158,7 +158,7 @@ func TestMatchReasonsPci(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	hardwareInfo, err := hardware_info.GetFromRawData(t, "xps13-9350", true, "../../test_data")
+	hardwareInfo, err := hardware_info.GetFromRawData("xps13-9350", true, "../../test_data")
 	if err != nil {
 		t.Fatal(err)
 	}

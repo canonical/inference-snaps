@@ -1,0 +1,27 @@
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 151
+model name	: 12th Gen Intel(R) Core(TM) i7-12850HX
+stepping	: 2
+microcode	: 0x3e
+cpu MHz		: 800.000
+cache size	: 25600 KB
+physical id	: 0
+siblings	: 24
+core id		: 0
+cpu cores	: 16
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 32
+wp		: yes
+flags		: fpu vme de
+vmx flags	: vnmi preemption_timer
+bugs		: spectre_v1 spectre_v2
+bogomips	: 4838.40
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
