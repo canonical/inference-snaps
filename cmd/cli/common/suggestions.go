@@ -66,3 +66,12 @@ func SuggestEngineInfo() string {
 
 	return fmt.Sprintf("Use \"%v show-engine <engine>\" for more information about an engine.", instanceName)
 }
+
+func SuggestKeyNotFound(key string) string {
+	instanceName := env.SnapInstanceName()
+	if instanceName == "" { // not a snap
+		instanceName = "<snap-instance-name>"
+	}
+
+	return fmt.Sprintf("Use \"%s get\" to view available keys", instanceName)
+}

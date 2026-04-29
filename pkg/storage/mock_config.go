@@ -9,32 +9,56 @@ type mockConfig struct {
 	values map[string]any
 }
 
-func NewMockConfig(values map[string]any) Config {
+func NewMockConfig() Config {
 	configValues := make(map[string]any)
-	maps.Copy(configValues, values)
 
 	return &mockConfig{values: configValues}
 }
 
 func (c *mockConfig) Set(key, value string, confType configType) error {
-	c.values[key] = value
+	scopedKey := string(confType) + "." + key
+	c.values[scopedKey] = value
 	return nil
 }
 
 func (c *mockConfig) SetDocument(key string, value any, confType configType) error {
-	c.values[key] = value
+	scopedKey := string(confType) + "." + key
+	c.values[scopedKey] = value
 	return nil
 }
 
 func (c *mockConfig) Get(key string) (map[string]any, error) {
-	result := make(map[string]any)
-	for k, v := range c.values {
-		if k == key || strings.HasPrefix(k, key+".") {
-			result[k] = v
+	if value, found := c.values[key]; found {
+		return map[string]any{key: value}, nil
+	}
+
+	for _, confType := range []configType{UserConfig, EngineConfig, PackageConfig} {
+		scopedKey := string(confType) + "." + key
+		if value, found := c.values[scopedKey]; found {
+			return map[string]any{key: value}, nil
 		}
 	}
 
-	return result, nil
+	result := make(map[string]any)
+	for _, confType := range []configType{UserConfig, EngineConfig, PackageConfig} {
+		prefix := string(confType) + "." + key + "."
+		for fullKey, value := range c.values {
+			if !strings.HasPrefix(fullKey, prefix) {
+				continue
+			}
+
+			normalizedKey := strings.TrimPrefix(fullKey, string(confType)+".")
+			if _, exists := result[normalizedKey]; !exists {
+				result[normalizedKey] = value
+			}
+		}
+	}
+
+	if len(result) > 0 {
+		return result, nil
+	}
+
+	return map[string]any{}, nil
 }
 
 func (c *mockConfig) GetAll() (map[string]any, error) {
@@ -44,6 +68,7 @@ func (c *mockConfig) GetAll() (map[string]any, error) {
 }
 
 func (c *mockConfig) Unset(key string, confType configType) error {
-	delete(c.values, key)
+	scopedKey := string(confType) + "." + key
+	delete(c.values, scopedKey)
 	return nil
 }

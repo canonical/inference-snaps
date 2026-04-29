@@ -102,7 +102,7 @@ func (cmd *setCommand) setUserConfig(key, value string) error {
 	}
 	currVal, found := currValMap[key]
 	if !found && !strings.HasPrefix(key, "passthrough.") {
-		return fmt.Errorf("unknown key: %q", key)
+		return fmt.Errorf("key %q is not found\n\n%s", key, common.SuggestKeyNotFound(key))
 	}
 
 	if fmt.Sprint(currVal) == value {

@@ -86,6 +86,7 @@ func main() {
 	addCommandGroup(rootCmd, "config", "Configuration Commands:",
 		commands.Get(ctx),
 		commands.Set(ctx),
+		commands.Unset(ctx),
 	)
 
 	addCommandGroup(rootCmd, "engine", "Management Commands:",

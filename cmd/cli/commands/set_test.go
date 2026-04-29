@@ -68,11 +68,12 @@ func TestParseKeyValue(t *testing.T) {
 }
 
 func TestSetValueSuccessForUserConfig(t *testing.T) {
-	config := storage.NewMockConfig(map[string]any{"api.endpoint": "https://old.example.com"})
+	mockConfig := storage.NewMockConfig()
+	mockConfig.Set("api.endpoint", "https://old.example.com", storage.UserConfig)
 	cmd := setCommand{
 		noRestart: true,
 		Context: &common.Context{
-			Config: config,
+			Config: mockConfig,
 			Snap:   snap.Mock(),
 		},
 	}
@@ -82,18 +83,18 @@ func TestSetValueSuccessForUserConfig(t *testing.T) {
 		t.Fatalf("setValue returned an unexpected error: %v", err)
 	}
 
-	values, err := config.Get("api.endpoint")
+	values, err := mockConfig.Get("api.endpoint")
 	if err != nil {
 		t.Fatalf("Get returned an unexpected error: %v", err)
 	}
 
 	if value, found := values["api.endpoint"]; !found || value != "https://new.example.com" {
-		t.Fatalf("expected api.endpoint to be set to full value, got %#v", values)
+		t.Fatalf("expected api.endpoint in user config to be set to full value, got %#v", values)
 	}
 }
 
 func TestSetValueRejectsUnknownKeys(t *testing.T) {
-	config := storage.NewMockConfig(map[string]any{})
+	config := storage.NewMockConfig()
 	cmd := setCommand{
 		noRestart: true,
 		Context: &common.Context{
@@ -106,14 +107,15 @@ func TestSetValueRejectsUnknownKeys(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error for unknown key, got nil")
 	} else {
-		if !strings.Contains(err.Error(), "unknown key") {
+		if !strings.Contains(err.Error(), "is not found") {
 			t.Fatalf("expected unknown key error, got: %s", err)
 		}
 	}
 }
 
 func TestSetNoPromptIfValueNotChanged(t *testing.T) {
-	config := storage.NewMockConfig(map[string]any{"api.port": 8080})
+	config := storage.NewMockConfig()
+	config.Set("api.port", "8080", storage.UserConfig)
 	cmd := setCommand{
 		assumeYes: false, // should not prompt since no change is needed
 		Context: &common.Context{
@@ -136,7 +138,8 @@ func ExampleSet_assumeYesRestartServices() {
 		_ = os.Unsetenv("SNAP_INSTANCE_NAME")
 	}()
 
-	config := storage.NewMockConfig(map[string]any{"api.endpoint": "https://old.example.com"})
+	config := storage.NewMockConfig()
+	config.Set("api.endpoint", "https://old.example.com", storage.UserConfig)
 	cmd := setCommand{
 		assumeYes: true,
 		Context: &common.Context{
