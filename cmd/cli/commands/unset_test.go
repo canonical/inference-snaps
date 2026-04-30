@@ -89,3 +89,42 @@ func TestUnsetNonexistentKey(t *testing.T) {
 		t.Fatalf("expected error message %q, got %q", expectedErrMsg, err.Error())
 	}
 }
+
+func ExampleUnset_noRestartWhenFinalValueUnchanged() {
+	config := storage.NewMockConfig()
+	config.Set("api.port", "8080", storage.PackageConfig)
+	config.Set("api.port", "8080", storage.UserConfig) // same as package value
+	cmd := unsetCommand{
+		assumeYes: true,
+		Context: &common.Context{
+			Config: config,
+			Snap:   snap.Mock(),
+		},
+	}
+
+	if err := cmd.unsetValue("api.port"); err != nil {
+		panic(err)
+	}
+
+	// Output:
+}
+
+func ExampleUnset_restartWhenFinalValueChanged() {
+	config := storage.NewMockConfig()
+	config.Set("api.port", "8080", storage.PackageConfig)
+	config.Set("api.port", "9999", storage.UserConfig)
+	cmd := unsetCommand{
+		assumeYes: true,
+		Context: &common.Context{
+			Config: config,
+			Snap:   snap.Mock(),
+		},
+	}
+
+	if err := cmd.unsetValue("api.port"); err != nil {
+		panic(err)
+	}
+
+	// Output:
+	// [mock] Restarting all services
+}

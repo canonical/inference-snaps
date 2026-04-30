@@ -52,3 +52,13 @@ func PromptlnEnter(action string) bool {
 
 	return true
 }
+
+func PromptRestartToApplyChanges(ctx *Context, assumeYes bool) error {
+	msg := fmt.Sprintf("Restart %s to apply the changes?", ctx.Snap.InstanceName())
+	if assumeYes || PromptYN(msg, true) {
+		if err := ctx.Snap.Restart(); err != nil {
+			return fmt.Errorf("restarting snap: %v", err)
+		}
+	}
+	return nil
+}

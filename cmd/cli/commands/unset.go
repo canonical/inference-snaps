@@ -72,12 +72,7 @@ func (cmd *unsetCommand) unsetValue(key string) error {
 	}
 
 	if !cmd.noRestart {
-		msg := fmt.Sprintf("Restart %s to apply the changes?", cmd.Snap.InstanceName())
-		if cmd.assumeYes || common.PromptYN(msg, true) {
-			if err := cmd.Snap.Restart(); err != nil {
-				return fmt.Errorf("restarting snap: %v", err)
-			}
-		}
+		return common.PromptRestartToApplyChanges(cmd.Context, cmd.assumeYes)
 	}
 	return nil
 }

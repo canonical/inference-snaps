@@ -345,7 +345,7 @@ func ExampleSet_noRestartWhenFinalValueUnchanged() {
 	// Output:
 }
 
-func ExampleSet_restartWhenFinalValueUnchanged() {
+func ExampleSet_restartWhenFinalValueChanged() {
 	config := storage.NewMockConfig()
 	config.Set("api.port", "8080", storage.UserConfig)
 	cmd := setCommand{

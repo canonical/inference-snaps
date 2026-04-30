@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
@@ -24,6 +23,7 @@ type useEngineCommand struct {
 	auto      bool
 	fix       bool
 	assumeYes bool
+	noRestart bool
 }
 
 func UseEngine(ctx *common.Context) *cobra.Command {
@@ -44,7 +44,8 @@ func UseEngine(ctx *common.Context) *cobra.Command {
 	// flags
 	cobraCmd.Flags().BoolVar(&cmd.auto, "auto", false, "automatically select a compatible engine")
 	cobraCmd.Flags().BoolVar(&cmd.fix, "fix", false, "fix issues with the currently active engine")
-	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for downloading new components")
+	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for all prompts")
+	cobraCmd.Flags().BoolVar(&cmd.noRestart, "no-restart", false, "do not restart the snap after changing engine")
 
 	return cobraCmd
 }
@@ -179,14 +180,13 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 
 	fmt.Printf("Engine changed to %q.\n", engineName)
 
-	// TODO: get this from an env var instead (e.g. ENGINE_SERVICES=server,proxy)
-	serviceName := env.SnapInstanceName() + ".server"
-
 	// Currently we cannot reliably determine if the service is active to automatically restart it
 	// See https://bugs.launchpad.net/snapd/+bug/2137543
 	//
-	// Ask the user to restart the service manually
-	fmt.Printf("\nRun \"snap restart %s\" to use the new engine.\n", serviceName)
+	// Ask if the user wants to restart
+	if !cmd.noRestart {
+		return common.PromptRestartToApplyChanges(cmd.Context, cmd.assumeYes)
+	}
 
 	return nil
 }

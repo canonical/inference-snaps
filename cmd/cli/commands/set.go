@@ -121,8 +121,8 @@ func (cmd *setCommand) setUserConfigs(keyValues map[string]string) error {
 
 	// Restart if configurations were changed
 	if anyChange {
-		if err := cmd.restartToApply(); err != nil {
-			return err
+		if !cmd.noRestart {
+			return common.PromptRestartToApplyChanges(cmd.Context, cmd.assumeYes)
 		}
 	}
 
@@ -184,12 +184,7 @@ func (cmd *setCommand) getCurrentValue(key string) (string, bool, error) {
 
 func (cmd *setCommand) restartToApply() error {
 	if !cmd.noRestart {
-		msg := fmt.Sprintf("Restart %s to apply the changes?", cmd.Snap.InstanceName())
-		if cmd.assumeYes || common.PromptYN(msg, true) {
-			if err := cmd.Snap.Restart(); err != nil {
-				return fmt.Errorf("restarting snap: %v", err)
-			}
-		}
+		return common.PromptRestartToApplyChanges(cmd.Context, cmd.assumeYes)
 	}
 	return nil
 }
