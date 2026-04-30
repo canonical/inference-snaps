@@ -47,7 +47,10 @@ func (cmd *pruneCacheCommand) run(_ *cobra.Command, _ []string) error {
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
+	} else if activeEngine == "" {
+		return common.ErrNoActiveEngine
 	}
+
 	activeEngineManifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngine)
 	if err != nil {
 		if errors.Is(err, engines.ErrManifestNotFound) {

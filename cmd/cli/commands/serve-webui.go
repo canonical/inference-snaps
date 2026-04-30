@@ -59,7 +59,7 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 		return fmt.Errorf("getting active engine: %v", err)
 	}
 	if activeEngineName == "" {
-		return fmt.Errorf("no engine is active")
+		return common.ErrNoActiveEngine
 	}
 
 	var capabilities []string
