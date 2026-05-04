@@ -44,6 +44,23 @@ This inference snap is optimized for the following hardware:
 
 {{wsl_support}}
 
+## Gemma4
+[![gemma4 snap](https://snapcraft.io/gemma4/badge.svg)](https://snapcraft.io/gemma4)
+[![gemma4 code][gh-badge]](https://github.com/canonical/gemma4-snap)
+
+Gemma 4 is a Large Language Model supporting text and image inputs, with text-based outputs.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+
+{{explore_optimizations}}
+
 ## Nemotron 3 Nano
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)
 [![nemotron-3-nano source][gh-badge]](https://github.com/canonical/nemotron-3-nano-snap)
