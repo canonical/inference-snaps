@@ -1,6 +1,9 @@
 package commands
 
 import (
+	"errors"
+	"testing"
+
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/pkg/storage"
@@ -48,4 +51,20 @@ func ExampleUseEngine_restartWhenEngineChanged() {
 	// Output:
 	// Engine changed to "cpu-avx1".
 	// [mock] Restarting all services
+}
+
+func TestFixActiveEngine_noActiveEngine(t *testing.T) {
+	cache := storage.NewMockCache()
+	cmd := useEngineCommand{
+		Context: &common.Context{
+			EnginesDir: "../../../test_data/engines",
+			Cache:      cache,
+			Snap:       snap.Mock(),
+		},
+	}
+
+	err := cmd.fixActiveEngine()
+	if !errors.Is(err, common.ErrNoActiveEngine) {
+		t.Errorf("expected no active engine error, got %v", err)
+	}
 }

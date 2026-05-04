@@ -79,7 +79,12 @@ func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("cannot specify both engine name and --fix flag")
 		}
-		return cmd.fixActiveEngine()
+		// If no engine is active, there's nothing to fix.
+		err := cmd.fixActiveEngine()
+		if errors.Is(err, common.ErrNoActiveEngine) {
+			return nil
+		}
+		return err
 	} else {
 		if len(args) == 1 {
 			return cmd.switchEngine(args[0])
