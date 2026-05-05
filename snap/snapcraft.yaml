@@ -91,6 +91,9 @@ parts:
     plugin: nil
     override-prime: |
       cat <<EOF > "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
+      environment:
+        - MODEL_PATH=\$COMPONENT
+        - MODEL_NAME=gemma-3-4b-it-ov-int4-fq
       servers:
         openvino:
           protocol: http
