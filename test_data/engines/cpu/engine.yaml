@@ -1,0 +1,13 @@
+name: cpu
+description: General CPU engine
+vendor: Canonical Ltd
+grade: stable
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+    - type: cpu
+      architecture: arm64
+memory: 4G
+disk-space: 8G
+

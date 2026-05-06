@@ -1,0 +1,15 @@
+name: not-compatible-engine
+description: This test engine is designed to be not compatible with any machine
+vendor: Canonical Ltd
+grade: stable
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+      flags: [inexistent_flag]
+memory: 2G
+disk-space: 5G
+components:
+  - dummy-component-1
+  - dummy-component-2 
+  - dummy-component-3
