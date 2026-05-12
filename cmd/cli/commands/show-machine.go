@@ -88,7 +88,7 @@ func (cmd *showMachineCommand) fetchMachineInfoWithSpinner() (*types.HwInfo, err
 	hwInfo, warnings, err := hardware_info.Get(true)
 	stopProgress()
 
-	if len(warnings) > 0 {
+	if len(warnings) > 0 && cmd.Verbose {
 		for _, warning := range warnings {
 			fmt.Fprintf(os.Stderr, "Warning: %s\n", warning)
 		}

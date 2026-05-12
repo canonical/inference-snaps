@@ -154,7 +154,9 @@ func LoadEngineEnvironment(ctx *Context) (func(), error) {
 	err = loadEngineEnvironmentFromSettingsCollection(settingsCollection)
 	return func() {
 		if err := unloadEngineEnvironmentFromSettingsCollection(settingsCollection); err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: failed to unload engine environment: %v\n", err)
+			if ctx.Verbose {
+				fmt.Fprintf(os.Stderr, "Warning: failed to unload engine environment: %v\n", err)
+			}
 		}
 	}, err
 }
@@ -184,7 +186,9 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 			if errors.Is(err, engines.ErrManifestNotFound) {
 				// TODO: remove this when implementing per-engine configuration
 				// We can't know what user overrides were set if the manifest is missing
-				fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
+				if ctx.Verbose {
+					fmt.Fprintf(os.Stderr, "Warning: previously active engine %q not found; skipping user configuration cleanup.\n", engineName)
+				}
 				return nil
 			}
 			return fmt.Errorf("loading engine manifest: %v", err)
@@ -234,7 +238,7 @@ func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, error) {
 	scoredEngines, warnings, err := ScoreEngines(ctx)
 	stopProgress()
 
-	if len(warnings) > 0 {
+	if len(warnings) > 0 && ctx.Verbose {
 		for _, warning := range warnings {
 			fmt.Fprintf(os.Stderr, "Warning: %s\n", warning)
 		}
