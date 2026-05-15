@@ -18,7 +18,7 @@ Install the Qwen VL snap from the `2.5` track (which refers to the version of th
 It is currently released with `beta` stability as indicated by the channel:
 
 ```{terminal}
-:input: sudo snap install qwen-vl --channel 2.5/beta
+sudo snap install qwen-vl --channel 2.5/beta
 
 qwen-vl (2.5/beta) 2.5 from Canonical IoT Labs✓ installed
 ```
@@ -37,7 +37,8 @@ Run the status command to see the selected engine and the status of the server.
 The output should include the server's status and the URL where the API can be accessed:
 
 ```{terminal}
-:input: qwen-vl status
+qwen-vl status
+
 engine: intel-cpu
 status: online
 endpoints:
@@ -53,7 +54,8 @@ The `qwen-vl` snap includes a basic chat client that can be used to chat with th
 Use the `chat` command to start a chat session:
 
 ```{terminal}
-:input: qwen-vl chat
+qwen-vl chat
+
 Connected to http://localhost:8326/v3
 Type your prompt, then ENTER to submit. CTRL-C to quit.
 » Hi there

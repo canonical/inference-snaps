@@ -40,7 +40,8 @@ snapcraft init
 This will create a {file}`snap` directory with a {file}`snapcraft.yaml` file inside:
 ```{terminal}
 :dir: gemma3-snap
-:input: tree .
+tree .
+
 .
 └── snap
     └── snapcraft.yaml
@@ -182,7 +183,8 @@ The above script loads the configurations and starts the HTTP server.
 At this point, the {file}`components` directory should look like this:
 ```{terminal}
 :dir: gemma3-snap
-:input: tree components/
+tree components/
+
 components/
 ├── llama-cpp
 │   ├── component.yaml
@@ -364,7 +366,8 @@ sudo snap connect gemma3-jane:hardware-observe
 Now, request auto selection of the engine:
 ```{terminal}
 :dir: gemma3-snap
-:input: sudo gemma3-jane use-engine --auto
+sudo gemma3-jane use-engine --auto
+
 Evaluating engines for optimal hardware compatibility:
 ✔ generic-cpu: compatible, score=12
 Selected engine: generic-cpu
@@ -381,7 +384,8 @@ sudo snap start gemma3-jane
 Next, check the logs again and make sure the server started successfully:
 ```{terminal}
 :dir: gemma3-snap
-:input: sudo snap logs gemma3-jane
+sudo snap logs gemma3-jane
+
 ...
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: main: server is listening on http://127.0.0.1:9090 - starting the main loop
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: srv  update_slots: all slots are idle
@@ -456,7 +460,8 @@ sudo snap install --devmode gemma3-jane --edge
 The snap should automatically select `generic-cpu` this time:
 ```{terminal}
 :dir: gemma3-snap
-:input: gemma3-jane status
+gemma3-jane status
+
 engine: generic-cpu
 endpoints:
     openai: http://localhost:9090/v1

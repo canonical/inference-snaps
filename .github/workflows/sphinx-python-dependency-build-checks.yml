@@ -48,4 +48,4 @@ jobs:
         set -ex
         make install \
           PIPOPTS="--no-binary :all:" \
-          || ( cat .sphinx/venv/pip_install.log && exit 1 )
+          || ( cat .venv/pip_install.log && exit 1 )

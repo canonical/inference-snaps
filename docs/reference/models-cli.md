@@ -20,7 +20,7 @@ To show usage information about any of the commands, set the `--help` flag.
 
 For example:
 ```{terminal}
-:input: gemma3 --help
+gemma3 --help
 
 gemma3 runs an engine that is optimized for your host machine,
 providing a local service endpoint.
