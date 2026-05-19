@@ -1,4 +1,5 @@
 (qwen-vl-tutorial)=
+
 # Get started with Inference Snaps using Qwen VL
 
 This tutorial walks you through the process of installing and using an inference snap.
@@ -8,6 +9,7 @@ This model is also referred to as a Vision Language Model (VLM) because it can i
 ## Set up your computer
 
 To complete this tutorial you will need:
+
 - A computer running an operating system that supports snaps, e.g., Ubuntu 24.04. Older Ubuntu versions aren't supported.
 - Hardware drivers. These may be pre-installed in your OS, but some devices require {ref}`additional drivers <install-drivers>`.
 - A Docker installation

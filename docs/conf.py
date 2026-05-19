@@ -41,11 +41,11 @@ ogp_site_url = "https://documentation.ubuntu.com/inference-snaps/"
 ogp_site_name = project
 
 # Preview image URL
-ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg"
+ogp_image = "https://assets.ubuntu.com/v1/cc828679-docs_illustration.svg"
 
 # Product favicon; shown in bookmarks, browser tabs, etc.
 # TODO: To customise the favicon, uncomment and update the next line.
-# html_favicon = "_static/favicon.png"
+# html_favicon = ".sphinx/_static/favicon.png"
 
 # Dictionary of values to pass into the Sphinx context for all pages:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
@@ -83,8 +83,12 @@ html_context = {
     "author": author,
     # Documentation license information
     "license": {
-        "name": "CC-BY-SA-3.0",
-        "url": "https://github.com/canonical/inference-snaps/blob/main/LICENSE",
+        # TODO: Specify your project's license.
+        # For the name, we recommend using the standard shorthand identifier from
+        # https://spdx.org/licenses
+        "name": "",
+        # TODO: Link directly to your project's license statement.
+        "url": "",
     },
 }
 
@@ -109,7 +113,7 @@ html_context = {
 #######################
 
 # Use RTD canonical URL to ensure duplicate pages have a specific canonical URL
-html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "https://documentation.ubuntu.com/inference-snaps/")
+html_baseurl = 'https://documentation.ubuntu.com/inference-snaps/'
 
 # sphinx-sitemap uses html_baseurl to generate the full URL for each page:
 sitemap_url_scheme = "{link}"
@@ -154,8 +158,8 @@ rediraffe_dir_only = True
 # product docs.
 llms_txt_description = textwrap.dedent(
     """\
-    This is the documentation for Inference Snaps, a collection of snaps that provide
-    access to various AI inference engines on Ubuntu.
+    This is the documentation for the Sphinx Stack, a template repository that helps you
+    set up, build, and publish Sphinx documentation.
     """
 )
 
@@ -171,6 +175,11 @@ if os.environ.get("READTHEDOCS"):
 linkcheck_ignore = [
     "http://127.0.0.1:*",
     "http://localhost:*",
+    "https://github.com",
+    r"https://matrix\.to/.*",
+    "https://example.com",
+    # SourceForge domains often block linkcheck
+    r"https://.*\.sourceforge\.(net|io)/.*",
 ]
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
@@ -229,17 +238,19 @@ exclude_patterns = [
 #     "https://assets.ubuntu.com/v1/d86746ef-cookie_banner.css",
 # ]
 
-# Adds custom JavaScript files, located under 'html_static_path'
-html_js_files = ["issue_links.js"]
+# Adds custom JavaScript files, located remotely or in 'html_static_path'.
+html_js_files = [
+    "issue_links.js",
+]
 
-# Specifies a reST snippet to be appended to each .rst file
+# Appends extra markup to the end of every document written in reST
 rst_epilog = """
 .. include:: /reuse/links.txt
 .. include:: /reuse/substitutions.txt
 """
 
 # Feedback button at the top; enabled by default
-# Disable the default feedback button as issue_links.js adds a custom one
+# TODO: Disable the button if your project is unsuitable for public feedback.
 disable_feedback_button = True
 
 # Your manpage URL

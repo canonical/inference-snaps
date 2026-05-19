@@ -1,56 +1,70 @@
 (engine-manifest)=
+
 # Engine manifest
 
-Each engine is accompanied by a manifest file outlining the engine’s components
-and configurations. The manifest also describes the engine’s system requirements.
+Each engine is accompanied by a manifest file outlining the engine's components
+and configurations. The manifest also describes the engine's system requirements.
 It is required during the selection process in order to pick the most
 {spellexception}`optimized` engine for the host machine.
 
 The engine manifest should include the following attributes:
 
 ## `name`
+
 A unique name for the engine.
 
 ## `description`
+
 The description of the engine
 
 ## `vendor`
+
 The name of the responsible {spellexception}`organization`
 
 ## `grade`
+
 Indicates the stability and compliance of the engine. Only stable engines
 get auto selected. (supported values: `stable` and `devel`)
 
 ## `devices`
-Lists of required computing devices. It’s possible to indicate if more than one
+
+Lists of required computing devices. It's possible to indicate if more than one
 device is required, or if there are multiple options, using the `anyof` and `allof`
 keywords. For example, an engine requiring a generic CPU, combined with either an
 Nvidia GPU with compute capability 7.0 or an AMD GPU with 8GB vRAM should list
 the CPU under `allof` and GPUs under `anyof`.
+
   - `type` - type of the device (cpu, gpu, npu, nil)
   - Remaining field types depend on the type. See other
   {ref}`device-specific properties <device-specific-fields>` below.
 
 ## `memory`
+
 Required system memory to load the model. Memory capacities should be given
 either in gigabytes or megabytes, with **G** or **M** as suffixes.
 
 ## `disk-space`
+
 The total size of engine components plus runtime additions. Disk capacities
 should be given either in gigabytes or megabytes, with **G** or **M** as
 suffixes.
 
 ## `components`
+
 List of snap components required by the engine
 
 ## `configurations`
+
 Default engine configurations
 
-(device-specific-fields)=
 ## Device-specific fields
+
+(device-specific-fields)=
+
 Device entries may also have the following device-specific fields:
 
 ### CPUs
+
 `architectures`: CPU architecture in Debian nomenclature (amd64, arm64). This
 field is  mandatory. The remaining fields are architecture specific.
 
@@ -63,8 +77,9 @@ field is  mandatory. The remaining fields are architecture specific.
   * `part-number` - from Main ID register
   * `features` - not used
 
-(pci-peripherals)=
 ### PCI peripherals
+
+(pci-peripherals)=
 
 * `bus`: `pci`
 * `vendor-id` - PCI vendor ID hex number.
@@ -135,4 +150,4 @@ When bus is set to PCI, this object inherits all {ref}`PCI peripheral <pci-perip
 ```
 
 [^1]: The comparison operators used for Compute Capability are based on [PEP](https://peps.python.org/pep-0440/#version-specifiers).
-When compared to [npm’s semantic versioning](https://docs.npmjs.com/about-semantic-versioning) and [Debian package’s Depend syntax](https://www.debian.org/doc/debian-policy/ch-relationships.html), all operators except the equal operator match.
+When compared to [npm's semantic versioning](https://docs.npmjs.com/about-semantic-versioning) and [Debian package's Depend syntax](https://www.debian.org/doc/debian-policy/ch-relationships.html), all operators except the equal operator match.
