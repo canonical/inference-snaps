@@ -1,6 +1,7 @@
 import datetime
 import os
 import textwrap
+import yaml
 
 # Configuration for the Sphinx documentation builder.
 # All configuration specific to your project should be done in this file.
@@ -257,8 +258,10 @@ html_js_files = [
 ]
 
 # Appends extra markup to the end of every document written in reST
-# rst_epilog = """
-# """
+rst_epilog = """
+.. include:: /reuse/links.txt
+.. include:: /reuse/substitutions.txt
+"""
 
 # Feedback button at the top; enabled by default
 # TODO: Disable the button if your project is unsuitable for public feedback.
@@ -287,6 +290,12 @@ rst_prolog = """
 .. role:: vale-ignore
     :class: vale-ignore
 """
+
+# Workaround for substitutions.yaml
+
+if os.path.exists('./reuse/substitutions.yaml'):
+    with open('./reuse/substitutions.yaml', 'r') as fd:
+        myst_substitutions = yaml.safe_load(fd.read())
 
 # Configuration for Intersphinx projects
 #
