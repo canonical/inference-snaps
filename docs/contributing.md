@@ -75,17 +75,17 @@ We aim for consistency, but don’t let formality prevent you from contributing.
 
 ### Inference Snaps documentation overview
 
-The Inference Snaps documentation is built on top of [Canonical's Sphinx starter pack] and hosted on GitHub.
+The Inference Snaps documentation is built on top of [Canonical's Sphinx Stack] and hosted on GitHub.
 It is published on [Read the Docs].
 
 The documentation is organized according to the [Diátaxis](https://diataxis.fr/) framework and written in reStructuredText or MyST Markdown.
 
-- For general guidance, refer to the [starter pack guide]
+- For general guidance, refer to the [Sphinx Stack documentation]
 - For syntax help and guidelines, refer to the [MyST syntax guide]
 
 ### Build the docs
 
-The sphinx starterpack allows you to build the Inference Snaps documentation locally.
+The Sphinx Stack allows you to build the Inference Snaps documentation locally.
 
 #### Fork and clone the repository
 
@@ -121,12 +121,14 @@ saved.
 Before you submit a PR, validate your changes with the following recipes:
 
 ```
-make spelling  
-make linkcheck  
+make lint-md
+make spelling
+make linkcheck
 make woke       # to check for non-inclusive language
 ```
 
 If the spell check reports any false positives:
+
 1. Add common terms to the `.custom_wordlist.txt` file to ignore them.
 2. Ignore document-specific terms using the `` {spellexception}`special.word` `` markup.
 3. Sort the list. You can use `LC_ALL=POSIX sort --stable --ignore-case .custom_wordlist.txt --output=.custom_wordlist.txt`.
@@ -218,13 +220,13 @@ You can also [follow Canonical’s documentation team on Fosstodon](https://foss
 [Ubuntu Code of Conduct]: https://ubuntu.com/community/ethos/code-of-conduct
 [Ubuntu style guide]: https://docs.ubuntu.com/styleguide/en/
 [Canonical contributor license agreement]: https://ubuntu.com/legal/contributors
-[Canonical's Sphinx starter pack]: https://github.com/canonical/sphinx-docs-starter-pack
+[Canonical's Sphinx Stack]: https://github.com/canonical/sphinx-stack
 [Read the Docs]: https://about.readthedocs.com/
 [Sphinx]: https://www.sphinx-doc.org/
 [reStructuredText]: https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
 [MyST Markdown]: https://myst-parser.readthedocs.io/en/latest/
-[starter pack guide]: https://canonical-starter-pack.readthedocs-hosted.com/stable/
-[MyST syntax guide]: https://canonical-starter-pack.readthedocs-hosted.com/stable/reference/myst-syntax-reference/
+[Sphinx Stack documentation]: https://documentation.ubuntu.com/sphinx-stack/latest/
+[MyST syntax guide]: https://documentation.ubuntu.com/sphinx-stack/latest/reference/myst-syntax/
 [Diátaxis]: https://diataxis.fr/
 [woke]: https://github.com/get-woke/woke
 [related issues, pull requests, and repositories]: https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls
