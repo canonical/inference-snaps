@@ -92,9 +92,9 @@ html_context = {
         # TODO: Specify your project's license.
         # For the name, we recommend using the standard shorthand identifier from
         # https://spdx.org/licenses
-        "name": "",
+        "name": "CC-BY-SA-3.0",
         # TODO: Link directly to your project's license statement.
-        "url": "",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0/",
     },
 }
 
