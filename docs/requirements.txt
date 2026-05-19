@@ -1,4 +1,4 @@
-# Canonical theme
+# Canonical theme (still needed for Furo theme and custom templates)
 canonical-sphinx~=0.6
 
 # Extensions previously auto-loaded by canonical-sphinx
@@ -27,6 +27,7 @@ packaging~=26.1
 sphinxcontrib-svg2pdfconverter[CairoSVG]~=2.1
 sphinx-last-updated-by-git~=0.3
 sphinx-sitemap~=2.9
+sphinx-llm~=0.4
 
 # Vale dependencies
 rst2html
