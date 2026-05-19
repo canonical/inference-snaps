@@ -21,7 +21,7 @@ import textwrap
 
 # Project name
 # TODO: Update with the official name of your project or product (e.g., "Ubuntu Server")
-project = "Project"
+project = "Inference Snaps"
 
 # Author name; used in the default copyright statement in the page footer
 author = "Canonical Ltd."
@@ -34,7 +34,7 @@ copyright = f"{datetime.date.today().year}"
 html_title = project + " documentation"
 
 # Documentation website URL
-ogp_site_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+ogp_site_url = "https://documentation.ubuntu.com/inference-snaps/"
 
 # Preview name of the documentation website
 # TODO: To use a different name for the project in previews, update the next line.
@@ -55,7 +55,7 @@ html_context = {
     # TODO: Change to your product website URL, dropping the 'https://' prefix (e.g.,
     #       'ubuntu.com/lxd'). If there's no such website, remove the {{ product_page }}
     #       link from the _templates/header.html file.
-    "product_page": "",
+    # "product_page": "ubuntu.com/ai", ## leaving commented out due to: https://github.com/canonical/inference-snaps/issues/57
     # Product tag image; the orange part of your logo, shown in the page header
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
@@ -72,7 +72,7 @@ html_context = {
     # documentation source files and creating GitHub issues are added at the bottom of
     # each page.
     # TODO: Change to your documentation GitHub repository URL or leave empty.
-    "github_url": "",
+    "github_url": "https://github.com/canonical/inference-snaps",
     # Docs branch in the repo; used in links for viewing the source files
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
@@ -118,7 +118,7 @@ html_context = {
 #######################
 
 # Use RTD canonical URL to ensure duplicate pages have a specific canonical URL
-html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+html_baseurl = 'https://documentation.ubuntu.com/inference-snaps/'
 
 # sphinx-sitemap uses html_baseurl to generate the full URL for each page:
 sitemap_url_scheme = "{link}"
@@ -139,7 +139,7 @@ sitemap_excludes = [
 # Template and asset locations #
 ################################
 
-# html_static_path = ["_static"]
+html_static_path = ["_static"]
 # templates_path = ["_templates"]
 
 #############
@@ -183,7 +183,8 @@ if os.environ.get("READTHEDOCS"):
 
 # A regex list of URLs that are ignored by 'make linkcheck'
 linkcheck_ignore = [
-    "http://127.0.0.1:8000",
+    "http://127.0.0.1:*",
+    "http://localhost:*",
     "https://github.com",
     r"https://matrix\.to/.*",
     "https://example.com",
@@ -211,7 +212,7 @@ linkcheck_retries = 3
 #   - substitution
 #   - deflist
 #   - linkify
-# myst_enable_extensions = set()
+myst_enable_extensions = set(["fieldlist"])
 
 # Custom Sphinx extensions; see
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
@@ -251,9 +252,9 @@ exclude_patterns = [
 # ]
 
 # Adds custom JavaScript files, located remotely or in 'html_static_path'.
-# html_js_files = [
-#     "https://assets.ubuntu.com/v1/287a5e8f-bundle.js",
-# ]
+html_js_files = [
+    "issue_links.js",
+]
 
 # Appends extra markup to the end of every document written in reST
 # rst_epilog = """
@@ -261,7 +262,7 @@ exclude_patterns = [
 
 # Feedback button at the top; enabled by default
 # TODO: Disable the button if your project is unsuitable for public feedback.
-# disable_feedback_button = True
+disable_feedback_button = True
 
 # Your manpage URL
 # TODO: To enable manpage links, uncomment and replace {codename} with required
