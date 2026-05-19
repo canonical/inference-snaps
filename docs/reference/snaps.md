@@ -1,9 +1,11 @@
 (available-snaps)=
+
 # Available snaps
 
 This page contains a list of inference snaps and the available optimizations.
 
 ## DeepSeek R1
+
 [![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1)
 [![deepseek-r1 code][gh-badge]](https://github.com/canonical/deepseek-r1-snap)
 
@@ -23,6 +25,7 @@ This inference snap is optimized for the following hardware:
 {{explore_optimizations}}
 
 ## Gemma3
+
 [![gemma3 snap](https://snapcraft.io/gemma3/badge.svg)](https://snapcraft.io/gemma3)
 [![gemma3 code][gh-badge]](https://github.com/canonical/gemma3-snap)
 
@@ -45,6 +48,7 @@ This inference snap is optimized for the following hardware:
 {{wsl_support}}
 
 ## Gemma4
+
 [![gemma4 snap](https://snapcraft.io/gemma4/badge.svg)](https://snapcraft.io/gemma4)
 [![gemma4 code][gh-badge]](https://github.com/canonical/gemma4-snap)
 
@@ -62,6 +66,7 @@ This inference snap is optimized for the following hardware:
 {{explore_optimizations}}
 
 ## Nemotron 3 Nano
+
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)
 [![nemotron-3-nano source][gh-badge]](https://github.com/canonical/nemotron-3-nano-snap)
 
@@ -80,6 +85,7 @@ The inference snap for Nemotron 3 Nano has been optimized for the following:
 {{explore_optimizations}}
 
 ## Nemotron 3 Nano Omni
+
 [![nemotron-3-nano-omni snap](https://snapcraft.io/nemotron-3-nano-omni/badge.svg)](https://snapcraft.io/nemotron-3-nano-omni)
 [![nemotron-3-nano-omni source][gh-badge]](https://github.com/canonical/nemotron-3-nano-omni-snap)
 
@@ -98,9 +104,9 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 {{explore_optimizations}}
 
 ## Qwen VL
+
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
-
 
 Qwen VL is a Vision Language Model which has the ability to process both visual and textual data.
 The input can be a combination of an image and text, with the output being text-based.

@@ -1,4 +1,5 @@
 (switch-between-engines)=
+
 # How to switch between engines
 
 The engine that best matches your system is automatically selected when you install an inference snap.
@@ -29,6 +30,7 @@ sudo <inference-snap> use-engine <engine-name>
 The selected engine will be downloaded and installed. 
 
 ## Verify selected engine
+
 Once the installation is complete, use the status command to confirm the inference snap is using the new engine:
 
 ```shell

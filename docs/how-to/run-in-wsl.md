@@ -1,4 +1,5 @@
 (run-in-wsl)=
+
 # Run an inference snap in WSL
 
 Inference snaps can be installed in WSL just like on a native Ubuntu installation.
@@ -16,6 +17,7 @@ Refer to your GPU vendor's documentation for instructions on how to do this.
 The rest of this how-to assumes you have followed Microsoft's guide to [install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and create the Ubuntu Linux distribution.
 
 Fully updated and perform a restart of the Ubuntu distribution before continuing:
+
 ```shell
 sudo apt update
 sudo apt upgrade
@@ -28,6 +30,7 @@ For NVIDIA GPUs, you can verify access using the `nvidia-smi` tool in WSL.
 
 For Intel GPUs you can use the `clinfo` tool to check if the GPU is detected.
 This tool is not available by default in WSL, but you can install it along with the Intel {spellexception}`OpenCL` drivers:
+
 ```shell
 sudo apt update
 sudo apt install clinfo intel-opencl-icd
@@ -39,17 +42,20 @@ clinfo
 Install a supported inference snap.
 
 From the list of engines, find the engine with a description that matches your GPU:
+
 ```shell
 <inference-snap> list-engines
 ```
 
 Switch to that engine and restart the snap:
+
 ```shell
 sudo <inference-snap> use-engine <engine-name>
 sudo snap restart <inference-snap>
 ```
 
 You can verify that the engine is running by looking at the snap logs:
+
 ```shell
 sudo snap logs <inference-snap> -f
 ```

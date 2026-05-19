@@ -1,18 +1,24 @@
 # Contributing
+
 We are committed to continuously improving our code and documentation and making it more useful for both ourselves and others.
 
 We welcome community contributions, suggestions, and fixes.
 Please review the following guidelines before contributing to the project.
 
 (contribute-to-our-code)=
+
 ## Contribute to our code
+
 You can help improve our code by:
+
 - Proposing new features or improvements
 - Identifying and fixing bugs
 - Reporting bugs and issues by opening an issue on GitHub
 
 ### Inference snaps code bases
+
 Our projects' source code can be found at:
+
 - [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
 - [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
 - [Gemma3 snap](https://github.com/canonical/gemma3-snap)
@@ -20,13 +26,15 @@ Our projects' source code can be found at:
 - [Nemotron 3 Nano Omni snap](https://github.com/canonical/nemotron-3-nano-omni-snap)
 
 ### Tooling
+
 Inference snaps use the following reusable building blocks:
+
 - [Inference Snaps CLI](https://github.com/canonical/inference-snaps-cli) – the command-line interface at the heart of each inference snap
 - [Inference Snaps Developer Tools](https://github.com/canonical/inference-snaps-dev) – GitHub Actions and utility scripts for building, testing, and publishing inference snaps
 
+## Contribute to our docs
 
 (contribute-to-our-docs)=
-## Contribute to our docs
 You can help improve this documentation by:
 
 - Documenting new features or improvements you contribute to the code.
@@ -35,6 +43,7 @@ You can help improve this documentation by:
 - Reporting documentation issues by opening an issue on GitHub.
 
 ### License and copyright
+
 Unless explicitly stated in the license headers of source files, all contributions to the Inference Snaps documentation are licensed under the [Creative Commons Attribution-Share Alike (CC-BY-SA) 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/). 
 You can also get a copy of this license by sending a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
@@ -42,6 +51,7 @@ All contributors must sign the [Canonical contributor license agreement](https:/
 The author of a change remains the copyright owner of their code (no copyright assignment occurs).
 
 ### Style and language
+
 This documentation is aimed at helping both beginners and experts. 
 We try to use appropriate writing for the subject, use inclusive language, and assume the reader has as little prior knowledge as possible.
 
@@ -72,7 +82,6 @@ The documentation is organized according to the [Diátaxis](https://diataxis.fr/
 
 - For general guidance, refer to the [starter pack guide]
 - For syntax help and guidelines, refer to the [MyST syntax guide]
-
 
 ### Build the docs
 
@@ -176,10 +185,13 @@ For example:
 ```
 git commit -m "docs(ref/kernel-boot): Add example for nohz parameter" -s
 ```
+
 #### Automatic documentation checks
+
 When you submit a pull request, GitHub will automatically run checks on the documentation to verify the spelling, validity of links, correct formatting of Markdown files, and use of inclusive language.
 
 ### Open Documentation Academy
+
 The Inference Snaps project is a proud member of the Canonical Open Documentation Academy (CODA).
 
 The Open Documentation Academy is an initiative that aims to encourage open source contributions from the community.

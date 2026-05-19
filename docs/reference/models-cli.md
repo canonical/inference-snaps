@@ -1,4 +1,5 @@
 (models-cli)=
+
 # Command line interface (CLI)
 
 This document provides a complete reference for the command line interface (CLI).
@@ -19,6 +20,7 @@ The syntax used is:
 To show usage information about any of the commands, set the `--help` flag.
 
 For example:
+
 ```{terminal}
 gemma3 --help
 
@@ -73,6 +75,7 @@ Details shown:
 
 * Service status and active endpoints
 * Currently selected engine
+
 <!-- * Availability of better engines, e.g., after attaching new hardware or installing drivers.
 * Missing drivers for available hardware
 * Resource usage by engines, including cached data -->
@@ -80,10 +83,10 @@ Details shown:
 ### `chat`
 
 Launch the command-line chat application.
+
 ```shell
 <inference-snap> chat
 ```
-
 
 ## Configuration commands
 
@@ -92,6 +95,7 @@ Change configuration options including reading, and setting persistent parameter
 ### `set`
 
 Set configuration values.
+
 ```shell
 <inference-snap> set <key>=<value>
 ```
@@ -109,7 +113,6 @@ The `get` command retrieves configuration values.
 
 If no key is given, all configurations are listed in tabular form.
 
-
 ## Management commands
 
 Manage available engines by listing, inspecting, and selecting them for use.
@@ -117,6 +120,7 @@ Manage available engines by listing, inspecting, and selecting them for use.
 ### `list-engines`
 
 List engines with details including name, description, vendor, and compatibility.
+
 ```shell
 <inference-snap> list-engines
 ```
@@ -129,6 +133,7 @@ For JSON serialization, set `--format=json`.
 ### `show-engine`
 
 Show engine details.
+
 ```shell
 <inference-snap> show-engine <engine> [flags]
 ```
@@ -145,18 +150,19 @@ The command's output includes information such as:
 ### `use-engine`
 
 To switch to a specific engine:
+
 ```shell
 <inference-snap> use-engine <engine>
 ```
 
 To automatically select the best match, considering the hardware and compute capabilities of the host machine:
+
 ```shell
 <inference-snap> use-engine --auto
 ```
 
 Switching engines will trigger the download of engine resources (as snap components).
 A confirmation prompt will appear before downloading.
-
 
 ```{tip}
 The `use-engine --auto` command is usually called during the inference snap installation.
@@ -182,11 +188,13 @@ For JSON serialization, set `--format=json`.
 Remove cached resources of the snap or an engine.
 
 To remove all cached data of the snap, including data of all inactive engines:
+
 ```shell
 <inference-snap> prune-cache 
 ```
 
 To remove cached data of a specific engine:
+
 ```shell
 <inference-snap> prune-cache --engine=<engine>
 ```
