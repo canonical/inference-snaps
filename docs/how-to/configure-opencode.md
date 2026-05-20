@@ -78,7 +78,7 @@ Update the configuration values to match your specific snap:
 Once configured, you can select the inference snap provider and model within OpenCode:
 
 - use `/connect` in OpenCode and select the newly created provider. 
-- if prompted for an API key, use a dummy value, e.g. `local`.
+- if prompted for an API key, use a placeholder value, e.g. `local`.
 
 Refer to the [OpenCode documentation][opencode-docs] for details on using AI features.
 
