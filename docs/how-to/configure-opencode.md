@@ -56,7 +56,7 @@ Add a new provider configuration with the endpoint and model information:
       "api": "openai",
       "name": "Gemma 4 Inference Snap",
       "options": {
-        "baseURL": "http://127.0.0.1:8336/v1"
+        "baseURL": "http://localhost:8336/v1"
       },
       "models": {
         "gemma4-e4b-q4-k-m": {}
@@ -77,8 +77,8 @@ Update the configuration values to match your specific snap:
 
 Once configured, you can select the inference snap provider and model within OpenCode:
 
-- use `/connect` in OpenCode and select the newly created provider. 
-- if prompted for an API key, use a placeholder value, e.g. `local`.
+- Use `/connect` in OpenCode and select the newly created provider.
+- If prompted for an API key, use a placeholder value, e.g. `local`.
 
 Refer to the [OpenCode documentation][opencode-docs] for details on using AI features.
 
