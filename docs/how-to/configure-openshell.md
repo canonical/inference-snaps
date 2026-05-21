@@ -19,7 +19,7 @@ sudo snap install openshell
 
 ## Network configuration
 
-Since OpenShell's sandboxes live inside a confined environement, inference snaps have to be configured to accept network connections from different IP addresses. To allow that, the `http.host` property needs to be modified.
+Since OpenShell's sandboxes live inside a confined environment, inference snaps have to be configured to accept network connections from different IP addresses. To allow that, the `http.host` property needs to be modified.
 
 In this guide we will set it to `0.0.0.0` to allow connections from any IP:
 
