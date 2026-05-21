@@ -50,7 +50,7 @@ Open or create the OpenCode configuration file at `~/.config/opencode/opencode.j
 Add a new provider configuration with the endpoint and model information:
 
 ```{code-block} json
-:emphasize-lines: 3-12  
+:emphasize-lines: 4-13
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
