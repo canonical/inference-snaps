@@ -76,10 +76,9 @@ Update the configuration values to match your specific snap:
 
 ## Use the inference snap with OpenCode
 
-Once configured, you can select the inference snap provider and model within OpenCode:
+Once configured, you can select the inference snap served model within OpenCode.
 
-- Use `/connect` in OpenCode and select the newly created provider.
-- If prompted for an API key, use a placeholder value, e.g. `local`.
+Use `/models` in OpenCode and select the newly created model, e.g. `gemma4-e4b-q4-k-m Gemma 4 Inference Snap`.
 
 Refer to the [OpenCode documentation][opencode-docs] for details on using AI features.
 
