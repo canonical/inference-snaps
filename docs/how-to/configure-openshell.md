@@ -111,18 +111,6 @@ openshell inference set \
 
 Make sure to substitute `gemma4-snap` with the name you've chosen at the previous step, and that the model name matches the one obtained with the `status` command.
 
-Confirm the configuration is correct:
-
-```{terminal}
-:input: openshell inference get
-
-Gateway inference:
-  Provider: gemma4-snap
-  Model:    gemma4-e4b-q4-k-m
-  Timeout:  60s
-  Version:  1
-```
-
 ## Use the inference snap from a sandbox
 
 Once configured, any agent running inside an OpenShell sandbox can reach the inference snap through the `https://inference.local` endpoint.
