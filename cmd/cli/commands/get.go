@@ -21,7 +21,7 @@ func Get(ctx *common.Context) *cobra.Command {
 		Short:             "Print configurations",
 		Long:              "Print one or more configurations",
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: cobra.NoFileCompletions,
+		ValidArgsFunction: cmd.completeKey,
 		RunE:              cmd.run,
 	}
 
@@ -34,6 +34,14 @@ func (cmd *getCommand) run(_ *cobra.Command, args []string) error {
 	} else {
 		return cmd.getValue(args[0])
 	}
+}
+
+func (cmd *getCommand) completeKey(_ *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) > 0 {
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	return common.CompleteConfigKeys(cmd.Config, toComplete, false, nil), cobra.ShellCompDirectiveDefault
 }
 
 func (cmd *getCommand) getValue(key string) error {

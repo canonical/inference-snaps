@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"maps"
 	"strings"
 )
 
@@ -62,9 +61,21 @@ func (c *mockConfig) Get(key string) (map[string]any, error) {
 }
 
 func (c *mockConfig) GetAll() (map[string]any, error) {
-	allValues := make(map[string]any)
-	maps.Copy(allValues, c.values)
-	return allValues, nil
+	result := make(map[string]any)
+
+	for _, confType := range []configType{PackageConfig, EngineConfig, UserConfig} {
+		prefix := string(confType) + "."
+		for fullKey, value := range c.values {
+			if !strings.HasPrefix(fullKey, prefix) {
+				continue
+			}
+
+			key := strings.TrimPrefix(fullKey, prefix)
+			result[key] = value
+		}
+	}
+
+	return result, nil
 }
 
 func (c *mockConfig) Unset(key string, confType configType) error {

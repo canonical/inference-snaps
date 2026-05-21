@@ -28,7 +28,7 @@ func Unset(ctx *common.Context) *cobra.Command {
 		Short:             "Unset configurations",
 		Long:              "Unset a user configuration, reverting to package or engine default. If no default exists for the key, it will be removed entirely.",
 		Args:              cobra.ExactArgs(1),
-		ValidArgsFunction: cobra.NoFileCompletions,
+		ValidArgsFunction: cmd.completeKey,
 		RunE:              cmd.run,
 	}
 
@@ -44,6 +44,14 @@ func (cmd *unsetCommand) run(_ *cobra.Command, args []string) error {
 	}
 
 	return cmd.unsetValue(args[0])
+}
+
+func (cmd *unsetCommand) completeKey(_ *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) > 0 {
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	return common.CompleteConfigKeys(cmd.Config, toComplete, false, nil), cobra.ShellCompDirectiveDefault
 }
 
 func (cmd *unsetCommand) unsetValue(key string) error {
