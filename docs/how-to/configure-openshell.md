@@ -109,7 +109,7 @@ openshell inference set \
     --model gemma4-e4b-q4-k-m
 ```
 
-Make sure to substitute `gemma4-snap` with the name you've chosen at the previous step, and that the model name matches the one obtained with the `status` command.
+Make sure to substitute `gemma4-snap` with the name you've chosen in the previous step, and that the model name matches the one obtained with the `status` command.
 
 ## Use the inference snap from a sandbox
 
