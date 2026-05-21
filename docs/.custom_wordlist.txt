@@ -70,8 +70,8 @@ passthrough
 PCI
 plantuml
 PNG
-Pygments
 proxying
+Pygments
 QEMU
 quantized
 Qwen
