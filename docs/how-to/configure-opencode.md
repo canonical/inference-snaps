@@ -51,6 +51,7 @@ Add a new provider configuration with the endpoint and model information:
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "provider": {
     "gemma4": {
       "api": "openai",
