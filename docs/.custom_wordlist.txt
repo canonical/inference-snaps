@@ -71,6 +71,7 @@ PCI
 plantuml
 PNG
 Pygments
+proxying
 QEMU
 quantized
 Qwen
@@ -78,6 +79,7 @@ readthedocs
 Rockcraft
 rst
 runtimes
+sandboxed
 sitemapindex
 snapcraft
 Snapcraft's
