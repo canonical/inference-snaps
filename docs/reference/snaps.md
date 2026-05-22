@@ -117,6 +117,22 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 
 {{explore_optimizations}}
 
+## Qwen3
+[![qwen3 snap](https://snapcraft.io/qwen3/badge.svg)](https://snapcraft.io/qwen3)
+[![qwen3 source][gh-badge]](https://github.com/canonical/qwen3-snap)
+
+Qwen3 is a Large Language Model supporting text inputs and outputs, with built-in thinking/reasoning mode.
+
+The inference snap for Qwen3 has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | llama.cpp CPU inference |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration |
+
+{{explore_optimizations}}
+
 <!--
 ## Deprecated snaps
 
