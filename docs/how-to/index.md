@@ -15,7 +15,7 @@ manage-snap-services
 use-openai-api
 switch-between-engines
 configure-snap
-troubleshooting/index.md
+override-runtime-environment-variables
 run-in-wsl
 ```
 
