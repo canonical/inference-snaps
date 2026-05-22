@@ -5,7 +5,7 @@
 Overriding runtime environment variables allows you to customize the behavior of the inference snap at runtime.
 This tutorial builds on the concepts introduced in {ref}`Configure inference snaps <configure-inference-snaps>`.
 
-## Setting an env var
+## Setting an environment variable
 
 You can set an environment variable for the inference snap by using the CLI tool.
 Use the following syntax:
@@ -47,9 +47,9 @@ Restart the snap to apply the changes:
 sudo snap restart <inference-snap>
 ```
 
-### Getting supported env vars for llama.cpp
+### Getting supported environment variables for `llama.cpp`
 
-Suppose you want to interact with the llama.cpp engine and check which environment variables it supports.
+Suppose you want to interact with the `llama.cpp` engine and check which environment variables it supports.
 
 ```shell
 sudo <inference-snap> run -- server.sh -h

@@ -77,6 +77,8 @@ readthedocs
 Rockcraft
 rst
 runtimes
+sideload
+sideloading
 sitemapindex
 snapcraft
 Snapcraft's
