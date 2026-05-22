@@ -28,4 +28,5 @@ Use the snap with your IDE:
 ```{toctree}
 :maxdepth: 1
 use-in-ide
+configure-opencode
 ```
