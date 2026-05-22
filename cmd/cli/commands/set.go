@@ -113,7 +113,7 @@ func (cmd *setCommand) setUserConfigs(keyValues map[string]string) error {
 			return fmt.Errorf("setting %q to %q: %v", k, v, err)
 		}
 
-		// User keys are known, except for passthrough keys
+		// User keys are known, except for env keys
 		if !currentKnown[k] || currentValues[k] != v {
 			anyChange = true
 		}
@@ -171,7 +171,7 @@ func (cmd *setCommand) getCurrentValue(key string) (string, bool, error) {
 		return "", false, fmt.Errorf("checking existing keys: %s", err)
 	}
 	currVal, found := currValMap[key]
-	if !found && !strings.HasPrefix(key, "passthrough.") {
+	if !found && !strings.HasPrefix(key, "env.") {
 		return "", false, fmt.Errorf("key %q is not found\n\n%s", key, common.SuggestKeyNotFound(key))
 	}
 

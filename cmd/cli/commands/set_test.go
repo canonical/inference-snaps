@@ -241,7 +241,7 @@ func TestSetValuesRejectsUnknownKeysAtomically(t *testing.T) {
 	}
 }
 
-func TestSetAcceptsUnknownPassthroughKeys(t *testing.T) {
+func TestSetAcceptsUnknownEnvKeys(t *testing.T) {
 	config := storage.NewMockConfig()
 	cmd := setCommand{
 		noRestart: true,
@@ -251,18 +251,18 @@ func TestSetAcceptsUnknownPassthroughKeys(t *testing.T) {
 		},
 	}
 
-	err := cmd.setUserConfigs(map[string]string{"passthrough.custom-key": "custom-value"})
+	err := cmd.setUserConfigs(map[string]string{"env.custom-key": "custom-value"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	values, err := config.Get("passthrough.custom-key")
+	values, err := config.Get("env.custom-key")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if value, found := values["passthrough.custom-key"]; !found || value != "custom-value" {
-		t.Fatalf("expected passthrough.custom-key to be set to custom-value, got %#v", values)
+	if value, found := values["env.custom-key"]; !found || value != "custom-value" {
+		t.Fatalf("expected env.custom-key to be set to custom-value, got %#v", values)
 	}
 }
 

@@ -64,8 +64,8 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	// TODO: add signal handling to intercept SIGTERM and invoke clean() before exiting.
 	defer clean()
 
-	if err := cmd.processPassthroughConfigs(); err != nil {
-		return fmt.Errorf("processing passthrough configs: %v", err)
+	if err := cmd.processEnvConfigs(); err != nil {
+		return fmt.Errorf("processing env configs: %v", err)
 	}
 
 	command := args[0]
@@ -76,31 +76,21 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	return execCmd.Run()
 }
 
-func (cmd *runCommand) getEnvVarsFromPassthroughConfigs(envVars map[string]any) (map[string]any, error) {
-	result := make(map[string]any)
-	const keyPrefix = "passthrough.environment."
-	for k, v := range envVars {
-		if strings.HasPrefix(k, keyPrefix) {
-			envVarName := strings.TrimPrefix(k, keyPrefix)
-			envVarValue := fmt.Sprintf("%v", v)
-			// Convert passthrough keys (my-key) to environment variables names (MY_KEY)
-			envVarName = strings.ToUpper(strings.ReplaceAll(envVarName, "-", "_"))
-			result[envVarName] = envVarValue
-		}
-	}
-
-	return result, nil
-}
-
-func (cmd *runCommand) processPassthroughConfigs() error {
-	passthroughConfigs, err := cmd.Config.Get("passthrough")
+func (cmd *runCommand) processEnvConfigs() error {
+	envConfigs, err := cmd.Config.Get("env")
 	if err != nil {
 		return fmt.Errorf("getting configs: %v", err)
 	}
-	envVars, err := cmd.getEnvVarsFromPassthroughConfigs(passthroughConfigs)
-	if err != nil {
-		return err
+
+	const keyPrefix = "env."
+	envVars := make(map[string]any, len(envConfigs))
+	for k, v := range envConfigs {
+		// Convert env keys (my-key) to environment variable names (MY_KEY)
+		name := strings.TrimPrefix(k, keyPrefix)
+		name = strings.ToUpper(strings.ReplaceAll(name, "-", "_"))
+		envVars[name] = fmt.Sprintf("%v", v)
 	}
+
 	err = utils.SetEnvironmentVariables(envVars)
 	if err != nil {
 		return fmt.Errorf("setting environment variables: %v", err)
