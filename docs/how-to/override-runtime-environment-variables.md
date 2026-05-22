@@ -3,7 +3,7 @@
 # Override runtime environment variables
 
 Overriding runtime environment variables allows you to customize the behavior of the inference snap at runtime.
-This tutorial builds on the concepts introduced in the {ref}`configure snap tutorial <configure-snap>`.
+This tutorial builds on the concepts introduced in {ref}`Configure inference snaps <configure-inference-snaps>`.
 
 ## Setting an env var
 
