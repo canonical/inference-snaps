@@ -29,27 +29,6 @@ sudo gemma4 set http.host=0.0.0.0
 
 Substitute **`gemma4`** with the name of the inference snap you are using. Ensure the inference snap is restarted to apply the change.
 
-Once that is done, note down the IP address of the LXD network interface (default `lxdbr0`), to be used later to configure OpenShell's provider:
-
-```{terminal}
-:input: ip address show lxdbr0
-4: lxdbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
-    link/ether 00:16:3e:75:4b:57 brd ff:ff:ff:ff:ff:ff
-    inet 10.108.167.1/24 scope global lxdbr0
-       valid_lft forever preferred_lft forever
-    inet6 fd42:bc7d:1777:ce29::1/64 scope global 
-       valid_lft forever preferred_lft forever
-```
-
-In this case, `10.108.167.1` is the address to note down.
-
-Alternatively, you can use this command to extract the relevant information:
-
-```{terminal}
-:input: ip -4 address show dev lxdbr0 | awk -F'[ /]' '/inet / {print $6}'
-10.108.167.1
-```
-
 ## Get the inference snap endpoint and model name
 
 Use the inference snap's `status` command to retrieve the OpenAI endpoint URL and model name.
@@ -76,11 +55,6 @@ model:
 
 Note the `openai` endpoint URL and the `model.name` value, as you'll need them for configuration.
 
-```{note}
-OpenShell sandboxes cannot reach `localhost` or `127.0.0.1` on the host directly.
-Use the IP address of the `lxdbr0` interface when building the provider URL, or use the host machine's LAN IP address.
-```
-
 ## Create an OpenShell provider
 
 Create a provider record that points OpenShell to the inference snap's OpenAI-compatible endpoint.
@@ -90,14 +64,19 @@ openshell provider create \
     --name gemma4-snap \
     --type openai \
     --credential OPENAI_API_KEY=not-needed \
-    --config OPENAI_BASE_URL=http://10.108.167.1:8336/v1
+    --config OPENAI_BASE_URL=http://$(hostname).local:8336/v1
 ```
 
 Update the configuration values to match your specific snap:
 
 - **`--name`**: A unique identifier for this provider (e.g., `gemma4-snap`)
 - **`--credential OPENAI_API_KEY`**: A placeholder value; the inference snap does not require authentication
-- **`--config OPENAI_BASE_URL`**: The inference snap's OpenAI endpoint, where the host is the LXD network interface's IP address.
+- **`--config OPENAI_BASE_URL`**: The inference snap's OpenAI endpoint, where the host is replaced with your machine's hostname, obtained by concatenating the output of `hostname` with the string `.local`
+
+```{note}
+OpenShell sandboxes cannot reach `localhost` or `127.0.0.1` on the host directly.
+Use your machine's **hostname** when building the provider URL, or use the host machine's LAN IP address.
+```
 
 ## Set inference routing
 
