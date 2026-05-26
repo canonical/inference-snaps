@@ -1,10 +1,10 @@
 (set-environment-variables)=
-# Set environment variables for the inference snap
+# Environment variables for the inference snap
 
 Runtime environment variables can be used to customize inference snap behavior.
 This guide builds on the concepts introduced in {ref}`Configure inference snaps <configure-inference-snaps>`.
 
-## Setting an environment variable
+## Set environment variables
 
 Set an environment variable with:
 
@@ -27,11 +27,11 @@ sudo <inference-snap> run -- env
 
 ## Examples
 
-### Getting supported environment variables for `llama.cpp`
+### Interact with `llama.cpp` environment variables
 
 For `llama.cpp`, supported variables are documented [here](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#usage).
 
-Example: set the number of layers stored in VRAM with `LLAMA_ARG_N_GPU_LAYERS`:
+For example, it is possible to set the number of layers stored in VRAM with `LLAMA_ARG_N_GPU_LAYERS`:
 
 ```shell
 sudo <inference-snap> set env.LLAMA_ARG_N_GPU_LAYERS=2
