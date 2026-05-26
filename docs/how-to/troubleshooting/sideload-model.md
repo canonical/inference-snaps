@@ -6,7 +6,7 @@ By default, the runtimes point model files that are in snap components.
 This is set internally via environment variables.
 The exact environment variable depends on the packaging and engines.
 
-For example, let's sideload a 12B model into gemma3 snap, for the cpu engine:
+For example, let's sideload a 12B model into `gemma3` snap, for the cpu engine:
 
 Inspect current snap environment variables to find the relevant variables for the model file:
 
