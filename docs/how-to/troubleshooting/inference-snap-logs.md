@@ -13,7 +13,7 @@ sudo snap logs <inference-snap>
 In order to follow the logs, set the `-f` flag:  
 
 ```shell
-sudo snap logs -f <inference-snap>
+sudo snap logs <inference-snap> -f
 ```
 
 To query additional logs, set the `-n` flag with the number of lines, for example:

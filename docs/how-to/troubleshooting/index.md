@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Here is a list of troubleshooting guides to help you resolve common issues when using inference snaps.
+This section lists troubleshooting guides for common inference snap issues.
 
 ## Inspect the snap
 
