@@ -20,10 +20,6 @@ Look for variables `MODEL_FILE`, `MODEL_NAME`, and `MMPROJ_FILE`.
 Then, set environment variables to point to the new model file:
 
 ```shell
-
-Set model-specific variables:
-
-```shell
 sudo gemma4 set env.MODEL_FILE=/path/to/my_model
 sudo gemma4 set env.MODEL_NAME=my_model
 sudo gemma4 set env.MMPROJ_FILE=/path/to/my_model.mmproj
