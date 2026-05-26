@@ -1,23 +1,29 @@
 (sideload-model)=
 # Sideload a model
-Sideloading a model allows you to test a new LLM without modifying the snap's configuration files or rebuilding the snap.
+Sideloading allows testing a different LLM without changing snap configuration files or rebuilding the snap.
 
-To get started, inspect the current environment variables in the snap:
+Inspect current snap environment variables:
 
 ```shell
 sudo <inference-snap> run -- env
 ```
 
 This command prints all environment variables available in the snap.
-Now suppose you want to sideload a model that requires a few environment variables:
+
+Set model-specific variables:
 
 ```shell
 sudo <inference-snap> set env.MODEL_FILE=/path/to/my_model
 sudo <inference-snap> set env.MODEL_NAME=my_model
-sudo <inference-snap> set env.MMPROJ_FILE=/path/to/my_model.mmproj # if the model also requires an mmproj file
 ```
 
-Restart the snap to apply the changes:
+If required by the model, set `MMPROJ_FILE`.
+
+```shell
+sudo <inference-snap> set env.MMPROJ_FILE=/path/to/my_model.mmproj
+```
+
+Restart the snap to apply changes:
 
 ```shell
 sudo snap restart <inference-snap>
