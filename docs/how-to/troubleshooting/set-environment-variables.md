@@ -13,7 +13,7 @@ sudo <inference-snap> set env.<env-var-name>=<value>
 ```
 
 Replace `<env-var-name>` with the variable name. Naming rules:
-- Environment variable names are always uppercase, so `<env-var-name>` is converted to uppercase if needed.
+- Environment variable names are always uppercase, so `<env-var-name>` is converted to uppercase.
 - The only allowed special character is `-`, which is converted to `_` in the actual environment variable name.
 
 For example, `my-env-var` is converted to `MY_ENV_VAR`.
