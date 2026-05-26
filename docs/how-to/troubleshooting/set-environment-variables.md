@@ -1,8 +1,8 @@
 (set-environment-variables)=
-# Environment variables for the inference snap
+# Set environment variables
 
-Runtime environment variables can be used to customize inference snap behavior.
-This guide builds on the concepts introduced in {ref}`Configure inference snaps <configure-inference-snaps>`.
+Inference snaps should typically be customized using {ref}`configurations <configure-inference-snaps>`.  
+Runtime environment variables can be used for debugging and to tweak a snap beyond what is possible via configurations. 
 
 ## Set environment variables
 
@@ -12,14 +12,14 @@ Set an environment variable with:
 sudo <inference-snap> set env.<env-var-name>=<value>
 ```
 
-Replace `<env-var-name>` with the variable name. Naming rules:
-- Environment variable names are always uppercase, so `<env-var-name>` is converted to uppercase.
-- The only allowed special character is `-`, which is converted to `_` in the actual environment variable name.
+Replace `<env-var-name>` with the environment variable name converted from upper case to lowercase. Underscores must be replaced with hyphens.
 
-For example, `my-env-var` is converted to `MY_ENV_VAR`.
+For example, `MY_ENV_VAR` can be set by using `env.my-env-var` key.
 
-New variables can be added, and existing variables can be overridden.
-To list currently set variables, run:
+An environment variable set this way overrides all internal values.  
+To unset and get environment variables, use `unset` and `get` commands.
+
+To list all the internally set environment variables, run:  
 
 ```shell
 sudo <inference-snap> run -- env
@@ -34,5 +34,5 @@ For `llama.cpp`, supported variables are documented [here](https://github.com/gg
 For example, it is possible to set the number of layers stored in VRAM with `LLAMA_ARG_N_GPU_LAYERS`:
 
 ```shell
-sudo <inference-snap> set env.LLAMA_ARG_N_GPU_LAYERS=2
+sudo <inference-snap> set env.llama-arg-n-gpu-layers=2
 ```
