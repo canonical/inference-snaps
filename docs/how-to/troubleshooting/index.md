@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This section lists troubleshooting guides for common inference snap issues.
+Here is a list of troubleshooting guides to help you resolve common issues when using inference snaps.
 
 ## Inspect the snap
 
@@ -14,4 +14,5 @@ inference-snap-logs
 ```{toctree}
 :maxdepth: 1
 set-environment-variables
+sideload-model
 ```
