@@ -1,9 +1,5 @@
 (inference-snap-logs)=
-# Inference Snap Logs
-
-The inference snap provides logs that can help you troubleshoot issues and understand the behavior of the snap.
-
-## View inference snap logs  
+# View inference snap logs  
 To view the logs of the inference snap, use the following command:
 
 ```shell
