@@ -1,12 +1,18 @@
 (set-environment-variables)=
 # Set environment variables
 
-```{versionadded} 2.0.0
+
+```{versionadded} 1.0.0-beta.42
 ```
+
+```{versionchanged} 2.0.0
+`passthrough.environment.` key prefix has been replaced with `env.`
+```
+
 Inference snaps should typically be customized using {ref}`configurations <configure-inference-snaps>`.  
 Runtime environment variables can be used for debugging and to tweak a snap beyond what is possible via configurations. 
 
-## Set environment variables
+## Syntax
 
 Set an environment variable with:
 
@@ -24,7 +30,7 @@ To unset and get environment variables, use `unset` and `get` commands.
 To list all the internally set environment variables, run:  
 
 ```shell
-sudo <inference-snap> run -- env
+sudo <inference-snap> run env
 ```
 
 ## Examples
