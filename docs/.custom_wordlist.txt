@@ -80,9 +80,9 @@ readthedocs
 Rockcraft
 rst
 runtimes
+sandboxed
 sideload
 sideloading
-sandboxed
 sitemapindex
 snapcraft
 Snapcraft's
