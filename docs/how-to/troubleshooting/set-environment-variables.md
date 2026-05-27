@@ -1,6 +1,8 @@
 (set-environment-variables)=
 # Set environment variables
 
+```{versionadded} 2.0.0
+```
 Inference snaps should typically be customized using {ref}`configurations <configure-inference-snaps>`.  
 Runtime environment variables can be used for debugging and to tweak a snap beyond what is possible via configurations. 
 
