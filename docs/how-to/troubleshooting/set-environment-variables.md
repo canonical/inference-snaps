@@ -35,9 +35,9 @@ sudo <inference-snap> run env
 
 ## Examples
 
-### Interact with `llama.cpp` environment variables
+### Override `llama-server` environment variables
 
-For `llama.cpp`, supported variables are documented [here](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#usage).
+For `llama-server`, supported variables are documented [here](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#usage).
 
 For example, it is possible to set the number of layers stored in VRAM with `LLAMA_ARG_N_GPU_LAYERS`:
 
