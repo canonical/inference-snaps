@@ -62,6 +62,8 @@ Ollama
 Omni
 OpenAI
 OpenCode
+OpenShell
+OpenShell's
 OpenVINO
 optimized
 otf
@@ -69,6 +71,7 @@ passthrough
 PCI
 plantuml
 PNG
+proxying
 Pygments
 QEMU
 quantized
@@ -79,6 +82,7 @@ rst
 runtimes
 sideload
 sideloading
+sandboxed
 sitemapindex
 snapcraft
 Snapcraft's
