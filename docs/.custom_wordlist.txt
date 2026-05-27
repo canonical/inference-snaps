@@ -18,6 +18,7 @@ fonts
 Fosstodon
 freefont
 frontend
+gemma
 Gemma
 Gemma's
 GGUF
