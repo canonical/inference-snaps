@@ -29,4 +29,5 @@ Use the snap with your IDE:
 :maxdepth: 1
 use-in-ide
 configure-opencode
+configure-openshell
 ```
