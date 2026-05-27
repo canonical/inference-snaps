@@ -36,9 +36,10 @@ sudo snap connect gemma3:home
 Finally, set the following environment variables:
 
 ```shell
-sudo gemma3 set env.model-file=/home/$USER/models/gemma3-12b/gemma-3-12b-it-q4_0.gguf\
-env.model-name=gemma-3-12b-it-q4-0\
-env.mmproj-file=/home/$USER/models/gemma3-12b/mmproj-F16.gguf  
+sudo gemma3 set \
+  env.model-file=/home/$USER/models/gemma3-12b/gemma-3-12b-it-q4_0.gguf \
+  env.model-name=gemma-3-12b-it-q4-0 \
+  env.mmproj-file=/home/$USER/models/gemma3-12b/mmproj-F16.gguf  
 ```
 
 The `set` command prompts for confirmation and restarts the snap.
