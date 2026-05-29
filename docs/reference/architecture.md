@@ -1,3 +1,4 @@
+(architecture)=
 # Architecture
 
 <!-- Another doc should explain what problem do we solve with this architecture -->

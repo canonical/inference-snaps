@@ -18,34 +18,20 @@ They also provide application developers with a standardized and reliable local 
 
 In this documentation
 ---------------------
+=================================        =========================================================
 
-.. grid:: 1 1 2 2
+=================================        =========================================================
+**Installing and configuring:**          :ref:`Install Qwen VL snap<qwen-vl-tutorial>` • :ref:`Switch engines <switch-between-engines>` • :ref:`Use OpenAI API<use-openai-api>`
+**Hardware drivers:**                    :ref:`Intel GPU <install-intel-gpu-drivers>` • :ref:`Intel NPU <install-intel-npu-drivers>` • :ref:`Nvidia GPU <install-nvidia-gpu-drivers>`
+**Building blocks:**                     :ref:`Snap architecture <architecture>` • :ref:`Engines <engines>` • :ref:`The command line interface<models-cli>`
+=================================        =========================================================
 
-   .. grid-item-card:: Tutorials
-      :link: /tutorial/index
-      :link-type: doc
-
-      **Get started** - a hands-on introduction for new users.
-
-   .. grid-item-card:: How-to guides
-      :link: /how-to/index
-      :link-type: doc
-
-      **Step-by-step** guides covering key operations and common tasks
-
-.. grid:: 1 1 2 2
-
-   .. grid-item-card:: Reference
-      :link: /reference/index
-      :link-type: doc
-
-      **Technical information** - specifications, user manuals, and architecture
-
-   .. grid-item-card:: Explanations
-      :link: /explanations/index
-      :link-type: doc
-
-      **Concepts** - discussion and clarification of key topics
+How this documentation is organized
+-----------------------------------
+- The :ref:`tutorial<tutorials-index>` is a hands-on introduction to inference snaps for new users.
+- :ref:`How-to guides<how-to-guides-index>` cover common tasks and key operations. These assume you have basic familiarity with inference snaps. 
+- The :ref:`reference<reference-index>` section provides specifications and architectures.
+- :ref:`Explanations<explanations-index>` contain detailed discussions on key concepts in the development and use of inference snaps.
    
 Project and community
 ---------------------
