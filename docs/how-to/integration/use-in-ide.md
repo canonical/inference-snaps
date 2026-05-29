@@ -1,4 +1,5 @@
 (use-in-ide)=
+
 # Use an inference snap from your favorite IDE
 
 Inference snaps provide an API that can be integrated with other software.

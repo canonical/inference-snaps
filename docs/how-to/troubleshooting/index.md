@@ -2,7 +2,6 @@
 
 Use these guides to diagnose issues, inspect runtime behavior, and adjust your snap environment.
 
-
 ## Inspect the snap
 
 ```{toctree}

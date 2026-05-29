@@ -17,6 +17,7 @@ The {command}`snapcraft` utility is used to create snaps.
 If you don't have it installed, refer to this [setup guide](https://documentation.ubuntu.com/snapcraft/stable/how-to/set-up-snapcraft/).
 
 You may also use {command}`tree`, {command}`curl`, and {command}`jq` which you can install with:
+
 ```shell
 sudo apt update
 sudo apt install tree curl jq
@@ -27,20 +28,25 @@ sudo apt install tree curl jq
 The [{file}`snapcraft.yaml` file](https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/) is where the snap's packaging logic is defined.
 
 Create and enter a new directory for the project:
+
 ```shell
 mkdir gemma3-snap
 cd gemma3-snap
 ```
 
 Use the following command to create a template in an initial project tree:
+
 ```shell
 snapcraft init
 ```
 
 This will create a {file}`snap` directory with a {file}`snapcraft.yaml` file inside:
+
 ```{terminal}
 :dir: gemma3-snap
-:input: tree .
+
+tree .
+
 .
 └── snap
     └── snapcraft.yaml
@@ -57,6 +63,7 @@ Add your username to it as a suffix to create a unique snap name that can be upl
 In this tutorial, `jane` is used as a placeholder for your username.
 
 The snapcraft file may look like this:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :caption: snap/snapcraft.yaml
 :language: yaml
@@ -64,10 +71,10 @@ The snapcraft file may look like this:
 :end-before: end metadata
 ```
 
-
 ## Craft the snap
 
 You need to extend the snapcraft file by adding:
+
 - `parts`: the build logic
 - `apps`: commands and services 
 - `components`: optional building blocks
@@ -81,6 +88,7 @@ You also need to add a few supporting scripts.
 It is useful to set some variables globally. Do this only for variables that are read from different parts of the snap's runtime environment.
 
 Add the following to the snapcraft file for the common environment variables:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :caption: snap/snapcraft.yaml
 :language: yaml
@@ -96,32 +104,38 @@ The CLI provides hardware detection, engine selection, component installation, s
 An open source implementation of the CLI is available [on GitHub](https://github.com/canonical/inference-snaps-cli). Add it to your snap.
 
 Create a `parts` section in the snapcraft file:
+
 ```yaml
 parts:
   ...
 ```
 
 Add a *part* in the snapcraft file to build and include the CLI:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start cli part
 :end-before: end part
 ```
+
 This will add `modelctl` command line tool to the snap package.
 You will use it inside the snap for various tasks, such as engine selection and configuration.
 
 Then, create an `apps` entry in the snapcraft file:
+
 ```yaml
 apps:
   ...
 ```
 
 Add the following *app*:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start cli app
 :end-before: end app
 ```
+
 This app exposes the `modelctl` command line tool to the user, under the snap's name.
 
 ### Components
@@ -140,6 +154,7 @@ A good first model to use is the [`gemma-3-1b-it-qat-q4_0-gguf`](https://hugging
 On that page, download the {file}`gemma-3-1b-it-q4_0.gguf` file (the file name differs slightly from the model name).
 
 Create a `components` directory with two subdirectories:
+
 - `model-1b-it-q4-0-gguf` for the model weights
 - `llama-cpp` for the runtime
 
@@ -153,12 +168,14 @@ Move the downloaded GGUF file to the model directory.
 The {spellexception}`llama.cpp`'s HTTP server binary will be built from source during packaging and placed in the expected location. More on that later in the same section.
 
 Add the following configuration file for the model:
+
 ```{literalinclude} create-inference-snap/components/model-1b-it-q4-0-gguf/component.yaml
 :caption: {spellexception}`components/model-1b-it-q4-0-gguf/component.yaml`
 :language: yaml
 ```
 
 And the following for the runtime:
+
 ```{literalinclude} create-inference-snap/components/llama-cpp/component.yaml
 :caption: {spellexception}`components/llama-cpp/component.yaml`
 :language: yaml
@@ -167,12 +184,14 @@ And the following for the runtime:
 The variables set above per component are passed on to the execution environment.
 
 Finally, add a wrapper script for starting the server provided by this component:
+
 ```{literalinclude} create-inference-snap/components/llama-cpp/server
 :caption: {spellexception}`components/llama-cpp/server`
 :language: bash
 ```
 
 Make the script executable:
+
 ```shell
 chmod +x components/llama-cpp/server
 ```
@@ -180,9 +199,12 @@ chmod +x components/llama-cpp/server
 The above script loads the configurations and starts the HTTP server.
 
 At this point, the {file}`components` directory should look like this:
+
 ```{terminal}
 :dir: gemma3-snap
-:input: tree components/
+
+tree components/
+
 components/
 ├── llama-cpp
 │   ├── component.yaml
@@ -198,6 +220,7 @@ You've created a couple of component directories, but the snap doesn't know anyt
 
 Edit the snapcraft file.
 Define one *component* for the runtime, and another one for the model weights:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start components
@@ -221,6 +244,7 @@ Add a new *part* to copy the local files from the {file}`components` directory t
 `(component/<component name>)` is a special syntax to reference a defined component.
 
 Furthermore, add a *part* to build {spellexception}`llama.cpp` from source and move the artifacts to the corresponding component:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start llama-cpp part
@@ -243,17 +267,20 @@ Create an {file}`engines` directory, with a subdirectory for an engine named `ge
 
 Inside, create a wrapper script that starts the runtime for this engine. 
 This runs the server program provided by the `llama-cpp` component:
+
 ```{literalinclude} create-inference-snap/engines/generic-cpu/server
 :caption: engines/generic-cpu/server
 :language: bash
 ```
 
 Make this script executable:
+
 ```shell
 chmod +x engines/generic-cpu/server
 ```
 
 In the same directory, create an {file}`engine.yaml` file that defines the engine:
+
 ```{literalinclude} create-inference-snap/engines/generic-cpu/engine.yaml
 :caption: engines/generic-cpu/engine.yaml
 :language: yaml
@@ -263,8 +290,8 @@ That is the {ref}`engine manifest file <engine-manifest>`.
 It describes the engine as well as its hardware and software requirements.
 The manifest file can be extended to restrict the hardware requirements and also set default configurations for the runtime.
 
-
 Add another *part* in snapcraft file to include the {file}`engines` directory in the snap:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start engines part
@@ -277,17 +304,20 @@ Now, you need to expose the engine's server to the snap.
 The snap should run the server (provided by the selected engine) as a background service.
 
 In a top level {file}`scripts` directory, add a wrapper script that abstracts away the engine selection and runs the server script of the selected engine:
+
 ```{literalinclude} create-inference-snap/scripts/server.sh
 :caption: scripts/server.sh
 :language: bash
 ``` 
 
 Add executable permission to the script:
+
 ```shell
 chmod +x scripts/server.sh
 ```
 
 Include the directory in the package, via a new *part*:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start scripts part
@@ -295,11 +325,13 @@ Include the directory in the package, via a new *part*:
 ```
 
 Then, add a server *app* that runs {file}`server.sh` as a background service:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start server app
 :end-before: end app
 ```
+
 The above goes to the `apps` section of the snapcraft file.
 
 ### The install hook
@@ -309,6 +341,7 @@ In snaps, the [install hook](https://snapcraft.io/docs/reference/development/sup
 
 The install hook should trigger hardware detection and install the best matching components and engine.
 Do this using the `modelctl` CLI tool included earlier:
+
 ```{literalinclude} create-inference-snap/snap/hooks/install
 :caption: snap/hooks/install
 :language: bash
@@ -318,6 +351,7 @@ This script gets added automatically to the snap if placed in the {file}`snap/ho
 However, you need to grant it the necessary permissions to detect hardware.
 
 Add the following to the snapcraft file to declare the required interface for the `install` hook:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start hooks
@@ -327,6 +361,7 @@ Add the following to the snapcraft file to declare the required interface for th
 ### Licensing
 
 Finally, add all license files to the snap. E.g. to add Gemma's license, add the following *part*:
+
 ```{literalinclude} create-inference-snap/snap/snapcraft.yaml
 :language: yaml
 :start-after: start gemma license part
@@ -338,6 +373,7 @@ Finally, add all license files to the snap. E.g. to add Gemma's license, add the
 With the crafting completed, it's time to pack and test the snap.
 
 Pack the snap:
+
 ```shell
 snapcraft pack
 ```
@@ -348,6 +384,7 @@ This will create the following files:
 - `gemma3-jane+llama-cpp.comp` - component package for the runtime
 
 Install the snap and the components:
+
 ```shell
 sudo snap install --dangerous *.snap && \
 sudo snap install --dangerous *.comp
@@ -357,31 +394,40 @@ The server will fail to start initially because the snap lacks permission to det
 You can verify this by checking the logs: `snap logs gemma3-jane`.
 
 Grant the snap access to the `hardware-observe` interface:
+
 ```shell
 sudo snap connect gemma3-jane:hardware-observe
 ```
 
 Now, request auto selection of the engine:
+
 ```{terminal}
 :dir: gemma3-snap
-:input: sudo gemma3-jane use-engine --auto
+
+sudo gemma3-jane use-engine --auto
+
 Evaluating engines for optimal hardware compatibility:
 ✔ generic-cpu: compatible, score=12
 Selected engine: generic-cpu
 Engine successfully changed to "generic-cpu"
 ```
+
 As the output shows, the snap has detected that `generic-cpu` engine is compatible with the host machine. 
 If there were other engines, it would have picked the best matching one.
 
 Start the server:
+
 ```shell
 sudo snap start gemma3-jane
 ```
 
 Next, check the logs again and make sure the server started successfully:
+
 ```{terminal}
 :dir: gemma3-snap
-:input: sudo snap logs gemma3-jane
+
+sudo snap logs gemma3-jane
+
 ...
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: main: server is listening on http://127.0.0.1:9090 - starting the main loop
 2025-11-13T15:34:52+01:00 gemma3-jane.server[241059]: srv  update_slots: all slots are idle
@@ -390,6 +436,7 @@ Next, check the logs again and make sure the server started successfully:
 Looks like the server is up and running!
 
 Submit a chat completion request using {command}`curl`:
+
 ```shell
  curl --silent --show-error http://localhost:9090/v1/chat/completions   --data '{
     "max_tokens": 300,
@@ -401,6 +448,7 @@ Submit a chat completion request using {command}`curl`:
 ```
 
 This should give you a response like this:
+
 ```json
 {
   "choices": [
@@ -438,6 +486,7 @@ Submit a request to be added to the component upload allow-list by posting in th
 There is no subcategory for component uploads, so just post without picking one.
 
 Once you have the permission, upload the snap and its components:
+
 ```shell
 snapcraft upload gemma3-jane_v3_amd64.snap \
   --component model-1b-it-q4-0-gguf=gemma3-jane+model-1b-it-q4-0-gguf.comp \
@@ -448,15 +497,19 @@ snapcraft upload gemma3-jane_v3_amd64.snap \
 The snap is now in the store!
 
 Remove the locally installed snap and install it from the store, in developer mode:
+
 ```shell
 sudo snap remove gemma3-jane
 sudo snap install --devmode gemma3-jane --edge
 ```
 
 The snap should automatically select `generic-cpu` this time:
+
 ```{terminal}
 :dir: gemma3-snap
-:input: gemma3-jane status
+
+gemma3-jane status
+
 engine: generic-cpu
 endpoints:
     openai: http://localhost:9090/v1
@@ -468,6 +521,7 @@ This isn't ideal for production use.
 
 If you install the snap in normal (confined) mode at this point, it will install but skip hardware detection and engine selection.
 You can connect the [hardware-observe interface](https://snapcraft.io/docs/reference/interfaces/hardware-observe-interface/) and then run the auto engine selection manually:
+
 ```shell
 sudo snap install gemma3-jane --edge
 sudo snap connect gemma3-jane:hardware-observe

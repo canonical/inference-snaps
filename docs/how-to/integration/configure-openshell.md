@@ -1,4 +1,5 @@
 (configure-openshell)=
+
 # Use inference snaps in OpenShell
 
 [OpenShell][openshell-docs] is NVIDIA's safe, private runtime for autonomous AI agents. It provides sandboxed execution environments with controlled inference routing, keeping AI traffic private by proxying model requests through a local gateway.

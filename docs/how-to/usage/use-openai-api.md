@@ -1,4 +1,5 @@
 (use-openai-api)=
+
 # Use an inference snap via its OpenAI API
 
 Some inference snaps expose an [OpenAI](https://github.com/openai/openai-openapi) compliant network API.
@@ -42,7 +43,6 @@ sudo snap restart <inference-snap>
 
 To access the API from another machine in the network, in the URL, use the IP address or hostname of the machine where the inference snap is running instead of `localhost`.
 
-
 ## Look up model name
 
 Some servers require you to specify the exact model name when querying them via the API.
@@ -53,6 +53,7 @@ curl <api-url>/models
 ```
 
 The response will look similar to the following, with the `id` field containing the model name:
+
 ```json
 {
   "object": "list",
@@ -66,7 +67,6 @@ The response will look similar to the following, with the `id` field containing 
   ]
 }
 ```
-
 
 ## Test API access with `curl`
 
@@ -84,6 +84,7 @@ curl <api-url>/chat/completions \
 ```
 
 This should return a JSON response looking similar to this:
+
 ```json
 {
   "choices": [
