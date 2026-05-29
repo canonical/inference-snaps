@@ -35,7 +35,7 @@ copyright = f"{datetime.date.today().year}"
 html_title = project + " documentation"
 
 # Documentation website URL
-ogp_site_url = "https://documentation.ubuntu.com/inference-snaps/"
+ogp_site_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 
 # Preview name of the documentation website
 # TODO: To use a different name for the project in previews, update the next line.
@@ -119,7 +119,7 @@ html_context = {
 #######################
 
 # Use RTD canonical URL to ensure duplicate pages have a specific canonical URL
-html_baseurl = 'https://documentation.ubuntu.com/inference-snaps/'
+html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 
 # sphinx-sitemap uses html_baseurl to generate the full URL for each page:
 sitemap_url_scheme = "{link}"
