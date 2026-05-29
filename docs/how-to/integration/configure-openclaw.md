@@ -1,5 +1,6 @@
 (configure-openclaw)=
-# Configure OpenClaw for use with inference snaps
+
+# Use inference snaps in OpenClaw
 
 Inference snap that support tool calling can be used with local agents like OpenClaw, {spellexception}`PicoClaw`, {spellexception}`NemoClaw`, etc.
 Refer to {ref}`available snaps <available-snaps>` to see which inference snaps support tool calling.
