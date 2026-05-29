@@ -1,6 +1,6 @@
 (manage-snap-services)=
 
-# How to manage inference snap services
+# Manage inference snap services
 
 All inference snaps contain a server application.
 The server is started as a service automatically after installation.

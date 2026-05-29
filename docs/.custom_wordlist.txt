@@ -19,6 +19,7 @@ fonts
 Fosstodon
 freefont
 frontend
+gemma
 Gemma
 Gemma's
 GGUF
@@ -62,6 +63,9 @@ Nvidia
 Ollama
 Omni
 OpenAI
+OpenCode
+OpenShell
+OpenShell's
 OpenVINO
 optimized
 otf
@@ -69,6 +73,7 @@ passthrough
 PCI
 plantuml
 PNG
+proxying
 Pygments
 QEMU
 quantized
@@ -77,6 +82,9 @@ readthedocs
 Rockcraft
 rst
 runtimes
+sandboxed
+sideload
+sideloading
 sitemapindex
 snapcraft
 Snapcraft's
