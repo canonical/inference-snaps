@@ -1,5 +1,5 @@
 (configure-openwebui)=
-# Configure Open WebUI for use with inference snaps
+# Use inference snaps in Open WebUI
 
 [Open WebUI][open-webui-docs] provides a convenient web interface for interacting with inference snaps that have an OpenAI endpoint.
 This guide will help you set up and use an inference snap with Open WebUI, hosted on the same machine.

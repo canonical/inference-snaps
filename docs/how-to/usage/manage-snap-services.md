@@ -1,5 +1,5 @@
 (manage-snap-services)=
-# How to manage inference snap services
+# Manage inference snap services
 
 
 All inference snaps contain a server application.

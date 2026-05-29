@@ -1,34 +1,23 @@
 # How-to guides
 
-These guides will walk you through the processes of configuring, deploying, and modifying inference snaps.
+These guides will walk you through the processes of installing, using, and integrating with inference snaps.
 
-Install required drivers:
+Prepare your environment and set up inference snaps:
 ```{toctree}
-:maxdepth: 1
-install-drivers
+:maxdepth: 2
+Installation <setup/index.md>
 ```
 
 Use the snap:
 ```{toctree}
-:maxdepth: 1
-manage-snap-services
-use-openai-api
-switch-between-engines
-configure-snap
-troubleshooting/index.md
-run-in-wsl
+:maxdepth: 2
+Usage <usage/index.md>
+Troubleshooting <troubleshooting/index.md>
 ```
 
-Use the snap with web clients:
+Integrate with inference snaps:
 ```{toctree}
-:maxdepth: 1
-configure-openwebui
+:maxdepth: 2
+Integration <integration/index.md>
 ```
 
-Use the snap with your IDE:
-```{toctree}
-:maxdepth: 1
-use-in-ide
-configure-opencode
-configure-openshell
-```

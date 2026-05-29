@@ -1,6 +1,7 @@
-# Troubleshooting
+# Troubleshooting inference snaps
 
-This section lists troubleshooting guides for common inference snap issues.
+Use these guides to diagnose issues, inspect runtime behavior, and adjust your snap environment.
+
 
 ## Inspect the snap
 

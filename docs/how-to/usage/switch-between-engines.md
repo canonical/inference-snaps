@@ -1,5 +1,5 @@
 (switch-between-engines)=
-# How to switch between engines
+# Switch between engines
 
 The engine that best matches your system is automatically selected when you install an inference snap.
 However, you can switch to another engine after installation.
