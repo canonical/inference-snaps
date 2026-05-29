@@ -11,7 +11,7 @@ require (
 	github.com/go-test/deep v1.1.1
 	github.com/jaypipes/pcidb v1.1.1
 	github.com/olekukonko/tablewriter v1.1.4
-	github.com/openai/openai-go/v3 v3.34.0
+	github.com/openai/openai-go/v3 v3.37.0
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/sys v0.43.0
 	golang.org/x/term v0.42.0
