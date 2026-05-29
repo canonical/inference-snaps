@@ -124,8 +124,8 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 		}
 
 		// Find max name and vendor lengths
-		engineNameMaxLen = max(engineNameMaxLen, len(engine.Name))
-		engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor))
+		engineNameMaxLen = max(engineNameMaxLen, len(engine.Name), len(headerRow[0]))
+		engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor), len(headerRow[1]))
 
 		row := []string{engine.Name, engine.Vendor, engine.Description}
 
