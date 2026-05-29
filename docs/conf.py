@@ -169,8 +169,10 @@ rediraffe_dir_only = True
 # <first sentence of home page>".
 llms_txt_description = textwrap.dedent(
     """\
-    This is the documentation for the Sphinx Stack, a template repository that helps you
-    set up, build, and publish Sphinx documentation.
+    This is the documentation for Inference Snaps &mdash; generative AI models that are packaged and optimized for 
+    efficient performance on local hardware.
+    They automatically detect your host machine's hardware and install runtime and model weight optimizations that best 
+    match its capabilities.
     """
 )
 
