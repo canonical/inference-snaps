@@ -1,0 +1,46 @@
+(set-environment-variables)=
+
+# Set environment variables
+
+```{versionadded} 1.0.0-beta.42
+```
+
+```{versionchanged} 2.0.0
+`passthrough.environment.` key prefix has been replaced with `env.`
+```
+
+Inference snaps should typically be customized using {ref}`configurations <configure-inference-snaps>`.  
+Runtime environment variables can be used for debugging and to tweak a snap beyond what is possible via configurations. 
+
+## Syntax
+
+Set an environment variable with:
+
+```shell
+sudo <inference-snap> set env.<env-var-name>=<value>
+```
+
+Replace `<env-var-name>` with the environment variable name converted from upper case to lowercase. Underscores must be replaced with hyphens.
+
+For example, `MY_ENV_VAR` can be set by using `env.my-env-var` key.
+
+An environment variable set this way overrides all internal values.  
+To unset and get environment variables, use `unset` and `get` commands.
+
+To list all the internally set environment variables, run:  
+
+```shell
+sudo <inference-snap> run env
+```
+
+## Examples
+
+### Override `llama-server` environment variables
+
+For `llama-server`, supported variables are documented [here](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#usage).
+
+For example, it is possible to set the number of layers stored in VRAM with `LLAMA_ARG_N_GPU_LAYERS`:
+
+```shell
+sudo <inference-snap> set env.llama-arg-n-gpu-layers=2
+```
