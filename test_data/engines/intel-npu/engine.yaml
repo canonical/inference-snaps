@@ -1,7 +1,6 @@
 name: intel-npu
 description: Intel NPUs
 vendor: Intel Corporation
-grade: stable
 devices:
   allof:
     - type: cpu

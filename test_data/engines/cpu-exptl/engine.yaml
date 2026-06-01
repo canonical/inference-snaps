@@ -1,7 +1,7 @@
-name: cpu-devel
-description: Requires any CPU but is grade devel
+name: cpu-exptl
+description: Requires any CPU but it is experimental
 vendor: Canonical Ltd
-grade: devel
+experimental: true
 devices:
   anyof:
     - type: cpu

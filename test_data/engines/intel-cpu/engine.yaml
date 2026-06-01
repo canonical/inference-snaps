@@ -1,7 +1,7 @@
 name: intel-cpu
 description: Use Intel CPUs
 vendor: Intel Corporation
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

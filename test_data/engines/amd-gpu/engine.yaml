@@ -1,7 +1,7 @@
 name: amd-gpu
 description: AMD specific engine targeting only one microarchitecture.
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

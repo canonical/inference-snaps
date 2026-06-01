@@ -1,7 +1,6 @@
 name: cuda-generic
 description: Nvidia GPUs using CUDA. All major CUDA versions are targeted.
 vendor: Canonical Ltd
-grade: stable
 devices:
   allof:
     - type: cpu

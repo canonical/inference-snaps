@@ -1,7 +1,7 @@
 name: cpu-avx1
 description: Legacy CPUs with only SSE4.2 (2008) and AVX (2011)
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   anyof:
     - type: cpu

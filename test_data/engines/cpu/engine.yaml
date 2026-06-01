@@ -1,7 +1,7 @@
 name: cpu
 description: General CPU engine
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   anyof:
     - type: cpu

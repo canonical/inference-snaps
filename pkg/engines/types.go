@@ -24,10 +24,10 @@ type ScoredManifest struct {
 }
 
 type Manifest struct {
-	Name        string `yaml:"name" json:"name"`
-	Description string `yaml:"description" json:"description"`
-	Vendor      string `yaml:"vendor" json:"vendor"`
-	Grade       string `yaml:"grade" json:"grade"`
+	Name         string `yaml:"name" json:"name"`
+	Description  string `yaml:"description" json:"description"`
+	Vendor       string `yaml:"vendor" json:"vendor"`
+	Experimental *bool  `yaml:"experimental,omitempty" json:"experimental,omitempty"`
 
 	Devices   Devices `yaml:"devices" json:"devices"`
 	Memory    *string `yaml:"memory,omitempty" json:"memory"`
@@ -79,6 +79,10 @@ type Device struct {
 }
 
 type Configurations map[string]interface{}
+
+func (m Manifest) IsExperimental() bool {
+	return m.Experimental != nil && *m.Experimental
+}
 
 func (c CompatibilityReport) EngineCompatible() bool {
 	return c.CompatibleMemory && c.CompatibleDisk && c.CompatibleDevices

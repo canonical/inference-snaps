@@ -1,7 +1,7 @@
 name: intel-gpu
 description: Modern Intel GPUs (>=gen 13)
 vendor: Intel Corporation
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

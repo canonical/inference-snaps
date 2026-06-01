@@ -11,14 +11,14 @@ import (
 func templateManifest() Manifest {
 	memDisk := "1"
 	manifest := Manifest{
-		Name:        "test",
-		Description: "test",
-		Vendor:      "test",
-		Grade:       "stable",
-		Devices:     Devices{},
-		Memory:      &memDisk,
-		DiskSpace:   &memDisk,
-		Components:  nil,
+		Name:         "test",
+		Description:  "test",
+		Vendor:       "test",
+		Experimental: nil,
+		Devices:      Devices{},
+		Memory:       &memDisk,
+		DiskSpace:    &memDisk,
+		Components:   nil,
 		Configurations: map[string]interface{}{
 			"engine": "test",
 			"model":  "test",
@@ -105,47 +105,27 @@ func TestVendorRequired(t *testing.T) {
 
 }
 
-func TestGradeRequired(t *testing.T) {
-	manifest := templateManifest()
-	manifest.Grade = ""
-
-	err := manifest.validate("test")
-	if err == nil {
-		t.Fatal("grade is required")
-	}
-	t.Log(err)
-
-}
-
-func TestGradeValid(t *testing.T) {
+func TestExperimentalValid(t *testing.T) {
 	manifest := templateManifest()
 
-	t.Run("grade stable", func(t *testing.T) {
-		manifest.Grade = "stable"
+	t.Run("experimental false", func(t *testing.T) {
+		value := false
+		manifest.Experimental = &value
 
 		err := manifest.validate("test")
 		if err != nil {
-			t.Fatalf("grade stable should be valid: %v", err)
+			t.Fatalf("experimental false should be valid: %v", err)
 		}
 	})
-	t.Run("grade devel", func(t *testing.T) {
-		manifest.Grade = "devel"
+	t.Run("experimental true", func(t *testing.T) {
+		value := true
+		manifest.Experimental = &value
 
 		err := manifest.validate("test")
 		if err != nil {
-			t.Fatalf("grade devel should be valid: %v", err)
+			t.Fatalf("experimental true should be valid: %v", err)
 		}
 	})
-	t.Run("grade invalid", func(t *testing.T) {
-		manifest.Grade = "invalid-grade"
-
-		err := manifest.validate("test")
-		if err == nil {
-			t.Fatal("grade invalid")
-		}
-		t.Log(err)
-	})
-
 }
 
 func TestMemoryValues(t *testing.T) {

@@ -117,8 +117,8 @@ func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.Scor
 					fmt.Printf("  - %s\n", reason)
 				}
 			}
-		} else if engine.Grade != "stable" {
-			fmt.Printf("• %s: devel, score=%d\n", engine.Name, engine.Score)
+		} else if engine.IsExperimental() {
+			fmt.Printf("• %s: experimental, score=%d\n", engine.Name, engine.Score)
 		} else {
 			fmt.Printf("✔ %s: compatible, score=%d\n", engine.Name, engine.Score)
 		}

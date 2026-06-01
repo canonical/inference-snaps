@@ -1,7 +1,7 @@
 name: rocm-generic
 description: AMD GPUs using ROCm. All major ROCm versions are targeted.
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

@@ -85,13 +85,6 @@ func (manifest Manifest) validate(expectedEngineName string) error {
 		return fmt.Errorf("required field is not set: vendor")
 	}
 
-	if manifest.Grade == "" {
-		return fmt.Errorf("required field is not set: grade")
-	}
-	if manifest.Grade != "stable" && manifest.Grade != "devel" {
-		return fmt.Errorf("grade should be 'stable' or 'devel'")
-	}
-
 	if manifest.Memory != nil {
 		_, err := utils.StringToBytes(*manifest.Memory)
 		if err != nil {

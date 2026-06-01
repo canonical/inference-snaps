@@ -1,7 +1,7 @@
 name: example-memory
 description: Legacy CPUs, offering full accuracy but very high memory usage
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   anyof:
     - type: cpu

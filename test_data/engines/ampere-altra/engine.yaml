@@ -1,7 +1,7 @@
 name: ampere-altra
 description: Test ampere selection
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

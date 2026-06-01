@@ -91,7 +91,7 @@ $ inference-snaps-cli show-machine --format=json | inference-snaps-cli debug sel
 ✅ cpu-avx1 - compatible, score = 14
 ✅ cpu-avx2 - compatible, score = 17
 ❌ cpu-avx512 - not compatible: required cpu device not found
-🟠 cpu-devel - score = 12, grade = devel
+🟠 cpu-exptl - score = 12, experimental
 ✅ cuda-generic - compatible, score = 107
 ✅ example-memory - compatible, score = 18
 ✅ intel-cpu - compatible, score = 18

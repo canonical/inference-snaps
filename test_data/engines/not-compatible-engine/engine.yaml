@@ -1,7 +1,7 @@
 name: not-compatible-engine
 description: This test engine is designed to be not compatible with any machine
 vendor: Canonical Ltd
-grade: stable
+experimental: false
 devices:
   allof:
     - type: cpu

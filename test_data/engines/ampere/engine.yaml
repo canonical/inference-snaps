@@ -1,7 +1,6 @@
 name: ampere
 description: Test ampere selection
 vendor: Canonical Ltd
-grade: stable
 devices:
   allof:
     - type: cpu

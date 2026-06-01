@@ -11,6 +11,13 @@ import (
 
 const ManifestFilename = "engine.yaml"
 
+func normalizeExperimentalField(manifest *Manifest) {
+	// Keep only explicit true; treat false as unset for consistent user-facing output.
+	if manifest.Experimental == nil || !*manifest.Experimental {
+		manifest.Experimental = nil
+	}
+}
+
 func LoadManifests(manifestsDir string) ([]Manifest, error) {
 	var manifests []Manifest
 
@@ -38,6 +45,8 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 			return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 		}
 
+		normalizeExperimentalField(&manifest)
+
 		manifests = append(manifests, manifest)
 	}
 	return manifests, nil
@@ -61,6 +70,8 @@ func LoadManifest(manifestsDir, engineName string) (*Manifest, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 	}
+
+	normalizeExperimentalField(&manifest)
 
 	return &manifest, nil
 }
