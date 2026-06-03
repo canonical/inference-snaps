@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"net"
 	"net/url"
 	"strings"
 )
@@ -63,6 +64,7 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 	const (
 		confHttpPort    = "http.port"
 		defaultBasePath = "/"
+		confHost        = "http.host"
 	)
 
 	httpPortMap, err := ctx.Config.Get(confHttpPort)
@@ -76,9 +78,13 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 		basePath = defaultBasePath
 	}
 
+	httpHost, err := endpointHost(ctx, confHost)
+	if err != nil {
+		return "", err
+	}
 	endpointUrl := url.URL{
 		Scheme: serverConfig[protocolKey],
-		Host:   fmt.Sprintf("localhost:%v", httpPort),
+		Host:   net.JoinHostPort(httpHost, fmt.Sprint(httpPort)),
 		Path:   basePath,
 	}
 
@@ -101,6 +107,7 @@ func UiServerHttpUrl(ctx *Context) (string, error) {
 	const (
 		confWebuiHttpPort = "webui.http.port"
 		defaultBasePath   = "/"
+		confWebuiHost     = "webui.http.host"
 	)
 
 	httpPortMap, err := ctx.Config.Get(confWebuiHttpPort)
@@ -109,11 +116,28 @@ func UiServerHttpUrl(ctx *Context) (string, error) {
 	}
 	httpPort := httpPortMap[confWebuiHttpPort]
 
+	httpHost, err := endpointHost(ctx, confWebuiHost)
+	if err != nil {
+		return "", err
+	}
+
 	endpointUrl := url.URL{
 		Scheme: "http",
-		Host:   fmt.Sprintf("localhost:%v", httpPort),
+		Host:   net.JoinHostPort(httpHost, fmt.Sprint(httpPort)),
 		Path:   defaultBasePath,
 	}
 
 	return endpointUrl.String(), nil
+}
+
+func endpointHost(ctx *Context, hostConfigKey string) (string, error) {
+	hostMap, err := ctx.Config.Get(hostConfigKey)
+	if err != nil {
+		return "", fmt.Errorf("getting config %q: %v", hostConfigKey, err)
+	}
+	host := fmt.Sprint(hostMap[hostConfigKey])
+
+	host = strings.TrimSpace(host)
+
+	return host, nil
 }
