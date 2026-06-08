@@ -5,62 +5,64 @@ import (
 	"net"
 	"net/url"
 	"strings"
+
+	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/runtimes"
 )
 
 const (
 	openAiEndpointKey = "openai"
-	protocolKey       = "protocol"
-	basePathKey       = "base-path"
 )
 
 func ServerEndpoints(ctx *Context) (map[string]string, error) {
-	settings, err := EngineComponentSettings(ctx)
+	activeEngineName, err := ctx.Cache.GetActiveEngine()
 	if err != nil {
-		return nil, fmt.Errorf("loading engine environment: %v", err)
+		return nil, fmt.Errorf("%s: %v", LookingUpActiveEngine, err)
 	}
-	return serverEndpoints(ctx, settings)
-}
+	activeEngineManifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngineName)
+	if err != nil {
+		return nil, fmt.Errorf("loading active engine manifest: %v", err)
+	}
 
-func serverEndpoints(ctx *Context, settingsCollection []ComponentSettings) (map[string]string, error) {
+	// If the engine does not list a runtime, return no endpoints
+	if activeEngineManifest.Runtime == "" {
+		return nil, nil
+	}
+
+	runtimeManifest, err := runtimes.LoadManifest(ctx.RuntimesDir, activeEngineManifest.Runtime)
+	if err != nil {
+		return nil, fmt.Errorf("loading runtime manifest: %v", err)
+	}
+
 	endpoints := make(map[string]string)
-	for _, settings := range settingsCollection {
 
-		// TODO: Remove this check in a future release
-		for _, env := range settings.Environment {
-			if strings.HasPrefix(env, "OPENAI_BASE_PATH") {
-				return nil, fmt.Errorf("OPENAI_BASE_PATH env in component %q is deprecated; set server settings in \"servers\".",
-					settings.componentName)
-			}
-		}
-
-		for serverName, serverSettings := range settings.Servers {
-			switch serverSettings[protocolKey] {
-			case "http", "https":
-				httpUrl, err := serverHttpUrl(ctx, serverSettings)
-				if err != nil {
-					return nil, fmt.Errorf("getting server HTTP URL: %v", err)
-				}
-				endpoints[serverName] = httpUrl
-			default:
-				return nil, fmt.Errorf("unsupported protocol %q for server %q in component %q",
-					serverSettings["protocol"], serverName, settings.componentName)
-			}
-		}
-
-		// If builtin webui is enabled, also list it as an endpoint
-		if WebUiEnabled() {
-			webUiUrl, err := UiServerHttpUrl(ctx)
+	for serverName, serverSettings := range runtimeManifest.Servers {
+		switch serverSettings.Protocol {
+		case "http", "https":
+			httpUrl, err := serverHttpUrl(ctx, serverSettings)
 			if err != nil {
-				return nil, fmt.Errorf("getting web UI url: %v", err)
+				return nil, fmt.Errorf("getting server HTTP URL: %v", err)
 			}
-			endpoints["webui"] = webUiUrl
+			endpoints[serverName] = httpUrl
+		default:
+			return nil, fmt.Errorf("unsupported protocol %q for server %q in component %q",
+				serverSettings.Protocol, serverName, activeEngineManifest.Runtime)
 		}
+	}
+
+	// If builtin webui is enabled, also list it as an endpoint
+	if WebUiEnabled() {
+		webUiUrl, err := UiServerHttpUrl(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("getting web UI url: %v", err)
+		}
+		endpoints["webui"] = webUiUrl
 	}
 
 	return endpoints, nil
 }
 
-func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error) {
+func serverHttpUrl(ctx *Context, server runtimes.Server) (string, error) {
 	const (
 		confHttpPort    = "http.port"
 		defaultBasePath = "/"
@@ -73,8 +75,8 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 	}
 	httpPort := httpPortMap[confHttpPort]
 
-	basePath, found := serverConfig[basePathKey]
-	if !found {
+	basePath := server.BasePath
+	if basePath == "" {
 		basePath = defaultBasePath
 	}
 
@@ -83,7 +85,7 @@ func serverHttpUrl(ctx *Context, serverConfig map[string]string) (string, error)
 		return "", err
 	}
 	endpointUrl := url.URL{
-		Scheme: serverConfig[protocolKey],
+		Scheme: server.Protocol,
 		Host:   net.JoinHostPort(httpHost, fmt.Sprint(httpPort)),
 		Path:   basePath,
 	}

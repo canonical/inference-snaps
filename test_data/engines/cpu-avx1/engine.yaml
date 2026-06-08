@@ -7,6 +7,5 @@ devices:
     - type: cpu
       architecture: amd64
       flags: [sse4_2, avx]
-memory: 4G
-disk-space: 8G
+
 

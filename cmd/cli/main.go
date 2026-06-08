@@ -17,10 +17,12 @@ import (
 
 func main() {
 	ctx := &common.Context{
-		EnginesDir: env.Snap() + "/engines",
-		Cache:      storage.NewCache(),
-		Config:     storage.NewConfig(),
-		Snap:       snap.New(),
+		EnginesDir:  env.Snap() + "/engines",
+		RuntimesDir: env.Snap() + "/runtimes",
+		ModelsDir:   env.Snap() + "/models",
+		Cache:       storage.NewCache(),
+		Config:      storage.NewConfig(),
+		Snap:        snap.New(),
 	}
 
 	// Get snap name for dynamic commands
@@ -93,6 +95,8 @@ func main() {
 		commands.ListEngines(ctx),
 		commands.ShowEngine(ctx),
 		commands.UseEngine(ctx),
+		commands.ListModels(ctx),
+		commands.UseModel(ctx),
 	)
 
 	addCommands(rootCmd,

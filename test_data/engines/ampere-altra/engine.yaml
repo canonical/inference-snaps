@@ -11,5 +11,3 @@ devices:
     - bus: pci
       vendor-id: 1def # Ampere Computing, LLC
       device-id: e100 # Altra PCI Express Root Complex A
-memory: 4G
-disk-space: 5G

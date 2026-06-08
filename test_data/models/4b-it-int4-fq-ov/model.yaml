@@ -1,0 +1,19 @@
+id: 4b-it-int4-fq-ov
+name: 4b
+
+description: OpenVino 4b test model
+model-card-url: https://example.com/model-card
+quantization: int4-fq
+
+disk-size: 6G # metadata
+
+capabilities:
+  - text
+
+components:
+  - model-4b-it-int4-fq-ov
+
+environment:
+  # ovms
+  - MODEL_NAME=gemma-4-4b-it-int4-fq-ov
+  - MODEL_PATH=$SNAP_COMPONENTS/model-4b-it-int4-fq-ov

@@ -9,16 +9,15 @@ import (
 )
 
 func templateManifest() Manifest {
-	memDisk := "1"
 	manifest := Manifest{
 		Name:         "test",
 		Description:  "test",
 		Vendor:       "test",
 		Experimental: nil,
-		Devices:      Devices{},
-		Memory:       &memDisk,
-		DiskSpace:    &memDisk,
-		Components:   nil,
+		Model: Model{
+			Default: "26b-q4-k-m-gguf",
+			Options: []string{"26b-q4-k-m-gguf", "30b-a3b-q4-k-m-gguf "},
+		},
 		Configurations: map[string]interface{}{
 			"engine": "test",
 			"model":  "test",
@@ -126,82 +125,6 @@ func TestExperimentalValid(t *testing.T) {
 			t.Fatalf("experimental true should be valid: %v", err)
 		}
 	})
-}
-
-func TestMemoryValues(t *testing.T) {
-	manifest := templateManifest()
-
-	t.Run("valid GB", func(t *testing.T) {
-		value := "1G"
-		manifest.Memory = &value
-
-		err := manifest.validate("test")
-		if err != nil {
-			t.Logf("memory should be valid: %v", err)
-		}
-	})
-
-	t.Run("valid MB", func(t *testing.T) {
-		value := "512M"
-		manifest.Memory = &value
-
-		err := manifest.validate("test")
-		if err != nil {
-			t.Logf("memory should be valid: %v", err)
-		}
-	})
-
-	// Empty memory string in yaml is parsed as nil, which we interpret as unset, which is valid
-
-	t.Run("not numeric", func(t *testing.T) {
-		value := "abc"
-		manifest.Memory = &value
-
-		err := manifest.validate("test")
-		if err == nil {
-			t.Fatal("non-numeric memory should be invalid")
-		}
-		t.Log(err)
-	})
-
-}
-
-func TestDiskValues(t *testing.T) {
-	manifest := templateManifest()
-
-	t.Run("valid GB", func(t *testing.T) {
-		value := "1G"
-		manifest.DiskSpace = &value
-
-		err := manifest.validate("test")
-		if err != nil {
-			t.Logf("disk should be valid: %v", err)
-		}
-	})
-
-	t.Run("valid MB", func(t *testing.T) {
-		value := "512M"
-		manifest.DiskSpace = &value
-
-		err := manifest.validate("test")
-		if err != nil {
-			t.Logf("disk should be valid: %v", err)
-		}
-	})
-
-	// Empty string in yaml is parsed as nil, which we interpret as unset, which is valid
-
-	t.Run("not numeric", func(t *testing.T) {
-		value := "abc"
-		manifest.DiskSpace = &value
-
-		err := manifest.validate("test")
-		if err == nil {
-			t.Fatal("non-numeric disk should be invalid")
-		}
-		t.Log(err)
-	})
-
 }
 
 func TestConfig(t *testing.T) {

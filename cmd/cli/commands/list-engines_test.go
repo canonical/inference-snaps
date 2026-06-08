@@ -14,7 +14,7 @@ import (
 
 func prepareTestData() (*listEnginesCommand, *outputEngines, error) {
 	cache := storage.NewMockCache()
-	err := cache.SetActiveEngine("example-memory")
+	err := cache.SetActiveEngine("intel-cpu")
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error setting active engine name: %v", err)
 	}
@@ -98,22 +98,21 @@ func TestGetEnginesTable(t *testing.T) {
 	}
 
 	expectedTable := `ENGINE                 VENDOR             DESCRIPTION                    COMPAT
-intel-cpu              Intel Corporation  Use Intel CPUs                 yes   
+intel-cpu*             Intel Corporation  Use Intel CPUs                 yes   
 cpu-avx2               Canonical Ltd      CPUs with AVX2                 yes   
 cpu-avx1               Canonical Ltd      Legacy CPUs with only SSE4.2…  yes   
 cpu                    Canonical Ltd      General CPU engine             yes   
 cpu-exptl              Canonical Ltd      Requires any CPU but it is e…  exptl 
-rocm-generic           Canonical Ltd      AMD GPUs using ROCm. All maj…  no    
-not-compatible-engine  Canonical Ltd      This test engine is designed…  no    
-intel-npu              Intel Corporation  Intel NPUs                     no    
 intel-gpu              Intel Corporation  Modern Intel GPUs (>=gen 13)   no    
-ampere                 Canonical Ltd      Test ampere selection          no    
-example-memory*        Canonical Ltd      Legacy CPUs, offering full a…  no    
-cuda-generic           Canonical Ltd      Nvidia GPUs using CUDA. All …  no    
-amd-gpu                Canonical Ltd      AMD specific engine targetin…  no    
+not-compatible-engine  Canonical Ltd      This test engine is designed…  no    
 cpu-avx512             Canonical Ltd      CPUs with AVX512               no    
-ampere-altra           Canonical Ltd      Test ampere selection          no    
 arm-neon               Canonical Ltd      ARM CPUs with NEON instructi…  no    
+ampere-altra           Canonical Ltd      Test ampere selection          no    
+ampere                 Canonical Ltd      Test ampere selection          no    
+intel-npu              Intel Corporation  Intel NPUs                     no    
+rocm-generic           Canonical Ltd      AMD GPUs using ROCm. All maj…  no    
+amd-gpu                Canonical Ltd      AMD specific engine targetin…  no    
+cuda-generic           Canonical Ltd      Nvidia GPUs using CUDA. All …  no    
 `
 
 	if tableStr != expectedTable {
@@ -128,7 +127,7 @@ func Example_printEnginesJson() {
 	}
 
 	// Reduce available engines to make the output more concise for this example test
-	var engineWhitelist = []string{"amd-gpu", "example-memory"}
+	var engineWhitelist = []string{"amd-gpu", "intel-cpu"}
 	filterEnginesByName(enginesList, engineWhitelist)
 
 	err = cmd.printEnginesJson(*enginesList)
@@ -138,7 +137,7 @@ func Example_printEnginesJson() {
 
 	// Output:
 	// {
-	//   "active-engine": "example-memory",
+	//   "active-engine": "intel-cpu",
 	//   "engines": [
 	//     {
 	//       "name": "amd-gpu",
@@ -161,12 +160,11 @@ func Example_printEnginesJson() {
 	//           }
 	//         ]
 	//       },
-	//       "memory": "2G",
-	//       "disk-space": "5G",
-	//       "components": [
-	//         "dummy-component-1",
-	//         "dummy-component-2"
-	//       ],
+	//       "runtime": "",
+	//       "model": {
+	//         "default": "",
+	//         "options": null
+	//       },
 	//       "configurations": null,
 	//       "score": 0,
 	//       "compatible": false,
@@ -175,38 +173,31 @@ func Example_printEnginesJson() {
 	//       ]
 	//     },
 	//     {
-	//       "name": "example-memory",
-	//       "description": "Legacy CPUs, offering full accuracy but very high memory usage",
-	//       "vendor": "Canonical Ltd",
+	//       "name": "intel-cpu",
+	//       "description": "Use Intel CPUs",
+	//       "vendor": "Intel Corporation",
 	//       "devices": {
-	//         "anyof": [
-	//           {
-	//             "type": "cpu",
-	//             "architecture": "amd64",
-	//             "manufacturer-id": "AuthenticAMD",
-	//             "compatibility-issues": [
-	//               "manufacturer id mismatch: GenuineIntel"
-	//             ]
-	//           },
+	//         "anyof": null,
+	//         "allof": [
 	//           {
 	//             "type": "cpu",
 	//             "architecture": "amd64",
 	//             "manufacturer-id": "GenuineIntel"
 	//           }
-	//         ],
-	//         "allof": null
+	//         ]
 	//       },
-	//       "memory": "35G",
-	//       "disk-space": "29G",
-	//       "components": [
-	//         "dummy-component-3"
-	//       ],
-	//       "configurations": null,
-	//       "score": 0,
-	//       "compatible": false,
-	//       "compatibility-issues": [
-	//         "insufficient memory"
-	//       ]
+	//       "runtime": "openvino-model-server",
+	//       "model": {
+	//         "default": "4b-it-int4-fq-ov",
+	//         "options": [
+	//           "4b-it-int4-fq-ov"
+	//         ]
+	//       },
+	//       "configurations": {
+	//         "target-device": "CPU"
+	//       },
+	//       "score": 16,
+	//       "compatible": true
 	//     }
 	//   ]
 	// }

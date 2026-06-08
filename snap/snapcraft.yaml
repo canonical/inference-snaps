@@ -1,12 +1,12 @@
 name: stack-utils
 base: core24
-version: git
 summary: Utilities for selecting hardware optimised engines
 description: |
   These utilities help decide which components should be installed on a particular system.
 
 grade: devel
 confinement: strict
+adopt-info: version
 
 plugs:
   intel-npu:
@@ -33,6 +33,14 @@ environment:
   SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
 
 parts:
+  version:
+    plugin: dump
+    source: .
+    build-packages:
+      - git-lfs
+    override-pull: |
+      craftctl set version="$(git -C $SNAPCRAFT_PROJECT_DIR describe --always --dirty)"
+
   scripts:
     source: snap/local
     plugin: dump
@@ -41,7 +49,38 @@ parts:
       "server.sh": bin/
       "server-webui.sh": bin/
 
-  system-utilities:
+  engines:
+    plugin: dump
+    source: test_data/engines
+    organize:
+      "*": engines/
+
+  runtimes:
+    plugin: dump
+    source: test_data/runtimes
+    organize:
+      "*": runtimes/
+
+  models:
+    plugin: dump
+    source: test_data/models
+    organize:
+      "*": models/
+
+  cli:
+    plugin: go
+    build-snaps:
+      - go/1.26/stable
+    source: .
+    source-type: local
+    override-build: |
+      craftctl default
+      # For tab completion
+      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/stack-utils
+    organize:
+      bin/cli: bin/modelctl
+
+  cli-dependencies:
     plugin: nil
     stage-packages:
       - pciutils # lspci
@@ -49,7 +88,7 @@ parts:
 
   # Used for NVIDIA vRAM and CUDA Capability detection.
   # Only the binary is included to avoid staging libraries, which should instead be provided by the host through the opengl interface.
-  nvidia-smi:
+  cli-nvidia-smi:
     plugin: nil
     build-packages:
       - nvidia-utils-580
@@ -62,7 +101,7 @@ parts:
       cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
 
   # OpenCL ICD and libigdgmm are required for Intel GPU vRAM lookup with clinfo
-  intel-opencl-icd:
+  cli-intel-opencl-icd:
     plugin: nil
     build-packages:
       - wget
@@ -86,59 +125,12 @@ parts:
       fi
       
       craftctl default
-  
-  dummy-components:
-    plugin: nil
-    override-prime: |
-      cat <<EOF > "$CRAFT_COMPONENT_DUMMY_COMPONENT_1_PRIME/component.yaml"
-      environment:
-        - MODEL_PATH=\$COMPONENT
-        - MODEL_NAME=gemma-3-4b-it-ov-int4-fq
-      servers:
-        openvino:
-          protocol: http
-          base-path: /v1
-        kserve:
-          protocol: http
-          base-path: /2
-        openai:
-          protocol: http
-          base-path: /v3
-      EOF
-      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_2_PRIME/component.yaml"
-      touch "$CRAFT_COMPONENT_DUMMY_COMPONENT_3_PRIME/component.yaml"
-
-  # To use `version: git` in this file, we require git as a build dependency.
-  # This is fixed but not published yet. See https://github.com/canonical/snapcraft/issues/4944
-  git:
-    plugin: nil
-    build-packages:
-      - git
-
-  cli:
-    plugin: go
-    build-snaps:
-      - go/1.26/stable
-    source: .
-    source-type: local
-    override-build: |
-      craftctl default
-      # For tab completion
-      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/stack-utils
-    organize:
-      bin/cli: bin/modelctl
 
   webui:
     plugin: dump
     source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.0.0-beta.5/inference-snaps-webui.tar.xz
     organize:
       "*": webui/
-
-  engines:
-    plugin: dump
-    source: test_data/engines
-    organize:
-      "*": engines/
 
   mock-openai-server:
     plugin: dump
@@ -147,16 +139,43 @@ parts:
       "*": bin/mock-openai-server/
 
 components:
-  dummy-component-1: &test-component
+  #
+  # Runtimes
+  #
+
+  runtime-llama-cpp-cpu: &test-component
     type: standard
     summary: Just a test component
     description: Component for testing purposes
-  dummy-component-2:
+  runtime-llama-cpp-cuda:
     <<: *test-component
-  dummy-component-3:
+  runtime-llama-cpp-rocm:
+    <<: *test-component
+  runtime-openvino-model-server:
     <<: *test-component
 
-      
+  #
+  # Models
+  #
+  model-4b-it-int4-fq-ov:
+    <<: *test-component
+  model-26b-a4b-q4-k-m-gguf:
+    <<: *test-component
+  mmproj-26b-bf16-gguf:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-1-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-2-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-3-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-4-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-5-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-6-of-6:
+    <<: *test-component
+
 apps:
   stack-utils:
     command: bin/modelctl

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// Prompt prompts the user and returns true for 'y', false for 'n'.
+// PromptYN prompts the user and returns true for 'y', false for 'n'.
 func PromptYN(prompt string, defaultResponse bool) bool {
 	reader := bufio.NewReader(os.Stdin)
 

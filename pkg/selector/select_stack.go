@@ -2,15 +2,12 @@ package selector
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 
-	"github.com/canonical/inference-snaps-cli/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/cpu"
 	"github.com/canonical/inference-snaps-cli/pkg/selector/pci"
 	"github.com/canonical/inference-snaps-cli/pkg/types"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
 )
 
 var ErrorNoCompatibleEngine = errors.New("no compatible engines found")
@@ -64,56 +61,6 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 		CompatibleMemory:  true,
 		CompatibleDisk:    true,
 		CompatibleDevices: true,
-	}
-
-	// Enough memory
-	if manifest.Memory != nil {
-		requiredMemory, err := utils.StringToBytes(*manifest.Memory)
-		if err != nil {
-			return 0, compatibilityReport, fmt.Errorf("parsing required memory: %v", err)
-		}
-
-		if hardwareInfo.Memory.TotalRam == 0 {
-			// If the TotalRam field is the Go struct Zero value, it was never set.
-			// We do not check swap for the Zero value, as swap can realistically be of size 0 bytes.
-			return 0, compatibilityReport, fmt.Errorf("total memory not reported by host system")
-		}
-
-		compatibilityReport.RequiredMemory = requiredMemory
-		compatibilityReport.TotalRAM = hardwareInfo.Memory.TotalRam
-		compatibilityReport.TotalSwap = hardwareInfo.Memory.TotalSwap
-
-		// Checking combination of ram and swap
-		availableMemory := hardwareInfo.Memory.TotalRam + hardwareInfo.Memory.TotalSwap
-		if availableMemory < requiredMemory {
-			compatibilityReport.CompatibleMemory = false
-		} else {
-			engineScore++
-		}
-	}
-
-	// Enough disk space
-	if manifest.DiskSpace != nil {
-		requiredDisk, err := utils.StringToBytes(*manifest.DiskSpace)
-
-		if err != nil {
-			return 0, compatibilityReport, fmt.Errorf("parsing required disk space: %v", err)
-		}
-
-		if _, ok := hardwareInfo.Disk[constants.SnapStoragePath]; !ok {
-			return 0, compatibilityReport, fmt.Errorf("disk space not reported by host system")
-		}
-
-		availableDiskSpace := hardwareInfo.Disk[constants.SnapStoragePath].Avail
-
-		compatibilityReport.RequiredDiskSpace = requiredDisk
-		compatibilityReport.AvailableDiskSpace = availableDiskSpace
-
-		if availableDiskSpace < requiredDisk {
-			compatibilityReport.CompatibleDisk = false
-		} else {
-			engineScore++
-		}
 	}
 
 	// Devices

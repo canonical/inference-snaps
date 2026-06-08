@@ -1,16 +1,15 @@
 package commands
 
 import (
-	"errors"
 	"fmt"
-	"maps"
 	"os"
 	"slices"
-	"strings"
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/models"
+	"github.com/canonical/inference-snaps-cli/pkg/runtimes"
 	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
@@ -44,215 +43,138 @@ func (cmd *pruneCacheCommand) run(_ *cobra.Command, _ []string) error {
 		return common.ErrPermissionDenied
 	}
 
-	activeEngine, err := cmd.Cache.GetActiveEngine()
-	if err != nil {
-		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
-	} else if activeEngine == "" {
-		return common.ErrNoActiveEngine
-	}
-
-	activeEngineManifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngine)
-	if err != nil {
-		if errors.Is(err, engines.ErrManifestNotFound) {
-			if cmd.Verbose {
-				fmt.Println(err)
-			}
-			return fmt.Errorf("active engine manifest not found")
-		}
-		return fmt.Errorf("loading engine manifest: %v", err)
-	}
-
-	var componentsWithEnginesToRemove map[string][]string
+	var err error
 	var componentsToRemove []string
 
-	switch {
-	case cmd.engine == "":
-		componentsWithEnginesToRemove, err = cmd.getAllComponentsToRemove(*activeEngineManifest)
+	if cmd.engine == "" {
+		componentsToRemove, err = cmd.unusedComponentsAll()
 		if err != nil {
-			return err
+			return fmt.Errorf("finding all unused components: %w", err)
 		}
-		if confirmed, err := cmd.printComponentsAndConfirm(componentsWithEnginesToRemove, false); err != nil {
-			return err
-		} else if !confirmed {
-			return nil
-		}
-		return cmd.pruneAllInactiveEngines(slices.Collect(maps.Keys(componentsWithEnginesToRemove)))
-
-	case cmd.engine == activeEngine:
-		return fmt.Errorf("cannot prune the active engine %q", activeEngine)
-
-	default:
-		engineManifest, err := engines.LoadManifest(cmd.EnginesDir, cmd.engine)
+	} else {
+		componentsToRemove, err = cmd.unusedComponentsEngine(cmd.engine)
 		if err != nil {
-			if errors.Is(err, engines.ErrManifestNotFound) {
-				if cmd.Verbose {
-					fmt.Println(err)
-				}
-				return fmt.Errorf("%q not found", cmd.engine)
-			}
-			return fmt.Errorf("loading engine manifest: %v", err)
+			return fmt.Errorf("finding unused engine components: %w", err)
 		}
-
-		componentsWithEnginesToRemove, err = cmd.calculateRemovableComponents([]engines.Manifest{*engineManifest}, *activeEngineManifest)
-		if err != nil {
-			return err
-		}
-		if confirmed, err := cmd.printComponentsAndConfirm(componentsWithEnginesToRemove, true); err != nil {
-			return fmt.Errorf("confirming component: %v", err)
-		} else if !confirmed {
-			return nil
-		}
-		componentsToRemove = slices.Collect(maps.Keys(componentsWithEnginesToRemove))
-		return cmd.pruneEngine(componentsToRemove, *engineManifest)
 	}
+
+	if len(componentsToRemove) == 0 {
+		fmt.Println("No components to remove.")
+		return nil
+	}
+
+	if confirmed, err := cmd.printComponentsAndConfirm(componentsToRemove); err != nil {
+		return err
+	} else if !confirmed {
+		return nil
+	}
+	return snapctl.RemoveComponents(componentsToRemove...).Run()
 }
 
-func (cmd *pruneCacheCommand) calculateRemovableComponents(enginesToCheck []engines.Manifest, activeEngineManifest engines.Manifest) (map[string][]string, error) {
-	componentsEnginesMap := make(map[string][]string)
-
-	activeSet := make(map[string]bool, len(activeEngineManifest.Components))
-	for _, c := range activeEngineManifest.Components {
-		activeSet[c] = true
+func (cmd *pruneCacheCommand) unusedComponentsAll() ([]string, error) {
+	allInstalledComponents, err := common.InstalledComponents()
+	if err != nil {
+		return nil, fmt.Errorf("getting installed components: %w", err)
 	}
-	for _, eng := range enginesToCheck {
-		if eng.Name == activeEngineManifest.Name {
-			continue
+
+	requiredComponents, err := common.ComponentsRequiredByCurrentSelection(cmd.Context)
+	if err != nil {
+		return nil, fmt.Errorf("getting required components: %w", err)
+	}
+
+	var unusedComponents []string
+
+	for _, component := range allInstalledComponents {
+		if !slices.Contains(requiredComponents, component) {
+			unusedComponents = append(unusedComponents, component)
 		}
-		for _, component := range eng.Components {
-			if activeSet[component] {
-				continue
-			}
-			installed, err := common.ComponentInstalled(component)
+	}
+
+	return unusedComponents, nil
+}
+
+func (cmd *pruneCacheCommand) unusedComponentsEngine(engineName string) ([]string, error) {
+	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
+	}
+
+	if activeEngine == engineName {
+		return nil, fmt.Errorf("cannot prune active engine")
+	}
+
+	requiredComponents, err := common.ComponentsRequiredByCurrentSelection(cmd.Context)
+	if err != nil {
+		return nil, fmt.Errorf("getting required components: %w", err)
+	}
+
+	var engineComponents []string
+
+	engineManifest, err := engines.LoadManifest(cmd.EnginesDir, engineName)
+	if err != nil {
+		return nil, fmt.Errorf("loading engine manifest: %w", err)
+	}
+
+	// Include runtime components if engine has a runtime
+	if engineManifest.Runtime != "" {
+		runtimeManifest, err := runtimes.LoadManifest(cmd.RuntimesDir, engineManifest.Runtime)
+		if err != nil {
+			return nil, fmt.Errorf("loading runtimes manifest: %w", err)
+		}
+		engineComponents = append(engineComponents, runtimeManifest.Components...)
+	}
+
+	// Include model components of all models compatible with this engine
+	for _, modelId := range engineManifest.Model.Options {
+		modelManifest, err := models.LoadManifest(cmd.ModelsDir, modelId)
+		if err != nil {
+			return nil, fmt.Errorf("loading model manifest for model %q: %w", modelId, err)
+		}
+		engineComponents = append(engineComponents, modelManifest.Components...)
+	}
+
+	var unusedComponents []string
+
+	for _, engineComponent := range engineComponents {
+		if !slices.Contains(requiredComponents, engineComponent) && // only remove if not required by current active engine and model
+			!slices.Contains(unusedComponents, engineComponent) { // prevent same components from being listed multiple times
+			componentInstalled, err := common.ComponentInstalled(engineComponent)
 			if err != nil {
 				return nil, err
 			}
-			if installed {
-				componentsEnginesMap[component] = append(componentsEnginesMap[component], eng.Name)
-			}
-		}
-	}
-	return componentsEnginesMap, nil
-}
-
-func (cmd *pruneCacheCommand) getAllComponentsToRemove(activeEngineManifest engines.Manifest) (map[string][]string, error) {
-	enginesToCheck, err := engines.LoadManifests(cmd.EnginesDir)
-	if err != nil {
-		return nil, fmt.Errorf("loading manifests: %w", err)
-	}
-	return cmd.calculateRemovableComponents(enginesToCheck, activeEngineManifest)
-}
-
-func (cmd *pruneCacheCommand) pruneEngine(componentsToRemove []string, engine engines.Manifest) error {
-	if err := common.UnsetEngineConfig(engine.Name, true, cmd.Context); err != nil {
-		return err
-	}
-
-	installed := make([]string, 0, len(componentsToRemove))
-	for _, component := range componentsToRemove {
-		if ok, err := common.ComponentInstalled(component); err == nil && ok {
-			installed = append(installed, component)
-		}
-	}
-
-	if len(installed) != 0 {
-		if err := snapctl.RemoveComponents(installed...).Run(); err != nil {
-			return fmt.Errorf("removing components: %w", err)
-		}
-	}
-	return nil
-}
-
-func (cmd *pruneCacheCommand) pruneAllInactiveEngines(componentsToRemove []string) error {
-	activeEngine, err := cmd.Cache.GetActiveEngine()
-	if err != nil {
-		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
-	}
-	var allEngines []engines.Manifest
-	allEngines, err = engines.LoadManifests(cmd.EnginesDir)
-	if err != nil {
-		return fmt.Errorf("loading manifests: %w", err)
-	}
-
-	for _, engine := range allEngines {
-		if engine.Name != activeEngine {
-			err := cmd.pruneEngine(componentsToRemove, engine)
-			if err != nil {
-				return err
+			if componentInstalled {
+				unusedComponents = append(unusedComponents, engineComponent)
 			}
 		}
 	}
 
-	return nil
+	return unusedComponents, nil
 }
 
-func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsWithEngines map[string][]string, isSingleEngine bool) (bool, error) {
-	if len(componentsWithEngines) == 0 {
-		fmt.Println("No components to remove.")
-	} else {
-		fmt.Println("Removing components:")
+func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsToRemove []string) (bool, error) {
 
-		componentSizes, err := snap_store.ComponentSizes()
-		if err != nil && cmd.Verbose {
-			fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
-		}
-
-		for componentName, engineNames := range componentsWithEngines {
-			componentLine := componentName
-			if size, ok := componentSizes[componentName]; ok {
-				componentLine += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
-			}
-
-			if isSingleEngine {
-				fmt.Printf("- %s\n", componentLine)
-				continue
-			}
-
-			fmt.Printf("- %s [%s]\n", componentLine, strings.Join(engineNames, ", "))
-		}
-
+	componentSizes, err := snap_store.ComponentSizes()
+	if err != nil && cmd.Verbose {
+		_, _ = fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
 	}
 
-	engineList, err := cmd.inactiveEngines()
-	if err != nil {
-		return false, fmt.Errorf("getting list of inactive engines: %v", err)
-	}
+	fmt.Println("Removing components:")
+	for _, componentName := range componentsToRemove {
+		componentLine := componentName
+		if size, ok := componentSizes[componentName]; ok {
+			componentLine += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
+		}
 
-	var confirmationPromptSentence string
-	if isSingleEngine {
-		confirmationPromptSentence = fmt.Sprintf("Continue pruning %q engine?", cmd.engine)
-	} else {
-		confirmationPromptSentence = fmt.Sprintf("Continue pruning [%v] engines?", strings.Join(engineList, ", "))
+		fmt.Printf("- %s\n", componentLine)
 	}
 
 	if utils.IsTerminalOutput() {
 		fmt.Println()
-		if !common.PromptYN(confirmationPromptSentence, false) {
+		if !common.PromptYN("Continue removing components?", false) {
 			fmt.Println("Cancelled. No changes applied.")
 			return false, nil
 		}
 	}
 
 	return true, nil
-}
-
-func (cmd *pruneCacheCommand) inactiveEngines() ([]string, error) {
-	enginesManifests, err := engines.LoadManifests(cmd.EnginesDir)
-	if err != nil {
-		return nil, err
-	}
-
-	var engineList []string
-	activeEngine, err := cmd.Cache.GetActiveEngine()
-	if err != nil {
-		return nil, fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
-	}
-
-	for _, manifest := range enginesManifests {
-		if manifest.Name == activeEngine {
-			continue
-		}
-		engineList = append(engineList, manifest.Name)
-	}
-
-	return engineList, nil
 }

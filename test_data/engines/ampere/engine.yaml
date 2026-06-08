@@ -6,5 +6,4 @@ devices:
     - type: cpu
       architecture: arm64
       implementer-id: 0xc0 # Ampere
-memory: 4G
-disk-space: 5G
+

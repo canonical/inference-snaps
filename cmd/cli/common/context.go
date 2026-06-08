@@ -6,9 +6,11 @@ import (
 )
 
 type Context struct {
-	EnginesDir string
-	Verbose    bool
-	Cache      storage.Cache
-	Config     storage.Config
-	Snap       snap.Snap
+	EnginesDir  string
+	RuntimesDir string
+	ModelsDir   string
+	Verbose     bool
+	Cache       storage.Cache
+	Config      storage.Config
+	Snap        snap.Snap
 }

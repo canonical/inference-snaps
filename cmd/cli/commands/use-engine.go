@@ -3,15 +3,12 @@ package commands
 import (
 	"errors"
 	"fmt"
-	"os"
-	"strings"
-	"time"
+	"slices"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
 	"github.com/canonical/inference-snaps-cli/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/pkg/models"
 	"github.com/canonical/inference-snaps-cli/pkg/selector"
-	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
 	"github.com/canonical/inference-snaps-cli/pkg/utils"
 	"github.com/spf13/cobra"
 )
@@ -142,7 +139,7 @@ func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.Scor
 // switchEngine changes the engine that is used by the snap
 func (cmd *useEngineCommand) switchEngine(engineName string) error {
 
-	engine, err := engines.LoadManifest(cmd.EnginesDir, engineName)
+	newEngineManifest, err := engines.LoadManifest(cmd.EnginesDir, engineName)
 	if err != nil {
 		if errors.Is(err, engines.ErrManifestNotFound) {
 			if cmd.Verbose {
@@ -153,13 +150,41 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		return fmt.Errorf("loading engine manifest: %v", err)
 	}
 
-	cancelledByUser, err := cmd.installMissingComponents(engine)
+	// We need to check which components are required for the switch.
+	// If the current model is supported by the new engine, we use the active model's components.
+	// If the model is not supported, we need to use the components of the new engine's default model.
+
+	activeModelName, err := cmd.Cache.GetActiveModel()
+	if err != nil {
+		return fmt.Errorf("getting active model name: %v", err)
+	}
+
+	// If the current active model is not supported by the new engine, switch to the engine's default model
+	newModelName := activeModelName
+	if !slices.Contains(newEngineManifest.Model.Options, activeModelName) {
+		newModelName = newEngineManifest.Model.Default
+	}
+
+	var newModelManifest *models.Manifest
+	if newModelName != "" {
+		newModelManifest, err = models.LoadManifest(cmd.ModelsDir, newModelName)
+		if err != nil {
+			return fmt.Errorf("loading model manifest: %v", err)
+		}
+	}
+
+	// Check for missing components
+	cancelledByUser, err := common.InstallMissingComponents(cmd.Context, cmd.assumeYes, newEngineManifest, newModelManifest)
 	if err != nil {
 		return fmt.Errorf("installing missing components: %v", err)
 	}
-
 	if cancelledByUser {
 		return nil
+	}
+
+	err = cmd.Cache.SetActiveModel(newModelName)
+	if err != nil {
+		return fmt.Errorf("setting active model: %v", err)
 	}
 
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
@@ -180,19 +205,16 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		}
 	}
 
-	if err = cmd.Cache.SetActiveEngine(engine.Name); err != nil {
+	if err = cmd.Cache.SetActiveEngine(newEngineManifest.Name); err != nil {
 		return fmt.Errorf("setting active engine: %v", err)
 	}
 
-	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
+	if err = common.SetEngineConfig(newEngineManifest, cmd.Context); err != nil {
 		return fmt.Errorf("setting new engine configurations: %v", err)
 	}
 
 	fmt.Printf("Engine changed to %q.\n", engineName)
 
-	// Currently we cannot reliably determine if the service is active to automatically restart it
-	// See https://bugs.launchpad.net/snapd/+bug/2137543
-	//
 	// Ask if the user wants to restart
 	if !cmd.noRestart {
 		return common.PromptRestartToApplyChanges(cmd.Context, cmd.assumeYes)
@@ -201,79 +223,10 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 	return nil
 }
 
-// TODO: unify with similar code in run.go
-func (cmd *useEngineCommand) missingComponents(components []string) ([]string, error) {
-	var missing []string
-	for _, component := range components {
-		isInstalled, err := common.ComponentInstalled(component)
-		if err != nil {
-			return missing, err
-		}
-		if !isInstalled {
-			missing = append(missing, component)
-		}
-	}
-	return missing, nil
-}
-
-func (*useEngineCommand) installComponents(components []string) error {
-	const (
-		snapdAlreadyInstalledError = "already installed"
-		snapdUnknownSnapError      = "cannot install components for a snap that is unknown to the store"
-		snapdTimeoutError          = "timeout exceeded while waiting for response"
-		snapdChangeInProgressError = "change in progress"
-		timeout                    = 60 * time.Minute
-		retryDelay                 = 10 * time.Second
-	)
-	startTime := time.Now()
-
-	for _, component := range components {
-		stopProgress := common.StartProgressSpinner("Installing " + component)
-		err := snapctl.InstallComponents(component).Run()
-		defer stopProgress()
-
-		for err != nil {
-			// Only retry up to the set timeout
-			if time.Since(startTime) > timeout {
-				return fmt.Errorf("timed out while installing %q:"+
-					"\nMonitor the installation progress with \"snap changes\""+
-					"\n\nRerun this command once the installation is complete",
-					component)
-			}
-
-			if strings.Contains(err.Error(), snapdAlreadyInstalledError) {
-				// All good. Continue installing next component.
-				break
-
-			} else if strings.Contains(err.Error(), snapdUnknownSnapError) {
-				// Install component manually
-				return fmt.Errorf("snap not known to the store:"+
-					"\nRerun this command after manually installing %q",
-					component)
-
-			} else if strings.Contains(err.Error(), snapdTimeoutError) {
-				// Snapd timed out while installing this component
-				time.Sleep(retryDelay)
-				err = snapctl.InstallComponents(component).Run()
-
-			} else if strings.Contains(err.Error(), snapdChangeInProgressError) {
-				// Snapd is busy with installing this component or busy with an unrelated change
-				time.Sleep(retryDelay)
-				err = snapctl.InstallComponents(component).Run()
-
-			} else {
-				// Any other error we do not specifically handle will stop installing components
-				return fmt.Errorf("installing %q: %s", component, err)
-			}
-		}
-
-		stopProgress()
-		fmt.Println("Installed " + component)
-	}
-
-	return nil
-}
-
+// fixActiveEngine does the following:
+// 1. auto selects an engine if the active engine no longer exists
+// 2. verify that the active model is supported by the active engine, otherwise switches to the default model
+// 2. if engine exists, make sure it is correctly installed and configured
 func (cmd *useEngineCommand) fixActiveEngine() error {
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
@@ -283,8 +236,8 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 		return common.ErrNoActiveEngine
 	}
 
-	// If active engine no longer exist, auto select another one
-	engine, err := engines.LoadManifest(cmd.EnginesDir, activeEngineName)
+	// If active engine no longer exists, auto select another one
+	engineManifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngineName)
 	if errors.Is(err, engines.ErrManifestNotFound) {
 		fmt.Printf("Active engine %q not found, performing auto selection instead.\n", activeEngineName)
 		return cmd.autoSelectEngine()
@@ -292,64 +245,40 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 		return fmt.Errorf("loading active engine manifest: %v", err)
 	}
 
-	// If engine exists, make sure it is correctly installed and configured
-	if _, err = cmd.installMissingComponents(engine); err != nil {
+	// Check if the model is supported, otherwise switch to the default
+	activeModelId, err := cmd.Cache.GetActiveModel()
+	if err != nil {
+		return fmt.Errorf("%s: %w", common.LookingUpActiveModel, err)
+	}
+	if !slices.Contains(engineManifest.Model.Options, activeModelId) {
+		activeModelId = engineManifest.Model.Default
+	}
+	err = cmd.Cache.SetActiveModel(activeModelId)
+	if err != nil {
+		return fmt.Errorf("setting active model: %v", err)
+	}
+
+	var modelManifest *models.Manifest
+	if activeModelId != "" {
+		modelManifest, err = models.LoadManifest(cmd.ModelsDir, activeModelId)
+		if err != nil {
+			return fmt.Errorf("loading active model manifest: %v", err)
+		}
+	}
+
+	// Make sure all components are correctly installed and engine is configured
+	if _, err = common.InstallMissingComponents(cmd.Context, cmd.assumeYes, engineManifest, modelManifest); err != nil {
 		return fmt.Errorf("installing missing components: %v", err)
 	}
+
 	if err = common.UnsetEngineConfig(activeEngineName, false, cmd.Context); err != nil {
 		return fmt.Errorf("un-setting engine configurations: %v", err)
 	}
-	if err = common.SetEngineConfig(engine, cmd.Context); err != nil {
+	if err = common.SetEngineConfig(engineManifest, cmd.Context); err != nil {
 		return fmt.Errorf("setting engine configurations: %v", err)
 	}
 
 	return nil
-}
-
-func (cmd *useEngineCommand) installMissingComponents(engine *engines.Manifest) (cancelledByUser bool, err error) {
-	missingComponents, err := cmd.missingComponents(engine.Components)
-	if err != nil {
-		return false, fmt.Errorf("checking installed components: %v", err)
-	}
-	if len(missingComponents) == 0 {
-		return false, nil
-	}
-
-	componentSizes, err := snap_store.ComponentSizes()
-	if err != nil && cmd.Verbose {
-		fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
-	}
-
-	// Format list of components, adding size if it is known
-	fmt.Println("Need to install the following components:")
-	for _, componentName := range missingComponents {
-		line := fmt.Sprintf("- %s", componentName)
-		if size, found := componentSizes[componentName]; found {
-			line += fmt.Sprintf(" (%s)", utils.FmtBytes(uint64(size)))
-		}
-		fmt.Println(line)
-	}
-
-	// Only ask for confirmation if it is an interactive terminal
-	if !cmd.assumeYes && utils.IsTerminalOutput() {
-		fmt.Println()
-		if !common.PromptYN("Do you want to continue?", true) {
-			fmt.Println("Cancelled. No changes applied.")
-			return true, nil
-		}
-	}
-
-	// Leave a blank line after printing component list and optional confirmation, before printing component installation progress
-	fmt.Println()
-
-	// This is blocking, but there is a timeout bug:
-	// https://github.com/canonical/inference-snaps-cli/issues/122
-	err = cmd.installComponents(missingComponents)
-	if err != nil {
-		return false, fmt.Errorf("installing components: %v", err)
-	}
-
-	return false, nil
 }
 
 func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.CompatibilityReport) []string {

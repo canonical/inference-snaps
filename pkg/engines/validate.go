@@ -85,20 +85,6 @@ func (manifest Manifest) validate(expectedEngineName string) error {
 		return fmt.Errorf("required field is not set: vendor")
 	}
 
-	if manifest.Memory != nil {
-		_, err := utils.StringToBytes(*manifest.Memory)
-		if err != nil {
-			return fmt.Errorf("parsing memory: %v", err)
-		}
-	}
-
-	if manifest.DiskSpace != nil {
-		_, err := utils.StringToBytes(*manifest.DiskSpace)
-		if err != nil {
-			return fmt.Errorf("parsing disk space: %v", err)
-		}
-	}
-
 	for key, val := range manifest.Configurations {
 		if !utils.IsPrimitive(val) {
 			return fmt.Errorf("configuration field %s is not a primitive value: %v", key, val)

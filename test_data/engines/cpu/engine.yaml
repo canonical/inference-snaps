@@ -8,6 +8,14 @@ devices:
       architecture: amd64
     - type: cpu
       architecture: arm64
-memory: 4G
-disk-space: 8G
 
+runtime: llama-cpp-cpu
+
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 26b-q4-k-m-gguf
+  - 30b-a3b-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600

@@ -29,11 +29,11 @@ type Manifest struct {
 	Vendor       string `yaml:"vendor" json:"vendor"`
 	Experimental *bool  `yaml:"experimental,omitempty" json:"experimental,omitempty"`
 
-	Devices   Devices `yaml:"devices" json:"devices"`
-	Memory    *string `yaml:"memory,omitempty" json:"memory"`
-	DiskSpace *string `yaml:"disk-space,omitempty" json:"disk-space"`
+	Devices Devices `yaml:"devices" json:"devices"`
 
-	Components     []string       `yaml:"components" json:"components"`
+	Runtime string `yaml:"runtime,omitempty" json:"runtime"`
+	Model   Model  `yaml:"model,omitempty" json:"model"`
+
 	Configurations Configurations `yaml:"configurations" json:"configurations"`
 }
 
@@ -80,8 +80,13 @@ type Device struct {
 
 type Configurations map[string]interface{}
 
-func (m Manifest) IsExperimental() bool {
-	return m.Experimental != nil && *m.Experimental
+type Model struct {
+	Default string   `yaml:"default" json:"default"`
+	Options []string `yaml:"options" json:"options"`
+}
+
+func (manifest Manifest) IsExperimental() bool {
+	return manifest.Experimental != nil && *manifest.Experimental
 }
 
 func (c CompatibilityReport) EngineCompatible() bool {

@@ -9,9 +9,3 @@ devices:
     - type: gpu
       vendor-id: 0x1002 # AMD Corporation
       microarchitecture: gfx1032
-memory: 2G
-disk-space: 5G
-components:
-  - dummy-component-1
-  - dummy-component-2
-

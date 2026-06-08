@@ -172,31 +172,6 @@ var validInvalidSets = map[string]testValidInvalid{
 		},
 	},
 
-	"example-memory": {
-		ValidMachines: []string{
-			"hp-zbook-power-16-inch-g11",
-			"mustang",
-			"system76-addw4",
-			"xps13-9350",
-			"lenovo-thinkpad-p16s",
-		},
-		InvalidMachines: []string{
-			"ampere-one-m-banshee-12",
-			"ampere-one-siryn",
-			"ampere-one-x-banshee-8",
-			"asus-ux301l",
-			"hp-pavilion-15-cs-3037nl",
-			"hp-proliant-rl300-gen11-altra",
-			"hp-proliant-rl300-gen11-altra-max",
-			"i7-1165G7",
-			"i7-2600k+arc-a580",
-			"i7-10510U",
-			//"orange-pi-rv2",
-			"raspberry-pi-5",
-			"raspberry-pi-5+hailo-8",
-			"xps13-7390",
-		},
-	},
 
 	"cuda-generic": {
 		ValidMachines: []string{

@@ -278,6 +278,12 @@ devices:
       vendor-id: 8086
       device-id: b0b0 # Panther Lake [Intel Graphics]
 
-memory: 4G
-disk-space: 8G
+runtime: openvino-model-server
 
+model:
+  default: 4b-it-int4-fq-ov
+  options:
+    - 4b-it-int4-fq-ov
+
+configurations:
+  target-device: GPU
