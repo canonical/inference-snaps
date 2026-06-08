@@ -22,6 +22,7 @@ If you find a config.json file instead of the YAML file, refer to this [YAML mig
 ```
 
 You can also open it from the plugin as follows:
+
 1. In the right [tool window bar][tool-window-bar], select the Continue logo
 2. Click on the **Select model** drop down menu
 3. In the new window, click the configuration icon (⚙️) to open `config.yaml`
