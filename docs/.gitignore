@@ -3,6 +3,7 @@
 .venv/
 
 # Sphinx
+.sphinx/
 _dev/warnings.txt
 _dev/.wordlist.dic
 _dev/.doctrees/
