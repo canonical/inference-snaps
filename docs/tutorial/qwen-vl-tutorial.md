@@ -10,7 +10,7 @@ This model is also referred to as a Vision Language Model (VLM) because it can i
 
 To complete this tutorial you will need:
 
-- A computer running an operating system that supports snaps, e.g., Ubuntu 24.04. Older Ubuntu versions aren't supported.
+- A computer running an operating system that supports snaps, e.g., Ubuntu 24.04 LTS. Older Ubuntu versions aren't supported.
 - Hardware drivers. These may be pre-installed in your OS, but some devices require {ref}`additional drivers <install-drivers>`.
 - A Docker installation
 
@@ -116,4 +116,4 @@ However, the model spotted the triangular buoy and responded according to that i
 
 To become more familiar with inference snaps:
 - Learn how to {ref}`switch to a different engine <switch-between-engines>` after installation
-- Configure an inference snap to {ref}`work with your IDE <use-in-ide>`
+- Configure an inference snap to {ref}`work with your clients <integration>`
