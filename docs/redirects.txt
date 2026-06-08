@@ -6,3 +6,4 @@
 # The old path must be a file that doesn"t exist in the source. The current path must be
 # a file that does exist in the source.
 
+./how-to/integration/use-in-ide/ ./how-to/integration/
