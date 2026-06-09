@@ -1,6 +1,8 @@
 package snap
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type mockSnap struct {
 	installComponentFn func(name string) error
@@ -28,6 +30,10 @@ func (c *mockSnap) Restart(service ...string) error {
 
 func (c *mockSnap) InstanceName() string {
 	return "mock-snap"
+}
+
+func (c *mockSnap) HardwareObservable() (bool, error) {
+	return false, nil
 }
 
 func (c *mockSnap) InstallComponent(name string) error {

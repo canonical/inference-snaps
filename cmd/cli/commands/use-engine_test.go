@@ -158,3 +158,60 @@ func TestFixActiveEngine_noActiveEngine(t *testing.T) {
 		t.Errorf("expected no active engine error, got %v", err)
 	}
 }
+
+func TestAutoSelectEngine_fallbackToEngine(t *testing.T) {
+
+	cache := storage.NewMockCache()
+	cmd := useEngineCommand{
+		Context: &common.Context{
+			EnginesDir: "../../../test_data/engines",
+			Cache:      cache,
+			Snap:       snap.Mock(),
+		},
+		fallback:  "amd-gpu",
+		auto:      true,
+		assumeYes: true,
+	}
+	err := cmd.autoSelectEngine()
+	if err != nil {
+		t.Fatalf("unexpected error auto selecting engine: %v", err)
+	}
+
+	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		t.Fatalf("unexpected error getting active engine: %v", err)
+	}
+	if activeEngine != "amd-gpu" {
+		t.Errorf("expected active engine to be 'amd-gpu', got %q", activeEngine)
+	}
+}
+
+func TestFixActiveEngine_fallbackWhenActiveEngineMissing(t *testing.T) {
+	cache := storage.NewMockCache()
+	cache.SetActiveEngine("missing-engine")
+
+	cmd := useEngineCommand{
+		Context: &common.Context{
+			EnginesDir: "../../../test_data/engines",
+			Cache:      cache,
+			Config:     storage.NewMockConfig(),
+			Snap:       snap.Mock(),
+		},
+		fallback:  "amd-gpu",
+		fix:       true,
+		assumeYes: true,
+	}
+
+	err := cmd.fixActiveEngine()
+	if err != nil {
+		t.Fatalf("unexpected error fixing active engine: %v", err)
+	}
+
+	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		t.Fatalf("unexpected error getting active engine: %v", err)
+	}
+	if activeEngine != "amd-gpu" {
+		t.Errorf("expected active engine to be 'amd-gpu', got %q", activeEngine)
+	}
+}

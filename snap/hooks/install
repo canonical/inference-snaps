@@ -35,12 +35,4 @@ ln -s /var/lib/snapd/hostfs/usr/lib/wsl/drivers $SNAP_COMMON/usr/lib/wsl/drivers
 #
 # Auto select an engine
 #
-
-if snapctl is-connected hardware-observe; then
-    modelctl use-engine --auto --assume-yes
-elif lscpu -V &> /dev/null; then
-    echo "Able to access hardware info without hardware-observe interface connection: assuming dev mode installation."
-    modelctl use-engine --auto --assume-yes
-else
-    echo "hardware-observe interface not auto connected. Skip auto engine selection."
-fi
+modelctl use-engine --auto --assume-yes --fallback=cpu
