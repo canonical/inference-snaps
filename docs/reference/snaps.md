@@ -125,11 +125,11 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 
 ## Qwen3.6
 
-[![qwen36 snap](https://snapcraft.io/qwen36/badge.svg)](https://snapcraft.io/qwen36)
-[![qwen36 source][gh-badge]](https://github.com/canonical/qwen3.6-snap)
+[![qwen3-6 snap](https://snapcraft.io/qwen3-6/badge.svg)](https://snapcraft.io/qwen3-6)
+[![qwen3-6 source][gh-badge]](https://github.com/canonical/qwen3.6-snap)
 
 Qwen3.6 is a Mixture-of-Experts Large Language Model designed for reasoning and chat completions.
-Input and output is text-based.
+It supports text and image inputs, with text-based outputs.
 
 This inference snap is optimized for the following hardware:
 
