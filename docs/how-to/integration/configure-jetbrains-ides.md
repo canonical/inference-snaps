@@ -14,7 +14,7 @@ It assumes that the snap has already been installed and configured.
 
 Open the configuration file `config.yaml`.
 The [config.yaml reference page][continue-ref] describes the possible locations of this file.
-It’s usually located at `~/.continue/config.yaml`.
+It's usually located at `~/.continue/config.yaml`.
 
 
 ```{note}
