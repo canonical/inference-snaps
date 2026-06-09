@@ -89,6 +89,7 @@ func Example_showEngineCommand_printEngineManifestYaml() {
 
 	// Output:
 	// name: cuda-generic
+	// summary: CUDA generic engine
 	// description: Nvidia GPUs using CUDA. All major CUDA versions are targeted.
 	// vendor: Canonical Ltd
 	// devices:
@@ -134,6 +135,7 @@ func Example_showEngineCommand_printEngineManifestJson() {
 	// Output:
 	// {
 	//   "name": "cuda-generic",
+	//   "summary": "CUDA generic engine",
 	//   "description": "Nvidia GPUs using CUDA. All major CUDA versions are targeted.",
 	//   "vendor": "Canonical Ltd",
 	//   "devices": {
@@ -195,6 +197,7 @@ func Example_showEngineCommand_printHappyEngineManifestYaml() {
 
 	// Output:
 	// name: intel-cpu
+	// summary: Intel CPU engine
 	// description: Use Intel CPUs
 	// vendor: Intel Corporation
 	// devices:
@@ -227,6 +230,7 @@ func Example_showEngineCommand_printHappyEngineManifestJson() {
 	// Output:
 	// {
 	//   "name": "intel-cpu",
+	//   "summary": "Intel CPU engine",
 	//   "description": "Use Intel CPUs",
 	//   "vendor": "Intel Corporation",
 	//   "devices": {
@@ -251,5 +255,87 @@ func Example_showEngineCommand_printHappyEngineManifestJson() {
 	//   },
 	//   "score": 16,
 	//   "compatible": true
+	// }
+}
+
+func Example_showEngineCommand_printEngineManifestWithLineBreaksInDescriptionYaml() {
+	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := showEngineCommand{format: "yaml"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// name: amd-gpu
+	// summary: AMD GPU engine
+	// description: |
+	//     AMD specific engine targeting one microarchitecture:
+	//       - gfx1032
+	// vendor: Canonical Ltd
+	// devices:
+	//     allof:
+	//         - type: cpu
+	//           architecture: amd64
+	//         - type: gpu
+	//           vendor-id: "0x1002"
+	//           microarchitecture: gfx1032
+	//           compatibility-issues:
+	//             - device not found
+	// configurations: {}
+	// score: 0
+	// compatible: false
+	// compatibility-issues:
+	//     - required device not found
+}
+
+func Example_showEngineCommand_printEngineManifestWithLineBreaksInDescriptionJson() {
+	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := showEngineCommand{format: "json"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// {
+	//   "name": "amd-gpu",
+	//   "summary": "AMD GPU engine",
+	//   "description": "AMD specific engine targeting one microarchitecture:\n  - gfx1032\n",
+	//   "vendor": "Canonical Ltd",
+	//   "devices": {
+	//     "anyof": null,
+	//     "allof": [
+	//       {
+	//         "type": "cpu",
+	//         "architecture": "amd64"
+	//       },
+	//       {
+	//         "type": "gpu",
+	//         "vendor-id": "0x1002",
+	//         "microarchitecture": "gfx1032",
+	//         "compatibility-issues": [
+	//           "device not found"
+	//         ]
+	//       }
+	//     ]
+	//   },
+	//   "runtime": "",
+	//   "model": {
+	//     "default": "",
+	//     "options": null
+	//   },
+	//   "configurations": null,
+	//   "score": 0,
+	//   "compatible": false,
+	//   "compatibility-issues": [
+	//     "required device not found"
+	//   ]
 	// }
 }

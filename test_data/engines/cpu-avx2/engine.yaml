@@ -1,5 +1,6 @@
 name: cpu-avx2
 description: CPUs with AVX2
+summary: CPU AVX2 engine
 vendor: Canonical Ltd
 experimental: false
 devices:

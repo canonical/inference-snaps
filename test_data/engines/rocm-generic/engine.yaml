@@ -1,5 +1,6 @@
 name: rocm-generic
 description: AMD GPUs using ROCm. All major ROCm versions are targeted.
+summary: ROCm generic engine
 vendor: Canonical Ltd
 experimental: false
 devices:

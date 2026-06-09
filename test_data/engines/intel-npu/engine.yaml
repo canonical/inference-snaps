@@ -1,5 +1,6 @@
 name: intel-npu
 description: Intel NPUs
+summary: Intel NPU engine
 vendor: Intel Corporation
 devices:
   allof:

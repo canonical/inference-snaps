@@ -1,5 +1,6 @@
 name: intel-cpu
 description: Use Intel CPUs
+summary: Intel CPU engine
 vendor: Intel Corporation
 experimental: false
 devices:

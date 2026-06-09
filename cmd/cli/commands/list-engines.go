@@ -103,7 +103,7 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 		return "", fmt.Errorf("No engines found.")
 	}
 
-	var headerRow = []string{"engine", "vendor", "description", "compat"}
+	var headerRow = []string{"engine", "vendor", "summary", "compat"}
 	tableRows := [][]string{headerRow}
 
 	// Sort by Score in descending order
@@ -127,7 +127,7 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 		engineNameMaxLen = max(engineNameMaxLen, len(engine.Name), len(headerRow[0]))
 		engineVendorMaxLen = max(engineVendorMaxLen, len(engine.Vendor), len(headerRow[1]))
 
-		row := []string{engine.Name, engine.Vendor, engine.Description}
+		row := []string{engine.Name, engine.Vendor, engine.Summary}
 
 		compatibleStr := ""
 		if engine.Compatible && !engine.IsExperimental() {
@@ -146,10 +146,10 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 	// Increase column widths to account for paddings
 	engineNameMaxLen += 1
 	engineVendorMaxLen += 2
-	// Description column fills the remaining space
-	engineDescriptionMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
+	// Summary column fills the remaining space, up to [engines.SummaryMaxLength]
+	engineSummaryMaxLen := tableMaxWidth - (engineNameMaxLen + engineVendorMaxLen)
 	// Reserve space for Compatible column
-	engineDescriptionMaxLen -= len(headerRow[3]) + 1
+	engineSummaryMaxLen -= len(headerRow[3]) + 1
 	options := []tablewriter.Option{
 		tablewriter.WithRenderer(renderer.NewColorized(renderer.ColorizedConfig{
 			Header: renderer.Tint{
@@ -175,9 +175,9 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 			MaxWidth: tableMaxWidth,
 			Widths: tw.CellWidth{
 				PerColumn: tw.Mapper[int, int]{
-					0: engineNameMaxLen,        // Engine name
-					1: engineVendorMaxLen,      // Vendor
-					2: engineDescriptionMaxLen, // Description
+					0: engineNameMaxLen,    // Engine name
+					1: engineVendorMaxLen,  // Vendor
+					2: engineSummaryMaxLen, // Summary
 					// 3:  0, // Compatible, not set because cell value is shorter than min width
 				},
 			},

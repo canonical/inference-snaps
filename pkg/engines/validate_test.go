@@ -12,6 +12,7 @@ func templateManifest() Manifest {
 	manifest := Manifest{
 		Name:         "test",
 		Description:  "test",
+		Summary:      "test",
 		Vendor:       "test",
 		Experimental: nil,
 		Model: Model{
@@ -38,12 +39,21 @@ func TestManifestFiles(t *testing.T) {
 		if entry.IsDir() {
 			engine := entry.Name()
 			manifestPath := filepath.Join(enginesDir, engine, ManifestFilename)
-			t.Run(engine, func(t *testing.T) {
-				err = Validate(manifestPath)
-				if err != nil {
-					t.Fatalf("%s: %v", engine, err)
-				}
-			})
+			if engine != "not-compatible-engine" {
+				t.Run(engine, func(t *testing.T) {
+					err = Validate(manifestPath)
+					if err != nil {
+						t.Fatalf("%s: %v", engine, err)
+					}
+				})
+			} else {
+				t.Run(engine, func(t *testing.T) {
+					err = Validate(manifestPath)
+					if err == nil {
+						t.Fatalf("%s should be invalid because the summary exceeds the maximum allowed characters", engine)
+					}
+				})
+			}
 		}
 	}
 }
@@ -80,13 +90,13 @@ func TestNameRequired(t *testing.T) {
 
 }
 
-func TestDescriptionRequired(t *testing.T) {
+func TestSummaryRequired(t *testing.T) {
 	manifest := templateManifest()
+	manifest.Summary = ""
 	manifest.Description = ""
-
 	err := manifest.validate("test")
 	if err == nil {
-		t.Fatal("description is required")
+		t.Fatal("summary is required")
 	}
 	t.Log(err)
 

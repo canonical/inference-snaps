@@ -1,5 +1,6 @@
 name: ampere-altra
 description: Test ampere selection
+summary: Ampere Altra engine
 vendor: Canonical Ltd
 experimental: false
 devices:

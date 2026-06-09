@@ -1,5 +1,6 @@
 name: arm-neon
 description: ARM CPUs with NEON instruction set
+summary: ARM NEON engine
 vendor: Canonical Ltd
 experimental: false
 devices:

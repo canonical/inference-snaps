@@ -1,5 +1,6 @@
 name: intel-gpu
 description: Modern Intel GPUs (>=gen 13)
+summary: Intel GPU engine
 vendor: Intel Corporation
 experimental: false
 devices:

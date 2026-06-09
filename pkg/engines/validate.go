@@ -11,6 +11,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// The chars limit has been chosen as it is the maximum length that can be displayed without truncation in the
+// list-engines table considering the minimum width of the other columns.
+const SummaryMaxLength = 56
+
 func Validate(manifestFilePath string) error {
 
 	if !strings.HasSuffix(manifestFilePath, ManifestFilename) {
@@ -77,8 +81,11 @@ func (manifest Manifest) validate(expectedEngineName string) error {
 		}
 	}
 
-	if manifest.Description == "" {
-		return fmt.Errorf("required field is not set: description")
+	if manifest.Summary == "" {
+		return fmt.Errorf("required field is not set: summary")
+	} else if len(manifest.Summary) > SummaryMaxLength {
+
+		return fmt.Errorf("summary field should be at most %d characters: %d", SummaryMaxLength, len(manifest.Summary))
 	}
 
 	if manifest.Vendor == "" {

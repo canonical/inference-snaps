@@ -1,5 +1,6 @@
 name: ampere
 description: Test ampere selection
+summary: Ampere ARM64 engine
 vendor: Canonical Ltd
 devices:
   allof:

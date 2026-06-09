@@ -1,5 +1,6 @@
 name: cuda-generic
 description: Nvidia GPUs using CUDA. All major CUDA versions are targeted.
+summary: CUDA generic engine
 vendor: Canonical Ltd
 devices:
   allof:

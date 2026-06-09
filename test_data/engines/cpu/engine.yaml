@@ -1,5 +1,6 @@
 name: cpu
 description: General CPU engine
+summary: General CPU engine
 vendor: Canonical Ltd
 experimental: false
 devices:

@@ -1,5 +1,6 @@
 name: cpu-avx512
 description: CPUs with AVX512
+summary: CPU AVX512 engine
 vendor: Canonical Ltd
 experimental: false
 devices:
