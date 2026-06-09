@@ -1,0 +1,61 @@
+(configure-jetbrains-ides)=
+
+# Use an inference snap from your favorite JetBrains IDE
+
+Inference snaps provide an API that can be integrated with other software.
+This guide explains how to integrate an inference snap with your favorite JetBrains IDE.
+It assumes that the snap has already been installed and configured.
+
+## Install Continue
+
+[Continue][continue-docs] enables integration of locally running models with the IDE. Install the Continue plugin by searching for **Continue** in the plugins menu on the welcome screen of the IDE, or by going to **File** > **Settings** > **Plugins** and searching for **Continue**.
+
+## Configure Continue
+
+Open the configuration file `config.yaml`.
+The [config.yaml reference page][continue-ref] describes the possible locations of this file.
+It's usually located at `~/.continue/config.yaml`.
+
+
+```{note}
+If you find a config.json file instead of the YAML file, refer to this [YAML migration guide](https://docs.continue.dev/reference/yaml-migration). 
+```
+
+You can also open it from the plugin as follows:
+
+1. In the right [tool window bar][tool-window-bar], select the Continue logo
+2. Click on the **Select model** drop down menu
+3. In the new window, click the configuration icon (⚙️) to open `config.yaml`
+
+
+Find the `models` list in the YAML file and add:
+
+```yaml
+  - name: Qwen-VL
+    provider: openai
+    apiBase: http://localhost:8326/v3
+    model: Qwen2.5-VL-3B-Instruct-ov-int4
+    roles:
+      - chat
+      - edit
+```
+
+The values above are examples based on the `qwen-vl` inference snap.
+Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
+To identify the correct `apiBase` and `model` name, check out this guide on {ref}`using the snap via its OpenAI API<use-openai-api>`.
+
+For additional configuration options, visit the [Continue reference page][continue-ref].
+
+## Use the inference snap with Continue
+
+Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue chat box.
+Any requests in the chat box will be sent to the selected model.
+
+```{tip}
+Explore the [Continue documentation][continue-docs] to learn how to use it for coding, chat and more.
+```
+
+<!-- links -->
+[continue-ref]: https://docs.continue.dev/reference
+[continue-docs]: https://docs.continue.dev/
+[tool-window-bar]: https://www.jetbrains.com/help/idea/tool-windows.html#bars_and_buttons

@@ -1,3 +1,5 @@
+(integration)=
+
 # Integrate with inference snaps
 
 Inference snaps provide standard API endpoints that can be used for integration with most existing clients.
@@ -11,9 +13,10 @@ OpenCode <configure-opencode>
 OpenShell <configure-openshell>
 ```
 
-Use the snap with your IDE:
+Use the snap with your IDEs:
 
 ```{toctree}
 :maxdepth: 1
-IDEs <use-in-ide>
+Visual Studio Code <configure-vs-code>
+JetBrains IDEs <configure-jetbrains-ides>
 ```
