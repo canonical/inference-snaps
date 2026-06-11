@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/v2/cmd/cli/common"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

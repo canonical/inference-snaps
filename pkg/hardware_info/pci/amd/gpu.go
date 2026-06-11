@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 func gpuProperties(pciDevice types.PciDevice) (map[string]string, error) {

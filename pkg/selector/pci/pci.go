@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/canonical/go-snapctl"
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/selector/weights"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/weights"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 func Match(manifestDevice engines.Device, hostPciDevices []types.PciDevice) (maxDeviceScore int, deviceIssues []string) {

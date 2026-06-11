@@ -1,8 +1,8 @@
 package common
 
 import (
-	"github.com/canonical/inference-snaps-cli/pkg/snap"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
 type Context struct {

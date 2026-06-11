@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 const nvidiaSmiTimeout = 30 * time.Second

@@ -7,14 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
-	"github.com/canonical/inference-snaps-cli/pkg/models"
-	"github.com/canonical/inference-snaps-cli/pkg/runtimes"
-	"github.com/canonical/inference-snaps-cli/pkg/selector"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 type Settings struct {

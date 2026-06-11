@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 var testDirs = []string{

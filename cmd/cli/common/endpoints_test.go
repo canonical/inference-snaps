@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/runtimes"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
 // writeRuntimeYAML replaces the runtime.yaml for the named runtime inside the given runtimesDir.

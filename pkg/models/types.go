@@ -1,6 +1,6 @@
 package models
 
-import "github.com/canonical/inference-snaps-cli/pkg/types"
+import "github.com/canonical/inference-snaps-cli/v2/pkg/types"
 
 type Manifest struct {
 	ID   string `json:"id" yaml:"id"`

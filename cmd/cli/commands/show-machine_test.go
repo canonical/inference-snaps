@@ -3,8 +3,8 @@ package commands
 import (
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 func Example_showMachineCommand_printMachineInfoJson() {

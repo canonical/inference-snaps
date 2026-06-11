@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
 	"gopkg.in/yaml.v3"
 )
 

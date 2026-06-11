@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/canonical/go-snapctl/env"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/webui"
+	"github.com/canonical/inference-snaps-cli/v2/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/webui"
 	"github.com/spf13/cobra"
 )
 

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
 func TestCompleteConfigKeysSuggestsKnownKeys(t *testing.T) {

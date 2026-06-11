@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/pkg/models"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 )
 
 func ModelStatus(ctx *Context) (map[string]string, error) {

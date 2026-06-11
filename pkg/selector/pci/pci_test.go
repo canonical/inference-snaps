@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 func TestCheckGpuVendor(t *testing.T) {

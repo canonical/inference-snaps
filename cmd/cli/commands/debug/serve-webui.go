@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
-	"github.com/canonical/inference-snaps-cli/pkg/webui"
+	"github.com/canonical/inference-snaps-cli/v2/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/webui"
 	"github.com/spf13/cobra"
 )
 

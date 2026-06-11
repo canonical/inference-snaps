@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"slices"
 
-	"github.com/canonical/inference-snaps-cli/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
 )
 
 func (device Device) validateCpu() error {

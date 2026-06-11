@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/canonical/inference-snaps-cli/pkg/snap"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
 // testDirs holds paths to the crafted directory tree used by component tests.

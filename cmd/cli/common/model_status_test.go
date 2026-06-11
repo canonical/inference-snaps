@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
 // writeModelYAML creates a model manifest at modelsDir/<name>/model.yaml with the given content.

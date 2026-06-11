@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/pkg/constants"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci/amd"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci/intel"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci/nvidia"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/pci/amd"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/pci/intel"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/pci/nvidia"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 	"github.com/jaypipes/pcidb"
 )
 

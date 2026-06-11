@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/storage"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 // errCache is a storage.Cache that returns errors from the specified methods.

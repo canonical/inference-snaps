@@ -3,10 +3,10 @@ package pci
 import (
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/selector/weights"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/weights"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 func checkProperties(manifestDevice engines.Device, hostPciDevice types.PciDevice) (int, error) {

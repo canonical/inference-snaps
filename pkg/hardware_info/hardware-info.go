@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/cpu"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/disk"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/memory"
-	"github.com/canonical/inference-snaps-cli/pkg/hardware_info/pci"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/cpu"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/disk"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/memory"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info/pci"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 func Get(friendlyNames bool) (*types.HwInfo, []string, error) {

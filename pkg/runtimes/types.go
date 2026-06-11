@@ -1,6 +1,6 @@
 package runtimes
 
-import "github.com/canonical/inference-snaps-cli/pkg/types"
+import "github.com/canonical/inference-snaps-cli/v2/pkg/types"
 
 type Manifest struct {
 	Servers     map[string]Server       `json:"servers" yaml:"servers"`

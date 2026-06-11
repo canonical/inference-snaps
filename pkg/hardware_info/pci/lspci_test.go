@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 func TestParseLsCpu(t *testing.T) {

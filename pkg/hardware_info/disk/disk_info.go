@@ -3,8 +3,8 @@ package disk
 import (
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/pkg/constants"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 var directories = []string{

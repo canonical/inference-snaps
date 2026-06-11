@@ -4,10 +4,10 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/selector/cpu"
-	"github.com/canonical/inference-snaps-cli/pkg/selector/pci"
-	"github.com/canonical/inference-snaps-cli/pkg/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/cpu"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/pci"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 )
 
 var ErrorNoCompatibleEngine = errors.New("no compatible engines found")

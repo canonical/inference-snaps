@@ -5,7 +5,7 @@ import (
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
-	"github.com/canonical/inference-snaps-cli/cmd/cli/common"
+	"github.com/canonical/inference-snaps-cli/v2/cmd/cli/common"
 	"github.com/spf13/cobra"
 )
 

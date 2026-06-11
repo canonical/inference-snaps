@@ -1,4 +1,4 @@
-module github.com/canonical/inference-snaps-cli
+module github.com/canonical/inference-snaps-cli/v2
 
 go 1.26.1
 

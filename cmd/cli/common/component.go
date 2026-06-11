@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/canonical/inference-snaps-cli/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/pkg/models"
-	"github.com/canonical/inference-snaps-cli/pkg/runtimes"
-	"github.com/canonical/inference-snaps-cli/pkg/snap_store"
-	"github.com/canonical/inference-snaps-cli/pkg/utils"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap_store"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 // InstalledComponents returns the names of all currently installed components
