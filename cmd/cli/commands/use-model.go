@@ -40,9 +40,34 @@ func UseModel(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
+// validateArgs returns a list of model names supported by the currently active engine
 func (cmd *useModelCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	// TODO implement auto completion
-	return nil, cobra.ShellCompDirectiveNoFileComp
+	activeEngine, err := cmd.Cache.GetActiveEngine()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveError
+	}
+	if activeEngine == "" {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	engineManifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngine)
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveError
+	}
+	supportedModels := engineManifest.Model.Options
+
+	modelManifests, err := models.LoadManifests(cmd.ModelsDir)
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	var completions []cobra.Completion
+	for _, manifest := range modelManifests {
+		if slices.Contains(supportedModels, manifest.ID) {
+			completions = append(completions, manifest.Name)
+		}
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
 func (cmd *useModelCommand) run(_ *cobra.Command, args []string) error {
@@ -95,7 +120,7 @@ func (cmd *useModelCommand) switchModel(modelId string) error {
 	supportedModels := engineManifest.Model.Options
 
 	if !slices.Contains(supportedModels, modelId) {
-		return fmt.Errorf("model %s not supported by engine %s", modelId, activeEngine)
+		return fmt.Errorf("model %s not supported by engine %s", newModelManifest.Name, activeEngine)
 	}
 
 	cancelledByUser, err := common.InstallMissingComponents(cmd.Context, cmd.assumeYes, engineManifest, newModelManifest)
@@ -121,7 +146,7 @@ func (cmd *useModelCommand) switchModel(modelId string) error {
 		return fmt.Errorf("setting active model: %v", err)
 	}
 
-	fmt.Printf("Model changed to %q.\n", modelId)
+	fmt.Printf("Model changed to %q.\n", newModelManifest.Name)
 
 	// Ask if the user wants to restart
 	if !cmd.noRestart {

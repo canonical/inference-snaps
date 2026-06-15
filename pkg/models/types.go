@@ -17,5 +17,5 @@ type Manifest struct {
 
 	Environment []string `json:"environment" yaml:"environment"`
 
-	Layout      map[string]types.Layout `yaml:"layout"`
+	Layout map[string]types.Layout `json:"layout,omitempty" yaml:"layout,omitempty"`
 }

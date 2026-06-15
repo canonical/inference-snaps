@@ -88,6 +88,55 @@ func TestIsRootUser(t *testing.T) {
 	}
 }
 
+func TestFmtBytesShortUnit(t *testing.T) {
+	tests := []struct {
+		value    float64
+		unit     string
+		expected string
+	}{
+		{1.0, "G", "1G"},
+		{2.0, "M", "2M"},
+		{1.5, "G", "1.5G"},
+		{0.0, "K", "0K"},
+		{1024.0, "T", "1024T"},
+		{3.7, "K", "3.7K"},
+	}
+	for _, tt := range tests {
+		got := fmtBytesShortUnit(tt.value, tt.unit)
+		if got != tt.expected {
+			t.Errorf("fmtBytesShortUnit(%v, %q) = %q, want %q", tt.value, tt.unit, got, tt.expected)
+		}
+	}
+}
+
+func TestFmtBytesShort(t *testing.T) {
+	tests := []struct {
+		bytes    uint64
+		expected string
+	}{
+		{0, "0"},
+		{512, "512"},
+		{1024, "1K"},
+		{2048, "2K"},
+		{1536, "1.5K"},
+		{1024 * 1024, "1M"},
+		{2 * 1024 * 1024, "2M"},
+		{uint64(1.5 * 1024 * 1024), "1.5M"},
+		{1024 * 1024 * 1024, "1G"},
+		{2 * 1024 * 1024 * 1024, "2G"},
+		{uint64(1.5 * 1024 * 1024 * 1024), "1.5G"},
+		{1024 * 1024 * 1024 * 1024, "1T"},
+		{2 * 1024 * 1024 * 1024 * 1024, "2T"},
+		{uint64(1.5 * 1024 * 1024 * 1024 * 1024), "1.5T"},
+	}
+	for _, tt := range tests {
+		got := FmtBytesShort(tt.bytes)
+		if got != tt.expected {
+			t.Errorf("FmtBytesShort(%d) = %q, want %q", tt.bytes, got, tt.expected)
+		}
+	}
+}
+
 func TestSetEnvironmentVariables(t *testing.T) {
 	defer os.Unsetenv("TEST_VAR")
 

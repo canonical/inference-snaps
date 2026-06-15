@@ -99,10 +99,6 @@ func (cmd *listEnginesCommand) printEnginesJson(enginesList outputEngines) error
 }
 
 func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (string, error) {
-	if len(enginesList.Engines) == 0 {
-		return "", fmt.Errorf("No engines found.")
-	}
-
 	var headerRow = []string{"engine", "vendor", "summary", "compat"}
 	tableRows := [][]string{headerRow}
 

@@ -17,6 +17,9 @@ disk-size: 6G # metadata
 
 capabilities:
   - text
+  - vision
+  - audio
+  - tool
 
 components:
   - model-30b-a3b-q4-k-m-gguf-1-of-6

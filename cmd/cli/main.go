@@ -96,6 +96,7 @@ func main() {
 		commands.ShowEngine(ctx),
 		commands.UseEngine(ctx),
 		commands.ListModels(ctx),
+		commands.ShowModel(ctx),
 		commands.UseModel(ctx),
 	)
 

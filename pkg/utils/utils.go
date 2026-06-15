@@ -21,7 +21,7 @@ func FmtPretty(v interface{}) string {
 	return string(jsonData)
 }
 
-// FmtBytes converts bytes to a printable string with unit
+// FmtBytes converts bytes to a printable string with binary prefixes (XiB)
 func FmtBytes(bytes uint64) string {
 	if bytes > 1024*1024*1024*1024 {
 		return fmt.Sprintf("%.1fTiB", float64(bytes)/1024/1024/1024/1024)
@@ -31,6 +31,28 @@ func FmtBytes(bytes uint64) string {
 		return fmt.Sprintf("%.1fMiB", float64(bytes)/1024/1024)
 	} else if bytes > 1024 {
 		return fmt.Sprintf("%.1fKiB", float64(bytes)/1024)
+	}
+	return fmt.Sprintf("%d", bytes)
+}
+
+// fmtBytesShortUnit formats a float with one or zero decimal places and appends a unit
+func fmtBytesShortUnit(value float64, unit string) string {
+	if value == float64(uint64(value)) {
+		return fmt.Sprintf("%d%s", uint64(value), unit)
+	}
+	return fmt.Sprintf("%.1f%s", value, unit)
+}
+
+// FmtBytesShort converts bytes to a printable string with a short unit (e.g. 1K, 1.5M, 2G)
+func FmtBytesShort(bytes uint64) string {
+	if bytes >= 1024*1024*1024*1024 {
+		return fmtBytesShortUnit(float64(bytes)/1024/1024/1024/1024, "T")
+	} else if bytes >= 1024*1024*1024 {
+		return fmtBytesShortUnit(float64(bytes)/1024/1024/1024, "G")
+	} else if bytes >= 1024*1024 {
+		return fmtBytesShortUnit(float64(bytes)/1024/1024, "M")
+	} else if bytes >= 1024 {
+		return fmtBytesShortUnit(float64(bytes)/1024, "K")
 	}
 	return fmt.Sprintf("%d", bytes)
 }
