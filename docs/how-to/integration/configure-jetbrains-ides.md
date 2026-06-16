@@ -3,59 +3,98 @@
 # Use an inference snap from your favorite JetBrains IDE
 
 Inference snaps provide an API that can be integrated with other software.
-This guide explains how to integrate an inference snap with your favorite JetBrains IDE.
+This guide explains how to integrate an inference snap with JetBrains AI Assistant in your JetBrains IDE.
 It assumes that the snap has already been installed and configured.
 
-## Install Continue
+## Get the inference snap's endpoint
 
-[Continue][continue-docs] enables integration of locally running models with the IDE. Install the Continue plugin by searching for **Continue** in the plugins menu on the welcome screen of the IDE, or by going to **File** > **Settings** > **Plugins** and searching for **Continue**.
+Use the inference snap's `status` command to retrieve the OpenAI endpoint URL.
 
-## Configure Continue
+For example, with the `gemma4` snap, run:
 
-Open the configuration file `config.yaml`.
-The [config.yaml reference page][continue-ref] describes the possible locations of this file.
-It's usually located at `~/.continue/config.yaml`.
-
-
-```{note}
-If you find a config.json file instead of the YAML file, refer to this [YAML migration guide](https://docs.continue.dev/reference/yaml-migration). 
+```shell
+gemma4 status
 ```
 
-You can also open it from the plugin as follows:
-
-1. In the right [tool window bar][tool-window-bar], select the Continue logo
-2. Click on the **Select model** drop down menu
-3. In the new window, click the configuration icon (⚙️) to open `config.yaml`
-
-
-Find the `models` list in the YAML file and add:
+The output will show the endpoint and model information:
 
 ```yaml
-  - name: Qwen-VL
-    provider: openai
-    apiBase: http://localhost:8326/v3
-    model: Qwen2.5-VL-3B-Instruct-ov-int4
-    roles:
-      - chat
-      - edit
+engine: nvidia-gpu
+services:
+    server: active
+    server-webui: active
+endpoints:
+    openai: http://localhost:8336/v1
+    webui: http://localhost:8337/
+model:
+    name: gemma4-e4b-q4-k-m
 ```
 
-The values above are examples based on the `qwen-vl` inference snap.
-Update `name`, `model`, and `apiBase` to match your specific snap and its configuration.
-To identify the correct `apiBase` and `model` name, check out this guide on {ref}`using the snap via its OpenAI API<use-openai-api>`.
+Note down the `openai` endpoint URL as you'll need it for configuration.
 
-For additional configuration options, visit the [Continue reference page][continue-ref].
+## Configure AI Assistant for local models
 
-## Use the inference snap with Continue
+JetBrains IDEs include _AI Assistant_, which can be configured to use locally hosted models.
+Open your JetBrains IDE and follow these steps to connect your inference snap:
 
-Once the model is configured, it can be selected from the Select Model drop down at the bottom of the Continue chat box.
-Any requests in the chat box will be sent to the selected model.
+### Ensure AI Assistant is installed
+
+AI Assistant comes as a plugin for JetBrains IDEs and may already be installed in your IDE. If not, follow this procedure:
+
+1. Navigate to **Settings | Plugins**.
+
+2. Search for and select _JetBrains AI Assistant_.
+
+3. Click the **Install** button.
+
+### Add the OpenAI-compatible endpoint
+
+Once _AI Assistant_ is installed, the API endpoint needs to be configured:
+
+1. Navigate to **Settings | Tools | AI Assistant | Providers & API keys**.
+
+2. In the **Third-party AI providers** section, select **OpenAI-compatible** as the provider type.
+
+3. In the configuration panel:
+   - **API Base URL**: Enter the API endpoint of your inference snap (for example, `http://localhost:8336/v1`).
+   - **API Key**: This field is not required for inference snaps, leave it empty or use a placeholder value, e.g. `unset`.
+
+4. Click **Test Connection** to verify the connection is working correctly.
+
+5. Click **Apply** to save the configuration.
+
+For more information, refer to the JetBrains [using custom models][jetbrains-ai-docs] guide.
+
+### Assign the model to AI Assistant features
+
+Once the endpoint is configured, you can assign your model to specific AI Assistant features:
+
+1. Navigate to **Settings | Tools | AI Assistant | Providers & API keys**.
+
+2. Scroll to the **Models Assignment** section.
+
+3. For each AI Assistant feature group (Core features, Instant helpers, Completion model), select your model from the dropdown.
+
+   - **Core features**: Used for in-editor code generation, commit message generation, and AI Chat
+   - **Instant helpers**: Used for lightweight features like chat context collection and name suggestions
+   - **Completion model**: Used for inline code completion (requires a Fill-in-the-Middle capable model)
+
+4. Click **Apply** to save your changes.
+
+## Use the inference snap with AI Chat
+
+Once your model is configured, you can use it in AI Chat:
+
+1. Open AI Chat by pressing the keyboard shortcut or selecting **Tools | AI Assistant** from the menu.
+
+2. In the chat window, select your model from the model selector dropdown. Your configured inference snap will appear under the **OpenAI-compatible** section.
+
+3. Start typing your prompts and the requests will be sent to your local inference snap.
 
 ```{tip}
-Explore the [Continue documentation][continue-docs] to learn how to use it for coding, chat and more.
+For more information about using AI Assistant, refer to the [JetBrains AI Assistant documentation][jetbrains-ai-chat].
 ```
 
 <!-- links -->
-[continue-ref]: https://docs.continue.dev/reference
-[continue-docs]: https://docs.continue.dev/
-[tool-window-bar]: https://www.jetbrains.com/help/idea/tool-windows.html#bars_and_buttons
+[jetbrains-ai-docs]: https://www.jetbrains.com/help/ai-assistant/use-custom-models.html
+[jetbrains-ai-chat]: https://www.jetbrains.com/help/ai-assistant/ai-chat.html
