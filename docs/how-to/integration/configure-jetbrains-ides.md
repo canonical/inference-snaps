@@ -34,7 +34,7 @@ Note down the `openai` endpoint URL as you'll need it for configuration.
 
 ## Configure AI Assistant for local models
 
-JetBrains IDEs include _AI Assistant_, which can be configured to use locally hosted models.
+JetBrains IDEs support _AI Assistant_, which can be configured to use locally hosted models.
 Open your JetBrains IDE and follow these steps to connect your inference snap:
 
 ### Ensure AI Assistant is installed
