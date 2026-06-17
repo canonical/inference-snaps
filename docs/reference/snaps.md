@@ -103,12 +103,12 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 
 {{explore_optimizations}}
 
-## Qwen VL
+## Qwen 2.5 VL
 
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
 
-Qwen VL is a Vision Language Model which has the ability to process both visual and textual data.
+Qwen 2.5 VL is a Vision Language Model which has the ability to process both visual and textual data.
 The input can be a combination of an image and text, with the output being text-based.
 
 The inference snap for Qwen 2.5 VL has been optimized for the following:
@@ -120,6 +120,26 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
+
+{{explore_optimizations}}
+
+## Qwen 3 Coder
+
+[![qwen3-coder snap](https://snapcraft.io/qwen3-coder/badge.svg)](https://snapcraft.io/qwen3-coder)
+[![qwen3-coder source][gh-badge]](https://github.com/canonical/qwen3-coder-snap)
+
+Qwen 3 Coder is a Large Language Model designed for coding and software development tasks.
+The input and output are text-based.
+
+The inference snap for Qwen 3 Coder has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
 
