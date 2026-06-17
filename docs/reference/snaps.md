@@ -123,6 +123,26 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 
 {{explore_optimizations}}
 
+## Qwen3.6
+
+[![qwen3-6 snap](https://snapcraft.io/qwen3-6/badge.svg)](https://snapcraft.io/qwen3-6)
+[![qwen3-6 source][gh-badge]](https://github.com/canonical/qwen3.6-snap)
+
+Qwen3.6 is a Mixture-of-Experts Large Language Model designed for reasoning and chat completions.
+It supports text and image inputs, with text-based outputs.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
+{{explore_optimizations}}
+
 <!--
 ## Deprecated snaps
 
