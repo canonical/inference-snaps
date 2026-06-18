@@ -49,6 +49,8 @@ AI Assistant comes as a plugin for JetBrains IDEs and may already be installed i
 
 4. You may need to restart your IDE for the installation to take effect.
 
+For more information, please see JetBrains' page on how to [install AI Assistant][jetbrains-install-ai-assistant].
+
 ### Add the OpenAI-compatible endpoint
 
 Once _AI Assistant_ is installed, the API endpoint needs to be configured:
@@ -100,3 +102,4 @@ For more information about using AI Assistant, refer to the [JetBrains AI Assist
 <!-- links -->
 [jetbrains-ai-docs]: https://www.jetbrains.com/help/ai-assistant/use-custom-models.html
 [jetbrains-ai-chat]: https://www.jetbrains.com/help/ai-assistant/ai-chat.html
+[jetbrains-install-ai-assistant]: https://www.jetbrains.com/help/ai-assistant/installation-guide-ai-assistant.html
