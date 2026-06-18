@@ -56,7 +56,7 @@ Once _AI Assistant_ is installed, the API endpoint needs to be configured:
 2. In the **Third-party AI providers** section, select **OpenAI-compatible** as the provider type.
 
 3. In the configuration panel:
-   - **API Base URL**: Enter the API endpoint of your inference snap (for example, `http://localhost:8336/v1`).
+   - **URL**: Enter the API endpoint of your inference snap (for example, `http://localhost:8336/v1`).
    - **API Key**: This field is not required for inference snaps, leave it empty or use a placeholder value, e.g. `unset`.
 
 4. Click **Test Connection** to verify the connection is working correctly.
