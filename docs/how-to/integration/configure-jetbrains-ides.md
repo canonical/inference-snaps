@@ -47,7 +47,7 @@ AI Assistant comes as a plugin for JetBrains IDEs and may already be installed i
 
 3. Click the **Install** button.
 
-4. You may need to restart your IDE for the installation to take effect.
+4. You might need to restart your IDE for the installation to take effect.
 
 For more information, please see JetBrains' page on how to [install AI Assistant][jetbrains-install-ai-assistant].
 
