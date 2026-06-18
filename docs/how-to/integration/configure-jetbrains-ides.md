@@ -67,7 +67,7 @@ Once _AI Assistant_ is installed, the API endpoint needs to be configured:
 
 5. Click **Apply** to save the configuration.
 
-For more information, refer to the JetBrains [using custom models][jetbrains-ai-docs] guide.
+For more information, refer to the JetBrains' [using custom models][jetbrains-ai-docs] guide.
 
 ### Assign the model to AI Assistant features
 
