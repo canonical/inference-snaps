@@ -23,7 +23,7 @@ go test -count 1 -failfast ./...
 The CLIs included in this repo can be built using the following commands:
 
 ```bash
-go build ./cmd/cli
+go build ./cmd/modelctl
 ```
 
 ### Build snap

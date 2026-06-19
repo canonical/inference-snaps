@@ -41,13 +41,18 @@ parts:
     override-pull: |
       craftctl set version="$(git -C $SNAPCRAFT_PROJECT_DIR describe --always --dirty)"
 
-  scripts:
+  local-scripts:
     source: snap/local
     plugin: dump
     organize:
-      "completion.bash": bin/
       "server.sh": bin/
       "server-webui.sh": bin/
+
+  completer:
+    source: completer
+    plugin: dump
+    organize:
+      "snap.bash": bin/completion.bash
 
   engines:
     plugin: dump
@@ -77,8 +82,6 @@ parts:
       craftctl default
       # For tab completion
       ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/stack-utils
-    organize:
-      bin/cli: bin/modelctl
 
   cli-dependencies:
     plugin: nil

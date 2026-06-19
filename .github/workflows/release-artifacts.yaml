@@ -45,15 +45,24 @@ jobs:
           GOOS: ${{ matrix.runner.goos }}
           GOARCH: ${{ matrix.runner.goarch }}
         run: |
-          go build -ldflags="-s -w" -o ./cli ./cmd/cli
+          go build -ldflags="-s -w" -o ./modelctl ./cmd/modelctl
 
       - name: Generate artifact
         run: |
-          tar -Jcvf ${{ env.ARTIFACT_NAME }} ./cli ./LICENSE
+          # Organize files
+          mkdir -p bin
+          mv ./modelctl ./bin/modelctl
+          mv ./completer/snap.bash ./bin/snap-completer.bash
+
+          # Create archive
+          tar -Jcvf ${{ env.ARTIFACT_NAME }} \
+            ./bin/modelctl \
+            ./bin/snap-completer.bash \
+            ./LICENSE
 
       - name: Upload release asset
         run: |
-          # --clobber overwrite existing assets of the same name
+          # --clobber overwrites existing assets of the same name
           gh release upload ${{ github.event.release.tag_name }} ${{ env.ARTIFACT_NAME }} --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
