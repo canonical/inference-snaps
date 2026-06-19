@@ -51,7 +51,7 @@ AI Assistant comes as a plugin for JetBrains IDEs and may already be installed i
 
 For more information, please see JetBrains' page on how to [install AI Assistant][jetbrains-install-ai-assistant].
 
-### Add the OpenAI-compatible endpoint
+### Connect to the OpenAI-compatible endpoint
 
 Once AI Assistant is installed, the API endpoint needs to be configured:
 
@@ -60,30 +60,23 @@ Once AI Assistant is installed, the API endpoint needs to be configured:
 2. In the **Third-party AI providers** section, select **OpenAI-compatible** as the provider type.
 
 3. In the configuration panel:
+
    - **URL**: Enter the `openai` API endpoint of the installed inference snap (for example, `http://localhost:8336/v1`).
    - **API Key**: Leave empty.
 
 4. Click **Test Connection** to verify the connection is working correctly.
 
-5. Click **Apply** to save the configuration.
+5. Scroll to the **Models Assignment** section.
 
-For more information, refer to the JetBrains' [using custom models][jetbrains-ai-docs] guide.
-
-### Assign the model to AI Assistant features
-
-Once the endpoint is configured, you can assign specific AI Assistant features to the model:
-
-1. Navigate to **Settings** › **Tools** › **AI Assistant** › **Providers & API keys**.
-
-2. Scroll to the **Models Assignment** section.
-
-3. For each AI Assistant feature group (Core features, Instant helpers, Completion model), select the model from the dropdown.
+6. For each AI Assistant feature group (Core features, Instant helpers, Completion model), select the model from the dropdown.
 
    - **Core features**: Used for in-editor code generation, commit message generation, and AI Chat
    - **Instant helpers**: Used for lightweight features like chat context collection and name suggestions
    - **Completion model**: Used for inline code completion (requires a Fill-in-the-Middle capable model)
 
-4. Click **Apply** to save your changes.
+7. Click **Apply** to save your changes.
+
+For more information, refer to the JetBrains' [using custom models][jetbrains-ai-docs] guide.
 
 ## Use the inference snap in the IDE
 
