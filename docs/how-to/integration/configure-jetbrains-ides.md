@@ -51,7 +51,7 @@ AI Assistant comes as a plugin for JetBrains IDEs and may already be installed i
 
 For more information, please see JetBrains' page on how to [install AI Assistant][jetbrains-install-ai-assistant].
 
-### Connect to the OpenAI-compatible endpoint
+### Configure AI Assistant to use the OpenAI endpoint
 
 Once AI Assistant is installed, the API endpoint needs to be configured:
 
