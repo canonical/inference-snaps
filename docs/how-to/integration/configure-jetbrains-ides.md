@@ -41,7 +41,7 @@ Open your JetBrains IDE and follow these steps to connect the inference snap:
 
 AI Assistant comes as a plugin for JetBrains IDEs and may already be installed in your IDE. If not, follow this procedure:
 
-1. Navigate to **Settings** › **Plugins**.
+1. Navigate to **Settings** {guilabel}`>` **Plugins**.
 
 2. Search for and select _JetBrains AI Assistant_.
 
@@ -55,7 +55,7 @@ For more information, please see JetBrains' page on how to [install AI Assistant
 
 Once AI Assistant is installed, the API endpoint needs to be configured:
 
-1. Navigate to **Settings** › **Tools** › **AI Assistant** › **Providers & API keys**.
+1. Navigate to **Settings** {guilabel}`>` **Tools** {guilabel}`>` **AI Assistant** {guilabel}`>` **Providers & API keys**.
 
 2. In the **Third-party AI providers** section, select **OpenAI-compatible** as the provider type.
 
@@ -83,7 +83,7 @@ For more information, refer to the JetBrains' [using custom models][jetbrains-ai
 Once the model is configured, you can use it in different parts of the IDE.
 For example, to chat:
 
-1. Open AI Chat by selecting **Tools** › **AI Assistant** from the menu.
+1. Open AI Chat by selecting **Tools** {guilabel}`>` **AI Assistant** from the menu.
 
 2. In the chat window, select the model from the model selector dropdown. The configured model should appear under the **OpenAI-compatible** section.
 
