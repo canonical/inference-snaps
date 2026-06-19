@@ -31,6 +31,7 @@ func (c *mockConfig) Get(key string) (map[string]any, error) {
 		return map[string]any{key: value}, nil
 	}
 
+	// Process primitive types
 	for _, confType := range []configType{UserConfig, EngineConfig, PackageConfig} {
 		scopedKey := string(confType) + "." + key
 		if value, found := c.values[scopedKey]; found {
@@ -38,6 +39,7 @@ func (c *mockConfig) Get(key string) (map[string]any, error) {
 		}
 	}
 
+	// Process objects
 	result := make(map[string]any)
 	for _, confType := range []configType{UserConfig, EngineConfig, PackageConfig} {
 		prefix := string(confType) + "." + key + "."
@@ -80,8 +82,23 @@ func (c *mockConfig) GetAll() (map[string]any, error) {
 
 func (c *mockConfig) Unset(key string, confType configType) error {
 	scopedKey := string(confType) + "." + key
+
+	// Remove the specific key
 	delete(c.values, scopedKey)
+
+	// Remove any keys that are prefixed with the scopedKey (for objects)
+	prefix := scopedKey + "."
+	for fullKey := range c.values {
+		if strings.HasPrefix(fullKey, prefix) {
+			delete(c.values, fullKey)
+		}
+	}
+
 	return nil
+}
+
+func (c *mockConfig) Migrate() error {
+	return migrateConfig(c)
 }
 
 // failConfig is a Config implementation whose mutating methods always return err.
@@ -95,11 +112,12 @@ func NewFailingMockConfig(err error) Config {
 	return &failConfig{err: err}
 }
 
-func (c *failConfig) Set(_, _ string, _ configType) error              { return c.err }
-func (c *failConfig) SetDocument(_ string, _ any, _ configType) error  { return c.err }
-func (c *failConfig) Unset(_ string, _ configType) error               { return c.err }
-func (c *failConfig) Get(_ string) (map[string]any, error)             { return map[string]any{}, nil }
-func (c *failConfig) GetAll() (map[string]any, error)                  { return map[string]any{}, nil }
+func (c *failConfig) Set(_, _ string, _ configType) error             { return c.err }
+func (c *failConfig) SetDocument(_ string, _ any, _ configType) error { return c.err }
+func (c *failConfig) Unset(_ string, _ configType) error              { return c.err }
+func (c *failConfig) Get(_ string) (map[string]any, error)            { return map[string]any{}, nil }
+func (c *failConfig) GetAll() (map[string]any, error)                 { return map[string]any{}, nil }
+func (c *failConfig) Migrate() error                                  { return c.err }
 
 // selectiveFailConfig delegates to a normal mockConfig but returns failErr when
 // Unset or SetDocument is called with failKey.
@@ -140,4 +158,6 @@ func (c *selectiveFailConfig) Get(key string) (map[string]any, error) {
 func (c *selectiveFailConfig) GetAll() (map[string]any, error) {
 	return c.base.GetAll()
 }
-
+func (c *selectiveFailConfig) Migrate() error {
+	return c.base.Migrate()
+}

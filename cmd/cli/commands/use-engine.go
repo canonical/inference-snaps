@@ -82,9 +82,13 @@ func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return fmt.Errorf("cannot specify both engine name and --fix flag")
 		}
-		// If no engine is active, there's nothing to fix.
+
+		if err := cmd.migrateConfig(); err != nil {
+			return err
+		}
+
 		err := cmd.fixActiveEngine()
-		if errors.Is(err, common.ErrNoActiveEngine) {
+		if errors.Is(err, common.ErrNoActiveEngine) { // If no engine is active, there's nothing to fix
 			return nil
 		}
 		return err
@@ -240,9 +244,9 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 }
 
 // fixActiveEngine does the following:
-// 1. auto selects an engine if the active engine no longer exists
-// 2. verify that the active model is supported by the active engine, otherwise switches to the default model
-// 2. if engine exists, make sure it is correctly installed and configured
+// - auto selects an engine if the active engine no longer exists
+// - verify that the active model is supported by the active engine, otherwise switches to the default model
+// - if engine exists, make sure it is correctly installed and configured
 func (cmd *useEngineCommand) fixActiveEngine() error {
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
@@ -309,4 +313,11 @@ func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.Compat
 		reasons = append(reasons, "required device not found")
 	}
 	return reasons
+}
+
+func (cmd *useEngineCommand) migrateConfig() error {
+	if err := cmd.Config.Migrate(); err != nil {
+		return fmt.Errorf("migrating config: %v", err)
+	}
+	return nil
 }

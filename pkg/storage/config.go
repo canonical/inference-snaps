@@ -11,6 +11,7 @@ type Config interface {
 	Get(key string) (map[string]any, error)
 	GetAll() (map[string]any, error)
 	Unset(key string, confType configType) error
+	Migrate() error
 }
 
 type config struct {
@@ -78,6 +79,10 @@ func (c *config) GetAll() (map[string]any, error) {
 
 func (c *config) Unset(key string, confType configType) error {
 	return c.storage.Unset(c.nestKeys(confType, key))
+}
+
+func (c *config) Migrate() error {
+	return migrateConfig(c)
 }
 
 // loadConfigs loads all configurations as a flattened map, after applying precedence rules
