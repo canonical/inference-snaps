@@ -1,5 +1,6 @@
 (configure-opencode)=
-# Configure OpenCode for use with inference snaps
+
+# Use inference snaps in OpenCode
 
 [OpenCode][opencode-docs] is an open source AI coding agent. It’s available as a terminal-based interface, desktop app, or IDE extension.
 This guide will help you configure OpenCode to use an inference snap as a provider for AI-powered features.

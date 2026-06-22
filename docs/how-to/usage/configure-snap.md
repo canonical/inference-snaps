@@ -1,4 +1,5 @@
 (configure-inference-snaps)=
+
 # Configure inference snaps
 
 Inference snaps expose a number of configurations.
@@ -14,8 +15,10 @@ Use the {ref}`CLI tool's <models-cli>` `get` command to show all currently avail
 ```
 
 Example:
+
 ```{terminal}
-:input: qwen-vl get
+qwen-vl get
+
 http.host: 127.0.0.1
 http.port: 8326
 verbose: false
@@ -30,12 +33,18 @@ To get the current value of a configuration, pass the configuration key to the `
 ```
 
 Example:
+
 ```{terminal}
-:input: qwen-vl get http
+qwen-vl get http
+
 http.base-path: v1
 http.host: 127.0.0.1
 http.port: 9999
-:input: qwen-vl get http.port
+```
+
+```{terminal}
+qwen-vl get http.port
+
 9999
 ```
 
@@ -55,9 +64,13 @@ sudo snap restart <inference-snap>
 ```
 
 Example:
-```{terminal}
-:input: sudo qwen-vl set http.port=9090
 
-:input: sudo snap restart qwen-vl
+```{terminal}
+sudo qwen-vl set http.port=9090
+```
+
+```{terminal}
+sudo snap restart qwen-vl
+
 Restarted.
 ```

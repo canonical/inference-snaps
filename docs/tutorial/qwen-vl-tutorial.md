@@ -1,4 +1,5 @@
 (qwen-vl-tutorial)=
+
 # Get started with Inference Snaps using Qwen VL
 
 This tutorial walks you through the process of installing and using an inference snap.
@@ -8,7 +9,8 @@ This model is also referred to as a Vision Language Model (VLM) because it can i
 ## Set up your computer
 
 To complete this tutorial you will need:
-- A computer running an operating system that supports snaps, e.g., Ubuntu 24.04. Older Ubuntu versions aren't supported.
+
+- A computer running an operating system that supports snaps, e.g., Ubuntu 24.04 LTS. Older Ubuntu versions aren't supported.
 - Hardware drivers. These may be pre-installed in your OS, but some devices require {ref}`additional drivers <install-drivers>`.
 - A Docker installation
 
@@ -18,7 +20,7 @@ Install the Qwen VL snap from the `2.5` track (which refers to the version of th
 It is currently released with `beta` stability as indicated by the channel:
 
 ```{terminal}
-:input: sudo snap install qwen-vl --channel 2.5/beta
+sudo snap install qwen-vl --channel 2.5/beta
 
 qwen-vl (2.5/beta) 2.5 from Canonical IoT Labs✓ installed
 ```
@@ -37,7 +39,8 @@ Run the status command to see the selected engine and the status of the server.
 The output should include the server's status and the URL where the API can be accessed:
 
 ```{terminal}
-:input: qwen-vl status
+qwen-vl status
+
 engine: intel-cpu
 status: online
 endpoints:
@@ -53,7 +56,8 @@ The `qwen-vl` snap includes a basic chat client that can be used to chat with th
 Use the `chat` command to start a chat session:
 
 ```{terminal}
-:input: qwen-vl chat
+qwen-vl chat
+
 Connected to http://localhost:8326/v3
 Type your prompt, then ENTER to submit. CTRL-C to quit.
 » Hi there
@@ -112,4 +116,4 @@ However, the model spotted the triangular buoy and responded according to that i
 
 To become more familiar with inference snaps:
 - Learn how to {ref}`switch to a different engine <switch-between-engines>` after installation
-- Configure an inference snap to {ref}`work with your IDE <use-in-ide>`
+- Configure an inference snap to {ref}`work with your clients <integration>`

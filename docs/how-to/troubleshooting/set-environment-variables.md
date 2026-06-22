@@ -1,6 +1,6 @@
 (set-environment-variables)=
-# Set environment variables
 
+# Set environment variables
 
 ```{versionadded} 1.0.0-beta.42
 ```
