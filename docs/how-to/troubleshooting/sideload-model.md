@@ -60,5 +60,5 @@ The `set` command prompts for confirmation and restarts the snap.
 To verify, query the available models:
 
 ```
-curl http://localhost:8328/v1/models | jq
+curl http://localhost:8336/v1/models | jq
 ```
