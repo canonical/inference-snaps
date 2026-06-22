@@ -19,7 +19,8 @@ sudo snap install gemma4
 If the snap is already installed, refresh it to ensure that it is the latest version:
 
 ```shell
-sudo snap refresh gemma4 --channel latest/stable```
+sudo snap refresh gemma4 --channel latest/stable
+```
 
 Inspect current snap environment variables to find the relevant variables for the model file:
 
