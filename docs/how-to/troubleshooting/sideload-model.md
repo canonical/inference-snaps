@@ -8,7 +8,7 @@ By default, the runtimes point to model files that are in snap components.
 This is set internally via environment variables.
 The exact environment variable depends on the packaging and engines.
 
-For example, let's sideload a 12B model into `gemma4` snap, for the `cpu` engine.
+For example, let's sideload a 12B gemma4 model fine tuned for coding and agentic work  into `gemma4` snap, for the `cpu` engine.
 
 If not installed, install the snap:
 
@@ -35,10 +35,10 @@ The goal is to override the values of these environment variables with paths tha
 For this example, download the following two model files from Hugging Face into ~/models/gemma4-12b:
 
 ```shell
-mkdir ~/models/gemma4-e4b
-cd ~/models/gemma4-e4b
-wget https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_S.gguf
-wget https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/mmproj-BF16.gguf
+mkdir ~/models/gemma4-12b
+cd ~/models/gemma4-12b
+wget https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF/resolve/main/gemma4-v2-Q4_K_M.gguf
+wget https://huggingface.co/unsloth/gemma-4-12b-it-GGUF/resolve/main/mmproj-F16.gguf
 ```
 
 Since the model files are in the user home directory, you need to connect the `home` interface to grant the snap access:
@@ -51,15 +51,15 @@ Finally, set the following environment variables:
 
 ```shell
 sudo gemma4 set \
-  env.model-file=/home/$USER/models/gemma4-e4b/gemma-4-E4B-it-Q4_K_S.gguf \
-  env.model-name=gemma-4-E4B-it-Q4_K_S \
-  env.mmproj-file=/home/$USER/models/gemma4-e4b/mmproj-BF16.gguf  
+  env.model-file=/home/$USER/models/gemma4-12b/gemma4-v2-Q4_K_M.gguf \
+  env.model-name=gemma4-v2-Q4_K_M \
+  env.mmproj-file=/home/$USER/models/gemma4-12b/mmproj-F16.gguf  
 ```
 
 The `set` command prompts for confirmation and restarts the snap.
 
 To verify, query the available models:
 
-```
+```shell
 curl http://localhost:8336/v1/models | jq
 ```
