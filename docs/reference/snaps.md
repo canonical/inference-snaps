@@ -24,6 +24,26 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## FastContext 1.0
+
+[![fastcontext-1-0 snap](https://snapcraft.io/fastcontext-1-0/badge.svg)](https://snapcraft.io/fastcontext-1-0)
+[![fastcontext-1-0 code][gh-badge]](https://github.com/canonical/fastcontext-1.0-snap)
+
+FastContext 1.0 4B SFT is an instruction-tuned Large Language Model meant for chat completions.
+The input and output are text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
+{{explore_optimizations}}
+
 ## Gemma3
 
 [![gemma3 snap](https://snapcraft.io/gemma3/badge.svg)](https://snapcraft.io/gemma3)
