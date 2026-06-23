@@ -10,7 +10,7 @@
 # 2026-06-23
 how-to/integration/configure-opencode how-to/integration/opencode
 how-to/integration/configure-openshell how-to/integration/openshell
-how-to/integration/configure-openwebui how-to/integration/openwebui
+how-to/integration/configure-openwebui how-to/integration/open-webui
 how-to/integration/configure-vs-code how-to/integration/vs-code
 how-to/integration/configure-jetbrains-ides how-to/integration/jetbrains-ides
 how-to/setup/install-drivers how-to/setup/drivers
@@ -24,7 +24,7 @@ how-to/integration/use-in-ide how-to/integration
 how-to/configure-opencode how-to/integration/opencode
 how-to/configure-openshell how-to/integration/openshell
 how-to/configure-openwebui how-to/integration/openwebui
-how-to/use-in-ide how-to/integration
+how-to/use-in-ides how-to/integration
 how-to/install-drivers how-to/setup/drivers
 how-to/run-in-wsl how-to/setup/wsl
 how-to/configure-snap how-to/usage/configure-snap
