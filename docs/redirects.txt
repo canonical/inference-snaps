@@ -6,4 +6,28 @@
 # The old path must be a file that doesn't exist in the source. The current path must be
 # a file that does exist in the source.
 
+
+# 2026-06-23
+how-to/integration/configure-opencode how-to/integration/opencode
+how-to/integration/configure-openshell how-to/integration/openshell
+how-to/integration/configure-openwebui how-to/integration/openwebui
+how-to/integration/configure-vs-code how-to/integration/vs-code
+how-to/integration/configure-jetbrains-ides how-to/integration/jetbrains-ides
+how-to/setup/install-drivers how-to/setup/drivers
+how-to/setup/run-in-wsl how-to/setup/wsl
+how-to/usage/use-openai-api how-to/usage/openai-api
+
+# 2026-06-09
 how-to/integration/use-in-ide how-to/integration
+
+# 2026-05-29
+how-to/configure-opencode how-to/integration/opencode
+how-to/configure-openshell how-to/integration/openshell
+how-to/configure-openwebui how-to/integration/openwebui
+how-to/use-in-ide how-to/integration
+how-to/install-drivers how-to/setup/drivers
+how-to/run-in-wsl how-to/setup/wsl
+how-to/configure-snap how-to/usage/configure-snap
+how-to/manage-snap-services how-to/usage/manage-snap-services
+how-to/switch-between-engines how-to/usage/switch-between-engines
+how-to/use-openai-api how-to/usage/openai-api
