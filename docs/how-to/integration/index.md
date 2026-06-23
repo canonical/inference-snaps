@@ -8,7 +8,7 @@ Use the snap with your clients:
 
 ```{toctree}
 :maxdepth: 1
-Open WebUI <openwebui>
+Open WebUI <open-webui>
 OpenCode <opencode>
 OpenShell <openshell>
 ```

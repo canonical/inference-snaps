@@ -23,7 +23,7 @@ how-to/integration/use-in-ide how-to/integration
 # 2026-05-29
 how-to/configure-opencode how-to/integration/opencode
 how-to/configure-openshell how-to/integration/openshell
-how-to/configure-openwebui how-to/integration/openwebui
+how-to/configure-openwebui how-to/integration/open-webui
 how-to/use-in-ides how-to/integration
 how-to/install-drivers how-to/setup/drivers
 how-to/run-in-wsl how-to/setup/wsl
