@@ -5,8 +5,8 @@ However, there are some additional steps to prepare your system for running infe
 
 ```{toctree}
 :maxdepth: 1
-install-drivers
-run-in-wsl
+drivers
+wsl
 ```
 
 <!--
