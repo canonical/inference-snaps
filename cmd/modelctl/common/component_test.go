@@ -358,12 +358,15 @@ func TestInstalledComponents(t *testing.T) {
 		}
 	})
 
-	t.Run("non-existent components directory returns error", func(t *testing.T) {
+	t.Run("non-existent components directory returns empty slice", func(t *testing.T) {
 		t.Setenv("SNAP_COMPONENTS", "/this/path/does/not/exist")
 
-		_, err := InstalledComponents()
-		if err == nil {
-			t.Fatal("expected error for non-existent components directory, got nil")
+		installed, err := InstalledComponents()
+		if err != nil {
+			t.Fatalf("expected nil error for non-existent components directory, got: %v", err)
+		}
+		if len(installed) != 0 {
+			t.Errorf("expected empty slice for non-existent components directory, got %v", installed)
 		}
 	})
 }

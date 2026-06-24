@@ -114,7 +114,14 @@ func Example_showEngineCommand_printEngineManifestYaml() {
 	//           vram: 5G
 	//           compatibility-issues:
 	//             - device not found
-	// configurations: {}
+	// runtime: llama-cpp-cuda
+	// model:
+	//     default: 26b-q4-k-m-gguf
+	//     options:
+	//         - 26b-q4-k-m-gguf
+	//         - 30b-a3b-q4-k-m-gguf
+	// configurations:
+	//     sleep-idle-seconds: 600
 	// score: 0
 	// compatible: false
 	// compatibility-issues:
@@ -170,12 +177,17 @@ func Example_showEngineCommand_printEngineManifestJson() {
 	//       }
 	//     ]
 	//   },
-	//   "runtime": "",
+	//   "runtime": "llama-cpp-cuda",
 	//   "model": {
-	//     "default": "",
-	//     "options": null
+	//     "default": "26b-q4-k-m-gguf",
+	//     "options": [
+	//       "26b-q4-k-m-gguf",
+	//       "30b-a3b-q4-k-m-gguf"
+	//     ]
 	//   },
-	//   "configurations": null,
+	//   "configurations": {
+	//     "sleep-idle-seconds": 600
+	//   },
 	//   "score": 0,
 	//   "compatible": false,
 	//   "compatibility-issues": [

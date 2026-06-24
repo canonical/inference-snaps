@@ -14,3 +14,14 @@ devices:
     - type: gpu
       vendor-id: 0x1002 # AMD Corporation
       microarchitecture: gfx1030
+
+runtime: llama-cpp-rocm
+
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+    - 26b-q4-k-m-gguf
+    - 30b-a3b-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600

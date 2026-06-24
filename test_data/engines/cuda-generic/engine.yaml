@@ -13,3 +13,14 @@ devices:
       # model-ids: [ ]
       vram: 5G
       # compute-capability: 5.0
+
+runtime: llama-cpp-cuda
+
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+    - 26b-q4-k-m-gguf
+    - 30b-a3b-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600

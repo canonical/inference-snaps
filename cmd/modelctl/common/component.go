@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -24,6 +25,10 @@ func InstalledComponents() ([]string, error) {
 
 	entries, err := os.ReadDir(componentsDir)
 	if err != nil {
+		// If the components directory does not exist, it means no components are installed
+		if errors.Is(err, os.ErrNotExist) {
+			return []string{}, nil
+		}
 		return nil, fmt.Errorf("reading components directory %q: %v", componentsDir, err)
 	}
 

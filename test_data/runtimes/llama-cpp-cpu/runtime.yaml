@@ -1,3 +1,5 @@
+name: llama-cpp-cpu
+
 servers:
   openai:
     protocol: http
@@ -5,11 +7,11 @@ servers:
 
 environment:
   # Add llama.cpp binaries
-  - PATH=$PATH:$SNAP_COMPONENTS/llama-cpp-cuda/bin
+  - PATH=$PATH:$SNAP_COMPONENTS/runtime-llama-cpp-cpu/bin
   # Add llama.cpp-built shared libraries
-  - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_COMPONENTS/llama-cpp-cuda/lib
+  - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_COMPONENTS/runtime-llama-cpp-cpu/lib
   # Add staged shared libraries
-  - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_COMPONENTS/llama-cpp-cuda/usr/lib/$ARCH_TRIPLET
+  - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_COMPONENTS/runtime-llama-cpp-cpu/usr/lib/$ARCH_TRIPLET
 
 components:
   - runtime-llama-cpp-cpu

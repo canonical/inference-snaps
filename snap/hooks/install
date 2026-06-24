@@ -35,4 +35,4 @@ ln -s /var/lib/snapd/hostfs/usr/lib/wsl/drivers $SNAP_COMMON/usr/lib/wsl/drivers
 #
 # Auto select an engine
 #
-modelctl use-engine --auto --assume-yes --fallback=cpu
+modelctl use-engine --auto --components --assume-yes --fallback=cpu
