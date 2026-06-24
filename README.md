@@ -48,7 +48,7 @@ gemma4 chat
 | Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
 | Qwen 2.5 VL | text, vision | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
 | Qwen 3 | text, thinking, tools | `snap install qwen3` | [repo](https://github.com/canonical/qwen3-snap)
-| Qwen3 Coder | text, tools  | `snap install qwen3-coder` | [repo](https://github.com/canonical/qwen3-coder-snap)
+| Qwen 3 Coder | text, tools | `snap install qwen3-coder` | [repo](https://github.com/canonical/qwen3-coder-snap)
 | Qwen 3.6 | text, thinking, vision, tools | `snap install qwen3-6` | [repo](https://github.com/canonical/qwen3.6-snap)
 
 More open source models are coming soon.
