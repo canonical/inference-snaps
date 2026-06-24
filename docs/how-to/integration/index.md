@@ -8,15 +8,15 @@ Use the snap with your clients:
 
 ```{toctree}
 :maxdepth: 1
-Open WebUI <configure-openwebui>
-OpenCode <configure-opencode>
-OpenShell <configure-openshell>
+Open WebUI <open-webui>
+OpenCode <opencode>
+OpenShell <openshell>
 ```
 
 Use the snap with your IDEs:
 
 ```{toctree}
 :maxdepth: 1
-Visual Studio Code <configure-vs-code>
-JetBrains IDEs <configure-jetbrains-ides>
+Visual Studio Code <vs-code>
+JetBrains IDEs <jetbrains-ides>
 ```
