@@ -98,24 +98,13 @@ func (cmd *showModelCommand) showCurrentModel() error {
 	return cmd.showModel(currentModel)
 }
 
-func (cmd *showModelCommand) showModel(modelName string) error {
-	manifests, err := models.LoadManifests(cmd.ModelsDir)
+func (cmd *showModelCommand) showModel(modelNameOrID string) error {
+	modelManifest, err := common.GetModelByNameOrId(cmd.Context, modelNameOrID)
 	if err != nil {
-		return fmt.Errorf("loading models: %v", err)
+		return err
 	}
 
-	var manifest *models.Manifest
-	for i := range manifests {
-		if manifests[i].Name == modelName || manifests[i].ID == modelName {
-			manifest = &manifests[i]
-			break
-		}
-	}
-	if manifest == nil {
-		return fmt.Errorf("model %q does not exist", modelName)
-	}
-
-	err = cmd.printModelManifest(manifest)
+	err = cmd.printModelManifest(modelManifest)
 	if err != nil {
 		return fmt.Errorf("printing model manifest: %v", err)
 	}

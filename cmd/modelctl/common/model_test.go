@@ -104,3 +104,94 @@ func TestModelStatus_NonExistentModel(t *testing.T) {
 		t.Fatal("expected error for non-existent model, got nil")
 	}
 }
+
+
+func TestGetModelByNameOrId(t *testing.T) {
+	tests := []struct {
+		name         string
+		activeEngine string
+		modelYAML    string // empty means don't write a model manifest
+		engineYAML   string // empty means don't write an engine manifest
+		query        string
+		wantID       string // non-empty: expect this ID in the returned manifest
+		wantName     string // non-empty: expect this Name in the returned manifest
+		wantErr      bool   // true: expect any non-nil error
+	}{
+		{
+			name:         "found by name",
+			activeEngine: "my-engine",
+			modelYAML:    "id: my-model-id\nname: my-model\ndisk-size: 1G\n",
+			engineYAML:   "name: my-engine\nmodel:\n  options:\n    - my-model-id\n",
+			query:        "my-model",
+			wantID:       "my-model-id",
+		},
+		{
+			name:         "found by id",
+			activeEngine: "my-engine",
+			modelYAML:    "id: my-model-id\nname: my-model\ndisk-size: 1G\n",
+			engineYAML:   "name: my-engine\nmodel:\n  options:\n    - my-model-id\n",
+			query:        "my-model-id",
+			wantName:     "my-model",
+		},
+		{
+			name:         "no active engine",
+			activeEngine: "",
+			query:        "my-model",
+			wantErr:      true,
+		},
+		{
+			name:         "incompatible with active engine",
+			activeEngine: "my-engine",
+			modelYAML:    "id: other-model-id\nname: other-model\ndisk-size: 1G\n",
+			engineYAML:   "name: my-engine\nmodel:\n  options:\n    - some-other-model-id\n",
+			query:        "other-model",
+			wantErr:      true,
+		},
+		{
+			name:         "model does not exist",
+			activeEngine: "my-engine",
+			engineYAML:   "name: my-engine\nmodel:\n  options: []\n",
+			query:        "nonexistent-model",
+			wantErr:      true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			modelsDir := t.TempDir()
+			enginesDir := t.TempDir()
+
+			if tc.modelYAML != "" {
+				writeModelYAML(t, modelsDir, "my-model", tc.modelYAML)
+			}
+			if tc.engineYAML != "" {
+				writeEngineYAML(t, enginesDir, "my-engine", tc.engineYAML)
+			}
+
+			cache := storage.NewMockCache()
+			if err := cache.SetActiveEngine(tc.activeEngine); err != nil {
+				t.Fatalf("SetActiveEngine: %v", err)
+			}
+			ctx := &Context{ModelsDir: modelsDir, EnginesDir: enginesDir, Cache: cache}
+
+			manifest, err := GetModelByNameOrId(ctx, tc.query)
+
+			if tc.wantErr {
+				if err == nil {
+					t.Fatal("expected an error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if tc.wantID != "" && manifest.ID != tc.wantID {
+				t.Errorf("expected ID %q, got %q", tc.wantID, manifest.ID)
+			}
+			if tc.wantName != "" && manifest.Name != tc.wantName {
+				t.Errorf("expected Name %q, got %q", tc.wantName, manifest.Name)
+			}
+		})
+	}
+}
+

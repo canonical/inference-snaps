@@ -82,31 +82,12 @@ func (cmd *useModelCommand) run(_ *cobra.Command, args []string) error {
 	}
 }
 
-func (cmd *useModelCommand) switchModel(modelId string) error {
+func (cmd *useModelCommand) switchModel(modelNameOrID string) error {
 
-	availableModels, err := models.LoadManifests(cmd.ModelsDir)
+	modelManifest, err := common.GetModelByNameOrId(cmd.Context, modelNameOrID)
 	if err != nil {
-		return fmt.Errorf("%s: %w", "loading available models", err)
+		return err
 	}
-
-	var newModelManifest *models.Manifest
-	// The provided model name is checked against both the available models' names and IDs
-	for _, manifest := range availableModels {
-		if manifest.Name == modelId {
-			newModelManifest = &manifest
-			break
-		}
-		if manifest.ID == modelId {
-			newModelManifest = &manifest
-			break
-		}
-	}
-	if newModelManifest == nil {
-		return fmt.Errorf("model %s does not exist", modelId)
-	}
-
-	// From now on use the real Model ID
-	modelId = newModelManifest.ID
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
@@ -117,13 +98,8 @@ func (cmd *useModelCommand) switchModel(modelId string) error {
 	if err != nil {
 		return fmt.Errorf("%s: %w", "loading engine manifest", err)
 	}
-	supportedModels := engineManifest.Model.Options
 
-	if !slices.Contains(supportedModels, modelId) {
-		return fmt.Errorf("model %s not supported by engine %s", newModelManifest.Name, activeEngine)
-	}
-
-	cancelledByUser, err := common.InstallMissingComponents(cmd.Context, cmd.assumeYes, engineManifest, newModelManifest)
+	cancelledByUser, err := common.InstallMissingComponents(cmd.Context, cmd.assumeYes, engineManifest, modelManifest)
 	if err != nil {
 		return fmt.Errorf("installing missing components: %v", err)
 	}
@@ -137,16 +113,16 @@ func (cmd *useModelCommand) switchModel(modelId string) error {
 		return fmt.Errorf("%s: %w", common.LookingUpActiveModel, err)
 	}
 
-	if activeModelId == modelId {
+	if activeModelId == modelManifest.ID {
 		// Model not changed, nothing left to do
 		return nil
 	}
 
-	if err = cmd.Cache.SetActiveModel(modelId); err != nil {
+	if err = cmd.Cache.SetActiveModel(modelManifest.ID); err != nil {
 		return fmt.Errorf("setting active model: %v", err)
 	}
 
-	fmt.Printf("Model changed to %q.\n", newModelManifest.Name)
+	fmt.Printf("Model changed to %q.\n", modelManifest.Name)
 
 	// Ask if the user wants to restart
 	if !cmd.noRestart {
