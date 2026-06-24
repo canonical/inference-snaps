@@ -20,33 +20,36 @@ Then:
 
 ```bash
 # Install a model snap
-sudo snap install gemma3
+sudo snap install gemma4
 
 # Check status
-gemma3 status
+gemma4 status
 
 # Chat with the LLM
-gemma3 chat
+gemma4 chat
 ```
 
 ## What it does
 
 - **Plug-and-play AI models**: Each snap bundles a range of optimized model weights and runtimes. 
-- **Hardware-aware**: Automatically selects and deployes silicon-optimized runtime and model weights for your machine.
+- **Hardware-aware**: Automatically selects and deploys silicon-optimized runtime and model weights for your machine.
 - **API-first design:** Exposes local standard APIs for integration.
 - **Offline-ready:** Once installed, the model runs entirely on your machine.
 - **Reproducible & isolated:** Snaps guarantee consistent environments across supported Linux distros.
 
-## Available Inference Snaps
+## Available inference snaps
 
-| Model | Description | Install | Source |
+| Model | Capabilities | Install | Source |
 |---|---|---|---|
-| deepseek-r1 | Reasoning LLM | `snap install deepseek-r1` | [repo](https://github.com/canonical/deepseek-r1-snap)
-| gemma3 | Vision-language model | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
-| gemma4 | Vision-language model | `snap install gemma4` | [repo](https://github.com/canonical/gemma4-snap)
-| nemotron-3-nano | Reasoning and non-reasoning LLM | `snap install nemotron-3-nano` | [repo](http://github.com/canonical/nemotron-3-nano-snap)
-| nemotron-3-nano-omni | Reasoning and non-reasoning LLM with image, video and audio support | `snap install nemotron-3-nano-omni` | [repo](http://github.com/canonical/nemotron-3-nano-omni-snap)
-| qwen-vl | Vision-language model | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
+| DeepSeek R1 | text, thinking | `snap install deepseek-r1` | [repo](https://github.com/canonical/deepseek-r1-snap)
+| Gemma 3 | text, thinking, vision | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
+| Gemma 4 | text, thinking, vision, tools | `snap install gemma4` | [repo](https://github.com/canonical/gemma4-snap)
+| Nemotron 3 Nano | text, thinking, tools | `snap install nemotron-3-nano` | [repo](https://github.com/canonical/nemotron-3-nano-snap)
+| Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
+| Qwen 2.5 VL | text, vision | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
+| Qwen 3 | text, thinking, tools | `snap install qwen3` | [repo](https://github.com/canonical/qwen3-snap)
+| Qwen3 Coder | text, tools  | `snap install qwen3-coder` | [repo](https://github.com/canonical/qwen3-coder-snap)
+| Qwen 3.6 | text, thinking, vision, tools | `snap install qwen3-6` | [repo](https://github.com/canonical/qwen3.6-snap)
 
 More open source models are coming soon.
 [Share your feedback](https://github.com/canonical/inference-snaps/discussions) and vote for what open-source models to support next.
