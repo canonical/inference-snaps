@@ -8,6 +8,6 @@ Follow these guides to operate, configure, and access inference snaps in day-to-
 manage-snap-services
 switch-between-engines
 configure-snap
-use-openai-api
+openai-api
 ```
 
