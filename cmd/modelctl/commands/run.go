@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/spf13/cobra"
 )
@@ -82,11 +83,13 @@ func (cmd *runCommand) processEnvConfigs() error {
 		return fmt.Errorf("getting configs: %v", err)
 	}
 
-	const keyPrefix = "env."
 	envVars := make(map[string]any, len(envConfigs))
 	for k, v := range envConfigs {
 		// Convert env keys (my-key) to environment variable names (MY_KEY)
-		name := strings.TrimPrefix(k, keyPrefix)
+		name, ok := strings.CutPrefix(k, storage.EnvKeyPrefix)
+		if !ok {
+			return fmt.Errorf("unexpected config key %q: expected prefix %q", k, storage.EnvKeyPrefix)
+		}
 		name = strings.ToUpper(strings.ReplaceAll(name, "-", "_"))
 		envVars[name] = fmt.Sprintf("%v", v)
 	}

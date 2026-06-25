@@ -129,6 +129,50 @@ func TestParseKeyValues(t *testing.T) {
 	}
 }
 
+func TestValidateEnvKeys(t *testing.T) {
+	tests := map[string]struct {
+		input       map[string]string
+		errContains string
+	}{
+		"non-env key with dots is allowed": {
+			input: map[string]string{"api.endpoint": "https://example.com"},
+		},
+		"valid env key": {
+			input: map[string]string{"env.my-var": "value"},
+		},
+		"env key with dot is rejected": {
+			input:       map[string]string{"env.a.b": "c"},
+			errContains: "dots are not allowed",
+		},
+		"env key with trailing dot is rejected": {
+			input:       map[string]string{"env.var.": "value"},
+			errContains: "dots are not allowed",
+		},
+		"env key with empty name is rejected": {
+			input:       map[string]string{"env.": "value"},
+			errContains: "must not be empty",
+		},
+	}
+
+	for testName, testCase := range tests {
+		t.Run(testName, func(t *testing.T) {
+			err := validateEnvKeys(testCase.input)
+			if testCase.errContains != "" {
+				if err == nil {
+					t.Fatalf("expected error containing %q, got nil", testCase.errContains)
+				}
+				if !strings.Contains(err.Error(), testCase.errContains) {
+					t.Fatalf("expected error containing %q, got %q", testCase.errContains, err.Error())
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("expected no error, got %q", err.Error())
+			}
+		})
+	}
+}
+
 func TestSetValueSuccessForUserConfig(t *testing.T) {
 	mockConfig := storage.NewMockConfig()
 	mockConfig.Set("api.endpoint", "https://old.example.com", storage.UserConfig)

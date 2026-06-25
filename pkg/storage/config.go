@@ -26,6 +26,10 @@ func NewConfig() Config {
 
 const configKeyPrefix = "config"
 
+// EnvKeyPrefix is the prefix used for configuration keys that are passed
+// through as environment variables to the running snap.
+const EnvKeyPrefix = "env."
+
 type configType string
 
 // config precedence, from lowest to highest

@@ -62,6 +62,10 @@ func (cmd *setCommand) set(keyValuePairs []string) error {
 		return err
 	}
 
+	if err := validateEnvKeys(keyValues); err != nil {
+		return err
+	}
+
 	switch {
 	case cmd.packageConfig:
 		return cmd.setPackageConfigs(keyValues)
@@ -129,6 +133,26 @@ func (cmd *setCommand) setUserConfigs(keyValues map[string]string) error {
 	return nil
 }
 
+// validateEnvKeys rejects env keys that would result in invalid environment
+// variable names. The name (the part after the env prefix) must not be empty
+// and must not contain dots, since dots are not valid characters in
+// environment variable names.
+func validateEnvKeys(keyValues map[string]string) error {
+	for key := range keyValues {
+		name, ok := strings.CutPrefix(key, storage.EnvKeyPrefix)
+		if !ok {
+			continue
+		}
+		if name == "" {
+			return fmt.Errorf("invalid key %q: environment variable name must not be empty", key)
+		}
+		if strings.Contains(name, ".") {
+			return fmt.Errorf("invalid key %q: dots are not allowed in environment variable names", key)
+		}
+	}
+	return nil
+}
+
 func (cmd *setCommand) parseKeyValues(keyValues []string) (map[string]string, error) {
 	kvMap := map[string]string{}
 	seenKeys := map[string]bool{}
@@ -171,7 +195,7 @@ func (cmd *setCommand) getCurrentValue(key string) (string, bool, error) {
 		return "", false, fmt.Errorf("checking existing keys: %s", err)
 	}
 	currVal, found := currValMap[key]
-	if !found && !strings.HasPrefix(key, "env.") {
+	if !found && !strings.HasPrefix(key, storage.EnvKeyPrefix) {
 		return "", false, fmt.Errorf("key %q is not found\n\n%s", key, common.SuggestKeyNotFound(key))
 	}
 
