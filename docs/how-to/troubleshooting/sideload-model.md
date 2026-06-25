@@ -8,7 +8,7 @@ By default, the runtimes point to model files that are in snap components.
 This is set internally via environment variables.
 The exact environment variable depends on the packaging and engines.
 
-For example, let's sideload a 12B gemma4 model fine-tuned for coding and agentic work into the `gemma4` snap, for the `cpu` engine.
+For example, let's sideload [this 12B gemma4 model](https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF) fine-tuned by the community for coding and agentic work into the `gemma4` snap, for the `cpu` engine.
 
 If not installed, install the snap:
 
@@ -19,13 +19,13 @@ sudo snap install gemma4
 If the snap is already installed, refresh it to ensure that it is the latest version:
 
 ```shell
-sudo snap refresh gemma4 --channel latest/stable
+sudo snap refresh gemma4 --stable
 ```
 
 Inspect current snap environment variables to find the relevant variables for the model file:
 
 ```shell
-sudo gemma4 run env
+gemma4 run env
 ```
 
 This command prints all environment variables available in the snap.
@@ -41,25 +41,44 @@ wget https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3
 wget https://huggingface.co/unsloth/gemma-4-12b-it-GGUF/resolve/main/mmproj-F16.gguf
 ```
 
+The models are roughly 7G in total.
 Since the model files are in the user home directory, you need to connect the `home` interface to grant the snap access:
 
 ```shell
 sudo snap connect gemma4:home
 ```
 
+Environment variables are engine-specific. Switch to the `cpu` engine:
+
+```shell
+sudo gemma4 use-engine cpu
+```
+
 Finally, set the following environment variables:
 
 ```shell
 sudo gemma4 set \
-  env.model-file=/home/$USER/models/gemma4-12b/gemma4-v2-Q4_K_M.gguf \
+  env.model-file=$HOME/models/gemma4-12b/gemma4-v2-Q4_K_M.gguf \
   env.model-name=gemma4-v2-Q4_K_M \
-  env.mmproj-file=/home/$USER/models/gemma4-12b/mmproj-F16.gguf
+  env.mmproj-file=$HOME/models/gemma4-12b/mmproj-F16.gguf
 ```
 
 The `set` command prompts for confirmation and restarts the snap.
 
-To verify, query the available models:
+To verify that the sideloaded model is in use, query the available models and check that the model name matches:
 
-```shell
-curl http://localhost:8336/v1/models | jq
+```{terminal}
+:input: curl http://127.0.0.1:8336/v1/models | jq
+
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "gemma4-v2-Q4_K_M",
+      "object": "model",
+      "model": "gemma4-v2-Q4_K_M",
+      ...
+    }
+  ]
+}
 ```
