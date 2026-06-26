@@ -85,6 +85,7 @@ rst
 runtimes
 sandboxed
 sideload
+sideloaded
 sideloading
 sitemapindex
 snapcraft

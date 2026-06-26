@@ -68,7 +68,7 @@ The `set` command prompts for confirmation and restarts the snap.
 To verify that the sideloaded model is in use, query the available models and check that the model name matches:
 
 ```{terminal}
-:input: curl http://127.0.0.1:8336/v1/models | jq
+curl http://127.0.0.1:8336/v1/models | jq
 
 {
   "object": "list",
