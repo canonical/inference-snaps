@@ -9,5 +9,6 @@ manage-snap-services
 switch-between-engines
 configure-snap
 openai-api
+sideload-model
 ```
 

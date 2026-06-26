@@ -14,5 +14,4 @@ inference-snap-logs
 ```{toctree}
 :maxdepth: 1
 set-environment-variables
-sideload-model
 ```
