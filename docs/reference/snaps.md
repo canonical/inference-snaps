@@ -16,10 +16,13 @@ This inference snap is optimized for the following hardware:
 
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
@@ -117,10 +120,13 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
