@@ -9,5 +9,20 @@
   "semanticCommits": "disabled",
   "postUpdateOptions": [
     "gomodTidy"
-  ]
+  ],
+  "packageRules": [
+    {
+      "description": "Automerge inference-snaps-dev update PRs",
+      "matchManagers": [
+        "git-submodules"
+      ],
+      "matchDepNames": [
+        "dev"
+      ],
+      "commitBody": "[skip ci]",
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": false
+    }
+  ],
 }
