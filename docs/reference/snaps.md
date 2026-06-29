@@ -22,7 +22,7 @@ This inference snap is optimized for the following hardware:
 | amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
@@ -43,7 +43,7 @@ This inference snap is optimized for the following hardware:
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
@@ -66,7 +66,7 @@ This inference snap is optimized for the following hardware:
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
 
@@ -85,7 +85,7 @@ The inference snap for Nemotron 3 Nano has been optimized for the following:
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
 
@@ -104,7 +104,7 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
 
@@ -126,7 +126,7 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 | amd64 | Intel NPU | Intel Neural Processing Unit acceleration |
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
 
 {{explore_optimizations}}
@@ -146,7 +146,7 @@ The inference snap for Qwen 3 has been optimized for the following:
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
@@ -166,7 +166,7 @@ The inference snap for Qwen 3 Coder has been optimized for the following:
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
@@ -186,7 +186,7 @@ This inference snap is optimized for the following hardware:
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
-| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
