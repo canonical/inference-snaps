@@ -60,9 +60,7 @@ func loadScoredEngine(t *testing.T, name string, score int) engines.ScoredManife
 	return engines.ScoredManifest{Manifest: *m, Score: score}
 }
 
-func ExampleUseEngine_noRestartWhenEngineUnchanged() {
-	// intel-gpu now requires runtime and model components, so we need SNAP_COMPONENTS
-	// to be set with those component directories so InstallMissingComponents is a no-op.
+func ExampleUseEngine_noRestartWhenEngineAndModelUnchanged() {
 	snapComponents, err := os.MkdirTemp("", "snap-components-*")
 	if err != nil {
 		panic(err)
@@ -80,6 +78,7 @@ func ExampleUseEngine_noRestartWhenEngineUnchanged() {
 
 	cache := storage.NewMockCache()
 	cache.SetActiveEngine("intel-gpu")
+	cache.SetActiveModel("4b-it-int4-fq-ov")
 	config := storage.NewMockConfig()
 	cmd := useEngineCommand{
 		assumeYes: true,
@@ -188,8 +187,110 @@ func ExampleUseEngine_autoSelectEngine() {
 	// ✔ cpu: compatible, score=10
 	// Selected engine: cpu
 	// Engine changed to "cpu".
+	// Model changed to "26b-q4-k-m-gguf".
 	// [mock] Restarting all services
 }
+
+// TestSwitchEngine_withModelID verifies that switchEngineAndModel respects an
+// explicitly supplied modelID:
+//   - a valid model supported by the engine is persisted as the active model
+//   - an unsupported model returns an error and leaves state unchanged
+func TestSwitchEngine_withModelID(t *testing.T) {
+	tests := []struct {
+		name                string
+		engineName          string
+		modelID             string
+		installedComponents []string
+		wantErr             bool
+		wantEngine          string
+		wantModel           string
+	}{
+		{
+			// Switch to the cpu engine and explicitly request the non-default
+			// model (30b-a3b-q4-k-m-gguf).  The engine's default is
+			// 26b-q4-k-m-gguf, so this exercises the override branch.
+			name:       "valid non-default model is used",
+			engineName: "cpu",
+			modelID:    "30b-a3b-q4-k-m-gguf",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+				"model-30b-a3b-q4-k-m-gguf-1-of-6",
+				"model-30b-a3b-q4-k-m-gguf-2-of-6",
+				"model-30b-a3b-q4-k-m-gguf-3-of-6",
+				"model-30b-a3b-q4-k-m-gguf-4-of-6",
+				"model-30b-a3b-q4-k-m-gguf-5-of-6",
+				"model-30b-a3b-q4-k-m-gguf-6-of-6",
+			},
+			wantErr:    false,
+			wantEngine: "cpu",
+			wantModel:  "30b-a3b-q4-k-m-gguf",
+		},
+		{
+			// Switch to the cpu engine and explicitly request the default model
+			// (26b-q4-k-m-gguf) – this should also succeed and store the
+			// explicit choice.
+			name:       "valid default model is used",
+			engineName: "cpu",
+			modelID:    "26b-q4-k-m-gguf",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+				"model-26b-a4b-q4-k-m-gguf",
+				"mmproj-26b-bf16-gguf",
+			},
+			wantErr:    false,
+			wantEngine: "cpu",
+			wantModel:  "26b-q4-k-m-gguf",
+		},
+		{
+			// Request a model that the cpu engine does not support.
+			// switchEngine must return an error and must not change any state.
+			name:       "unsupported model returns error",
+			engineName: "cpu",
+			modelID:    "4b-it-int4-fq-ov", // only supported by intel-gpu
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			setupSnapComponents(t, tt.installedComponents...)
+
+			cmd := newUseEngineCmd()
+			err := cmd.switchEngineAndModel(tt.engineName, tt.modelID)
+
+			if tt.wantErr {
+				if err == nil {
+					t.Fatal("expected an error but got nil")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			activeEngine, err := cmd.Cache.GetActiveEngine()
+			if err != nil {
+				t.Fatalf("getting active engine: %v", err)
+			}
+			if activeEngine != tt.wantEngine {
+				t.Errorf("active engine = %q, want %q", activeEngine, tt.wantEngine)
+			}
+
+			activeModel, err := cmd.Cache.GetActiveModel()
+			if err != nil {
+				t.Fatalf("getting active model: %v", err)
+			}
+			if activeModel != tt.wantModel {
+				t.Errorf("active model = %q, want %q", activeModel, tt.wantModel)
+			}
+		})
+	}
+}
+
 func TestFixActiveEngine_noActiveEngine(t *testing.T) {
 	cache := storage.NewMockCache()
 	cmd := useEngineCommand{

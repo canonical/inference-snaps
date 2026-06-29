@@ -45,9 +45,9 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 	return manifests, nil
 }
 
-func LoadManifest(manifestsDir, modelName string) (*Manifest, error) {
+func LoadManifest(manifestsDir, modelID string) (*Manifest, error) {
 
-	fileName := filepath.Join(manifestsDir, modelName, ManifestFilename)
+	fileName := filepath.Join(manifestsDir, modelID, ManifestFilename)
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -59,7 +59,7 @@ func LoadManifest(manifestsDir, modelName string) (*Manifest, error) {
 	var manifest Manifest
 	err = yaml.Unmarshal(data, &manifest)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
+		return nil, fmt.Errorf("%s: %s", fileName, err)
 	}
 
 	return &manifest, nil
