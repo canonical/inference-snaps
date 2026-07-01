@@ -140,17 +140,52 @@ func TestValidateEnvKeys(t *testing.T) {
 		"valid env key": {
 			input: map[string]string{"env.my-var": "value"},
 		},
+		"valid env key with digits": {
+			input: map[string]string{"env.my-var-2": "value"},
+		},
+		"env key with leading hyphen is rejected": {
+			input:       map[string]string{"env.-my-llo": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key with consecutive hyphens is rejected": {
+			input:       map[string]string{"env.my---llo": "value"},
+			errContains: "must start with a lowercase letter",
+		},
 		"env key with dot is rejected": {
 			input:       map[string]string{"env.a.b": "c"},
-			errContains: "dots are not allowed",
+			errContains: "must start with a lowercase letter",
 		},
 		"env key with trailing dot is rejected": {
 			input:       map[string]string{"env.var.": "value"},
-			errContains: "dots are not allowed",
+			errContains: "must start with a lowercase letter",
 		},
 		"env key with empty name is rejected": {
 			input:       map[string]string{"env.": "value"},
 			errContains: "must not be empty",
+		},
+		"env key with uppercase letters is rejected": {
+			input:       map[string]string{"env.AAA": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key with mixed case is rejected": {
+			input:       map[string]string{"env.MyVar": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key with underscore is rejected": {
+			input:       map[string]string{"env.x_y": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key with plus is rejected": {
+			input:       map[string]string{"env.x+y": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key with tilde is rejected": {
+			input:       map[string]string{"env.x~y": "value"},
+			errContains: "must start with a lowercase letter",
+		},
+		"env key starting with a digit is rejected": {
+			input:       map[string]string{"env.1var": "value"},
+			errContains: "must start with a lowercase letter",
 		},
 	}
 

@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
@@ -133,10 +134,16 @@ func (cmd *setCommand) setUserConfigs(keyValues map[string]string) error {
 	return nil
 }
 
-// validateEnvKeys rejects env keys that would result in invalid environment
-// variable names. The name (the part after the env prefix) must not be empty
-// and must not contain dots, since dots are not valid characters in
-// environment variable names.
+// envKeyNameRegex matches the allowed format for the name portion of an env key
+// (the part after the env prefix). The name must start with a lowercase letter,
+// can contain lowercase letters and digits, and may use single hyphens between
+// alphanumeric groups. Leading and consecutive hyphens are not allowed.
+var envKeyNameRegex = regexp.MustCompile(`^[a-z](?:-?[a-z0-9])*$`)
+
+// validateEnvKeys rejects env keys whose name (the part after the env prefix)
+// does not conform to the allowed format. Env keys are normalized when exported
+// as environment variables: lowercase letters are uppercased and hyphens are
+// replaced with underscores.
 func validateEnvKeys(keyValues map[string]string) error {
 	for key := range keyValues {
 		name, ok := strings.CutPrefix(key, storage.EnvKeyPrefix)
@@ -146,8 +153,8 @@ func validateEnvKeys(keyValues map[string]string) error {
 		if name == "" {
 			return fmt.Errorf("invalid key %q: environment variable name must not be empty", key)
 		}
-		if strings.Contains(name, ".") {
-			return fmt.Errorf("invalid key %q: dots are not allowed in environment variable names", key)
+		if !envKeyNameRegex.MatchString(name) {
+			return fmt.Errorf("invalid key %q: key must start with a lowercase letter and contain only lowercase letters, digits, and single hyphens", name)
 		}
 	}
 	return nil
