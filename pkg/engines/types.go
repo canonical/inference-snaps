@@ -1,7 +1,7 @@
 package engines
 
 import (
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine/types"
 )
 
 type CompatibilityReport struct {
@@ -58,7 +58,7 @@ type Device struct {
 	// CPU arm64
 	ImplementerId *types.HexInt `yaml:"implementer-id,omitempty" json:"implementer-id,omitempty"`
 	PartNumber    *types.HexInt `yaml:"part-number,omitempty" json:"part-number,omitempty"`
-	Features      []string      `yaml:"features,omitempty" json:"features,omitempty"`
+	Features      []string        `yaml:"features,omitempty" json:"features,omitempty"`
 
 	// PCI
 	VendorId *types.HexInt `yaml:"vendor-id,omitempty" json:"vendor-id,omitempty"`

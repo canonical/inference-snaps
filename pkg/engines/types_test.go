@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 func TestParseManifest(t *testing.T) {

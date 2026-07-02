@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 // The chars limit has been chosen as it is the maximum length that can be displayed without truncation in the

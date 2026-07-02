@@ -7,7 +7,7 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/cpu"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/pci"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine"
 )
 
 var ErrorNoCompatibleEngine = errors.New("no compatible engines found")
@@ -34,11 +34,11 @@ func TopEngine(scoredEngines []engines.ScoredManifest) (*engines.ScoredManifest,
 	return &compatibleEngines[0], nil
 }
 
-func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
+func ScoreEngines(machineInfo *machine.MachineInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
 	var scoredEngines []engines.ScoredManifest
 
 	for _, currentManifest := range manifests {
-		score, compatibilityReport, err := checkEngine(hardwareInfo, currentManifest)
+		score, compatibilityReport, err := checkEngine(machineInfo, currentManifest)
 		if err != nil {
 			return nil, err
 		}
@@ -55,7 +55,7 @@ func ScoreEngines(hardwareInfo *types.HwInfo, manifests []engines.Manifest) ([]e
 	return scoredEngines, nil
 }
 
-func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, engines.CompatibilityReport, error) {
+func checkEngine(machineInfo *machine.MachineInfo, manifest engines.Manifest) (int, engines.CompatibilityReport, error) {
 	engineScore := 0
 	compatibilityReport := engines.CompatibilityReport{
 		CompatibleMemory:  true,
@@ -67,7 +67,7 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 
 	// all
 	if len(manifest.Devices.Allof) > 0 {
-		deviceCompatibilityScore := scoreDevicesAll(hardwareInfo, manifest.Devices.Allof)
+		deviceCompatibilityScore := scoreDevicesAll(machineInfo, manifest.Devices.Allof)
 		if deviceCompatibilityScore == 0 {
 			compatibilityReport.CompatibleDevices = false
 		} else {
@@ -77,7 +77,7 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 
 	// any
 	if len(manifest.Devices.Anyof) > 0 {
-		deviceCompatibilityScore := scoreDevicesAny(hardwareInfo, manifest.Devices.Anyof)
+		deviceCompatibilityScore := scoreDevicesAny(machineInfo, manifest.Devices.Anyof)
 		if deviceCompatibilityScore == 0 {
 			compatibilityReport.CompatibleDevices = false
 		} else {
@@ -92,14 +92,14 @@ func checkEngine(hardwareInfo *types.HwInfo, manifest engines.Manifest) (int, en
 	return engineScore, compatibilityReport, nil
 }
 
-func scoreDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) int {
+func scoreDevicesAll(machineInfo *machine.MachineInfo, devices []engines.Device) int {
 	compatible := true
 	compatibilityScore := 0
 
 	for i, _ := range devices {
 
 		if devices[i].Type == "cpu" {
-			cpuScore, deviceIssues := cpu.Match(devices[i], hardwareInfo.Cpus)
+			cpuScore, deviceIssues := cpu.Match(devices[i], machineInfo)
 			if len(deviceIssues) > 0 {
 				compatible = false
 				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, deviceIssues...)
@@ -114,7 +114,7 @@ func scoreDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 
 		} else if devices[i].Bus == "" || devices[i].Bus == "pci" {
 			// Fallback to PCI as default bus
-			pciScore, pciIssues := pci.Match(devices[i], hardwareInfo.PciDevices)
+			pciScore, pciIssues := pci.Match(devices[i], machineInfo)
 			if len(pciIssues) > 0 {
 				compatible = false
 				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, pciIssues...)
@@ -131,7 +131,7 @@ func scoreDevicesAll(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 	return compatibilityScore
 }
 
-func scoreDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) int {
+func scoreDevicesAny(machineInfo *machine.MachineInfo, devices []engines.Device) int {
 	compatible := true
 	compatibilityScore := 0
 	devicesFound := 0
@@ -139,9 +139,9 @@ func scoreDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 	for i, device := range devices {
 
 		if device.Type == "cpu" {
-			cpuScore, deviceIssues := cpu.Match(device, hardwareInfo.Cpus)
+			cpuScore, deviceIssues := cpu.Match(device, machineInfo)
 			if len(deviceIssues) > 0 {
-				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, deviceIssues...)
+				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, deviceIssues...)
 			} else {
 				devicesFound++
 				compatibilityScore += cpuScore
@@ -153,9 +153,9 @@ func scoreDevicesAny(hardwareInfo *types.HwInfo, devices []engines.Device) int {
 
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
-			pciScore, pciIssues := pci.Match(device, hardwareInfo.PciDevices)
+			pciScore, pciIssues := pci.Match(device, machineInfo)
 			if len(pciIssues) > 0 {
-				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, pciIssues...)
+				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, pciIssues...)
 			} else {
 				devicesFound++
 				compatibilityScore += pciScore

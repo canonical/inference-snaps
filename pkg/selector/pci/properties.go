@@ -5,11 +5,11 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/weights"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
+	"github.com/canonical/lscompute/pkg/machine/device/pci"
 )
 
-func checkProperties(manifestDevice engines.Device, hostPciDevice types.PciDevice) (int, error) {
+func checkProperties(manifestDevice engines.Device, hostPciDevice pci.Device) (int, error) {
 	extraScore := 0
 
 	// vram
@@ -34,7 +34,7 @@ func checkProperties(manifestDevice engines.Device, hostPciDevice types.PciDevic
 	return extraScore, nil
 }
 
-func checkVram(manifestDevice engines.Device, hostPciDevice types.PciDevice) error {
+func checkVram(manifestDevice engines.Device, hostPciDevice pci.Device) error {
 	vramRequired, err := utils.StringToBytes(*manifestDevice.VRam)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func checkVram(manifestDevice engines.Device, hostPciDevice types.PciDevice) err
 	}
 }
 
-func checkMicroarchitecture(microArchRequired string, hostPciDevice types.PciDevice) error {
+func checkMicroarchitecture(microArchRequired string, hostPciDevice pci.Device) error {
 	if microArch, ok := hostPciDevice.AdditionalProperties["microarchitecture"]; ok {
 		if microArch == microArchRequired {
 			return nil

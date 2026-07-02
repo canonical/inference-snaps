@@ -8,19 +8,19 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/host"
 )
 
 type Settings struct {
-	Environment    []string                `yaml:"environment"`
-	Layout         map[string]types.Layout `yaml:"layout"`
-	expandedLayout map[string]types.Layout
+	Environment    []string                  `yaml:"environment"`
+	Layout         map[string]engines.Layout `yaml:"layout"`
+	expandedLayout map[string]engines.Layout
 }
 
 func EngineSettings(ctx *Context) (*Settings, error) {
@@ -61,7 +61,7 @@ func EngineSettings(ctx *Context) (*Settings, error) {
 	var engineSettings Settings
 	engineSettings.Environment = append(engineSettings.Environment, runtimeManifest.Environment...)
 	engineSettings.Environment = append(engineSettings.Environment, modelManifest.Environment...)
-	engineSettings.Layout = make(map[string]types.Layout)
+	engineSettings.Layout = make(map[string]engines.Layout)
 	maps.Copy(engineSettings.Layout, runtimeManifest.Layout)
 	maps.Copy(engineSettings.Layout, modelManifest.Layout)
 
@@ -87,9 +87,9 @@ func loadEngineEnvironmentFromSettings(settings *Settings) error {
 		}
 	}
 
-	settings.expandedLayout = make(map[string]types.Layout, len(settings.Layout))
+	settings.expandedLayout = make(map[string]engines.Layout, len(settings.Layout))
 	for k, v := range settings.Layout {
-		engineLayout := types.Layout{
+		engineLayout := engines.Layout{
 			Symlink: os.ExpandEnv(v.Symlink),
 		}
 		settings.expandedLayout[os.ExpandEnv(k)] = engineLayout
@@ -186,11 +186,11 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 	return nil
 }
 
-// hardwareInfoGet and engineScorer are package-level variables so tests can
+// machineInfoGet and engineScorer are package-level variables so tests can
 // inject fakes without changing any production behaviour.
 var (
-	hardwareInfoGet = hardware_info.Get
-	engineScorer    = selector.ScoreEngines
+	machineInfoGet = machine.Get
+	engineScorer   = selector.ScoreEngines
 )
 
 /*
@@ -205,7 +205,7 @@ func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, []string, error) {
 		return nil, nil, fmt.Errorf("loading engines: %w", err)
 	}
 
-	machineInfo, warnings, err := hardwareInfoGet(false)
+	machineInfo, warnings, err := machineInfoGet(host.Real(), false)
 	if err != nil {
 		return nil, nil, fmt.Errorf("getting machine info: %w", err)
 	}

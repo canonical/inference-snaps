@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
-	"gopkg.in/yaml.v3"
+	"github.com/canonical/lscompute/pkg/machine"
+	"go.yaml.in/yaml/v4"
 )
 
 /*
 If the model snap has no engines defined, scoring should pass, but finding a top engine should not be possible.
 */
 func TestFindTopEngineFromNone(t *testing.T) {
-	hwInfo := types.HwInfo{}
+	hwInfo := machine.MachineInfo{}
 
 	allEngines, err := engines.LoadManifests("../../test_data/engines")
 	if err != nil {
@@ -33,7 +33,7 @@ func TestFindTopEngineFromNone(t *testing.T) {
 }
 
 func TestNoCpuInHwInfo(t *testing.T) {
-	hwInfo := types.HwInfo{
+	hwInfo := machine.MachineInfo{
 		// All fields are nil or zero
 	}
 
@@ -55,6 +55,6 @@ func TestNoCpuInHwInfo(t *testing.T) {
 		t.Fatal(err)
 	}
 	if report.EngineCompatible() {
-		t.Fatal("Missing CPU info in hardware_info should result in an incompatible engine")
+		t.Fatal("Missing CPU info in machine info should result in an incompatible engine")
 	}
 }

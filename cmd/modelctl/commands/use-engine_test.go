@@ -7,7 +7,6 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
@@ -166,12 +165,12 @@ func ExampleUseEngine_autoSelectEngine() {
 		}
 		allEngines = append(allEngines, *e)
 	}
-	machineInfo, err := hardware_info.GetFromRawData("mustang", true, "../../../test_data")
+	machine, err := machineInfoFixture("mustang")
 	if err != nil {
 		panic(err)
 	}
 
-	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
+	scoredEngines, err := selector.ScoreEngines(machine, allEngines)
 	if err != nil {
 		panic(err)
 	}

@@ -3,13 +3,12 @@ package commands
 import (
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine"
 )
 
 func Example_showMachineCommand_printMachineInfoJson() {
 	cmd := showMachineCommand{format: "json"}
-	info, err := hardware_info.GetFromRawData("dummy-machine", true, "../../../test_data")
+	info, err := machineInfoFixture("dummy-machine")
 	if err != nil {
 		panic(err)
 	}
@@ -41,8 +40,9 @@ func Example_showMachineCommand_printMachineInfoJson() {
 	//       "avail": 943543738368
 	//     }
 	//   },
-	//   "pci": [
+	//   "devices": [
 	//     {
+	//       "bus": "pci",
 	//       "slot": "0000:00:00.0",
 	//       "bus-number": "0x0",
 	//       "device-class": "0x600",
@@ -61,7 +61,7 @@ func Example_showMachineCommand_printMachineInfoJson() {
 
 func Example_showMachineCommand_printMachineInfoYaml() {
 	cmd := showMachineCommand{format: "yaml"}
-	info, err := hardware_info.GetFromRawData("dummy-machine", true, "../../../test_data")
+	info, err := machineInfoFixture("dummy-machine")
 	if err != nil {
 		panic(err)
 	}
@@ -85,8 +85,9 @@ func Example_showMachineCommand_printMachineInfoYaml() {
 	//     /var/lib/snapd/snaps:
 	//         total: 1006451294208
 	//         avail: 943543738368
-	// pci:
-	//     - slot: "0000:00:00.0"
+	// devices:
+	//     - bus: pci
+	//       slot: "0000:00:00.0"
 	//       bus-number: "0x0"
 	//       device-class: "0x600"
 	//       programming-interface: 0
@@ -100,7 +101,7 @@ func Example_showMachineCommand_printMachineInfoYaml() {
 
 func Test_printMachineInfo_unknownFormat(t *testing.T) {
 	cmd := showMachineCommand{format: "xml"}
-	info := &types.HwInfo{}
+	info := &machine.MachineInfo{}
 
 	err := cmd.printMachineInfo(info)
 	if err == nil || err.Error() != `unknown format "xml"` {

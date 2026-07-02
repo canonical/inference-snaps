@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/host"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -54,7 +54,7 @@ func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 	return cmd.printMachineInfo(info)
 }
 
-func (cmd *showMachineCommand) printMachineInfo(info *types.HwInfo) error {
+func (cmd *showMachineCommand) printMachineInfo(info *machine.MachineInfo) error {
 	switch cmd.format {
 	case "json":
 		return cmd.printMachineInfoJson(info)
@@ -65,7 +65,7 @@ func (cmd *showMachineCommand) printMachineInfo(info *types.HwInfo) error {
 	}
 }
 
-func (cmd *showMachineCommand) printMachineInfoJson(info *types.HwInfo) error {
+func (cmd *showMachineCommand) printMachineInfoJson(info *machine.MachineInfo) error {
 	jsonString, err := json.MarshalIndent(info, "", "  ")
 	if err != nil {
 		return fmt.Errorf("json: %s", err)
@@ -74,7 +74,7 @@ func (cmd *showMachineCommand) printMachineInfoJson(info *types.HwInfo) error {
 	return nil
 }
 
-func (cmd *showMachineCommand) printMachineInfoYaml(info *types.HwInfo) error {
+func (cmd *showMachineCommand) printMachineInfoYaml(info *machine.MachineInfo) error {
 	yamlString, err := yaml.Marshal(info)
 	if err != nil {
 		return fmt.Errorf("yaml: %s", err)
@@ -83,9 +83,9 @@ func (cmd *showMachineCommand) printMachineInfoYaml(info *types.HwInfo) error {
 	return nil
 }
 
-func (cmd *showMachineCommand) fetchMachineInfoWithSpinner() (*types.HwInfo, error) {
+func (cmd *showMachineCommand) fetchMachineInfoWithSpinner() (*machine.MachineInfo, error) {
 	stopProgress := common.StartProgressSpinner("Gathering machine information")
-	hwInfo, warnings, err := hardware_info.Get(true)
+	hwInfo, warnings, err := machine.Get(host.Real(), true)
 	stopProgress()
 
 	if len(warnings) > 0 && cmd.Verbose {

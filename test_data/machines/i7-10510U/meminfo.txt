@@ -1,2 +1,0 @@
-MemTotal:       15908761600
-SwapTotal:       4294963200

@@ -6,7 +6,8 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/cpu"
 )
 
 func TestCheckCpuVendor(t *testing.T) {
@@ -19,19 +20,19 @@ func TestCheckCpuVendor(t *testing.T) {
 		ManufacturerId: &manufacturerId,
 	}
 
-	hwInfoCpus := []types.CpuInfo{{
+	hwInfoCpus := []cpu.CpuInfo{{
 		Architecture:   constants.Amd64,
 		ManufacturerId: manufacturerId,
 	}}
 
-	score, issues := Match(device, hwInfoCpus)
+	score, issues := Match(device, &machine.MachineInfo{Cpus: hwInfoCpus})
 	if len(issues) != 0 {
 		t.Fatalf("CPU vendor should match: %v", strings.Join(issues, ","))
 	}
 
 	manufacturerId = "AuthenticAMD"
 
-	score, issues = Match(device, hwInfoCpus)
+	score, issues = Match(device, &machine.MachineInfo{Cpus: hwInfoCpus})
 	if len(issues) == 0 || score > 0 {
 		t.Fatal("CPU vendor should NOT match")
 	}
@@ -49,21 +50,21 @@ func TestCheckCpuFlags(t *testing.T) {
 		Flags:          []string{"avx2"},
 	}
 
-	hwInfoCpus := []types.CpuInfo{{
+	hwInfoCpus := []cpu.CpuInfo{{
 		Architecture:   constants.Amd64,
 		ManufacturerId: manufacturerId,
 		Flags:          []string{"avx2"},
 	}}
 
-	result, err := Match(device, hwInfoCpus)
-	if err != nil {
-		t.Fatalf("CPU flags should match: %v", err)
+	score, issues := Match(device, &machine.MachineInfo{Cpus: hwInfoCpus})
+	if len(issues) != 0 {
+		t.Fatalf("CPU flags should match: %v", strings.Join(issues, ","))
 	}
 
 	device.Flags = []string{"avx512"}
 
-	result, err = Match(device, hwInfoCpus)
-	if err == nil || result > 0 {
+	score, issues = Match(device, &machine.MachineInfo{Cpus: hwInfoCpus})
+	if len(issues) == 0 || score > 0 {
 		t.Fatal("CPU flags should NOT match")
 	}
 

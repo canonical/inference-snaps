@@ -76,10 +76,10 @@ This allows piping the output to another application.
 This command can be used to perform engine selection using static data.
 It is useful for testing purposes.
 
-To use, pipe the machine info in JSON format into `select-engine`.
+To use, pipe the machine info in **JSON format** into `select-engine`.
 You also need to provide the location of the engine manifests from which the selection should be made.
 
-The result is printed as JSON to the standard output, while any other log messages are written as standard errors.
+The result is printed as **JSON** to the standard output by default (use `--format=yaml` for YAML output), while any other log messages are written as standard errors.
 
 Example:
 
@@ -99,10 +99,16 @@ $ inference-snaps-cli show-machine --format=json | inference-snaps-cli debug sel
 ❌ intel-npu - not compatible: required device not found
 Selected engine for your hardware configuration: cuda-generic
 
-engines:
-    - name: ampere
-      description: Test ampere selection
+{
+  "engines": [
+    {
+      "name": "ampere",
+      "description": "Test ampere selection",
       ...
+    }
+  ],
+  "top-engine": "cuda-generic"
+}
 ```
 
 ## Notes

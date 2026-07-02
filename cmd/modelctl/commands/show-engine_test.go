@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/hardware_info"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 )
 
@@ -46,7 +45,7 @@ func scoreEngineAgainstMachine(engineName string, machineName string) (*engines.
 	if err != nil {
 		return nil, fmt.Errorf("failed to load engine manifest: %v", err)
 	}
-	info, err := hardware_info.GetFromRawData(machineName, true, "../../../test_data")
+	info, err := machineInfoFixture(machineName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get hardware info: %v", err)
 	}

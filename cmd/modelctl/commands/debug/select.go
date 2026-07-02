@@ -3,13 +3,14 @@ package debug
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -42,19 +43,22 @@ func SelectCommand(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	cobraCmd.Flags().StringVar(&cmd.format, "format", "yaml", "engine selection results format")
+	cobraCmd.Flags().StringVar(&cmd.format, "format", "json", "engine selection results format")
 	cobraCmd.Flags().StringVar(&cmd.enginesDir, "engines", ctx.EnginesDir, "engine manifests directory")
 
 	return cobraCmd
 }
 
 func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
-	// Read yaml piped in from the hardware-info app
-	var hardwareInfo types.HwInfo
-
-	err := yaml.NewDecoder(os.Stdin).Decode(&hardwareInfo)
+	// Read the machine info JSON piped in from the lscompute / show-machine app
+	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		return fmt.Errorf("decoding hardware info: %s", err)
+		return fmt.Errorf("reading machine info from stdin: %s", err)
+	}
+
+	machineInfo, err := machine.Decode(data)
+	if err != nil {
+		return fmt.Errorf("decoding machine info: %s", err)
 	}
 
 	allEngines, err := engines.LoadManifests(cmd.enginesDir)
@@ -62,7 +66,7 @@ func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("loading engines from directory: %s", err)
 	}
 
-	scoredEngines, err := selector.ScoreEngines(&hardwareInfo, allEngines)
+	scoredEngines, err := selector.ScoreEngines(machineInfo, allEngines)
 	if err != nil {
 		return fmt.Errorf("checking engines: %s", err)
 	}

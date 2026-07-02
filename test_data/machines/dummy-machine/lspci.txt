@@ -1,9 +1,0 @@
-Slot:	0000:00:00.0
-Class:	0600
-Vendor:	8086
-Device:	4637
-SVendor:	103c
-SDevice:	89c6
-Rev:	02
-ProgIf:	00
-IOMMUGroup:	1

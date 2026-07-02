@@ -42,6 +42,11 @@ layout:
   # Under wsl the libraries are expected in /usr/lib/wsl
   /usr/lib/wsl:
     bind: $SNAP_COMMON/usr/lib/wsl
+  # PCI and USB ID databases bundled with the snap
+  /usr/share/misc/pci.ids:
+    bind-file: $SNAP/usr/share/misc/pci.ids
+  /usr/share/misc/usb.ids:
+    bind-file: $SNAP/usr/share/misc/usb.ids
 
 environment:
   # Path to access current revision of components
@@ -105,8 +110,21 @@ parts:
   cli-dependencies:
     plugin: nil
     stage-packages:
-      - pciutils # lspci
       - clinfo # used for Intel GPU vRAM detection. It depends on intel-opencl-icd
+
+  # PCI ID database downloaded at build time for friendly device name lookups.
+  pci-ids:
+    plugin: dump
+    source: https://pci-ids.ucw.cz/v2.2/pci.ids
+    source-type: file
+    organize:
+      pci.ids: usr/share/misc/pci.ids
+
+  # USB ID database for friendly device name lookups.
+  usb-ids:
+    plugin: nil
+    stage-packages:
+      - usb.ids
 
   # Used for NVIDIA vRAM and CUDA Capability detection.
   # Only the binary is included to avoid staging libraries, which should instead be provided by the host through the opengl interface.

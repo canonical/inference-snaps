@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
-	"github.com/canonical/inference-snaps-cli/v2/pkg/types"
+	"github.com/canonical/lscompute/pkg/machine/types"
 )
 
 func TestDeviceType(t *testing.T) {
