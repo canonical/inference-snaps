@@ -81,7 +81,7 @@ func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 }
 
 func (cmd *statusCommand) statusYaml() (string, error) {
-	statusStr, err := cmd.statusStruct()
+	statusStr, err := common.SnapStatus(cmd.Context)
 	if err != nil {
 		return "", fmt.Errorf("getting status: %v", err)
 	}
@@ -93,7 +93,7 @@ func (cmd *statusCommand) statusYaml() (string, error) {
 }
 
 func (cmd *statusCommand) statusJson() (string, error) {
-	statusStr, err := cmd.statusStruct()
+	statusStr, err := common.SnapStatus(cmd.Context)
 	if err != nil {
 		return "", fmt.Errorf("getting status: %v", err)
 	}
@@ -102,44 +102,4 @@ func (cmd *statusCommand) statusJson() (string, error) {
 		return "", fmt.Errorf("marshalling json: %v", err)
 	}
 	return string(jsonStr), nil
-}
-
-type status struct {
-	Engine    string            `json:"engine" yaml:"engine"`
-	Services  map[string]string `json:"services" yaml:"services"`
-	Endpoints map[string]string `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
-	Model     map[string]string `json:"model,omitempty" yaml:"model,omitempty"`
-}
-
-func (cmd *statusCommand) statusStruct() (*status, error) {
-	var statusStr status
-
-	activeEngineName, err := cmd.Cache.GetActiveEngine()
-	if err != nil {
-		return nil, fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
-	}
-	if activeEngineName == "" {
-		return nil, common.ErrNoActiveEngine
-	}
-	statusStr.Engine = activeEngineName
-
-	services, err := common.ServiceStatuses()
-	if err != nil {
-		return nil, fmt.Errorf("getting service statuses: %v", err)
-	}
-	statusStr.Services = services
-
-	endpoints, err := common.ServerEndpoints(cmd.Context)
-	if err != nil {
-		return nil, fmt.Errorf("getting server api endpoints: %v", err)
-	}
-	statusStr.Endpoints = endpoints
-
-	modelStatus, err := common.ModelStatus(cmd.Context)
-	if err != nil {
-		return nil, fmt.Errorf("getting model status: %v", err)
-	}
-	statusStr.Model = modelStatus
-
-	return &statusStr, nil
 }

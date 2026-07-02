@@ -40,7 +40,7 @@ func (cmd *webUiCommand) run(_ *cobra.Command, _ []string) error {
 		return fmt.Errorf("getting webui server url: %s", err)
 	}
 
-	services, err := common.ServiceStatuses()
+	services, err := cmd.Context.Snap.ServiceStatuses()
 	if err != nil {
 		return fmt.Errorf("getting service statuses: %v", err)
 	}

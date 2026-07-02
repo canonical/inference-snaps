@@ -8,6 +8,21 @@ grade: devel
 confinement: strict
 adopt-info: version
 
+slots:
+  status:
+    interface: content
+    content: inference-snap-status
+    source:
+      read:
+        - $SNAP_COMMON/share
+  # Deprecated: remove when Open WebUI uses inference-snap-status
+  open-webui:
+    interface: content
+    content: open-webui-config
+    source:
+      read:
+        - $SNAP_COMMON/share
+
 plugs:
   intel-npu:
     interface: custom-device
@@ -31,6 +46,10 @@ layout:
 environment:
   # Path to access current revision of components
   SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
+  ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
+  # This is to find the intel.icd file, containing the path to libigdrcl.so
+  # Required for Intel GPU detection and communication
+  OCL_ICD_VENDORS: $SNAP/etc/OpenCL/vendors
 
 parts:
   version:

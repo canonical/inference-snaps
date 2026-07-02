@@ -6,9 +6,10 @@ import (
 
 type mockSnap struct {
 	installComponentFn func(name string) error
+	serviceStatuses    map[string]string
 }
 
-// Mock returns a no-op Snap suitable for tests that don't exercise InstallComponent.
+// Mock returns a no-op Snap suitable for tests that don't exercise InstallComponent or ServiceStatuses.
 func Mock() Snap {
 	return &mockSnap{}
 }
@@ -17,6 +18,11 @@ func Mock() Snap {
 // Use a closure to simulate sequences of errors across multiple calls.
 func MockWithInstall(fn func(name string) error) Snap {
 	return &mockSnap{installComponentFn: fn}
+}
+
+// MockWithServiceStatuses returns a Snap that returns the given statuses from ServiceStatuses.
+func MockWithServiceStatuses(statuses map[string]string) Snap {
+	return &mockSnap{serviceStatuses: statuses}
 }
 
 func (c *mockSnap) Restart(service ...string) error {
@@ -41,4 +47,11 @@ func (c *mockSnap) InstallComponent(name string) error {
 		return c.installComponentFn(name)
 	}
 	return nil
+}
+
+func (c *mockSnap) ServiceStatuses() (map[string]string, error) {
+	if c.serviceStatuses != nil {
+		return c.serviceStatuses, nil
+	}
+	return map[string]string{}, nil
 }

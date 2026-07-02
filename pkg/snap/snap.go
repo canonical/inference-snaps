@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/canonical/go-snapctl"
 	"github.com/canonical/go-snapctl/env"
@@ -14,6 +15,7 @@ type Snap interface {
 	InstanceName() string
 	HardwareObservable() (bool, error)
 	InstallComponent(name string) error
+	ServiceStatuses() (map[string]string, error)
 }
 
 func New() Snap {
@@ -61,3 +63,22 @@ func (*snap) HardwareObservable() (bool, error) {
 func (*snap) InstallComponent(name string) error {
 	return snapctl.InstallComponents(name).Run()
 }
+
+// ServiceStatuses returns the current status of all snap services, keyed by service app name.
+func (*snap) ServiceStatuses() (map[string]string, error) {
+	services, err := snapctl.Services().Run()
+	if err != nil {
+		return nil, fmt.Errorf("getting list of services: %v", err)
+	}
+	statuses := make(map[string]string)
+	for name, service := range services {
+		// The service name is in the format <snap-name>.<service-app>, we only want the service-app part.
+		_, serviceApp, found := strings.Cut(name, ".")
+		if !found {
+			return nil, fmt.Errorf("unexpected service name format: %q", name)
+		}
+		statuses[serviceApp] = service.Current
+	}
+	return statuses, nil
+}
+
