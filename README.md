@@ -44,6 +44,7 @@ gemma4 chat
 | DeepSeek R1 | text, thinking | `snap install deepseek-r1` | [repo](https://github.com/canonical/deepseek-r1-snap)
 | Gemma 3 | text, thinking, vision | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
 | Gemma 4 | text, thinking, vision, tools | `snap install gemma4` | [repo](https://github.com/canonical/gemma4-snap)
+| GLM 4.7 Flash | text, thinking, tools | `snap install glm-4-7-flash` | [repo](https://github.com/canonical/glm-4.7-flash-snap)
 | Nemotron 3 Nano | text, thinking, tools | `snap install nemotron-3-nano` | [repo](https://github.com/canonical/nemotron-3-nano-snap)
 | Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
 | Qwen 2.5 VL | text, vision | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
