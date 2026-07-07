@@ -163,7 +163,7 @@ func (c *chatClient) handshake() error {
 func (c *chatClient) checkServerReady() error {
 	params := openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
-			openai.SystemMessage("Are you up?"),
+			openai.UserMessage("Are you up?"),
 		},
 		Model:               c.modelName,
 		MaxCompletionTokens: openai.Int(1),
