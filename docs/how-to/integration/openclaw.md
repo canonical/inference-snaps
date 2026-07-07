@@ -24,7 +24,6 @@ model:
     name: gemma4-e4b-it-int4-ov
 ```
 
-
 ## Configure using wizard
 
 After installation, OpenClaw launches the interactive setup wizard with a number of sections to set up the agent.
@@ -68,13 +67,12 @@ You can now use OpenClaw, and it should use the inference snap as model.
 
 If you have multiple models configured, the OpenClaw dashboard lets you choose the one to use from the dropdown below the chat input box.
 
-
 ## Configure using config file
 
 OpenClaw's configuration is persisted to a file. One can also manually edit this file.
 
 ```
-$ nano ~/.openclaw/openclaw.json
+nano ~/.openclaw/openclaw.json
 ```
 
 After the wizard was run, the file will contain a section listing the available models.
@@ -122,5 +120,5 @@ You can manually edit this file to change the configuration or add new models.
 After modifying the file, restart the OpenClaw gateway to apply the changes:
 
 ```
-$ openclaw gateway restart
+openclaw gateway restart
 ```
