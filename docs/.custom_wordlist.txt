@@ -1,3 +1,4 @@
+agentic
 artifacts
 backend
 backends
@@ -85,6 +86,7 @@ rst
 runtimes
 sandboxed
 sideload
+sideloaded
 sideloading
 sitemapindex
 snapcraft

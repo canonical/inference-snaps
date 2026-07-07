@@ -59,6 +59,8 @@ This inference snap is optimized for the following hardware:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
+| amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
@@ -103,12 +105,12 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 
 {{explore_optimizations}}
 
-## Qwen VL
+## Qwen 2.5 VL
 
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)
 [![qwen-vl source][gh-badge]](https://github.com/canonical/qwen-vl-snap)
 
-Qwen VL is a Vision Language Model which has the ability to process both visual and textual data.
+Qwen 2.5 VL is a Vision Language Model which has the ability to process both visual and textual data.
 The input can be a combination of an image and text, with the output being text-based.
 
 The inference snap for Qwen 2.5 VL has been optimized for the following:
@@ -120,6 +122,66 @@ The inference snap for Qwen 2.5 VL has been optimized for the following:
 | amd64 | Intel CPU | Intel-specific CPU optimizations |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | Ampere {spellexception}`Altra`/One CPUs | Optimized for Ampere processors |
+
+{{explore_optimizations}}
+
+## Qwen 3
+
+[![qwen3 snap](https://snapcraft.io/qwen3/badge.svg)](https://snapcraft.io/qwen3)
+[![qwen3 source][gh-badge]](https://github.com/canonical/qwen3-snap)
+
+Qwen 3 is a Large Language Model designed for reasoning and chat completions.
+The input and output are text-based.
+
+The inference snap for Qwen 3 has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
+{{explore_optimizations}}
+
+## Qwen 3 Coder
+
+[![qwen3-coder snap](https://snapcraft.io/qwen3-coder/badge.svg)](https://snapcraft.io/qwen3-coder)
+[![qwen3-coder source][gh-badge]](https://github.com/canonical/qwen3-coder-snap)
+
+Qwen 3 Coder is a Large Language Model designed for coding and software development tasks.
+The input and output are text-based.
+
+The inference snap for Qwen 3 Coder has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
+{{explore_optimizations}}
+
+## Qwen3.6
+
+[![qwen3-6 snap](https://snapcraft.io/qwen3-6/badge.svg)](https://snapcraft.io/qwen3-6)
+[![qwen3-6 source][gh-badge]](https://github.com/canonical/qwen3.6-snap)
+
+Qwen3.6 is a Mixture-of-Experts Large Language Model designed for reasoning and chat completions.
+It supports text and image inputs, with text-based outputs.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms  |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
 
 {{explore_optimizations}}
 
