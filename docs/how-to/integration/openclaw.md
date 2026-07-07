@@ -3,7 +3,7 @@
 # Use inference snaps in OpenClaw
 
 Inference snaps that support tool calling can be used with local agents like OpenClaw, {spellexception}`PicoClaw`, {spellexception}`NemoClaw`, Hermes, etc.
-The steps below are a guideline on how to configure OpenClaw to use an inference snap like Gemma 4.
+The steps below are a guideline on how to configure OpenClaw to use an inference snap.
 Similar steps can be used to configure other AI agents.
 
 ## Look up base URL and model ID
@@ -18,10 +18,10 @@ services:
     server: active
     server-webui: active
 endpoints:
-    openai: http://127.0.0.1:8336/v3
-    webui: http://127.0.0.1:8337/
+    openai: http://127.0.0.1:8338/v1
+    webui: http://127.0.0.1:8339/
 model:
-    name: gemma4-e4b-it-int4-ov
+    name: qwen3-8b-q4-k-m
 ```
 
 ## Configure using wizard
@@ -67,7 +67,7 @@ You can now use OpenClaw, and it should use the inference snap as model.
 
 If you have multiple models configured, the OpenClaw dashboard lets you choose the one to use from the dropdown below the chat input box.
 
-## Configure using config file
+## Configure using file
 
 OpenClaw's configuration is persisted to a file. One can also manually edit this file.
 
@@ -85,7 +85,7 @@ You can manually edit this file to change the configuration or add new models.
     "mode": "merge",
     "providers": {
       "qwen3-snap": {
-        "baseUrl": "http://localhost:8338/v1",
+        "baseUrl": "http://127.0.0.1:8338/v1",
         "api": "openai-responses",
         "models": [
           {
