@@ -2,7 +2,7 @@
 
 > Install, run, and serve AI models as snaps — optimized for your hardware.
 
-Inference snaps turn complex generative model deployment into a single command.
+Inference Snaps turn complex generative model deployment into a single command.
 They are built on the idea that AI runtimes should be portable, composable, and local-first.
 Whether you’re experimenting with Gemma 4, Qwen 3 Coder, or DeepSeek R1, you can instantly install a pre-optimized runtime and spin up an API endpoint locally. Each model snap includes all dependencies and is tuned for your silicon — CPU, GPU, or NPU.
 
