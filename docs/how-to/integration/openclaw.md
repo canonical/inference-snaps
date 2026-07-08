@@ -75,7 +75,6 @@ nano ~/.openclaw/openclaw.json
 ```
 
 After the wizard was run, the file will contain a section listing the available models.
-You can manually edit this file to change the configuration or add new models.
 For example, a configuration file with both the qwen3 and gemma4 inference snaps configured would look like this:
 
 ```json
