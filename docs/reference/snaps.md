@@ -70,6 +70,25 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## GLM 4.7 Flash
+
+[![glm-4-7-flash snap](https://snapcraft.io/glm-4-7-flash/badge.svg)](https://snapcraft.io/glm-4-7-flash)
+[![glm-4-7-flash code][gh-badge]](https://github.com/canonical/glm-4.7-flash-snap)
+
+GLM 4.7 Flash is a Mixture-of-Experts Large Language Model designed for reasoning and tool-calling tasks.
+The input and output are text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## Nemotron 3 Nano
 
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)
