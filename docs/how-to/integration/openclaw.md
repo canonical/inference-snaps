@@ -11,8 +11,9 @@ Similar steps can be used to configure other AI agents.
 Run the respective inference snap's status command to look up the `openai` endpoint URL and the model name.
 These values will be required when configuring the agent.
 
-```shell
-$ <inference-snap> status
+```{terminal}
+<inference-snap> status
+
 engine: cpu
 services:
     server: active
@@ -71,16 +72,15 @@ If you have multiple models configured, the OpenClaw dashboard lets you choose t
 
 OpenClaw's configuration is persisted to a file. One can also manually edit this file.
 
-```
+```shell
 nano ~/.openclaw/openclaw.json
 ```
 
 After the wizard was run, the file will contain a section listing the available models.
 You can manually edit this file to change the configuration or add new models.
 
-```
+```json
 {
-...
   "models": {
     "mode": "merge",
     "providers": {
@@ -112,13 +112,12 @@ You can manually edit this file to change the configuration or add new models.
         ]
       }
     }
-  },
-...
+  }
 }
 ```
 
 After modifying the file, restart the OpenClaw gateway to apply the changes:
 
-```
+```shell
 openclaw gateway restart
 ```
