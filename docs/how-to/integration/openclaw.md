@@ -1,19 +1,27 @@
-(openclaw)=
+(configure-openclaw)=
 
 # Use inference snaps in OpenClaw
 
-Inference snaps that support tool calling can be used with local agents like OpenClaw, {spellexception}`PicoClaw`, {spellexception}`NemoClaw`, Hermes, etc.
-The steps below are a guideline on how to configure OpenClaw to use an inference snap.
-Similar steps can be used to configure other AI agents.
+OpenClaw is a local AI agent that supports tool calling.
+This guide will help you configure OpenClaw to use an inference snap.
 
-## Look up base URL and model ID
+Similar steps can be used to configure other AI agents, such as {spellexception}`PicoClaw`, {spellexception}`NemoClaw`, and Hermes.
 
-Run the respective inference snap's status command to look up the `openai` endpoint URL and the model name.
-These values will be required when configuring the agent.
+You must have OpenClaw and an inference snap installed to continue.
 
-```{terminal}
+## Get the inference snap endpoint and model name
+
+Use the inference snap's `status` command to retrieve the OpenAI endpoint URL and model name.
+
+For example, run:
+
+```shell
 <inference-snap> status
+```
 
+The output will show the endpoint and model information:
+
+```yaml
 engine: cpu
 services:
     server: active
@@ -25,7 +33,9 @@ model:
     name: qwen3-8b-q4-k-m
 ```
 
-## Configure using wizard
+Note down the `openai` endpoint URL and the `model.name` value, as you'll need them for configuration.
+
+## Configure using the wizard
 
 After installation, OpenClaw launches the interactive setup wizard with a number of sections to set up the agent.
 The connection with an inference snap needs to be set up during the model configuration section.
@@ -37,38 +47,26 @@ openclaw configure --section model
 ```
 
 The wizard will ask a number of questions.
-Answer the questions using this guide as a reference.
+Answer the questions using this guide as a reference:
 
-Model/{spellexception}`auth` provider
-~ Choose "Custom Provider"
-
-API Base URL
-~ Enter the `openai` endpoint URL obtained previously from the `status` command.
-
-How do you want to provide this API key?
-~ Choose "Paste API key now"
-
-API Key
-~ Leave blank
-
-Endpoint compatibility
-~ Choose either the legacy "OpenAI-compatible" or the newer "OpenAI Responses-compatible".
-
-Model ID
-~ Enter the model name obtained previously from the `status` command.
+- **Model/{spellexception}`auth` provider**: Choose "Custom Provider"
+- **API Base URL**: Enter the `openai` endpoint URL obtained previously from the `status` command.
+- **How do you want to provide this API key?**: Choose "Paste API key now"
+- **API Key**: Leave blank
+- **Endpoint compatibility**: Choose "OpenAI-compatible".
+- **Model ID**: Enter the `model.name` value obtained previously from the `status` command.
 
 The endpoint will now be verified by the wizard.
 If it fails, but the `<inference-snap> chat` command works, it is probably because the model does not have enough resources to be used by an agent.
 
-Endpoint ID and Model alias
-~ You can give the endpoint and model alias any value of your choosing. We recommend making it clear this is the model from the inference snap.
+- **Endpoint ID and Model alias**: You can give the endpoint and model alias any value of your choosing. We recommend making it clear this is the model from the inference snap.
 
 The wizard should print `Configure complete`.
-You can now use OpenClaw, and it should use the inference snap as model.
+You can now use OpenClaw, and it should use the inference snap as its model.
 
 If you have multiple models configured, the OpenClaw dashboard lets you choose the one to use from the dropdown below the chat input box.
 
-## Configure using file
+## Configure using the configuration file
 
 OpenClaw's configuration is persisted to a file. One can also manually edit this file.
 
@@ -78,15 +76,17 @@ nano ~/.openclaw/openclaw.json
 
 After the wizard was run, the file will contain a section listing the available models.
 You can manually edit this file to change the configuration or add new models.
+For example, a configuration file with both the qwen3 and gemma4 inference snaps configured would look like this:
 
 ```json
 {
+  // other configuration sections...
   "models": {
     "mode": "merge",
     "providers": {
       "qwen3-snap": {
         "baseUrl": "http://127.0.0.1:8338/v1",
-        "api": "openai-responses",
+        "api": "openai-completions",
         "models": [
           {
             "id": "qwen3-8b-q4-k-m",
@@ -112,7 +112,8 @@ You can manually edit this file to change the configuration or add new models.
         ]
       }
     }
-  }
+  },
+  // other configuration sections...
 }
 ```
 
