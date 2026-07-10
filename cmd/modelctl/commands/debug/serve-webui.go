@@ -45,7 +45,7 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 
 	config := webui.Config{
 		OpenAIBaseURL: cmd.baseUrl,
-		Capabilities:  webui.SupportedCapabilities(), // set all capabilities for debugging
+		Capabilities:  common.SupportedCapabilities(), // set all capabilities for debugging
 		InstanceName:  "debug",
 		EngineName:    "unset",
 	}

@@ -2,10 +2,10 @@ package commands
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/webui"
 	"github.com/spf13/cobra"
 )
@@ -14,9 +14,8 @@ type serveWebUiCommand struct {
 	*common.Context
 
 	// flags
-	port         int
-	host         string // bind address
-	capabilities string
+	port int
+	host string // bind address
 }
 
 func ServeWebUi(ctx *common.Context) *cobra.Command {
@@ -35,8 +34,6 @@ func ServeWebUi(ctx *common.Context) *cobra.Command {
 	// flags
 	cobraCmd.Flags().IntVar(&cmd.port, "port", 8081, "HTTP bind port")
 	cobraCmd.Flags().StringVar(&cmd.host, "host", "localhost", "HTTP bind address")
-	cobraCmd.Flags().StringVar(&cmd.capabilities, "capabilities", "text",
-		fmt.Sprintf("Comma-separated list of capabilities (%s)", strings.Join(webui.SupportedCapabilities(), ", ")))
 
 	return cobraCmd
 }
@@ -62,9 +59,22 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 		return common.ErrNoActiveEngine
 	}
 
-	var capabilities []string
-	for cap := range strings.SplitSeq(cmd.capabilities, ",") {
-		capabilities = append(capabilities, strings.TrimSpace(cap))
+	activeModelId, err := cmd.Cache.GetActiveModel()
+	if err != nil {
+		return fmt.Errorf("getting active model: %w", err)
+	}
+
+	// Always send an array (possibly empty) so the /config response has a
+	// stable shape and never serializes capabilities as JSON null.
+	capabilities := []string{}
+	if activeModelId != "" {
+		modelManifest, err := models.LoadManifest(cmd.ModelsDir, activeModelId)
+		if err != nil {
+			return fmt.Errorf("loading model manifest: %w", err)
+		}
+		if modelManifest.Capabilities != nil {
+			capabilities = modelManifest.Capabilities
+		}
 	}
 
 	config := webui.Config{

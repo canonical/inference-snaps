@@ -3,7 +3,6 @@ package webui
 import (
 	"fmt"
 	"net/url"
-	"slices"
 )
 
 type Config struct {
@@ -13,28 +12,11 @@ type Config struct {
 	EngineName    string   `json:"engineName"`
 }
 
-const (
-	capabilityText         string = "text"
-	capabilityTextMarkdown string = "text:markdown"
-	capabilityVision       string = "vision"
-)
-
-func SupportedCapabilities() []string {
-	return []string{capabilityText, capabilityTextMarkdown, capabilityVision}
-}
-
 func (c Config) Validate() error {
 
 	// Validate OpenAI base URL
 	if _, err := url.Parse(c.OpenAIBaseURL); err != nil {
 		return fmt.Errorf("invalid OpenAI base URL: %w", err)
-	}
-
-	// Validate capabilities
-	for _, cap := range c.Capabilities {
-		if !slices.Contains(SupportedCapabilities(), cap) {
-			return fmt.Errorf("unsupported capability: %q", cap)
-		}
 	}
 
 	return nil

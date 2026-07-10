@@ -4,23 +4,6 @@ import (
 	"testing"
 )
 
-func TestSupportedCapabilities(t *testing.T) {
-	caps := SupportedCapabilities()
-	if len(caps) == 0 {
-		t.Fatal("expected non-empty capabilities list")
-	}
-	found := map[string]bool{}
-	for _, c := range caps {
-		found[c] = true
-	}
-	if !found["text"] {
-		t.Error("expected 'text' in supported capabilities")
-	}
-	if !found["vision"] {
-		t.Error("expected 'vision' in supported capabilities")
-	}
-}
-
 func TestConfigValidate(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -70,20 +53,12 @@ func TestConfigValidate(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "unsupported capability",
+			name: "unknown capability is accepted (forwarded to frontend)",
 			config: Config{
 				OpenAIBaseURL: "http://localhost:11434/v1",
-				Capabilities:  []string{"audio"},
+				Capabilities:  []string{"unknown"},
 			},
-			wantErr: true,
-		},
-		{
-			name: "one valid one invalid capability",
-			config: Config{
-				OpenAIBaseURL: "http://localhost:11434/v1",
-				Capabilities:  []string{"text", "unknown"},
-			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "nil capabilities",

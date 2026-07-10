@@ -10,6 +10,13 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
+const (
+	capabilityText     string = "text"
+	capabilityVision   string = "vision"
+	capabilityTools    string = "tools"
+	capabilityThinking string = "thinking"
+)
+
 type ModelDetails struct {
 	ID   string `json:"id" yaml:"id"`
 	Name string `json:"name" yaml:"name"`
@@ -22,6 +29,10 @@ type ModelDetails struct {
 	DiskSize string `json:"disk-size" yaml:"disk-size"`
 
 	Components []string `json:"components" yaml:"components"`
+}
+
+func SupportedCapabilities() []string {
+	return []string{capabilityText, capabilityVision, capabilityTools, capabilityThinking}
 }
 
 func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
