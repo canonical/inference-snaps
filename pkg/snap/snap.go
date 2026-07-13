@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/canonical/go-snapctl"
@@ -47,16 +48,16 @@ func (*snap) HardwareObservable() (bool, error) {
 		return true, nil
 	}
 
-	_, err = os.ReadDir("/sys/bus/pci/devices")
-	if err == nil {
+	// Hardware access is available also if the snap is installed without confinement.
+	// Verify by running lscpu from the system path (not staged in the snap)
+	if err := exec.Command("/usr/bin/lscpu", "-V").Run(); err != nil {
+		if errors.Is(err, os.ErrPermission) {
+			return false, nil
+		}
+		return false, fmt.Errorf("checking lscpu availability: %w", err)
+	} else {
 		return true, nil
 	}
-
-	if errors.Is(err, os.ErrPermission) || os.IsPermission(err) {
-		return false, nil
-	}
-
-	return false, fmt.Errorf("reading /sys/bus/pci/devices: %w", err)
 }
 
 // InstallComponent installs a single snap component.
@@ -81,4 +82,3 @@ func (*snap) ServiceStatuses() (map[string]string, error) {
 	}
 	return statuses, nil
 }
-
