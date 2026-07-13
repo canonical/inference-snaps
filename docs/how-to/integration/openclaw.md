@@ -56,8 +56,9 @@ Answer the questions using this guide as a reference:
 - **Endpoint compatibility**: Choose "OpenAI-compatible".
 - **Model ID**: Enter the `model.name` value obtained previously from the `status` command.
 
-The endpoint will now be verified by the wizard.
-If it fails, but the `<inference-snap> chat` command works, it is probably because the model does not have enough resources to be used by an agent.
+The wizard will now run a live completion probe to verify the endpoint.
+If it fails, it could be due to insufficient RAM or VRAM, or missing tool-calling support in the model.
+Refer to the [OpenClaw troubleshooting guide](https://docs.openclaw.ai/help/troubleshooting) for further help.
 
 - **Endpoint ID and Model alias**: You can give the endpoint and model alias any value of your choosing. We recommend making it clear this is the model from the inference snap.
 
@@ -68,7 +69,7 @@ If you have multiple models configured, the OpenClaw dashboard lets you choose t
 
 ## Configure using the configuration file
 
-OpenClaw's configuration is persisted to a file. One can also manually edit this file.
+An alternative way of configuring OpenClaw is by means of editing its configuration file.
 
 ```shell
 nano ~/.openclaw/openclaw.json
