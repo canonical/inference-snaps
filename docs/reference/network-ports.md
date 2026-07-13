@@ -2,7 +2,7 @@
 
 # Network ports registry
 
-Inference snaps bind on one or multiple TCP ports to expose their APIs. If a port is already in use by another service on your system, the inference snap service will fail to start. In such cases, you can {ref}`configure the snap <configure-inference-snaps>` to listen on a different port.
+Inference snaps bind to one or more TCP ports to expose their APIs. If a port is already in use by another service on your system, the inference snap service will fail to start. In such cases, you can {ref}`configure the snap <configure-inference-snaps>` to listen on a different port.
 
 The following table lists the default port assignments for each inference snap. The port range starts from the unassigned IANA registration subset 8323-8350 and continues into higher numbers. Each snap is assigned an even-numbered port, with the following odd number reserved for future use.
 
