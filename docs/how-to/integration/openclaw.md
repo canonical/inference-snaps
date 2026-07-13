@@ -60,8 +60,8 @@ The wizard will now run a live completion probe to verify the endpoint.
 If it fails, it could be due to insufficient RAM or VRAM, or missing tool-calling support in the model.
 Refer to the [OpenClaw troubleshooting guide](https://docs.openclaw.ai/help/troubleshooting) for further help.
 
-- **Endpoint ID**: Any desired value, but we recommend making it clear this is the connection with the inference snap, e.g. `qwen3-snap-endpoint`.
-- **Model alias (optional)**: This is the name of the model that will be shown in the OpenClaw dashboard. If not set here, it will fall back to the model ID. We recommend making it clear this is the model from the inference snap, e.g. `qwen3-snap-model`.
+- **Endpoint ID**: Arbitrary identifier of the provider, e.g. set it to `qwen3-snap`.
+- **Model alias (optional)**: An alias for the model. It falls back to the model ID if left unset. 
 
 The wizard should print `Configure complete`.
 You can now use OpenClaw, and it should use the inference snap as its model.
