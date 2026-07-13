@@ -1,28 +1,6 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ],
-  "git-submodules": {
-    "enabled": true
-  },
-  "semanticCommits": "disabled",
-  "postUpdateOptions": [
-    "gomodTidy"
-  ],
-  "packageRules": [
-    {
-      "description": "Automerge inference-snaps-dev update PRs",
-      "matchManagers": [
-        "git-submodules"
-      ],
-      "matchDepNames": [
-        "dev"
-      ],
-      "commitBody": "[skip ci]",
-      "automerge": true,
-      "automergeType": "pr",
-      "ignoreTests": false
-    }
-  ],
+    "config:recommended",
+    "github>canonical/inference-snaps-dev//renovate/default.jsonc#v2"
+  ]
 }
