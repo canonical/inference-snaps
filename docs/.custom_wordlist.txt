@@ -64,6 +64,7 @@ Nvidia
 Ollama
 Omni
 OpenAI
+OpenClaw
 OpenCode
 OpenShell
 OpenShell's
