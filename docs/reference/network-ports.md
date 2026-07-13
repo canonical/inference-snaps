@@ -8,16 +8,16 @@ The following table lists the default port assignments for each inference snap. 
 
 | Snap | Reserved ports |
 |------|-------|
-| deepseek-r1 | 8324, 8325 |
-| qwen-vl | 8326, 8327 |
-| gemma3 | 8328, 8329 |
-| nemotron-3-nano | 8330, 8331 |
-| nemotron-3-super | 8332, 8333 |
-| nemotron-3-nano-omni | 8334, 8335 |
-| gemma4 | 8336, 8337 |
-| qwen3 | 8338, 8339 |
-| qwen3-coder | 8340, 8341 |
-| qwen3.6 | 8342, 8343 |
-| smollm2 | 8344, 8345 |
-| qwen3.5 | 8352, 8353 |
-| glm-4.7-flash | 8354, 8355 |
+| [DeepSeek R1](https://snapcraft.io/deepseek-r1) | 8324, 8325 |
+| [Qwen 2.5 VL](https://snapcraft.io/qwen-vl) | 8326, 8327 |
+| [Gemma3](https://snapcraft.io/gemma3) | 8328, 8329 |
+| [Nemotron 3 Nano](https://snapcraft.io/nemotron-3-nano) | 8330, 8331 |
+| [Nemotron 3 Super](https://snapcraft.io/nemotron-3-super) | 8332, 8333 |
+| [Nemotron 3 Nano Omni](https://snapcraft.io/nemotron-3-nano-omni) | 8334, 8335 |
+| [Gemma4](https://snapcraft.io/gemma4) | 8336, 8337 |
+| [Qwen 3](https://snapcraft.io/qwen3) | 8338, 8339 |
+| [Qwen 3 Coder](https://snapcraft.io/qwen3-coder) | 8340, 8341 |
+| [Qwen 3.6](https://snapcraft.io/qwen3-6) | 8342, 8343 |
+| [SmolLM2](https://snapcraft.io/smollm2) | 8344, 8345 |
+| Qwen 3.5 | 8352, 8353 |
+| [GLM 4.7 Flash](https://snapcraft.io/glm-4-7-flash) | 8354, 8355 |
