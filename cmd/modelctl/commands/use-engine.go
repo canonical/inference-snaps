@@ -423,7 +423,7 @@ func selectEngineForSeededComponents(cmd *useEngineCommand, scoredEngines []engi
 	for _, model := range allModels {
 		for _, component := range model.Components {
 			if slices.Contains(installedComponents, component) {
-				seededModels = append(seededModels, model.ID)
+				seededModels = append(seededModels, model.Name)
 				break
 			}
 		}

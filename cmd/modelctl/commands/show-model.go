@@ -80,7 +80,7 @@ func (cmd *showModelCommand) validateArgs(_ *cobra.Command, args []string, toCom
 
 	var completions []cobra.Completion
 	for _, manifest := range modelManifests {
-		if slices.Contains(supportedModels, manifest.ID) {
+		if slices.Contains(supportedModels, manifest.Name) {
 			completions = append(completions, manifest.Name)
 		}
 	}
@@ -98,8 +98,8 @@ func (cmd *showModelCommand) showCurrentModel() error {
 	return cmd.showModel(currentModel)
 }
 
-func (cmd *showModelCommand) showModel(modelNameOrID string) error {
-	modelManifest, err := common.GetModelByNameOrId(cmd.Context, modelNameOrID)
+func (cmd *showModelCommand) showModel(modelNameOrAlias string) error {
+	modelManifest, err := common.GetModelByNameOrAlias(cmd.Context, modelNameOrAlias)
 	if err != nil {
 		return err
 	}

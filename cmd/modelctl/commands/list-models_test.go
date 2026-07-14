@@ -25,7 +25,7 @@ func prepareModelsTestData() (*listModelsCommand, *outputModels, error) {
 	for _, manifest := range manifests {
 		details, err := common.NewModelDetails(&manifest)
 		if err != nil {
-			return nil, nil, fmt.Errorf("error creating model details for %s: %v", manifest.ID, err)
+			return nil, nil, fmt.Errorf("error creating model details for %s: %v", manifest.Name, err)
 		}
 		allModels = append(allModels, details)
 	}
@@ -85,10 +85,10 @@ func TestGetModelsTable(t *testing.T) {
 		t.Fatalf("Error getting models table: %v", err)
 	}
 
-	expectedTable := `NAME     CAPABILITIES               DISK SIZE                                   
-26b      text                       6G                                          
-30b-a3b  text, vision, audio, tool  6G                                          
-4b*      text                       6G                                          
+	expectedTable := `NAME                 CAPABILITIES               DISK SIZE                       
+26b-q4-k-m-gguf      text                       6G                              
+30b-a3b-q4-k-m-gguf  text, vision, audio, tool  6G                              
+4b-it-int4-fq-ov*    text                       6G                              
 `
 
 	if tableStr != expectedTable {
@@ -105,7 +105,7 @@ func Example_printModelsJson() {
 	// Use only the 4b-it-int4-fq-ov model to keep output concise
 	var filtered []common.ModelDetails
 	for _, m := range modelsList.Models {
-		if m.ID == "4b-it-int4-fq-ov" {
+		if m.Name == "4b-it-int4-fq-ov" {
 			filtered = append(filtered, m)
 		}
 	}
@@ -121,8 +121,8 @@ func Example_printModelsJson() {
 	//   "active-model": "4b-it-int4-fq-ov",
 	//   "models": [
 	//     {
-	//       "id": "4b-it-int4-fq-ov",
-	//       "name": "4b",
+	//       "name": "4b-it-int4-fq-ov",
+	//       "alias": "4b-it",
 	//       "description": "OpenVino 4b test model",
 	//       "model-card-url": "https://example.com/model-card",
 	//       "quantization": "int4-fq",

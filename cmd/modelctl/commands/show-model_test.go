@@ -33,8 +33,8 @@ func Example_showModelCommand_printModelManifestYaml() {
 	}
 
 	// Output:
-	// id: 4b-it-int4-fq-ov
-	// name: 4b
+	// name: 4b-it-int4-fq-ov
+	// alias: 4b-it
 	// description: OpenVino 4b test model
 	// model-card-url: https://example.com/model-card
 	// quantization: int4-fq
@@ -58,8 +58,8 @@ func Example_showModelCommand_printModelManifestJson() {
 
 	// Output:
 	// {
-	//   "id": "4b-it-int4-fq-ov",
-	//   "name": "4b",
+	//   "name": "4b-it-int4-fq-ov",
+	//   "alias": "4b-it",
 	//   "description": "OpenVino 4b test model",
 	//   "model-card-url": "https://example.com/model-card",
 	//   "quantization": "int4-fq",

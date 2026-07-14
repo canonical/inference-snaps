@@ -1,5 +1,4 @@
-id: 26b-q4-k-m-gguf
-name: 26b
+name: 26b-q4-k-m-gguf
 
 description: Test model description
 model-card-url: https://example.com/model-card

@@ -36,7 +36,7 @@ func TestParseManifest(t *testing.T) {
 				t.Fatalf("failed to unmarshal %s: %v", modelFile, err)
 			}
 
-			t.Logf("parsed model manifest: id=%q name=%q", manifest.ID, manifest.Name)
+			t.Logf("parsed model manifest: name=%q alias=%q", manifest.Name, manifest.Alias)
 		})
 	}
 }

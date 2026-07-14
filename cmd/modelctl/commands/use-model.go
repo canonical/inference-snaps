@@ -63,7 +63,7 @@ func (cmd *useModelCommand) validateArgs(_ *cobra.Command, args []string, toComp
 
 	var completions []cobra.Completion
 	for _, manifest := range modelManifests {
-		if slices.Contains(supportedModels, manifest.ID) {
+		if slices.Contains(supportedModels, manifest.Name) {
 			completions = append(completions, manifest.Name)
 		}
 	}
@@ -82,9 +82,9 @@ func (cmd *useModelCommand) run(_ *cobra.Command, args []string) error {
 	}
 }
 
-func (cmd *useModelCommand) switchModel(modelNameOrID string) error {
+func (cmd *useModelCommand) switchModel(modelNameOrAlias string) error {
 
-	modelManifest, err := common.GetModelByNameOrId(cmd.Context, modelNameOrID)
+	modelManifest, err := common.GetModelByNameOrAlias(cmd.Context, modelNameOrAlias)
 	if err != nil {
 		return err
 	}
@@ -113,12 +113,12 @@ func (cmd *useModelCommand) switchModel(modelNameOrID string) error {
 		return fmt.Errorf("%s: %w", common.LookingUpActiveModel, err)
 	}
 
-	if activeModelId == modelManifest.ID {
+	if activeModelId == modelManifest.Name {
 		// Model not changed, nothing left to do
 		return nil
 	}
 
-	if err = cmd.Cache.SetActiveModel(modelManifest.ID); err != nil {
+	if err = cmd.Cache.SetActiveModel(modelManifest.Name); err != nil {
 		return fmt.Errorf("setting active model: %v", err)
 	}
 

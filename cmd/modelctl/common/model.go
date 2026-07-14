@@ -18,8 +18,8 @@ const (
 )
 
 type ModelDetails struct {
-	ID   string `json:"id" yaml:"id"`
-	Name string `json:"name" yaml:"name"`
+	Name  string `json:"name" yaml:"name"`
+	Alias string `json:"alias,omitempty" yaml:"alias,omitempty"`
 
 	Description  string   `json:"description" yaml:"description"`
 	ModelCardUrl string   `json:"model-card-url" yaml:"model-card-url"`
@@ -37,8 +37,8 @@ func SupportedCapabilities() []string {
 
 func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
 	var modelDetails ModelDetails
-	modelDetails.ID = manifest.ID
 	modelDetails.Name = manifest.Name
+	modelDetails.Alias = manifest.Alias
 	modelDetails.Description = manifest.Description
 	modelDetails.ModelCardUrl = manifest.ModelCardUrl
 	modelDetails.Quantization = manifest.Quantization
@@ -55,7 +55,11 @@ func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
 	return modelDetails, nil
 }
 
-func GetModelByNameOrId(ctx *Context, modelName string) (*models.Manifest, error) {
+func GetModelByNameOrAlias(ctx *Context, modelName string) (*models.Manifest, error) {
+	if modelName == "" {
+		return nil, fmt.Errorf("model name must not be empty")
+	}
+
 	activeEngine, err := ctx.Cache.GetActiveEngine()
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", LookingUpActiveEngine, err)
@@ -77,8 +81,8 @@ func GetModelByNameOrId(ctx *Context, modelName string) (*models.Manifest, error
 	// Consider the active engine's models first
 	var manifest *models.Manifest
 	for _, modelManifest := range allModelManifests {
-		if slices.Contains(engineManifest.Model.Options, modelManifest.ID) &&
-			(modelManifest.Name == modelName || modelManifest.ID == modelName) {
+		if slices.Contains(engineManifest.Model.Options, modelManifest.Name) &&
+			(modelManifest.Name == modelName || modelManifest.Alias == modelName) {
 			manifest = &modelManifest
 			break
 		}
@@ -87,7 +91,7 @@ func GetModelByNameOrId(ctx *Context, modelName string) (*models.Manifest, error
 	// If the provided name is not one of the active engine's models, warn the user it is not compatible
 	if manifest == nil {
 		for _, modelManifest := range allModelManifests {
-			if modelManifest.Name == modelName || modelManifest.ID == modelName {
+			if modelManifest.Name == modelName || modelManifest.Alias == modelName {
 				return nil, fmt.Errorf("model %q is not compatible with the active engine", modelName)
 			}
 		}

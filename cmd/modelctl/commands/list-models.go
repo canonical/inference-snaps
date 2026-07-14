@@ -117,7 +117,7 @@ func (cmd *listModelsCommand) getModelsTable(modelsList outputModels) (string, e
 	for _, model := range modelsList.Models {
 		name := model.Name
 		// Mark active model with "*"
-		if model.ID == modelsList.ActiveModel {
+		if model.Name == modelsList.ActiveModel {
 			name = name + "*"
 		}
 

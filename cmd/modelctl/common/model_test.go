@@ -105,33 +105,32 @@ func TestModelStatus_NonExistentModel(t *testing.T) {
 	}
 }
 
-
-func TestGetModelByNameOrId(t *testing.T) {
+func TestGetModelByNameOrAlias(t *testing.T) {
 	tests := []struct {
 		name         string
 		activeEngine string
 		modelYAML    string // empty means don't write a model manifest
 		engineYAML   string // empty means don't write an engine manifest
 		query        string
-		wantID       string // non-empty: expect this ID in the returned manifest
 		wantName     string // non-empty: expect this Name in the returned manifest
+		wantAlias    string // non-empty: expect this Alias in the returned manifest
 		wantErr      bool   // true: expect any non-nil error
 	}{
 		{
-			name:         "found by name",
+			name:         "found by alias",
 			activeEngine: "my-engine",
-			modelYAML:    "id: my-model-id\nname: my-model\ndisk-size: 1G\n",
+			modelYAML:    "name: my-model-id\nalias: my-model\ndisk-size: 1G\n",
 			engineYAML:   "name: my-engine\nmodel:\n  options:\n    - my-model-id\n",
 			query:        "my-model",
-			wantID:       "my-model-id",
+			wantName:     "my-model-id",
 		},
 		{
-			name:         "found by id",
+			name:         "found by name",
 			activeEngine: "my-engine",
-			modelYAML:    "id: my-model-id\nname: my-model\ndisk-size: 1G\n",
+			modelYAML:    "name: my-model-id\nalias: my-model\ndisk-size: 1G\n",
 			engineYAML:   "name: my-engine\nmodel:\n  options:\n    - my-model-id\n",
 			query:        "my-model-id",
-			wantName:     "my-model",
+			wantAlias:    "my-model",
 		},
 		{
 			name:         "no active engine",
@@ -174,7 +173,7 @@ func TestGetModelByNameOrId(t *testing.T) {
 			}
 			ctx := &Context{ModelsDir: modelsDir, EnginesDir: enginesDir, Cache: cache}
 
-			manifest, err := GetModelByNameOrId(ctx, tc.query)
+			manifest, err := GetModelByNameOrAlias(ctx, tc.query)
 
 			if tc.wantErr {
 				if err == nil {
@@ -185,13 +184,12 @@ func TestGetModelByNameOrId(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			if tc.wantID != "" && manifest.ID != tc.wantID {
-				t.Errorf("expected ID %q, got %q", tc.wantID, manifest.ID)
-			}
 			if tc.wantName != "" && manifest.Name != tc.wantName {
 				t.Errorf("expected Name %q, got %q", tc.wantName, manifest.Name)
+			}
+			if tc.wantAlias != "" && manifest.Alias != tc.wantAlias {
+				t.Errorf("expected Alias %q, got %q", tc.wantAlias, manifest.Alias)
 			}
 		})
 	}
 }
-
