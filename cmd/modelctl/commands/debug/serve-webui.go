@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/webui"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +46,7 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 
 	config := webui.Config{
 		OpenAIBaseURL: cmd.baseUrl,
-		Capabilities:  common.SupportedCapabilities(), // set all capabilities for debugging
+		Capabilities:  models.SupportedCapabilities(), // set all capabilities for debugging
 		InstanceName:  "debug",
 		EngineName:    "unset",
 	}
