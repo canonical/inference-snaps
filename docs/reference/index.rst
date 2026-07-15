@@ -10,3 +10,4 @@ These documents provide specifications for different set ups when using or modif
    architecture
    engine-manifest
    models-cli
+   network-ports
