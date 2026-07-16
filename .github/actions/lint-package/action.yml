@@ -1,0 +1,29 @@
+name: Lint package
+description: Run modelctl debug lint-package against a snap package directory
+
+inputs:
+  package-dir:
+    description: Path to the package root containing engines, models, and runtimes
+    required: false
+    default: .
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.26.x'
+
+    - name: Build modelctl
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../..
+      run: |
+        go install ./cmd/modelctl
+        echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+    - name: Lint package manifests
+      shell: bash
+      working-directory: ${{ github.workspace }}/${{ inputs.package-dir }}
+      run: |
+        modelctl debug lint-package .
