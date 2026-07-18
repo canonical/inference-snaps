@@ -1,0 +1,4 @@
+[submodule "gemma4"]
+	path = dev
+	url = https://github.com/canonical/gemma4-snap
+	branch = main
