@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/weights"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/lscompute/pkg/machine"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
 	"github.com/canonical/lscompute/pkg/machine/types"
@@ -223,5 +223,5 @@ func checkSnapConnection(connection string) (bool, error) {
 		// Stub out and always return true for all connections
 		return true, nil
 	}
-	return snapctl.IsConnected(connection).Run()
+	return snap.IsConnected(connection)
 }

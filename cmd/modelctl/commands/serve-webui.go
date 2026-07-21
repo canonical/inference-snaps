@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 
-	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/webui"
@@ -80,7 +79,7 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 	config := webui.Config{
 		OpenAIBaseURL: baseURL,
 		Capabilities:  capabilities,
-		InstanceName:  env.SnapInstanceName(),
+		InstanceName:  cmd.Snap.InstanceName(),
 		EngineName:    activeEngineName,
 	}
 

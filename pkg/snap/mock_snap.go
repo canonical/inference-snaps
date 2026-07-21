@@ -38,6 +38,14 @@ func (c *mockSnap) InstanceName() string {
 	return "mock-snap"
 }
 
+func (c *mockSnap) Dir() string {
+	return "/tmp/mock-snap"
+}
+
+func (c *mockSnap) Version() string {
+	return "mock-version"
+}
+
 func (c *mockSnap) HardwareObservable() (bool, error) {
 	return false, nil
 }
@@ -46,6 +54,10 @@ func (c *mockSnap) InstallComponent(name string) error {
 	if c.installComponentFn != nil {
 		return c.installComponentFn(name)
 	}
+	return nil
+}
+
+func (c *mockSnap) RemoveComponents(name ...string) error {
 	return nil
 }
 

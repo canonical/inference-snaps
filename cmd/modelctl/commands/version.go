@@ -6,7 +6,6 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -73,7 +72,7 @@ func (cmd *versionCommand) run(_ *cobra.Command, _ []string) error {
 
 func (cmd *versionCommand) getVersionData() versionModel {
 	return versionModel{
-		Snap: cleanVersionString(env.SnapVersion()),
+		Snap: cleanVersionString(cmd.Snap.Version()),
 		Cli:  cleanVersionString(getCliVersion()),
 	}
 }

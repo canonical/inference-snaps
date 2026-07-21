@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
-	"github.com/canonical/go-snapctl"
-	"github.com/canonical/go-snapctl/env"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/commands"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/commands/debug"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
@@ -16,17 +15,18 @@ import (
 )
 
 func main() {
+	s := snap.New()
+	snapDir := s.Dir()
 	ctx := &common.Context{
-		EnginesDir:  env.Snap() + "/engines",
-		RuntimesDir: env.Snap() + "/runtimes",
-		ModelsDir:   env.Snap() + "/models",
+		EnginesDir:  filepath.Join(snapDir, "engines"),
+		RuntimesDir: filepath.Join(snapDir, "runtimes"),
+		ModelsDir:   filepath.Join(snapDir, "models"),
 		Cache:       storage.NewCache(),
 		Config:      storage.NewConfig(),
-		Snap:        snap.New(),
+		Snap:        s,
 	}
-
 	// Get snap name for dynamic commands
-	instanceName := env.SnapInstanceName()
+	instanceName := s.InstanceName()
 	if instanceName == "" {
 		instanceName = "cli"
 	}
@@ -43,8 +43,8 @@ func main() {
 	}
 
 	// Add custom text after the help message - only show service management for top-level help
-	if env.Snap() != "" {
-		services, err := snapctl.Services().Run()
+	if s.Dir() != "" {
+		services, err := ctx.Snap.ServiceStatuses()
 		if err != nil {
 			fmt.Printf("Error: retrieving snap services: %v\n", err)
 			return

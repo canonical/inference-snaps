@@ -3,7 +3,7 @@ package common
 import (
 	"fmt"
 
-	"github.com/canonical/go-snapctl/env"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 )
 
 func SuggestServerStartup() string {
@@ -12,7 +12,7 @@ func SuggestServerStartup() string {
 
 func SuggestServerLogs() string {
 
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}
@@ -25,7 +25,7 @@ func SuggestServerLogs() string {
 
 func SuggestStartServer() string {
 
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}
@@ -38,7 +38,7 @@ func SuggestStartServer() string {
 
 func SuggestStartService(service string) string {
 
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}
@@ -50,7 +50,7 @@ func SuggestStartService(service string) string {
 
 func SuggestServiceManagement() string {
 
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}
@@ -59,7 +59,7 @@ func SuggestServiceManagement() string {
 }
 
 func SuggestEngineInfo() string {
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}
@@ -68,7 +68,7 @@ func SuggestEngineInfo() string {
 }
 
 func SuggestKeyNotFound(key string) string {
-	instanceName := env.SnapInstanceName()
+	instanceName := snap.InstanceName()
 	if instanceName == "" { // not a snap
 		instanceName = "<snap-instance-name>"
 	}

@@ -5,7 +5,6 @@ import (
 	"os"
 	"slices"
 
-	"github.com/canonical/go-snapctl"
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
@@ -68,7 +67,7 @@ func (cmd *pruneCacheCommand) run(_ *cobra.Command, _ []string) error {
 	} else if !confirmed {
 		return nil
 	}
-	return snapctl.RemoveComponents(componentsToRemove...).Run()
+	return cmd.Snap.RemoveComponents(componentsToRemove...)
 }
 
 func (cmd *pruneCacheCommand) unusedComponentsAll() ([]string, error) {
