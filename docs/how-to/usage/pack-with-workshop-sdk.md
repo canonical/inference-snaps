@@ -24,7 +24,7 @@ cd <your-inference-snap-repo>
 
 The template repository contains a `Makefile` that you can use to download the model weights and a `README` needed by the agents to run the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap creation.
 
-Let's start by preparing the `Makefile` to download the required model weights. Sometimes you may want to pack inside the same inference snap multiple models with different number of paramenters. In this case, you can add multiple targets to the `Makefile` to download all the required models. The following is an example of a `Makefile` that downloads two models and their corresponding mmproj files.
+Let's start by preparing the `Makefile` to download the required model weights. Sometimes you may want to pack inside the same inference snap multiple models with different number of parameters. In this case, you can add multiple targets to the `Makefile` to download all the required models. The following is an example of a `Makefile` that downloads two models and their corresponding projectors.
 
 ```makefile
 SHELL := /bin/bash
