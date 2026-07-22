@@ -1,8 +1,8 @@
 (pack-with-workshop-sdk)=
 
-# Pack an inference snap with Workshop and the inference-snaps-sdk
+# Create an inference snap with LLMs
 
-Use this guide when you want to package an inference snap with the Workshop environment and the `inference-snaps-sdk`.
+Use this guide when you want to pack an inference snap with a Workshop environment and the `inference-snaps-sdk`.
 
 ## Before you start
 
@@ -22,9 +22,9 @@ cd <your-inference-snap-repo>
 
 ## 2. Inputs preparation
 
-The template repository contains a `Makefile` that you can use to download the model weights and a README needed by the SDK to generate the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap.
+The template repository contains a `Makefile` that you can use to download the model weights and a `README` needed by the agents to run the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap creation.
 
-Let's start by preparing the `Makefile` to download the required model weights:
+Let's start by preparing the `Makefile` to download the required model weights. Sometimes you may want to pack inside the same inference snap multiple models with different number of paramenters. In this case, you can add multiple targets to the `Makefile` to download all the required models. The following is an example of a `Makefile` that downloads two models and their corresponding mmproj files.
 
 ```makefile
 SHELL := /bin/bash
@@ -40,22 +40,22 @@ setup-hf-cli:
 	python3 -m venv .venv
 	. .venv/bin/activate && pip install --upgrade pip && pip install -U huggingface_hub
 
-download-model-4b: setup-hf-cli
+download-model-A: setup-hf-cli
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
 
-download-mmproj-4b: setup-hf-cli
+download-mmproj-A: setup-hf-cli
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
 
-download-model-9b: setup-hf-cli
+download-model-B: setup-hf-cli
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir-1-of-N>
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir-2-of-N>
     ...
 
-download-mmproj-9b: setup-hf-cli
+download-mmproj-B: setup-hf-cli
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
 ```
 
-Now open the `README.md` with your favorite editor and compile the section at the top of the file between the `<!--` and `-->` comments. This section is needed by the SDK to generate the packaging pipeline.
+Now open the `README.md` with your favorite editor and compile the section at the top of the file between the `<!--` and `-->` comments
 
 ```
 # This is the name of the snap. The name that is registered on the snap store and also the name of the cli command.
@@ -100,7 +100,7 @@ Inside the Workshop shell, start OpenCode:
 opencode --auto
 ```
 
-This opens the OpenCode TUI with the skills and agents installed by `inference-snaps-sdk`.
+This opens the OpenCode TUI with the skills and agents installed by `inference-snaps-sdk`. The `--auto` flag raises the permission prompt automatically, so you don't have to manually approve the permissions. Workshop environment is sandboxed so you can safely approve the permissions without worrying about security issues. Nonetheless, if you want to approve the permissions manually, you can run `opencode` without the `--auto` flag.
 
 ### Run the packaging pipeline
 
