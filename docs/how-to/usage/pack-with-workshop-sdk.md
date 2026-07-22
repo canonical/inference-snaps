@@ -22,7 +22,8 @@ cd <your-inference-snap-repo>
 
 ## 2. Inputs preparation
 
-Prepare the Makefile to download the required model weights:
+Prepare the `Makefile` to download the required model weights:
+
 ```makefile
 SHELL := /bin/bash
 
