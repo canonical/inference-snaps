@@ -21,8 +21,9 @@ cd <your-inference-snap-repo>
 ```
 
 ## 2. Inputs preparation
+The template repository contains a `Makefile` that you can use to download the model weights and a README needed by the SDK to generate the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap.
 
-Prepare the `Makefile` to download the required model weights:
+Let's start by preparing the `Makefile` to download the required model weights:
 
 ```makefile
 SHELL := /bin/bash
@@ -53,7 +54,7 @@ download-mmproj-9b: setup-hf-cli
 	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
 ```
 
-Now open the `README.md`with your favorite editor and compile the section at the top of the file between the `<!--` and `-->` comments. This section is needed by the SDK to generate the packaging pipeline.
+Now open the `README.md` with your favorite editor and compile the section at the top of the file between the `<!--` and `-->` comments. This section is needed by the SDK to generate the packaging pipeline.
 
 ```
 # This is the name of the snap. The name that is registered on the snap store and also the name of the cli command.
@@ -70,7 +71,11 @@ webui-http-port: e.g. 8081
 engines: e.g. cpu, nvidia-gpu
 ```
 
-## 3. Launch Workshop
+## 3. Packaging the inference snap
+
+Now that you have prepared the inputs, you can launch Workshop and run the agentic packaging pipeline.
+
+### Launch Workshop
 
 From your project directory, start Workshop:
 
@@ -86,7 +91,7 @@ workshop shell
 
 At this point, you should be in the Workshop shell and ready to run packaging steps.
 
-## 3. Start OpenCode in Workshop
+### Start OpenCode in Workshop
 
 Inside the Workshop shell, start OpenCode:
 
@@ -96,7 +101,7 @@ opencode --auto
 
 This opens the OpenCode TUI with the skills and agents installed by `inference-snaps-sdk`.
 
-## 4. Run the packaging pipeline
+### Run the packaging pipeline
 
 In the OpenCode TUI, run this prompt:
 
@@ -106,6 +111,6 @@ start snap packaging pipeline
 
 The SDK pipeline walks through the standard packaging flow and generates the build outputs.
 
-## 5. Open a PR for your newly packaged inference snap
+## 4. Open a PR for your newly packaged inference snap
 
-On a successful packaging run, the SDK generates a PR description with the build outputs. You can open a PR to your inference snap repository with the generated description.
+At the end of a successful packaging run, the AI agent generates a PR description with the build outputs. You can open a PR to your inference snap repository with the generated description.
