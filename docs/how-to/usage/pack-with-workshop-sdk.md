@@ -21,6 +21,7 @@ cd <your-inference-snap-repo>
 ```
 
 ## 2. Inputs preparation
+
 The template repository contains a `Makefile` that you can use to download the model weights and a README needed by the SDK to generate the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap.
 
 Let's start by preparing the `Makefile` to download the required model weights:
