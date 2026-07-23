@@ -15,6 +15,12 @@ You need:
 - Workshop installed on the machine where you will run the packaging pipeline. See [Install Workshop](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/#) for instructions.
 - A GitHub repository for your inference snap (typically created from the [inference snap template](https://github.com/canonical/inference-snap-template))
 
+Helpful references while you follow this tutorial:
+
+- [OpenCode integration](../how-to/integration/opencode.md)
+- [Network ports registry](../reference/network-ports.md)
+- [Troubleshooting](../how-to/troubleshooting/index.md)
+
 ## 1. Open your snap project
 
 Clone your inference snap repository and navigate into it:
@@ -28,7 +34,9 @@ cd <your-inference-snap-repo>
 
 The template repository contains a `Makefile` that you can use to download the model weights and a `README` needed by the agents to run the packaging pipeline. You need to edit these files to provide the correct inputs for your inference snap creation.
 
-Let's start by preparing the `Makefile` to download the required model weights. Sometimes you may want to pack inside the same inference snap multiple models with different number of parameters. In this case, you can add multiple targets to the `Makefile` to download all the required models. The following is an example of a `Makefile` that downloads two models and their corresponding projectors.
+Let's start by preparing the `Makefile` to download the required model weights. If you want to package multiple model variants in one snap, add multiple targets to download each model and related projector files.
+
+The following example downloads two models and their corresponding projectors:
 
 ```makefile
 SHELL := /bin/bash
@@ -75,6 +83,7 @@ webui-http-port: e.g. 8081
 # Optimizations
 engines: e.g. cpu, nvidia-gpu
 ```
+Make sure your selected ports do not conflict with entries in [Network ports registry](../reference/network-ports.md).
 
 ## 3. Packaging the inference snap
 
@@ -94,7 +103,13 @@ Then open a shell inside the Workshop environment:
 workshop shell
 ```
 
-At this point, you should be in the Workshop shell and ready to run packaging steps.
+At this point, you should be in the Workshop shell and ready to run packaging steps. You can check that you effectively entered the Workshop shell by running:
+
+```{terminal}
+workshop@dev:/project$ whoami
+workshop
+```
+
 
 ### Start OpenCode in Workshop
 
@@ -114,8 +129,60 @@ In the OpenCode TUI, run this prompt:
 start snap packaging pipeline
 ```
 
-The SDK pipeline walks through the standard packaging flow and generates the build outputs.
+The SDK pipeline will validate inputs, summarize them and ask you to confirm before starting the packaging process. The pipeline will then run the packaging steps and generate outputs. 
+Expected result:
+- The run finishes without blocking errors.
+- Build outputs and a generated PR description are available.
 
-## 4. Open a PR for your newly packaged inference snap
+## 4. Test your inference snap
+First of all let's exit the Workshop shell:
+
+```{terminal}
+workshop@dev:/project$ exit
+exit
+user@host-machine:~$ whoami
+user
+```
+
+Now navigate to your project directory and run the following command to install the snap:
+
+```shell
+cd <your-inference-snap-repo>
+sudo snap install *.snap *.comp --dangerous
+```
+
+Once the snap is installed, you can run the chat command of the inference snap and test it:
+
+```shell
+<snap-name> chat
+```
+
+Or open the webui of the inference snap in your browser. At the beginning of this guide you choose two different ports for the API server and the webui server. If you want to check them run:
+
+```shell
+<snap-name> get
+```
+
+You will see an output similar to this:
+
+```text
+http.host: 127.0.0.1
+http.port: 8330
+...
+webui.http.host: 127.0.0.1
+webui.http.port: 8331
+```
+
+Open with your favorite browser the following URL:
+```
+http://127.0.0.1:<webui-http-port>
+```
+or 
+
+```
+http://127.0.0.1:<http-port>
+```
+
+## 5. Open a PR for your newly packaged inference snap
 
 At the end of a successful packaging run, the AI agent generates a PR description with the build outputs. You can open a PR to your inference snap repository with the generated description.
