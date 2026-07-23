@@ -10,6 +10,5 @@ switch-between-engines
 configure-snap
 openai-api
 sideload-model
-pack-with-workshop-sdk
 ```
 

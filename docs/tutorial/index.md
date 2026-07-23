@@ -6,5 +6,6 @@ Tutorials for creating and using inference snaps for developers and end users.
 :maxdepth: 1
 qwen-vl-tutorial
 create-inference-snap
+pack-with-workshop-sdk
 ```
 
