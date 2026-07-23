@@ -45,41 +45,40 @@ SHELL := /bin/bash
 
 all: download-models
 
-download-models: download-model-A download-mmproj-A download-model-B-splitted download-mmproj-B
+download-models: download-model-4b download-mmproj-4b download-model-9b download-mmproj-9b
 
 setup-hf-cli:
 	sudo apt-get install -y python3-venv
 	python3 -m venv .venv
 	. .venv/bin/activate && pip install --upgrade pip && pip install -U huggingface_hub
 
-download-model-A: setup-hf-cli
-	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
+download-model-4b: setup-hf-cli
+	. .venv/bin/activate && hf download hf://unsloth/Qwen3.5-4B-GGUF/Qwen3.5-4B-UD-Q4_K_XL.gguf --local-dir components/model-q4-k-xl-gguf
 
-download-mmproj-A: setup-hf-cli
-	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
+download-mmproj-4b: setup-hf-cli
+	. .venv/bin/activate && hf download hf://unsloth/Qwen3.5-4B-GGUF/mmproj-BF16.gguf --local-dir components/mmproj-4b-q4-k-xl
 
-download-model-B: setup-hf-cli
-	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir-1-of-N>
-	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir-2-of-N>
-    ...
+download-model-9b: setup-hf-cli
+	. .venv/bin/activate && hf download hf://inference-snaps/Qwen3.5-9B-Q4_K_M-5GB/Qwen3.5-9B-Q4_K_M-00001-of-00002.gguf --local-dir components/model-q4-k-m-gguf-1-of-2
+	. .venv/bin/activate && hf download hf://inference-snaps/Qwen3.5-9B-Q4_K_M-5GB/Qwen3.5-9B-Q4_K_M-00002-of-00002.gguf --local-dir components/model-q4-k-m-gguf-2-of-2
 
-download-mmproj-B: setup-hf-cli
-	. .venv/bin/activate && hf download <hf-link> --local-dir components/<component-dir>
+download-mmproj-9b: setup-hf-cli
+	. .venv/bin/activate && hf download hf://unsloth/Qwen3.5-9B-GGUF/mmproj-BF16.gguf --local-dir components/mmproj-9b-q4-k-m
 ```
 
 Now open the `README.md` with your favorite editor and compile the section at the top of the file between the `<!--` and `-->` comments
 
 ```
 # This is the name of the snap. The name that is registered on the snap store and also the name of the cli command.
-snap-name: e.g. gemma4
+snap-name: e.g. qwen3-5
 # This name is just a friendly name for the snap, it can be used in the documentation
-snap-friendly-name: e.g. Gemma 4B
+snap-friendly-name: e.g. Qwen 3.5
 # URL to model card from the model publisher
-model-card: e.g. https://ai.google.dev/gemma/docs/core/model_card_4
+model-card: e.g. https://qwen.ai/blog?id=qwen3.5
 # The port that the inference snap will use for its API server.
-http-port: e.g. 8080
+http-port: e.g. 8352
 # The port that the inference snap will use for its webui server.
-webui-http-port: e.g. 8081
+webui-http-port: e.g. 8353
 # Optimizations
 engines: e.g. cpu, nvidia-gpu
 ```
