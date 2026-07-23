@@ -4,6 +4,10 @@
 
 Use this guide when you want to pack an inference snap with a Workshop environment and the `inference-snaps-sdk`.
 
+```{admonition} Experimental workflow
+This packaging workflow is experimental. The steps, prompts, and generated outputs may change, and you may need to make manual adjustments before opening a pull request.
+```
+
 ## Before you start
 
 You need:
