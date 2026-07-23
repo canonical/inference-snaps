@@ -83,6 +83,7 @@ webui-http-port: e.g. 8081
 # Optimizations
 engines: e.g. cpu, nvidia-gpu
 ```
+
 Make sure your selected ports do not conflict with entries in [Network ports registry](../reference/network-ports.md).
 
 ## 3. Packaging the inference snap
@@ -110,7 +111,6 @@ workshop@dev:/project$ whoami
 workshop
 ```
 
-
 ### Start OpenCode in Workshop
 
 Inside the Workshop shell, start OpenCode:
@@ -135,6 +135,7 @@ Expected result:
 - Build outputs and a generated PR description are available.
 
 ## 4. Test your inference snap
+
 First of all let's exit the Workshop shell:
 
 ```{terminal}
@@ -174,9 +175,11 @@ webui.http.port: 8331
 ```
 
 Open with your favorite browser the following URL:
+
 ```
 http://127.0.0.1:<webui-http-port>
 ```
+
 or 
 
 ```
