@@ -75,7 +75,7 @@ download-model: setup-hf-cli
 
 This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `components/` directory, where the pipeline expects the files that become part of the snap.
 
-### README.md
+### README
 
 Next, open `README.md` and fill in the metadata block at the top of the file, between the `<!--` and `-->` comments, with these values:
 
@@ -175,6 +175,9 @@ Exit the Workshop shell to return to your machine:
 ```{terminal}
 workshop@dev:/project$ exit
 exit
+```
+
+```{terminal}
 user@host-machine:~$ whoami
 user
 ```
@@ -218,13 +221,11 @@ Before you open a pull request, confirm that the packaging matches what you inte
 
 ```{terminal}
 qwen3-5 list-engines
-
 cpu
 ```
 
 ```{terminal}
 qwen3-5 list-models
-
 model-q4-k-xl-gguf
 ```
 
