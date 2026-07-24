@@ -4,6 +4,7 @@
 
 In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
+
 You'll do this with the *Qwen 3.5* model, and by the end you'll have a working `qwen3-5` snap that starts and responds to a prompt.
 
 ```{admonition} Experimental workflow
@@ -38,7 +39,8 @@ cd <your-inference-snap-repo>
 List the directory. You should see three files:
 
 ```{terminal}
-:input: ls
+ls
+
 Makefile  README.md  workshop.yaml
 ```
 
@@ -133,8 +135,8 @@ opencode --auto
 
 The OpenCode TUI opens with the skills and agents installed by `inference-snaps-sdk`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
 
-OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see [OpenCode configuration](../how-to/integration/opencode.md#configure-opencode). You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
-In order to do that tou can send this command in the OpenCode TUI:
+OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see {ref}`OpenCode configuration <configure-opencode>`. You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
+In order to do that you can send this command in the OpenCode TUI:
 
 ```text
 /connect
@@ -195,7 +197,8 @@ The command connects to the model server and waits for your prompt. Type a messa
 Next, check the configured ports:
 
 ```{terminal}
-:input: qwen3-5 get
+qwen3-5 get
+
 http.host: 127.0.0.1
 http.port: 8352
 ...
@@ -214,12 +217,14 @@ The packaging run generated a PR description together with the build outputs.
 Before you open a pull request, confirm that the packaging matches what you intended:
 
 ```{terminal}
-:input: qwen3-5 list-engines
+qwen3-5 list-engines
+
 cpu
 ```
 
 ```{terminal}
-:input: qwen3-5 list-models
+qwen3-5 list-models
+
 model-q4-k-xl-gguf
 ```
 
