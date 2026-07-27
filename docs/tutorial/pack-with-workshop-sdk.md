@@ -5,7 +5,7 @@
 In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
 
-You'll do this with the *Qwen 3.5* model, and by the end you'll have a working `qwen3-5` snap that starts and responds to a prompt.
+You'll do this with the help of a LLM of your choice, and by the end you'll have a working `qwen3-5` snap that starts and responds to a prompt.
 
 ```{admonition} Experimental workflow
 This packaging workflow is experimental. The steps, prompts, and generated outputs may change, and you may need to make manual adjustments before opening a pull request.
@@ -170,7 +170,7 @@ If the pipeline stops on a validation error, fix the reported problem and ask th
 
 ## 4. Test your snap
 
-Exit the Workshop shell to return to your machine:
+Exit from the OpenCode TUI by typing `/exit` and pressing ENTER or with `CTRL+c`. Then exit the Workshop shell to return to your machine:
 
 ```{terminal}
 workshop@dev:/project$ exit
