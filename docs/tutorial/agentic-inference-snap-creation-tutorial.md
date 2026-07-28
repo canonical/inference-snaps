@@ -1,6 +1,6 @@
 (pack-with-workshop-sdk)=
 
-# Pack an inference snap with Workshop
+# Using agentic AI to create inference snaps
 
 In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
