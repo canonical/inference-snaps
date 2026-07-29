@@ -5,7 +5,8 @@
 In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
 
-You'll do this with the help of a LLM of your choice, and by the end you'll have a working `qwen3-5` snap that starts and responds to a prompt.
+You'll do this with the help of an LLM of your choice.
+By the end of this tutorial you'll have a working `qwen3-5` snap that starts and responds to a prompt.
 
 ```{admonition} Experimental workflow
 This packaging workflow is experimental. The steps, prompts, and generated outputs may change, and you may need to make manual adjustments before opening a pull request.
@@ -19,10 +20,10 @@ This tutorial builds on snap packaging and inference snap concepts. Work through
 - [Get started with Qwen VL](../tutorial/qwen-vl-tutorial.md)
 
 To follow this tutorial, you need:
-
-- Workshop installed on your machine. If you are new to Workshop, see [Install Workshop](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/#).
 - A Linux machine where you can install and run snaps.
-- A GitHub repository for your inference snap, created from the [inference snap template](https://github.com/canonical/inference-snap-template). The template already contains the `workshop.yaml`, `Makefile`, and `README.md` files used here.
+- Workshop installed on your machine. If you are new to Workshop, see [Install Workshop](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/#).
+- A GitHub repository for your inference snap, created from the [inference snap template](https://github.com/canonical/inference-snap-template).
+- Network access to download the *Qwen 3.5* model files from Hugging Face.
 - Network access to download the *Qwen 3.5* model files from Hugging Face.
 
 For more detail on the tools used along the way, see [OpenCode integration](../how-to/integration/opencode.md), the [Network ports registry](../reference/network-ports.md), and [Troubleshooting](../how-to/troubleshooting/index.md).
@@ -35,8 +36,7 @@ Clone your inference snap repository and move into it:
 git clone <your-inference-snap-repo-url>
 cd <your-inference-snap-repo>
 ```
-
-List the directory. You should see three files:
+List the directory contents. You should see three files:
 
 ```{terminal}
 ls
@@ -77,7 +77,7 @@ This sets up the Hugging Face CLI in a local virtual environment and downloads t
 
 ### README
 
-Next, open `README.md` and fill in the metadata block at the top of the file, between the `<!--` and `-->` comments, with these values:
+Next, open `README.md` and fill in the metadata block at the top of the file, between the `<!--` and `-->` comment tags, with these values:
 
 ```text
 snap-name: qwen3-5
@@ -92,17 +92,21 @@ Notice a few things about this block:
 
 - `snap-name` uses only lowercase letters, digits, and hyphens. It becomes the CLI command users run after installation.
 - The ports `8352` and `8353` must not clash with entries in the [Network ports registry](../reference/network-ports.md).
-- `engines: cpu` keeps this first build simple by targeting a single runtime.
+- `engines: cpu` keeps this first build simple by targeting a single hardware optimization.
 
 Your two inputs are now ready: the `Makefile` downloads the model, and the `README.md` metadata describes the snap.
 
 ## 3. Package the inference snap
 
-With the inputs ready, launch Workshop and run the packaging pipeline.
+With the inputs ready, you are ready to launch Workshop and run the packaging pipeline.
 
 ### Launch Workshop
 
-From your project directory, start the Workshop environment described by `workshop.yaml`:
+Workshop is a confined environment that includes only the necessary dependencies for a specific purpose.
+These dependencies are called SDKs.
+The workshop environment is described by a `workshop.yaml` file.
+
+Start the Workshop environment now by running this command from the project root directory.
 
 ```shell
 workshop launch
@@ -117,15 +121,20 @@ workshop shell
 Confirm that you are inside the Workshop shell:
 
 ```{terminal}
-workshop@dev:/project$ whoami
+:user: workshop  
+:host: dev  
+:dir: /project
+
+whoami
+
 workshop
 ```
 
-If the output is not `workshop`, stop here. Exit and check that Workshop launched correctly before you continue.
+If the output is not `workshop`, stop here. Exit and check that Workshop launched correctly before you continue. You can refer to the [Workshop documentation](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/#launch-start-and-stop) for help.
 
 ### Start OpenCode
 
-The `inference-snaps-sdk` ships with OpenCode, a terminal UI for running LLM agents. For more information, see the [OpenCode documentation](https://opencode.ai/docs).
+The workshop includes the `inference-snaps-sdk`, which ships with OpenCode, a terminal UI for running LLM agents. For more information, see the [OpenCode documentation](https://opencode.ai/docs).
 
 Inside the Workshop shell, start OpenCode:
 
@@ -163,7 +172,7 @@ Confirm to continue. The pipeline generates the packaging files, builds the snap
 
 When the run finishes, you'll have:
 
-- one or more build artifacts, such as `.snap` and `.comp` files, in the repository
+- one or more build artifacts, such as `.snap` and `.comp` files, in the project directory  
 - a generated PR description ready for review
 
 If the pipeline stops on a validation error, fix the reported problem and ask the agent to continue.
@@ -173,19 +182,23 @@ If the pipeline stops on a validation error, fix the reported problem and ask th
 Exit from the OpenCode TUI by typing `/exit` and pressing ENTER or with `CTRL+c`. Then exit the Workshop shell to return to your machine:
 
 ```{terminal}
-workshop@dev:/project$ exit
+:user: workshop  
+:host: dev  
+:dir: /project
+exit
+
 exit
 ```
 
 ```{terminal}
-user@host-machine:~$ whoami
+whoami
+
 user
 ```
 
-Move into your project directory and install the generated artifacts:
+From the project directory, install the generated artifacts:
 
 ```shell
-cd <your-inference-snap-repo>
 sudo snap install *.snap *.comp --dangerous
 ```
 
@@ -195,8 +208,9 @@ Now start the snap and chat with the model:
 qwen3-5 chat
 ```
 
-The command connects to the model server and waits for your prompt. Type a message and press ENTER, and the model responds.
-
+The command connects to the model server and waits for your prompt.  
+Type a message and press ENTER.  
+You should see a response arriving for the message you typed.
 Next, check the configured ports:
 
 ```{terminal}
@@ -209,7 +223,7 @@ webui.http.host: 127.0.0.1
 webui.http.port: 8353
 ```
 
-Notice that the ports match the `8352` and `8353` values you set in `README.md`. Open the Web UI in your browser at `http://127.0.0.1:8353`.
+Notice that the ports match the `8352` and `8353` values you set in `README.md`. Open the Web UI in your browser at [http://127.0.0.1:8353](http://127.0.0.1:8353).  
 
 You have now confirmed that the `qwen3-5` snap installs, starts, and exposes the ports you configured.
 
@@ -221,11 +235,13 @@ Before you open a pull request, confirm that the packaging matches what you inte
 
 ```{terminal}
 qwen3-5 list-engines
+
 cpu
 ```
 
 ```{terminal}
 qwen3-5 list-models
+
 model-q4-k-xl-gguf
 ```
 
