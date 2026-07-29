@@ -86,6 +86,8 @@ Rockcraft
 rst
 runtimes
 sandboxed
+SDK
+SDKs
 sideload
 sideloaded
 sideloading

@@ -36,6 +36,7 @@ Clone your inference snap repository and move into it:
 git clone <your-inference-snap-repo-url>
 cd <your-inference-snap-repo>
 ```
+
 List the directory contents. You should see three files:
 
 ```{terminal}
