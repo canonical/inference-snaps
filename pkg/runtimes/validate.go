@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
@@ -123,13 +126,61 @@ func (manifest Manifest) validate(expectedRuntimeName string) error {
 	return nil
 }
 
+func isValidProtocol(protocol string) bool {
+	switch protocol {
+	case ProtocolHttp, ProtocolHttps, ProtocolHttpUnix, ProtocolHttpsUnix:
+		return true
+	case ProtocolWebSocket, ProtocolWebSocketSecure, ProtocolWebSocketUnix, ProtocolWebSocketSecureUnix:
+		return true
+	default:
+		return false
+	}
+}
+
+func isValidNamespace(namespace string) bool {
+	if namespace == "" {
+		return true
+	}
+	// Namespace must start with a lowercase letter, followed by any combination of
+	// lowercase letters, digits, and hyphens
+	pattern := regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
+	return pattern.MatchString(namespace)
+}
+
 func (server Server) validate(name string) error {
 	if server.Protocol == "" {
 		return fmt.Errorf("required field is not set for server %s: protocol", name)
 	}
 
-	if server.BasePath == "" {
-		return fmt.Errorf("required field is not set for server %s: base-path", name)
+	if !isValidProtocol(server.Protocol) {
+		return fmt.Errorf("invalid protocol %q for server %s: must be one of http, https, http+unix, https+unix, ws, wss, ws+unix, wss+unix", server.Protocol, name)
+	}
+
+	// namespace is optional
+	if server.Namespace != "" {
+		if !isValidNamespace(server.Namespace) {
+			return fmt.Errorf("invalid namespace %q for server %s: must start with a lowercase letter, and contain only lowercase letters, digits, and hyphens", server.Namespace, name)
+		}
+	}
+
+	// base-path is optional
+	if server.BasePath != "" {
+		if !strings.HasPrefix(server.BasePath, "/") {
+			return fmt.Errorf("invalid base-path for server %s: must start with '/'", name)
+		}
+
+		parsed, err := url.Parse(server.BasePath)
+		if err != nil {
+			return fmt.Errorf("invalid base-path for server %s: %v", name, err)
+		}
+
+		if parsed.Scheme != "" || parsed.Host != "" || parsed.Opaque != "" {
+			return fmt.Errorf("invalid base-path for server %s: must be a URL path, not a full URL", name)
+		}
+
+		if parsed.RawQuery != "" || parsed.Fragment != "" {
+			return fmt.Errorf("invalid base-path for server %s: query and fragment are not allowed", name)
+		}
 	}
 
 	return nil

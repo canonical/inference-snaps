@@ -58,7 +58,7 @@ func (cmd *webUiCommand) run(_ *cobra.Command, _ []string) error {
 	}
 
 	// Wait until the openai server endpoint is ready to accept chat prompts. This should be handled in the webui in the future.
-	chatBaseUrl, err := common.OpenAiEndpoint(cmd.Context)
+	chatBaseUrl, err := common.OpenAiBaseUrl(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("getting OpenAI base URL: %v", err)
 	}

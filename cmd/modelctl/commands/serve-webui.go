@@ -45,7 +45,7 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 		return fmt.Errorf("waiting for component: %s", err)
 	}
 
-	baseURL, err := common.OpenAiEndpoint(cmd.Context)
+	baseURL, err := common.OpenAiBaseUrl(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("getting OpenAI base URL: %v", err)
 	}

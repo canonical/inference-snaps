@@ -13,7 +13,7 @@ type Manifest struct {
 }
 
 type Server struct {
-	Protocol    string `json:"protocol" yaml:"protocol"`
-	BasePath    string `json:"base-path" yaml:"base-path"`
-	ConfigGroup string `json:"config-group" yaml:"config-group"`
+	Protocol  string `json:"protocol" yaml:"protocol"`
+	BasePath  string `json:"base-path" yaml:"base-path"`
+	Namespace string `json:"namespace" yaml:"namespace"`
 }

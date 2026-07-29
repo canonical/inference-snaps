@@ -19,6 +19,8 @@ import (
 	"github.com/openai/openai-go/v3"
 	"github.com/openai/openai-go/v3/option"
 	"github.com/openai/openai-go/v3/packages/ssestream"
+
+	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
 )
 
 type chatClient struct {
@@ -142,7 +144,7 @@ func (c *chatClient) handshake() error {
 	host := parsedURL.Hostname()
 	port := parsedURL.Port()
 	if port == "" {
-		if parsedURL.Scheme == "https" {
+		if parsedURL.Scheme == runtimes.ProtocolHttps || parsedURL.Scheme == runtimes.ProtocolWebSocketSecure {
 			port = "443"
 		} else {
 			port = "80"
