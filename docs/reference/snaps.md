@@ -127,6 +127,25 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 
 {{explore_optimizations}}
 
+## Nomic Embed Text v1.5
+
+[![nomic-embed-text-v1-5 snap](https://snapcraft.io/nomic-embed-text-v1-5/badge.svg)](https://snapcraft.io/nomic-embed-text-v1-5)
+[![nomic-embed-text-v1-5 source][gh-badge]](https://github.com/canonical/nomic-embed-text-v1.5-snap)
+
+Nomic Embed Text v1.5 is a high-performance text embedding model that produces dense vector representations for retrieval and semantic search.
+The input is text-based, with the output being embedding vectors.
+
+The inference snap for Nomic Embed Text v1.5 has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## Qwen 2.5 VL
 
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)
