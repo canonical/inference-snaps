@@ -5,10 +5,14 @@
   ],
   "packageRules": [
     {
+      "description": "Update all submodules in a single PR",
       "matchManagers": ["git-submodules"],
-      "groupName": "Batch update submodules",
+      "groupName": "all-submodules",
       "schedule": ["on monday"],
-      "automerge": true
+      "commitBody": "[skip ci]",
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": true
     }
   ]
 }
