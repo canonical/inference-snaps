@@ -22,14 +22,13 @@ This tutorial builds on snap packaging and inference snap concepts. Work through
 To follow this tutorial, you need:
 - A Linux machine where you can install and run snaps.
 - Workshop installed on your machine. If you are new to Workshop, see [Install Workshop](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/#).
-- A GitHub repository for your inference snap, created from the [inference snap template](https://github.com/canonical/inference-snap-template).
-- Network access to download the *Qwen 3.5* model files from Hugging Face.
 - Network access to download the *Qwen 3.5* model files from Hugging Face.
 
 For more detail on the tools used along the way, see [OpenCode integration](../how-to/integration/opencode.md), the [Network ports registry](../reference/network-ports.md), and [Troubleshooting](../how-to/troubleshooting/index.md).
 
 ## 1. Open your snap project
 
+Go to the [Inference Snap Template repository](https://github.com/canonical/inference-snap-template) and click on *Use this template*. This will create a new inference snap repository under your GitHub account containing the minimal files to follow this tutorial.
 Clone your inference snap repository and move into it:
 
 ```shell
@@ -99,7 +98,7 @@ Your two inputs are now ready: the `Makefile` downloads the model, and the `READ
 
 ## 3. Package the inference snap
 
-With the inputs ready, you are ready to launch Workshop and run the packaging pipeline.
+With the inputs ready, you can launch Workshop and run the packaging pipeline.
 
 ### Launch Workshop
 
@@ -153,7 +152,7 @@ In order to do that you can send this command in the OpenCode TUI:
 ```
 
 You will be prompted to select a provider and enter your API key or redirected to a web page to log in. After you connect, you can use the remote model for the packaging pipeline.
-By default, Opencode uses the `Big Pickle` model from Opencode Zen. You are free to use any model you prefer.
+By default, OpenCode uses the `Big Pickle` model from OpenCode Zen. You are free to use any model you prefer.
 
 ### Run the packaging pipeline
 
