@@ -1,0 +1,52 @@
+[submodule "deepseek-r1-snap"]
+	path = snaps/deepseek-r1
+	url = https://github.com/canonical/deepseek-r1-snap
+	branch = main
+[submodule "gemma3-snap"]
+	path = snaps/gemma3
+	url = https://github.com/canonical/gemma3-snap
+	branch = main
+[submodule "gemma4-snap"]
+	path = snaps/gemma4
+	url = https://github.com/canonical/gemma4-snap
+	branch = main
+[submodule "glm-4.7-flash-snap"]
+	path = snaps/glm-4.7-flash
+	url = https://github.com/canonical/glm-4.7-flash-snap
+	branch = main
+[submodule "nemotron-3-nano-snap"]
+	path = snaps/nemotron-3-nano
+	url = https://github.com/canonical/nemotron-3-nano-snap
+	branch = main
+[submodule "nemotron-3-nano-omni-snap"]
+	path = snaps/nemotron-3-nano-omni
+	url = https://github.com/canonical/nemotron-3-nano-omni-snap
+	branch = main
+[submodule "nomic-embed-text-v1.5-snap"]
+	path = snaps/nomic-embed-text-v1.5
+	url = https://github.com/canonical/nomic-embed-text-v1.5-snap
+	branch = main
+[submodule "qwen-vl-snap"]
+	path = snaps/qwen-vl
+	url = https://github.com/canonical/qwen-vl-snap
+	branch = main
+[submodule "qwen3-snap"]
+	path = snaps/qwen3
+	url = https://github.com/canonical/qwen3-snap
+	branch = main
+[submodule "qwen3.5-snap"]
+	path = snaps/qwen3.5
+	url = https://github.com/canonical/qwen3.5-snap
+	branch = main
+[submodule "qwen3.6-snap"]
+	path = snaps/qwen3.6
+	url = https://github.com/canonical/qwen3.6-snap
+	branch = main
+[submodule "qwen3-coder-snap"]
+	path = snaps/qwen3-coder
+	url = https://github.com/canonical/qwen3-coder-snap
+	branch = main
+[submodule "smollm2-snap"]
+	path = snaps/smollm2
+	url = https://github.com/canonical/smollm2-snap
+	branch = main
