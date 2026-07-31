@@ -3,7 +3,7 @@
 # Get started with Inference Snaps using Qwen VL
 
 This tutorial walks you through the process of installing and using an inference snap.
-Specifically, you will install and run *Qwen 2.5 VL*, a multi-modal large language model (LLM).
+Specifically, you will install and run *Qwen 2.5 VL*, a multimodal large language model (LLM).
 This model is also referred to as a Vision Language Model (VLM) because it can ingest and interpret images, along with text prompts.
 
 ## Set up your computer
