@@ -1,5 +1,3 @@
-(pack-with-workshop-sdk)=
-
 # Using agentic AI to create inference snaps
 
 In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
