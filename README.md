@@ -44,6 +44,7 @@ gemma4 chat
 | GLM 4.7 Flash | text, thinking, tools | `snap install glm-4-7-flash` | [repo](https://github.com/canonical/glm-4.7-flash-snap)
 | Nemotron 3 Nano | text, thinking, tools | `snap install nemotron-3-nano` | [repo](https://github.com/canonical/nemotron-3-nano-snap)
 | Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
+| Nemotron 3.5 Lightning | text, thinking, tools | `snap install nemotron-3-5-lightning` | [repo](https://github.com/canonical/nemotron-3.5-lightning-snap)
 | Nomic Embed Text v1.5 | text embedding | `snap install nomic-embed-text-v1-5` | [repo](https://github.com/canonical/nomic-embed-text-v1.5-snap)
 | Qwen 2.5 VL | text, vision | `snap install qwen-vl` | [repo](https://github.com/canonical/qwen-vl-snap)
 | Qwen 3 | text, thinking, tools | `snap install qwen3` | [repo](https://github.com/canonical/qwen3-snap)
@@ -67,5 +68,4 @@ We welcome pull requests!
 Please see [contribution guide](https://documentation.ubuntu.com/inference-snaps/contributing/) for tooling, build instructions, and model submission guidelines.
 
 Join the discussion in our [GitHub Discussions](https://github.com/canonical/inference-snaps/discussions), or [report issues](https://github.com/canonical/inference-snaps/issues/new/choose).
-
 
