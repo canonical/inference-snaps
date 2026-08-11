@@ -22,6 +22,10 @@
 	path = snaps/nemotron-3-nano-omni
 	url = https://github.com/canonical/nemotron-3-nano-omni-snap
 	branch = main
+[submodule "nemotron-3.5-lightning-snap"]
+	path = snaps/nemotron-3.5-lightning
+	url = https://github.com/canonical/nemotron-3.5-lightning-snap
+	branch = main
 [submodule "nomic-embed-text-v1.5-snap"]
 	path = snaps/nomic-embed-text-v1.5
 	url = https://github.com/canonical/nomic-embed-text-v1.5-snap
