@@ -49,6 +49,7 @@ llamafile
 LLM
 LLMs
 localhost
+Makefile
 microarchitecture
 microarchitectures
 multimodal
