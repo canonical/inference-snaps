@@ -248,6 +248,25 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## SmolLM2
+
+[![smollm2 snap](https://snapcraft.io/smollm2/badge.svg)](https://snapcraft.io/smollm2)
+[![smollm2 code][gh-badge]](https://github.com/canonical/smollm2-snap)
+
+SmolLM2 is a compact Large Language Model developed by Hugging Face, designed for efficient text generation and natural language tasks.
+The input and output are text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 <!--
 ## Deprecated snaps
 
