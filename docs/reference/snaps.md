@@ -248,6 +248,24 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## Qwen3.8
+
+[![qwen3-8 snap](https://snapcraft.io/qwen3-8/badge.svg)](https://snapcraft.io/qwen3-8)
+[![qwen3-8 source][gh-badge]](https://github.com/canonical/qwen3.8-snap)
+
+Qwen3.8 is a native vision-language model that understands images and videos, with flexible thinking control, designed to carry complex, multi-step tasks through to completion with greater reliability.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## SmolLM2
 
 [![smollm2 snap](https://snapcraft.io/smollm2/badge.svg)](https://snapcraft.io/smollm2)
