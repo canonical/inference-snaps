@@ -1,6 +1,6 @@
 # Using agentic AI to create inference snaps
 
-In this tutorial, you'll package an inference snap with Workshop and the `inference-snaps-sdk`.
+In this tutorial, you'll package an inference snap with Workshop and the `inference-snap-maker` SDK.
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
 
 You'll do this with the help of an LLM of your choice.
@@ -132,7 +132,7 @@ If the output is not `workshop`, stop here. Exit and check that Workshop launche
 
 ### Start OpenCode
 
-The workshop includes the `inference-snaps-sdk`, which ships with OpenCode, a terminal UI for running LLM agents. For more information, see the [OpenCode documentation](https://opencode.ai/docs).
+The workshop includes the `inference-snap-maker` SDK and ships with [OpenCode](https://opencode.ai/docs), a terminal UI for running LLM agents. 
 
 Inside the Workshop shell, start OpenCode:
 
@@ -140,7 +140,7 @@ Inside the Workshop shell, start OpenCode:
 opencode --auto
 ```
 
-The OpenCode TUI opens with the skills and agents installed by `inference-snaps-sdk`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
+The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker` SDK. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
 
 OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see {ref}`OpenCode configuration <configure-opencode>`. You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
 In order to do that you can send this command in the OpenCode TUI:
