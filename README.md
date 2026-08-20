@@ -50,6 +50,7 @@ gemma4 chat
 | Qwen 3 | text, thinking, tools | `snap install qwen3` | [repo](https://github.com/canonical/qwen3-snap)
 | Qwen 3 Coder | text, tools | `snap install qwen3-coder` | [repo](https://github.com/canonical/qwen3-coder-snap)
 | Qwen 3.6 | text, thinking, vision, tools | `snap install qwen3-6` | [repo](https://github.com/canonical/qwen3.6-snap)
+| Qwen 3.8 | text, thinking, vision, tools | `snap install qwen3-8` | [repo](https://github.com/canonical/qwen3.8-snap)
 | SmolLM2 | text | `snap install smollm2` | [repo](https://github.com/canonical/smollm2-snap)
 
 More open source models are coming soon.
