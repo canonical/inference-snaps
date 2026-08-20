@@ -67,6 +67,13 @@ func (cmd *validateCommand) run(_ *cobra.Command, args []string) error {
 		}
 	}
 
+	if err := models.ValidateAliases(filepath.Join(snapDir, "engines"), filepath.Join(snapDir, "models")); err != nil {
+		allManifestsValid = false
+		fmt.Printf("❌ model aliases: %s\n", err)
+	} else {
+		fmt.Printf("✅ model aliases are unique per engine\n")
+	}
+
 	if !allManifestsValid {
 		return fmt.Errorf("some manifests are invalid")
 	}

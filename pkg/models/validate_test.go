@@ -5,12 +5,14 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"gopkg.in/yaml.v3"
 )
 
 func templateManifest() Manifest {
 	manifest := Manifest{
 		Name:         "test",
+		Alias:        "test-alias",
 		Description:  "test",
 		ModelCardUrl: "https://example.com/model-card",
 		Quantization: "Q4_K_M",
@@ -200,5 +202,58 @@ func TestModelNameMatch(t *testing.T) {
 	err := manifest.validate("test")
 	if err == nil {
 		t.Fatal("model directory name should match name in manifest")
+	}
+}
+
+func TestValidateAliasCollisionSameEngine(t *testing.T) {
+	modelA := templateManifest()
+	modelA.Name = "model-a"
+	modelA.Alias = "shared"
+
+	modelB := templateManifest()
+	modelB.Name = "model-b"
+	modelB.Alias = "shared"
+
+	engineManifests := []engines.Manifest{
+		{Name: "engine-1", Model: engines.Model{Options: []string{"model-a", "model-b"}}},
+	}
+	if err := validateAliasesPerEngine(engineManifests, []Manifest{modelA, modelB}); err == nil {
+		t.Fatalf("expected alias collision within engine, got no error")
+	}
+}
+
+func TestValidateAliasSharedAcrossEngines(t *testing.T) {
+	// The same alias is allowed when the two models never share an engine.
+	modelA := templateManifest()
+	modelA.Name = "model-a"
+	modelA.Alias = "shared"
+
+	modelB := templateManifest()
+	modelB.Name = "model-b"
+	modelB.Alias = "shared"
+
+	engineManifests := []engines.Manifest{
+		{Name: "engine-1", Model: engines.Model{Options: []string{"model-a"}}},
+		{Name: "engine-2", Model: engines.Model{Options: []string{"model-b"}}},
+	}
+	if err := validateAliasesPerEngine(engineManifests, []Manifest{modelA, modelB}); err != nil {
+		t.Fatalf("expected no collision across engines, got: %v", err)
+	}
+}
+
+func TestValidateAliasUniqueWithinEngine(t *testing.T) {
+	modelA := templateManifest()
+	modelA.Name = "model-a"
+	modelA.Alias = "alias-a"
+
+	modelB := templateManifest()
+	modelB.Name = "model-b"
+	modelB.Alias = "alias-b"
+
+	engineManifests := []engines.Manifest{
+		{Name: "engine-1", Model: engines.Model{Options: []string{"model-a", "model-b"}}},
+	}
+	if err := validateAliasesPerEngine(engineManifests, []Manifest{modelA, modelB}); err != nil {
+		t.Fatalf("expected no collision, got: %v", err)
 	}
 }

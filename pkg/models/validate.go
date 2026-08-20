@@ -57,7 +57,11 @@ func Validate(manifestFilePath string) error {
 	if err != nil {
 		return err
 	}
-	return engines.ValidateComponents(manifest.Components, knownComponents)
+	if err := engines.ValidateComponents(manifest.Components, knownComponents); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func modelNameFromPath(manifestFilePath string) string {
@@ -138,5 +142,39 @@ func (manifest Manifest) validate(expectedModelName string) error {
 		return err
 	}
 
+	return nil
+}
+
+func ValidateAliases(enginesDir, modelsDir string) error {
+	modelManifests, err := LoadManifests(modelsDir)
+	if err != nil {
+		return err
+	}
+	engineManifests, err := engines.LoadManifests(enginesDir)
+	if err != nil {
+		return err
+	}
+	return validateAliasesPerEngine(engineManifests, modelManifests)
+}
+
+func validateAliasesPerEngine(engineManifests []engines.Manifest, modelManifests []Manifest) error {
+	modelsByName := make(map[string]Manifest, len(modelManifests))
+	for _, m := range modelManifests {
+		modelsByName[m.Name] = m
+	}
+
+	for _, engine := range engineManifests {
+		aliasOwner := make(map[string]string)
+		for _, modelName := range engine.Model.Options {
+			model, ok := modelsByName[modelName]
+			if !ok || model.Alias == "" {
+				continue
+			}
+			if prev, ok := aliasOwner[model.Alias]; ok && prev != model.Name {
+				return fmt.Errorf("engine %q: models %q and %q both use alias %q", engine.Name, prev, model.Name, model.Alias)
+			}
+			aliasOwner[model.Alias] = model.Name
+		}
+	}
 	return nil
 }
