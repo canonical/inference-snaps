@@ -16,8 +16,8 @@ git submodule update --remote
 ## Adding a new snap submodule
 
 To add a new snap repository as submodule, run:
-```
-git submodule add --name <repo-name> --branch main <repository-url> snaps/<name>
+```shell
+git submodule add --name <name>-snap --branch main <repository-url> snaps/<name>
 ```
 Where `name` is the repository name without the `-snap` suffix.
 
