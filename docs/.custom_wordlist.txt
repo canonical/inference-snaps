@@ -49,6 +49,7 @@ llamafile
 LLM
 LLMs
 localhost
+lscompute
 Makefile
 microarchitecture
 microarchitectures
