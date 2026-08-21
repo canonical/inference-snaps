@@ -17,13 +17,7 @@ You can help improve our code by:
 
 ### Inference snaps code bases
 
-Our projects' source code can be found at:
-
-- [DeepSeek R1 snap](https://github.com/canonical/deepseek-r1-snap)
-- [Qwen VL snap](https://github.com/canonical/qwen-vl-snap)
-- [Gemma3 snap](https://github.com/canonical/gemma3-snap)
-- [Nemotron 3 Nano snap](https://github.com/canonical/nemotron-3-nano-snap)
-- [Nemotron 3 Nano Omni snap](https://github.com/canonical/nemotron-3-nano-omni-snap)
+Our projects' source code can be found in the [/snaps subdirectory](https://github.com/canonical/inference-snaps/tree/main/snaps) of the repository.
 
 ### Tooling
 
@@ -31,6 +25,7 @@ Inference snaps use the following reusable building blocks:
 
 - [Inference Snaps CLI](https://github.com/canonical/inference-snaps-cli) – the command-line interface at the heart of each inference snap
 - [Inference Snaps Developer Tools](https://github.com/canonical/inference-snaps-dev) – GitHub Actions and utility scripts for building, testing, and publishing inference snaps
+- [lscompute](https://github.com/canonical/lscompute) – the tool used to list the available compute resources on a system
 
 ## Contribute to our docs
 
