@@ -54,3 +54,7 @@
 	path = snaps/smollm2
 	url = https://github.com/canonical/smollm2-snap
 	branch = main
+[submodule "qwen3.8-snap"]
+	path = snaps/qwen3.8
+	url = https://github.com/canonical/qwen3.8-snap
+	branch = main
