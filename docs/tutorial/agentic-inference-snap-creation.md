@@ -56,19 +56,76 @@ First, open the `Makefile` and replace its contents with the following, which do
 ```makefile
 SHELL := /bin/bash
 
-.PHONY: download-models setup-hf-cli
+# Always run `hf` via pipx to avoid relying on local `hf` installations.
+hf := pipx run --spec "huggingface_hub[cli]" hf
 
-all: download-models
+SNAP_NAME ?= qwen3-5
+ENGINE ?= cpu
 
-download-models: download-model
+.PHONY: all
+all: help
 
-setup-hf-cli:
-	sudo apt-get install -y python3-venv
-	python3 -m venv .venv
-	. .venv/bin/activate && pip install --upgrade pip && pip install -U huggingface_hub
+#
+# Main targets
+#
 
-download-model: setup-hf-cli
-	. .venv/bin/activate && hf download hf://unsloth/Qwen3.5-4B-GGUF/Qwen3.5-4B-UD-Q4_K_XL.gguf --local-dir components/model-q4-k-xl-gguf
+.PHONY: help
+help: ## Show this help message
+	@echo "Usage: make <target>"
+	@echo
+	@echo "Targets:"
+	@# List all targets with descriptions (lines starting with '##'):
+	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | \
+		sort | \
+		awk 'BEGIN {FS = ":.*## "}; {printf "  %-11s %s\n", $$1, $$2}'
+
+.PHONY: init
+init: init-submodules install-deps download-models ## Initialize the build environment (dependencies, model weights, submodules, etc.)
+
+.PHONY: build
+build: ## Build the snap
+	./dev/build.sh
+
+.PHONY: install
+install: ## Install the snap
+	./dev/install.sh
+
+.PHONY: upload
+upload: ## Upload the snap
+	./dev/upload.sh
+
+.PHONY: smoke-test
+smoke-test: ## Run smoke tests (override with SNAP_NAME=... ENGINE=...)
+	sudo ./dev/smoke-test.sh $(SNAP_NAME) $(ENGINE)
+
+#
+# Supporting targets
+#
+
+.PHONY: install-deps
+install-deps:
+	@echo "Installing dependencies..."
+	@# Ensure pipx is available for running the hf CLI.
+	@command -v pipx >/dev/null 2>&1 || { \
+		sudo apt-get update; \
+		sudo apt-get install -y pipx; \
+	}
+
+.PHONY: init-submodules
+init-submodules:
+	@echo "Initializing submodules..."
+	@if git submodule status | grep -q '^-'; then \
+		git submodule update --init; \
+	fi
+
+# TODO: Update to match the expected model(s):
+.PHONY: download-models
+download-models: download-model-4b-ud-q4-k-xl-gguf
+
+.PHONY: download-model-4b-ud-q4-k-xl-gguf
+download-model-4b-ud-q4-k-xl-gguf:
+	$(hf) download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q4_K_XL.gguf \
+	--local-dir components/model-q4-k-xl-gguf
 ```
 
 This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `components/` directory, where the pipeline expects the files that become part of the snap.
