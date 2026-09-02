@@ -91,6 +91,39 @@ func TestCheckGpuVram(t *testing.T) {
 	}
 }
 
+func TestCheckComputeCapability(t *testing.T) {
+
+	hwInfoGpu := pci.Device{
+		DeviceClass: 0x0300,
+		AdditionalProperties: map[string]string{
+			"compute-capability": "6.1",
+		},
+	}
+
+	testPciDevices := []pciDevice{{Device: hwInfoGpu}}
+
+	requiredComputeCapability := ">=6.0, <7.0"
+	device := engines.Device{
+		Type:              "gpu",
+		Bus:               "pci",
+		VendorId:          nil,
+		ComputeCapability: &requiredComputeCapability,
+	}
+
+	availableDevices := filterPciDevices(testPciDevices, device.VendorId, device.DeviceId)
+	scoredDevices, scoreIssues := scorePciDevices(device, availableDevices)
+	if len(scoreIssues) != 0 {
+		t.Fatalf("GPU compute-capability should match: %s", strings.Join(scoreIssues, ", "))
+	}
+
+	requiredComputeCapability = ">=7.0"
+	availableDevices = filterPciDevices(testPciDevices, device.VendorId, device.DeviceId)
+	scoredDevices, scoreIssues = scorePciDevices(device, availableDevices)
+	if len(scoreIssues) == 0 || scoredDevices[0].Score != 0 {
+		t.Fatalf("GPU compute-capability should NOT match")
+	}
+}
+
 func TestCheckNpuDriver(t *testing.T) {
 	npuVendorId := types.HexInt(0x8086)
 	npuDeviceId := types.HexInt(0x643e)

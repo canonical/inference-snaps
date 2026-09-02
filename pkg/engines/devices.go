@@ -2,6 +2,8 @@ package engines
 
 import (
 	"fmt"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 func (devices Devices) validate() error {
@@ -61,6 +63,13 @@ func (device Device) validateGpu() error {
 	if err != nil {
 		return fmt.Errorf("bus: %v", err)
 	}
+
+	if device.ComputeCapability != nil {
+		if _, err := semver.NewConstraint(*device.ComputeCapability); err != nil {
+			return fmt.Errorf("compute-capability: invalid constraint %q: %v", *device.ComputeCapability, err)
+		}
+	}
+
 	return nil
 }
 

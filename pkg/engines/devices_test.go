@@ -95,6 +95,29 @@ func TestDeviceGpu(t *testing.T) {
 		}
 		t.Log(err)
 	})
+
+	t.Run("GPU valid compute-capability constraint", func(t *testing.T) {
+		device := Device{Type: "gpu", Bus: "pci"}
+		computeCap := ">=6.0, <7.0"
+		device.ComputeCapability = &computeCap
+
+		err := device.validate()
+		if err != nil {
+			t.Fatalf("GPU compute-capability constraint should be valid: %v", err)
+		}
+	})
+
+	t.Run("GPU invalid compute-capability constraint", func(t *testing.T) {
+		device := Device{Type: "gpu", Bus: "pci"}
+		computeCap := ">=not-a-version"
+		device.ComputeCapability = &computeCap
+
+		err := device.validate()
+		if err == nil {
+			t.Fatal("GPU compute-capability constraint should be invalid")
+		}
+		t.Log(err)
+	})
 }
 
 func TestDeviceNpu(t *testing.T) {

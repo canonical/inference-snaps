@@ -12,7 +12,7 @@ devices:
       vendor-id: 0x10de # Nvidia Corporation
       # model-ids: [ ]
       vram: 5G
-      # compute-capability: 5.0
+      # compute-capability: ">=5.0"
 
 runtime: llama-cpp-cuda
 

@@ -177,8 +177,8 @@ func machineInfoFixture(name string) (*machine.MachineInfo, error) {
 						SubvendorName: new("Hewlett-Packard Company"),
 					},
 					AdditionalProperties: map[string]string{
-						"computeCapability": "6.1",
-						"vram":              "2147483648",
+						"compute-capability": "6.1",
+						"vram":               "2147483648",
 					},
 				},
 			},
@@ -448,7 +448,7 @@ func machineInfoFixture(name string) (*machine.MachineInfo, error) {
 						SubvendorName: new("NVIDIA Corporation"),
 					},
 					AdditionalProperties: map[string]string{
-						"compute_capability": "6.1",
+						"compute-capability": "6.1",
 						"vram":               "11811160064",
 					},
 				},
@@ -703,7 +703,7 @@ func machineInfoFixture(name string) (*machine.MachineInfo, error) {
 						SubvendorName: new("CLEVO/KAPOK Computer"),
 					},
 					AdditionalProperties: map[string]string{
-						"compute_capability": "8.9",
+						"compute-capability": "8.9",
 						"vram":               "6439305216",
 					},
 				},

@@ -3,6 +3,7 @@ module github.com/canonical/inference-snaps-cli/v2
 go 1.26.1
 
 require (
+	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/canonical/go-snapctl v1.0.0-beta.6
 	github.com/canonical/lscompute v1.0.0-alpha
