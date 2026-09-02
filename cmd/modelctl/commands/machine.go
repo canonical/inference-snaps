@@ -13,24 +13,34 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type showMachineCommand struct {
+type machineCommand struct {
 	*common.Context
 
 	// flags
 	format string
 }
 
+func Machine(ctx *common.Context) *cobra.Command {
+	return newMachineCmd(ctx, "machine", "")
+}
+
+// TODO: remove when we fully migrate to "machine" command
 func ShowMachine(ctx *common.Context) *cobra.Command {
-	var cmd showMachineCommand
+	return newMachineCmd(ctx, "show-machine", `use "machine" instead`)
+}
+
+func newMachineCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
+	var cmd machineCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:               "show-machine",
+		Use:               use,
 		Short:             "Print information about the host machine",
 		Long:              "Print information about the host machine, including hardware and compute resources",
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,
+		Deprecated:        deprecated,
 	}
 
 	// flags
@@ -45,7 +55,7 @@ func ShowMachine(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
+func (cmd *machineCommand) run(_ *cobra.Command, _ []string) error {
 	info, err := cmd.fetchMachineInfoWithSpinner()
 	if err != nil {
 		return err
@@ -54,7 +64,7 @@ func (cmd *showMachineCommand) run(_ *cobra.Command, _ []string) error {
 	return cmd.printMachineInfo(info)
 }
 
-func (cmd *showMachineCommand) printMachineInfo(info *machine.MachineInfo) error {
+func (cmd *machineCommand) printMachineInfo(info *machine.MachineInfo) error {
 	switch cmd.format {
 	case "json":
 		return cmd.printMachineInfoJson(info)
@@ -65,7 +75,7 @@ func (cmd *showMachineCommand) printMachineInfo(info *machine.MachineInfo) error
 	}
 }
 
-func (cmd *showMachineCommand) printMachineInfoJson(info *machine.MachineInfo) error {
+func (cmd *machineCommand) printMachineInfoJson(info *machine.MachineInfo) error {
 	jsonString, err := json.MarshalIndent(info, "", "  ")
 	if err != nil {
 		return fmt.Errorf("json: %s", err)
@@ -74,7 +84,7 @@ func (cmd *showMachineCommand) printMachineInfoJson(info *machine.MachineInfo) e
 	return nil
 }
 
-func (cmd *showMachineCommand) printMachineInfoYaml(info *machine.MachineInfo) error {
+func (cmd *machineCommand) printMachineInfoYaml(info *machine.MachineInfo) error {
 	yamlString, err := yaml.Marshal(info)
 	if err != nil {
 		return fmt.Errorf("yaml: %s", err)
@@ -83,7 +93,7 @@ func (cmd *showMachineCommand) printMachineInfoYaml(info *machine.MachineInfo) e
 	return nil
 }
 
-func (cmd *showMachineCommand) fetchMachineInfoWithSpinner() (*machine.MachineInfo, error) {
+func (cmd *machineCommand) fetchMachineInfoWithSpinner() (*machine.MachineInfo, error) {
 	stopProgress := common.StartProgressSpinner("Gathering machine information")
 	hwInfo, warnings, err := machine.Get(host.Real(), true)
 	stopProgress()

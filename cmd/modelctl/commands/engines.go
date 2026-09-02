@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type listEnginesCommand struct {
+type enginesCommand struct {
 	*common.Context
 
 	// flags
@@ -28,16 +28,26 @@ type outputEngines struct {
 	Engines      []common.EngineDetails `json:"engines"`
 }
 
+func Engines(ctx *common.Context) *cobra.Command {
+	return newEnginesCmd(ctx, "engines", "")
+}
+
+// TODO: remove when we fully migrate to "engines" command
 func ListEngines(ctx *common.Context) *cobra.Command {
-	var cmd listEnginesCommand
+	return newEnginesCmd(ctx, "list-engines", `use "engines" instead`)
+}
+
+func newEnginesCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
+	var cmd enginesCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:               "list-engines",
+		Use:               use,
 		Short:             "List available engines",
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE:              cmd.run,
+		Deprecated:        deprecated,
 	}
 
 	// flags
@@ -52,7 +62,7 @@ func ListEngines(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
+func (cmd *enginesCommand) run(_ *cobra.Command, _ []string) error {
 	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("scoring engines: %v", err)
@@ -89,7 +99,7 @@ func (cmd *listEnginesCommand) run(_ *cobra.Command, _ []string) error {
 	return nil
 }
 
-func (cmd *listEnginesCommand) printEnginesJson(enginesList outputEngines) error {
+func (cmd *enginesCommand) printEnginesJson(enginesList outputEngines) error {
 	jsonString, err := json.MarshalIndent(enginesList, "", "  ")
 	if err != nil {
 		return fmt.Errorf("marshalling engines: %v", err)
@@ -98,7 +108,7 @@ func (cmd *listEnginesCommand) printEnginesJson(enginesList outputEngines) error
 	return nil
 }
 
-func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (string, error) {
+func (cmd *enginesCommand) getEnginesTable(enginesList outputEngines) (string, error) {
 	var headerRow = []string{"engine", "vendor", "summary", "compat"}
 	tableRows := [][]string{headerRow}
 
@@ -218,7 +228,7 @@ func (cmd *listEnginesCommand) getEnginesTable(enginesList outputEngines) (strin
 	return tableOutputStr, nil
 }
 
-func (cmd *listEnginesCommand) printEnginesTable(enginesList outputEngines) error {
+func (cmd *enginesCommand) printEnginesTable(enginesList outputEngines) error {
 	if len(enginesList.Engines) == 0 {
 		fmt.Fprintln(os.Stderr, "No engines found.")
 		return nil

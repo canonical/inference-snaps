@@ -11,19 +11,28 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type showEngineCommand struct {
+type engineCommand struct {
 	*common.Context
 
 	// flags
 	format string
 }
 
+func Engine(ctx *common.Context) *cobra.Command {
+	return newEngineCmd(ctx, "engine [<engine>]", "")
+}
+
+// TODO: remove when we fully migrate to "engine" command
 func ShowEngine(ctx *common.Context) *cobra.Command {
-	var cmd showEngineCommand
+	return newEngineCmd(ctx, "show-engine", `use "engine" instead`)
+}
+
+func newEngineCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
+	var cmd engineCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:   "show-engine [<engine>]",
+		Use:   use,
 		Short: "Print information about an engine",
 		Long:  "Print information about the active engine, or the specified engine",
 		// Args
@@ -32,6 +41,7 @@ func ShowEngine(ctx *common.Context) *cobra.Command {
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: cmd.validateArgs,
 		RunE:              cmd.run,
+		Deprecated:        deprecated,
 	}
 
 	// flags
@@ -46,18 +56,18 @@ func ShowEngine(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *showEngineCommand) run(_ *cobra.Command, args []string) error {
+func (cmd *engineCommand) run(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return cmd.showCurrentEngine()
 	} else if len(args) == 1 {
-		return cmd.showEngine(args[0])
+		return cmd.engine(args[0])
 
 	} else {
 		return fmt.Errorf("invalid number of arguments")
 	}
 }
 
-func (cmd *showEngineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+func (cmd *engineCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 	manifests, err := engines.LoadManifests(cmd.EnginesDir)
 	if err != nil {
 		fmt.Printf("Error: loading engines: %v\n", err)
@@ -72,7 +82,7 @@ func (cmd *showEngineCommand) validateArgs(_ *cobra.Command, args []string, toCo
 	return engineNames, cobra.ShellCompDirectiveNoSpace
 }
 
-func (cmd *showEngineCommand) showCurrentEngine() error {
+func (cmd *engineCommand) showCurrentEngine() error {
 	currentEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("%s: %w", common.LookingUpActiveEngine, err)
@@ -80,10 +90,10 @@ func (cmd *showEngineCommand) showCurrentEngine() error {
 	if currentEngine == "" {
 		return common.ErrNoActiveEngine
 	}
-	return cmd.showEngine(currentEngine)
+	return cmd.engine(currentEngine)
 }
 
-func (cmd *showEngineCommand) showEngine(engineName string) error {
+func (cmd *engineCommand) engine(engineName string) error {
 	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("scoring engines: %v", err)
@@ -106,7 +116,7 @@ func (cmd *showEngineCommand) showEngine(engineName string) error {
 	return nil
 }
 
-func (cmd *showEngineCommand) printEngineManifest(engine engines.ScoredManifest) error {
+func (cmd *engineCommand) printEngineManifest(engine engines.ScoredManifest) error {
 	var output common.EngineDetails = common.NewEngineDetails(engine)
 
 	switch cmd.format {

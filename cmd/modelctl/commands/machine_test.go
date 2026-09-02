@@ -6,8 +6,8 @@ import (
 	"github.com/canonical/lscompute/pkg/machine"
 )
 
-func Example_showMachineCommand_printMachineInfoJson() {
-	cmd := showMachineCommand{format: "json"}
+func Example_machineCommand_printMachineInfoJson() {
+	cmd := machineCommand{format: "json"}
 	info, err := machineInfoFixture("dummy-machine")
 	if err != nil {
 		panic(err)
@@ -59,8 +59,8 @@ func Example_showMachineCommand_printMachineInfoJson() {
 
 }
 
-func Example_showMachineCommand_printMachineInfoYaml() {
-	cmd := showMachineCommand{format: "yaml"}
+func Example_machineCommand_printMachineInfoYaml() {
+	cmd := machineCommand{format: "yaml"}
 	info, err := machineInfoFixture("dummy-machine")
 	if err != nil {
 		panic(err)
@@ -100,7 +100,7 @@ func Example_showMachineCommand_printMachineInfoYaml() {
 }
 
 func Test_printMachineInfo_unknownFormat(t *testing.T) {
-	cmd := showMachineCommand{format: "xml"}
+	cmd := machineCommand{format: "xml"}
 	info := &machine.MachineInfo{}
 
 	err := cmd.printMachineInfo(info)

@@ -11,7 +11,7 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
-func prepareTestData() (*listEnginesCommand, *outputEngines, error) {
+func prepareTestData() (*enginesCommand, *outputEngines, error) {
 	cache := storage.NewMockCache()
 	err := cache.SetActiveEngine("intel-cpu")
 	if err != nil {
@@ -40,7 +40,7 @@ func prepareTestData() (*listEnginesCommand, *outputEngines, error) {
 		Cache:      cache,
 		Config:     nil,
 	}
-	cmd := listEnginesCommand{Context: ctx}
+	cmd := enginesCommand{Context: ctx}
 
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {

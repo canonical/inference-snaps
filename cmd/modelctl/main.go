@@ -33,14 +33,7 @@ func main() {
 
 	// rootCmd is the base command
 	// It gets populated with subcommands
-	rootCmd := &cobra.Command{
-		SilenceUsage: true,
-		Long: instanceName + " runs an engine that is optimized for your host machine,\n" +
-			"providing a local service endpoint.\n\n" +
-			"Use this command to configure the active engine, or switch to an alternative engine.",
-		PersistentPreRunE: persistentPreRunE,
-		Use:               instanceName,
-	}
+	rootCmd := newRootCmd(instanceName)
 
 	// Add custom text after the help message - only show service management for top-level help
 	if s.Dir() != "" {
@@ -66,53 +59,10 @@ func main() {
 	// Disable command sorting to keep commands sorted as added below
 	cobra.EnableCommandSorting = false
 
-	addCommandGroup(rootCmd, "basic", "Basic Commands:",
-		commands.Status(ctx),
-		// Chat is added conditionally
-	)
-	if common.ChatEnabled() {
-		err := appendCommandToGroup(rootCmd, "basic", commands.Chat(ctx))
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			return
-		}
+	if err := registerCommands(rootCmd, ctx); err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
 	}
-	if common.WebUiEnabled() {
-		err := appendCommandToGroup(rootCmd, "basic", commands.WebUi(ctx))
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			return
-		}
-	}
-
-	addCommandGroup(rootCmd, "config", "Configuration Commands:",
-		commands.Get(ctx),
-		commands.Set(ctx),
-		commands.Unset(ctx),
-	)
-
-	addCommandGroup(rootCmd, "engine", "Management Commands:",
-		commands.ListEngines(ctx),
-		commands.ShowEngine(ctx),
-		commands.UseEngine(ctx),
-		commands.ListModels(ctx),
-		commands.ShowModel(ctx),
-		commands.UseModel(ctx),
-	)
-
-	addCommands(rootCmd,
-		commands.ShowMachine(ctx),
-		commands.PruneCache(ctx),
-		commands.Version(ctx),
-	)
-
-	// Hidden commands
-	addCommands(rootCmd,
-		commands.ExportStatus(ctx),
-		commands.Run(ctx),
-		commands.ServeWebUi(ctx),
-		debug.DebugCommand(ctx),
-	)
 
 	// disable logging timestamps
 	log.SetFlags(0)
@@ -169,4 +119,72 @@ func addCommands(rootCmd *cobra.Command, commands ...*cobra.Command) {
 	for _, cmd := range commands {
 		rootCmd.AddCommand(cmd)
 	}
+}
+
+func newRootCmd(instanceName string) *cobra.Command {
+	rootCmd := &cobra.Command{
+		SilenceUsage: true,
+		Long: instanceName + " runs an engine that is optimized for your host machine,\n" +
+			"providing a local service endpoint.\n\n" +
+			"Use this command to configure the active engine, or switch to an alternative engine.",
+		PersistentPreRunE: persistentPreRunE,
+		Use:               instanceName,
+	}
+
+	return rootCmd
+}
+
+func registerCommands(rootCmd *cobra.Command, ctx *common.Context) error {
+	addCommandGroup(rootCmd, "basic", "Basic Commands:",
+		commands.Status(ctx),
+		// Chat is added conditionally
+	)
+	if common.ChatEnabled() {
+		err := appendCommandToGroup(rootCmd, "basic", commands.Chat(ctx))
+		if err != nil {
+			return err
+		}
+	}
+	if common.WebUiEnabled() {
+		err := appendCommandToGroup(rootCmd, "basic", commands.WebUi(ctx))
+		if err != nil {
+			return err
+		}
+	}
+
+	addCommandGroup(rootCmd, "config", "Configuration Commands:",
+		commands.Get(ctx),
+		commands.Set(ctx),
+		commands.Unset(ctx),
+	)
+
+	addCommandGroup(rootCmd, "engine", "Management Commands:",
+		commands.Engines(ctx),
+		commands.Engine(ctx),
+		commands.UseEngine(ctx),
+		commands.Models(ctx),
+		commands.Model(ctx),
+		commands.UseModel(ctx),
+	)
+
+	addCommands(rootCmd,
+		commands.Machine(ctx),
+		commands.PruneCache(ctx),
+		commands.Version(ctx),
+	)
+
+	// Hidden commands
+	addCommands(rootCmd,
+		commands.ExportStatus(ctx),
+		commands.Run(ctx),
+		commands.ServeWebUi(ctx),
+		debug.DebugCommand(ctx),
+		commands.ListEngines(ctx), // deprecated alias for "engines"
+		commands.ListModels(ctx),  // deprecated alias for "models"
+		commands.ShowEngine(ctx),  // deprecated alias for "engine"
+		commands.ShowMachine(ctx), // deprecated alias for "machine"
+		commands.ShowModel(ctx),   // deprecated alias for "model"
+	)
+
+	return nil
 }

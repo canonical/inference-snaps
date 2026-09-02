@@ -7,13 +7,13 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 )
 
-func TestShowModelUnsupportedFormatResultsInError(t *testing.T) {
+func TestModelUnsupportedFormatResultsInError(t *testing.T) {
 	manifest, err := models.LoadManifest("../../../test_data/models", "4b-it-int4-fq-ov")
 	if err != nil {
 		t.Fatalf("could not load model manifest: %v", err)
 	}
 
-	cmd := showModelCommand{format: "invalid-format"}
+	cmd := modelCommand{format: "invalid-format"}
 	err = cmd.printModelManifest(manifest)
 
 	if err == nil {
@@ -21,13 +21,13 @@ func TestShowModelUnsupportedFormatResultsInError(t *testing.T) {
 	}
 }
 
-func Example_showModelCommand_printModelManifestYaml() {
+func Example_modelCommand_printModelManifestYaml() {
 	manifest, err := models.LoadManifest("../../../test_data/models", "4b-it-int4-fq-ov")
 	if err != nil {
 		panic(fmt.Sprintf("failed to load model manifest: %v", err))
 	}
 
-	cmd := showModelCommand{format: "yaml"}
+	cmd := modelCommand{format: "yaml"}
 	if err := cmd.printModelManifest(manifest); err != nil {
 		panic(fmt.Sprintf("failed to print model manifest: %v", err))
 	}
@@ -45,13 +45,13 @@ func Example_showModelCommand_printModelManifestYaml() {
 	//     - model-4b-it-int4-fq-ov
 }
 
-func Example_showModelCommand_printModelManifestJson() {
+func Example_modelCommand_printModelManifestJson() {
 	manifest, err := models.LoadManifest("../../../test_data/models", "4b-it-int4-fq-ov")
 	if err != nil {
 		panic(fmt.Sprintf("failed to load model manifest: %v", err))
 	}
 
-	cmd := showModelCommand{format: "json"}
+	cmd := modelCommand{format: "json"}
 	if err := cmd.printModelManifest(manifest); err != nil {
 		panic(fmt.Sprintf("failed to print model manifest: %v", err))
 	}

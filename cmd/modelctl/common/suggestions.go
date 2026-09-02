@@ -64,7 +64,7 @@ func SuggestEngineInfo() string {
 		instanceName = "<snap-instance-name>"
 	}
 
-	return fmt.Sprintf("Use \"%v show-engine <engine>\" for more information about an engine.", instanceName)
+	return fmt.Sprintf("Use \"%v engine <engine>\" for more information about an engine.", instanceName)
 }
 
 func SuggestKeyNotFound(key string) string {

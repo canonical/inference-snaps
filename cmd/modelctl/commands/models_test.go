@@ -9,7 +9,7 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
-func prepareModelsTestData() (*listModelsCommand, *outputModels, error) {
+func prepareModelsTestData() (*modelsCommand, *outputModels, error) {
 	cache := storage.NewMockCache()
 	err := cache.SetActiveModel("4b-it-int4-fq-ov")
 	if err != nil {
@@ -35,7 +35,7 @@ func prepareModelsTestData() (*listModelsCommand, *outputModels, error) {
 		Cache:     cache,
 		Config:    nil,
 	}
-	cmd := listModelsCommand{Context: ctx}
+	cmd := modelsCommand{Context: ctx}
 
 	activeModel, err := cmd.Cache.GetActiveModel()
 	if err != nil {
@@ -50,7 +50,7 @@ func prepareModelsTestData() (*listModelsCommand, *outputModels, error) {
 	return &cmd, &modelsList, nil
 }
 
-func TestListModelsJson(t *testing.T) {
+func TestModelsJson(t *testing.T) {
 	cmd, modelsList, err := prepareModelsTestData()
 	if err != nil {
 		t.Fatalf("Error preparing test data: %v", err)
@@ -62,7 +62,7 @@ func TestListModelsJson(t *testing.T) {
 	}
 }
 
-func TestListModelsTable(t *testing.T) {
+func TestModelsTable(t *testing.T) {
 	cmd, modelsList, err := prepareModelsTestData()
 	if err != nil {
 		t.Fatalf("Error preparing test data: %v", err)

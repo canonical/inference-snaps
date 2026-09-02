@@ -15,7 +15,7 @@ func TestInfoLong(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	cmd := showEngineCommand{
+	cmd := engineCommand{
 		format: "yaml",
 	}
 	err = cmd.printEngineManifest(scoredEngine)
@@ -31,7 +31,7 @@ func TestInfoShort(t *testing.T) {
 	}
 	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
 
-	cmd := showEngineCommand{
+	cmd := engineCommand{
 		format: "yaml",
 	}
 	err = cmd.printEngineManifest(scoredEngine)
@@ -67,7 +67,7 @@ func TestUnsupportedFormatResultsInError(t *testing.T) {
 		t.Fatalf("could not score manifest: %v", err)
 	}
 
-	cmd := showEngineCommand{format: "invalid-format"}
+	cmd := engineCommand{format: "invalid-format"}
 	err = cmd.printEngineManifest(*engineManifest)
 
 	if err == nil {
@@ -75,13 +75,13 @@ func TestUnsupportedFormatResultsInError(t *testing.T) {
 	}
 }
 
-func Example_showEngineCommand_printEngineManifestYaml() {
+func Example_engineCommand_printEngineManifestYaml() {
 	engineManifest, err := scoreEngineAgainstMachine("cuda-generic", "dummy-machine")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "yaml"}
+	cmd := engineCommand{format: "yaml"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}
@@ -127,13 +127,13 @@ func Example_showEngineCommand_printEngineManifestYaml() {
 	//     - required device not found
 }
 
-func Example_showEngineCommand_printEngineManifestJson() {
+func Example_engineCommand_printEngineManifestJson() {
 	engineManifest, err := scoreEngineAgainstMachine("cuda-generic", "dummy-machine")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "json"}
+	cmd := engineCommand{format: "json"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}
@@ -195,13 +195,13 @@ func Example_showEngineCommand_printEngineManifestJson() {
 	// }
 }
 
-func Example_showEngineCommand_printHappyEngineManifestYaml() {
+func Example_engineCommand_printHappyEngineManifestYaml() {
 	engineManifest, err := scoreEngineAgainstMachine("intel-cpu", "i7-1165G7")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "yaml"}
+	cmd := engineCommand{format: "yaml"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}
@@ -227,13 +227,13 @@ func Example_showEngineCommand_printHappyEngineManifestYaml() {
 	// compatible: true
 }
 
-func Example_showEngineCommand_printHappyEngineManifestJson() {
+func Example_engineCommand_printHappyEngineManifestJson() {
 	engineManifest, err := scoreEngineAgainstMachine("intel-cpu", "i7-1165G7")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "json"}
+	cmd := engineCommand{format: "json"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}
@@ -269,13 +269,13 @@ func Example_showEngineCommand_printHappyEngineManifestJson() {
 	// }
 }
 
-func Example_showEngineCommand_printEngineManifestWithLineBreaksInDescriptionYaml() {
+func Example_engineCommand_printEngineManifestWithLineBreaksInDescriptionYaml() {
 	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "yaml"}
+	cmd := engineCommand{format: "yaml"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}
@@ -303,13 +303,13 @@ func Example_showEngineCommand_printEngineManifestWithLineBreaksInDescriptionYam
 	//     - required device not found
 }
 
-func Example_showEngineCommand_printEngineManifestWithLineBreaksInDescriptionJson() {
+func Example_engineCommand_printEngineManifestWithLineBreaksInDescriptionJson() {
 	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
 	if err != nil {
 		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
 	}
 
-	cmd := showEngineCommand{format: "json"}
+	cmd := engineCommand{format: "json"}
 	if err := cmd.printEngineManifest(*engineManifest); err != nil {
 		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
 	}

@@ -63,7 +63,7 @@ The following assumes use of the stack-utils snap to use the CLI.
 A summary of the current host machine can be obtained by running:
 
 ```
-inference-snaps-cli show-machine
+inference-snaps-cli machine
 ```
 
 This prints a machine-readable summary of the host system. 
@@ -84,7 +84,7 @@ The result is printed as **JSON** to the standard output by default (use `--form
 Example:
 
 ```bash
-$ inference-snaps-cli show-machine --format=json | inference-snaps-cli debug select-engine --engines test_data/engines/
+$ inference-snaps-cli machine --format=json | inference-snaps-cli debug select-engine --engines test_data/engines/
 ❌ ampere - not compatible: required cpu device not found
 ❌ ampere-altra - not compatible: required cpu device not found
 ❌ arm-neon - not compatible: required device not found

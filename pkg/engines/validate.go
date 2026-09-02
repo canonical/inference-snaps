@@ -12,7 +12,7 @@ import (
 )
 
 // The chars limit has been chosen as it is the maximum length that can be displayed without truncation in the
-// list-engines table considering the minimum width of the other columns.
+// engines table considering the minimum width of the other columns.
 const SummaryMaxLength = 56
 
 func Validate(manifestFilePath string) error {

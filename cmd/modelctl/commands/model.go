@@ -13,19 +13,28 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type showModelCommand struct {
+type modelCommand struct {
 	*common.Context
 
 	// flags
 	format string
 }
 
+func Model(ctx *common.Context) *cobra.Command {
+	return newModelCmd(ctx, "model [<model>]", "")
+}
+
+// TODO: remove when we fully migrate to "model" command
 func ShowModel(ctx *common.Context) *cobra.Command {
-	var cmd showModelCommand
+	return newModelCmd(ctx, "show-model", `use "model" instead`)
+}
+
+func newModelCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
+	var cmd modelCommand
 	cmd.Context = ctx
 
 	cobraCmd := &cobra.Command{
-		Use:   "show-model [<model>]",
+		Use:   use,
 		Short: "Print information about a model",
 		Long:  "Print information about the active model, or the specified model",
 		// Args
@@ -33,6 +42,7 @@ func ShowModel(ctx *common.Context) *cobra.Command {
 		Args:              cobra.MaximumNArgs(1),
 		ValidArgsFunction: cmd.validateArgs,
 		RunE:              cmd.run,
+		Deprecated:        deprecated,
 	}
 
 	// flags
@@ -47,18 +57,18 @@ func ShowModel(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *showModelCommand) run(_ *cobra.Command, args []string) error {
+func (cmd *modelCommand) run(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return cmd.showCurrentModel()
 	} else if len(args) == 1 {
-		return cmd.showModel(args[0])
+		return cmd.model(args[0])
 	} else {
 		return fmt.Errorf("invalid number of arguments")
 	}
 }
 
 // validateArgs returns a list of model names supported by the currently active engine
-func (cmd *showModelCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+func (cmd *modelCommand) validateArgs(_ *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveError
@@ -87,7 +97,7 @@ func (cmd *showModelCommand) validateArgs(_ *cobra.Command, args []string, toCom
 	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
-func (cmd *showModelCommand) showCurrentModel() error {
+func (cmd *modelCommand) showCurrentModel() error {
 	currentModel, err := cmd.Cache.GetActiveModel()
 	if err != nil {
 		return fmt.Errorf("%s: %w", common.LookingUpActiveModel, err)
@@ -95,10 +105,10 @@ func (cmd *showModelCommand) showCurrentModel() error {
 	if currentModel == "" {
 		return common.ErrNoActiveModel
 	}
-	return cmd.showModel(currentModel)
+	return cmd.model(currentModel)
 }
 
-func (cmd *showModelCommand) showModel(modelNameOrAlias string) error {
+func (cmd *modelCommand) model(modelNameOrAlias string) error {
 	modelManifest, err := common.GetModelByNameOrAlias(cmd.Context, modelNameOrAlias)
 	if err != nil {
 		return err
@@ -111,7 +121,7 @@ func (cmd *showModelCommand) showModel(modelNameOrAlias string) error {
 	return nil
 }
 
-func (cmd *showModelCommand) printModelManifest(manifest *models.Manifest) error {
+func (cmd *modelCommand) printModelManifest(manifest *models.Manifest) error {
 	output, err := common.NewModelDetails(manifest)
 	if err != nil {
 		return fmt.Errorf("creating model details: %v", err)

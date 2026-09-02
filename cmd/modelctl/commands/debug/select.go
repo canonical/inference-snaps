@@ -50,7 +50,6 @@ func SelectCommand(ctx *common.Context) *cobra.Command {
 }
 
 func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
-	// Read the machine info JSON piped in from the lscompute / show-machine app
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		return fmt.Errorf("reading machine info from stdin: %s", err)
