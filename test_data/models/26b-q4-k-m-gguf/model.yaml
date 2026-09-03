@@ -20,7 +20,6 @@ environment:
   # The model file path is set to the first shard's symlink:
   - SHARDS_DIR=/tmp/model-26b-a4b-it-q4-k-m-shards
   - MODEL_FILE=$SHARDS_DIR/gemma-4-26B-A4B-it-UD-Q4_K_M-00001-of-00004.gguf
-  - MODEL_NAME=gemma4-26b-a4b-q4-k-m
   - MMPROJ_FILE=$SNAP_COMPONENTS/mmproj-26b-bf16-gguf/mmproj-BF16.gguf
 
 layout:

@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
@@ -104,18 +103,7 @@ func ModelStatus(ctx *Context) (map[string]string, error) {
 	}
 
 	status := make(map[string]string)
-	for _, kv := range activeModelManifest.Environment {
-		// Split into key/value
-		parts := strings.SplitN(kv, "=", 2)
-		if len(parts) != 2 {
-			return status, fmt.Errorf("invalid env var %q", kv)
-		}
-		k, v := parts[0], parts[1]
-
-		if k == "MODEL_NAME" {
-			status["name"] = v
-		}
-	}
+	status["name"] = activeModelManifest.Name
 
 	return status, nil
 }

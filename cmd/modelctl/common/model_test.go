@@ -33,44 +33,9 @@ func makeModelStatusCtx(t *testing.T, modelsDir, modelName string) *Context {
 	}
 }
 
-func TestModelStatus_ModelNamePresent(t *testing.T) {
-	modelsDir := t.TempDir()
-	writeModelYAML(t, modelsDir, "my-model", `environment:
-  - MODEL_NAME=my-model
-  - OTHER_VAR=value
-`)
-	ctx := makeModelStatusCtx(t, modelsDir, "my-model")
-
-	status, err := ModelStatus(ctx)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if status["name"] != "my-model" {
-		t.Errorf("expected name %q, got %q", "my-model", status["name"])
-	}
-}
-
-func TestModelStatus_NoModelName(t *testing.T) {
-	modelsDir := t.TempDir()
-	writeModelYAML(t, modelsDir, "my-model", `environment:
-  - OTHER_VAR=value
-`)
-	ctx := makeModelStatusCtx(t, modelsDir, "my-model")
-
-	status, err := ModelStatus(ctx)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if _, ok := status["name"]; ok {
-		t.Errorf("expected no 'name' key, but got: %q", status["name"])
-	}
-}
-
 func TestModelStatus_ModelNameWithEqualsInValue(t *testing.T) {
 	modelsDir := t.TempDir()
-	writeModelYAML(t, modelsDir, "my-model", `environment:
-  - MODEL_NAME=my=model
-`)
+	writeModelYAML(t, modelsDir, "my-model", `name: my=model`)
 	ctx := makeModelStatusCtx(t, modelsDir, "my-model")
 
 	status, err := ModelStatus(ctx)
@@ -79,19 +44,6 @@ func TestModelStatus_ModelNameWithEqualsInValue(t *testing.T) {
 	}
 	if status["name"] != "my=model" {
 		t.Errorf("expected name %q, got %q", "my=model", status["name"])
-	}
-}
-
-func TestModelStatus_InvalidEnvVar(t *testing.T) {
-	modelsDir := t.TempDir()
-	writeModelYAML(t, modelsDir, "my-model", `environment:
-  - INVALID_NO_EQUALS
-`)
-	ctx := makeModelStatusCtx(t, modelsDir, "my-model")
-
-	_, err := ModelStatus(ctx)
-	if err == nil {
-		t.Fatal("expected error for invalid env var, got nil")
 	}
 }
 

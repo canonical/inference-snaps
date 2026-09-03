@@ -10,7 +10,6 @@ environment:
   # To work around it, the engine's server script creates symlinks on runtime to flatten them into a single directory.
   # The model file path is set to the first shard's symlink:
   - MODEL_FILE=/tmp/nemotron-3-nano-shards/Nemotron-Nano-3-30B-A3B-Q4_K_M-00001-of-00006.gguf
-  - MODEL_NAME=nemotron-3-nano-30b-a3b-q4-k-m
 
 disk-size: 6G # metadata
 

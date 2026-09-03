@@ -21,9 +21,7 @@ runtime: my-runtime
     protocol: http
     base-path: /v1
 `)
-	writeModelYAML(t, modelsDir, "my-model", `environment:
-  - MODEL_NAME=my-model
-`)
+	writeModelYAML(t, modelsDir, "my-model", `name: my-model`)
 
 	cache := storage.NewMockCache()
 	if err := cache.SetActiveEngine("my-engine"); err != nil {

@@ -15,5 +15,4 @@ components:
 
 environment:
   # ovms
-  - MODEL_NAME=gemma-4-4b-it-int4-fq-ov
   - MODEL_PATH=$SNAP_COMPONENTS/model-4b-it-int4-fq-ov

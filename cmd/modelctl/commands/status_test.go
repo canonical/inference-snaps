@@ -73,7 +73,7 @@ func Example_statusCommand_printStatusYaml() {
 	//     whisperlive:
 	//         unix-socket: /run/whisper.sock (ws://unix/realtime)
 	// model:
-	//     name: gemma-4-4b-it-int4-fq-ov
+	//     name: 4b-it-int4-fq-ov
 }
 
 func Example_statusCommand_printStatusJson() {
@@ -105,7 +105,7 @@ func Example_statusCommand_printStatusJson() {
 	//     }
 	//   },
 	//   "model": {
-	//     "name": "gemma-4-4b-it-int4-fq-ov"
+	//     "name": "4b-it-int4-fq-ov"
 	//   }
 	// }
 }
