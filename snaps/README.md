@@ -13,6 +13,30 @@ To update them earlier to the latest commit on their main branches, run:
 git submodule update --remote
 ```
 
+## Building inference snaps
+
+When cloning the projects as submodules, the `.git` directory will not be present within each submodule.
+Instead, the `.git` information is stored in the parent repository and the submodule directory contains a reference to it.
+This prevents Snapcraft from accessing the Git directory during the snap build process, and as a result the build fails when extracting version information.
+
+To build the inference snaps it is necessary to convert submodules into standalone Git repositories.
+This can be done by running the following command:
+
+```shell
+git submodule foreach --recursive '
+  REAL_GITDIR=$(git rev-parse --git-dir)
+  if [ -f .git ]; then
+    rm .git
+    cp -r "$REAL_GITDIR" .git
+    # Remove the old relative path to the parent working directory
+    # so Git defaults to using the current directory instead
+    git config --local --unset core.worktree
+  fi
+'
+```
+
+Next, enter the snap subdirectory and run `make` for usage instructions.
+
 ## Adding a new snap submodule
 
 To add a new snap repository as submodule, run:
