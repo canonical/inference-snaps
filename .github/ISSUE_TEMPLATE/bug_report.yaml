@@ -16,5 +16,5 @@ body:
     id: snap-version
     attributes:
       label: Snap version
-      description: Provide the output of the following command: `<inference-snap> version`
+      description: Provide the output of the `<inference-snap> version` command.
       render: shell
