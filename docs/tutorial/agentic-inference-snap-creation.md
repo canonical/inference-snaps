@@ -121,7 +121,7 @@ download-model-4b-ud-q4-k-xl-gguf:
 	--local-dir components/model-q4-k-xl-gguf
 ```
 
-This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `components/` directory, where the pipeline expects the files that become part of the snap.
+This uses `pipx` to run the Hugging Face CLI (installing `pipx` if needed) and downloads the model file into the `components/` directory, where the pipeline expects the files that become part of the snap.
 
 ### README
 
