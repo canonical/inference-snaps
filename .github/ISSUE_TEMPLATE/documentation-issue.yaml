@@ -1,0 +1,13 @@
+name: Documentation issue
+description: Report issue related to the documentation
+type: Documentation
+
+body:
+
+  - type: textarea
+    id: documentation-description
+    attributes:
+      label: Description
+      description: Describe the documentation issue and where it occurs.
+    validations:
+      required: true

@@ -1,0 +1,13 @@
+name: Feature request
+description: File a feature request
+type: Feature
+
+body:
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Description
+      description: Describe the requested feature, use cases, and any relevant details.
+    validations:
+      required: true
