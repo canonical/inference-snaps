@@ -1,6 +1,5 @@
 name: Bug report
 description: File a software bug report
-#labels: 
 type: Bug
 
 body:
@@ -9,15 +8,7 @@ body:
     id: bug-description
     attributes:
       label: Bug description
-      description: Describe the problem
-    validations:
-      required: true
-
-  - type: textarea
-    id: reproduction
-    attributes:
-      label: To reproduce
-      description: Step-by-step instructions on how to reproduce the behavior
+      description: Describe the problem. Provide instructions on how to reproduce the behavior.
     validations:
       required: true
 
@@ -25,22 +16,5 @@ body:
     id: snap-version
     attributes:
       label: Snap version
-      description: Provide the output of the following command `snap list <inference-snap>`
+      description: Provide the output of the following command: `<inference-snap> version`
       render: shell
-
-  - type: textarea
-    id: environment
-    attributes:
-      label: System information
-      description: |
-        For hardware detection and engine selection bugs, provide information about your system.
-
-        Run `<inference-snap> show-machine` and paste the output below.
-      value: |
-        <details>
-
-        ```yaml
-        
-        ```
-
-        </details>
