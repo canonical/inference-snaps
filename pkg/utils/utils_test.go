@@ -25,6 +25,39 @@ func TestStringToBytesMegabytes(t *testing.T) {
 	}
 }
 
+func TestStringToBytesFloat(t *testing.T) {
+	sizeBytes, err := StringToBytes("3.14M")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// 3.14 * 1024*1024 = 3292528.64
+	expected := uint64(3292528)
+	if sizeBytes != expected {
+		t.Fatal("incorrectly parsed size")
+	}
+}
+
+func TestStringToBytesNaNFloat(t *testing.T) {
+	_, err := StringToBytes("NaNM")
+	if err == nil {
+		t.Fatal("NaN should not be parsed")
+	}
+}
+
+func TestStringToBytesPosInfFloat(t *testing.T) {
+	_, err := StringToBytes("+infM")
+	if err == nil {
+		t.Fatal("+inf should not be parsed")
+	}
+}
+
+func TestStringToBytesNegInfFloat(t *testing.T) {
+	_, err := StringToBytes("-infM")
+	if err == nil {
+		t.Fatal("-inf should not be parsed")
+	}
+}
+
 func TestStringToBytesTerabytes(t *testing.T) {
 	_, err := StringToBytes("2T")
 	if err == nil {
@@ -51,6 +84,13 @@ func TestStringToBytesExponent(t *testing.T) {
 	_, err := StringToBytes("10E4")
 	if err == nil {
 		t.Fatal("Exponents should not be supported")
+	}
+}
+
+func TestStringToBytesNegativeValues(t *testing.T) {
+	_, err := StringToBytes("-1024M")
+	if err == nil {
+		t.Fatal("Negative values should not be parsed")
 	}
 }
 
