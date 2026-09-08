@@ -6,6 +6,7 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/cpu"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/fastrpc"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/pci"
 	"github.com/canonical/lscompute/pkg/machine"
 )
@@ -96,8 +97,7 @@ func scoreDevicesAll(machineInfo *machine.MachineInfo, devices []engines.Device)
 	compatible := true
 	compatibilityScore := 0
 
-	for i, _ := range devices {
-
+	for i := range devices {
 		if devices[i].Type == "cpu" {
 			cpuScore, deviceIssues := cpu.Match(devices[i], machineInfo)
 			if len(deviceIssues) > 0 {
@@ -111,6 +111,15 @@ func scoreDevicesAll(machineInfo *machine.MachineInfo, devices []engines.Device)
 			// Not implemented
 			compatible = false
 			devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, "usb device matching not implemented")
+
+		} else if devices[i].Bus == "fastrpc" {
+			fastRPCScore, fastRPCIssues := fastrpc.Match(devices[i], machineInfo)
+			if len(fastRPCIssues) > 0 {
+				compatible = false
+				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, fastRPCIssues...)
+			} else {
+				compatibilityScore += fastRPCScore
+			}
 
 		} else if devices[i].Bus == "" || devices[i].Bus == "pci" {
 			// Fallback to PCI as default bus
@@ -137,11 +146,10 @@ func scoreDevicesAny(machineInfo *machine.MachineInfo, devices []engines.Device)
 	devicesFound := 0
 
 	for i, device := range devices {
-
 		if device.Type == "cpu" {
 			cpuScore, deviceIssues := cpu.Match(device, machineInfo)
 			if len(deviceIssues) > 0 {
-				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, deviceIssues...)
+				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, deviceIssues...)
 			} else {
 				devicesFound++
 				compatibilityScore += cpuScore
@@ -149,13 +157,22 @@ func scoreDevicesAny(machineInfo *machine.MachineInfo, devices []engines.Device)
 
 		} else if device.Bus == "usb" {
 			compatible = false
-			device.CompatibilityIssues = append(device.CompatibilityIssues, "usb device matching not implemented")
+			devices[i].CompatibilityIssues = append(device.CompatibilityIssues, "usb device matching not implemented")
+
+		} else if device.Bus == "fastrpc" {
+			fastRPCScore, fastRPCIssues := fastrpc.Match(device, machineInfo)
+			if len(fastRPCIssues) > 0 {
+				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, fastRPCIssues...)
+			} else {
+				devicesFound++
+				compatibilityScore += fastRPCScore
+			}
 
 		} else if device.Bus == "" || device.Bus == "pci" {
 			// Fallback to PCI as default bus
 			pciScore, pciIssues := pci.Match(device, machineInfo)
 			if len(pciIssues) > 0 {
-				devices[i].CompatibilityIssues = append(devices[i].CompatibilityIssues, pciIssues...)
+				devices[i].CompatibilityIssues = append(device.CompatibilityIssues, pciIssues...)
 			} else {
 				devicesFound++
 				compatibilityScore += pciScore

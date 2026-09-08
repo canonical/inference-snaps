@@ -46,7 +46,7 @@ type Devices struct {
 type Device struct {
 	// General
 	Type string `yaml:"type,omitempty" json:"type,omitempty"` // cpu, gpu, npu or nil
-	Bus  string `yaml:"bus,omitempty" json:"bus,omitempty"`   // pci, usb or nil
+	Bus  string `yaml:"bus,omitempty" json:"bus,omitempty"`   // pci, usb, fastrpc or nil
 
 	// CPUs
 	Architecture *string `yaml:"architecture,omitempty" json:"architecture,omitempty"`
@@ -58,7 +58,7 @@ type Device struct {
 	// CPU arm64
 	ImplementerId *types.HexInt `yaml:"implementer-id,omitempty" json:"implementer-id,omitempty"`
 	PartNumber    *types.HexInt `yaml:"part-number,omitempty" json:"part-number,omitempty"`
-	Features      []string        `yaml:"features,omitempty" json:"features,omitempty"`
+	Features      []string      `yaml:"features,omitempty" json:"features,omitempty"`
 
 	// PCI
 	VendorId *types.HexInt `yaml:"vendor-id,omitempty" json:"vendor-id,omitempty"`
@@ -68,9 +68,6 @@ type Device struct {
 	VRam              *string `yaml:"vram,omitempty" json:"vram,omitempty"`
 	Microarchitecture *string `yaml:"microarchitecture,omitempty" json:"microarchitecture,omitempty"`
 	ComputeCapability *string `yaml:"compute-capability,omitempty" json:"compute-capability,omitempty"`
-
-	// NPU
-	// no additional properties for now
 
 	// Drivers
 	SnapConnections []string `yaml:"snap-connections,omitempty" json:"snap-connections,omitempty"`

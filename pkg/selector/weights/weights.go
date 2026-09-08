@@ -12,6 +12,8 @@ const (
 	GpuVRam              = 10
 	GpuMicroarchitecture = 10
 	GpuComputeCapability = 10
+	FastRPCDevice        = 100
+	FastRPCDeviceType    = 10
 
 	CpuDevice = 10
 	CpuModel  = 8

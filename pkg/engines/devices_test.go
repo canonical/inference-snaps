@@ -153,6 +153,27 @@ func TestDeviceNpu(t *testing.T) {
 		}
 		t.Log(err)
 	})
+
+	t.Run("NPU fastrpc valid fields", func(t *testing.T) {
+		device = Device{Type: "npu", Bus: "fastrpc"}
+
+		err := device.validate()
+		if err != nil {
+			t.Fatalf("NPU fastrpc fields should be valid: %v", err)
+		}
+	})
+
+	t.Run("NPU fastrpc invalid fields", func(t *testing.T) {
+		device = Device{Type: "npu", Bus: "fastrpc"}
+		hexValue := types.HexInt(0xAA)
+		device.VendorId = &hexValue
+
+		err := device.validate()
+		if err == nil {
+			t.Fatal("NPU fastrpc fields should be invalid")
+		}
+		t.Log(err)
+	})
 }
 
 func TestDeviceTypeless(t *testing.T) {
