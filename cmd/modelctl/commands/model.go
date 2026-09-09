@@ -109,33 +109,28 @@ func (cmd *modelCommand) showCurrentModel() error {
 }
 
 func (cmd *modelCommand) model(modelNameOrAlias string) error {
-	modelManifest, err := common.GetModelByNameOrAlias(cmd.Context, modelNameOrAlias)
+	modelDetails, err := common.GetModelDetailsByNameOrAlias(cmd.Context, modelNameOrAlias)
 	if err != nil {
 		return err
 	}
 
-	err = cmd.printModelManifest(modelManifest)
+	err = cmd.printModelDetails(modelDetails)
 	if err != nil {
-		return fmt.Errorf("printing model manifest: %v", err)
+		return fmt.Errorf("printing model details: %v", err)
 	}
 	return nil
 }
 
-func (cmd *modelCommand) printModelManifest(manifest *models.Manifest) error {
-	output, err := common.NewModelDetails(manifest)
-	if err != nil {
-		return fmt.Errorf("creating model details: %v", err)
-	}
-
+func (cmd *modelCommand) printModelDetails(modelDetails *common.ModelDetails) error {
 	switch cmd.format {
 	case "json":
-		jsonString, err := json.MarshalIndent(output, "", "  ")
+		jsonString, err := json.MarshalIndent(modelDetails, "", "  ")
 		if err != nil {
 			return fmt.Errorf("json: %s", err)
 		}
 		fmt.Printf("%s\n", jsonString)
 	case "yaml", "":
-		modelYaml, err := yaml.Marshal(output)
+		modelYaml, err := yaml.Marshal(modelDetails)
 		if err != nil {
 			return fmt.Errorf("yaml: %s", err)
 		}

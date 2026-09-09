@@ -75,3 +75,19 @@ func SuggestKeyNotFound(key string) string {
 
 	return fmt.Sprintf("Use \"%s get\" to view available keys", instanceName)
 }
+
+func SuggestListModels(incompatibleModelsCount int, activeEngine string) string {
+	instanceName := snap.InstanceName()
+	if instanceName == "" { // not a snap
+		instanceName = "<snap-instance-name>"
+	}
+	var hintTemplate string
+	if incompatibleModelsCount == 1 {
+		hintTemplate = "There is %d other model which is not compatible with the active %s engine"
+	} else {
+		hintTemplate = "There are %d other models which are not compatible with the active %s engine"
+	}
+	command := fmt.Sprintf("%s models --all", instanceName)
+	return fmt.Sprintf("Hint: "+hintTemplate+". Run %q to list them.",
+		incompatibleModelsCount, activeEngine, command)
+}

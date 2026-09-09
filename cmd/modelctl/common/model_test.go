@@ -57,7 +57,7 @@ func TestModelStatus_NonExistentModel(t *testing.T) {
 	}
 }
 
-func TestGetModelByNameOrAlias(t *testing.T) {
+func TestGetModelManifestByNameOrAlias(t *testing.T) {
 	tests := []struct {
 		name         string
 		activeEngine string
@@ -125,7 +125,7 @@ func TestGetModelByNameOrAlias(t *testing.T) {
 			}
 			ctx := &Context{ModelsDir: modelsDir, EnginesDir: enginesDir, Cache: cache}
 
-			manifest, err := GetModelByNameOrAlias(ctx, tc.query)
+			manifest, err := GetModelManifestByNameOrAlias(ctx, tc.query)
 
 			if tc.wantErr {
 				if err == nil {
@@ -143,5 +143,75 @@ func TestGetModelByNameOrAlias(t *testing.T) {
 				t.Errorf("expected Alias %q, got %q", tc.wantAlias, manifest.Alias)
 			}
 		})
+	}
+}
+
+func TestGetAllModels(t *testing.T) {
+	modelsDir := t.TempDir()
+	enginesDir := t.TempDir()
+	writeModelYAML(t, modelsDir, "model1", "name: model1\nalias: m1\ndisk-size: 1G\n")
+	writeModelYAML(t, modelsDir, "model2", "name: model2\nalias: m2\ndisk-size: 2G\n")
+
+	ctx := &Context{ModelsDir: modelsDir, EnginesDir: enginesDir}
+
+	models, err := GetAllModels(ctx)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(models) != 2 {
+		t.Fatalf("expected 2 models, got %d", len(models))
+	}
+
+	expectedNames := map[string]bool{"model1": true, "model2": true}
+	for _, model := range models {
+		if !expectedNames[model.Name] {
+			t.Errorf("unexpected model name: %s", model.Name)
+		}
+	}
+}
+
+func TestGetAllModelsWithEngines(t *testing.T) {
+	modelsDir := t.TempDir()
+	enginesDir := t.TempDir()
+
+	writeModelYAML(t, modelsDir, "model1", "name: model1\nalias: m1\ndisk-size: 1G\n")
+	writeModelYAML(t, modelsDir, "model2", "name: model2\nalias: m2\ndisk-size: 2G\n")
+	writeModelYAML(t, modelsDir, "model3", "name: model3\nalias: m3\ndisk-size: 3G\n")
+	writeModelYAML(t, modelsDir, "model4", "name: model4\nalias: m4\ndisk-size: 4G\n")
+
+	writeEngineYAML(t, enginesDir, "engine1", "name: engine1\nmodel:\n  options:\n    - model1\n    - model3\n")
+	writeEngineYAML(t, enginesDir, "engine2", "name: engine2\nmodel:\n  options:\n    - model1\n    - model2\n")
+
+	ctx := &Context{ModelsDir: modelsDir, EnginesDir: enginesDir}
+
+	modelsWithEngines, err := GetAllModels(ctx)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(modelsWithEngines) != 4 {
+		t.Fatalf("expected 4 models, got %d", len(modelsWithEngines))
+	}
+
+	for _, modelWithEngines := range modelsWithEngines {
+		switch modelWithEngines.Name {
+		case "model1":
+			if len(modelWithEngines.CompatibleEngines) != 2 || modelWithEngines.CompatibleEngines[0] != "engine1" || modelWithEngines.CompatibleEngines[1] != "engine2" {
+				t.Errorf("model1 should be compatible with engine1 and engine2, got: %v", modelWithEngines.CompatibleEngines)
+			}
+		case "model2":
+			if len(modelWithEngines.CompatibleEngines) != 1 || modelWithEngines.CompatibleEngines[0] != "engine2" {
+				t.Errorf("model2 should be compatible with engine2, got: %v", modelWithEngines.CompatibleEngines)
+			}
+		case "model3":
+			if len(modelWithEngines.CompatibleEngines) != 1 || modelWithEngines.CompatibleEngines[0] != "engine1" {
+				t.Errorf("model3 should be compatible with engine1, got: %v", modelWithEngines.CompatibleEngines)
+			}
+		case "model4":
+			if len(modelWithEngines.CompatibleEngines) != 0 {
+				t.Errorf("model4 should not be compatible with any engines, got: %v", modelWithEngines.CompatibleEngines)
+			}
+		default:
+			t.Errorf("unexpected model name: %s", modelWithEngines.Name)
+		}
 	}
 }
