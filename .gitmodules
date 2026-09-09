@@ -58,3 +58,7 @@
 	path = snaps/qwen3.8
 	url = https://github.com/canonical/qwen3.8-snap
 	branch = main
+[submodule "snaps/glm-ocr"]
+	path = snaps/glm-ocr
+	url = https://github.com/canonical/glm-ocr-snap
+	branch = main
