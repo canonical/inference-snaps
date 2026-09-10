@@ -89,6 +89,25 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## GLM-OCR
+
+[![glm-ocr snap](https://snapcraft.io/glm-ocr/badge.svg)](https://snapcraft.io/glm-ocr)
+[![glm-ocr code][gh-badge]](https://github.com/canonical/glm-ocr-snap)
+
+GLM-OCR is a vision-language model specialized for OCR and document understanding.
+The input can be a combination of an image and text, with the output being text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## Nemotron 3 Nano
 
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)

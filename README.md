@@ -42,6 +42,7 @@ gemma4 chat
 | Gemma 3 | text, thinking, vision | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
 | Gemma 4 | text, thinking, vision, tools | `snap install gemma4` | [repo](https://github.com/canonical/gemma4-snap)
 | GLM 4.7 Flash | text, thinking, tools | `snap install glm-4-7-flash` | [repo](https://github.com/canonical/glm-4.7-flash-snap)
+| GLM-OCR | text, vision | `snap install glm-ocr` | [repo](https://github.com/canonical/glm-ocr-snap)
 | Nemotron 3 Nano | text, thinking, tools | `snap install nemotron-3-nano` | [repo](https://github.com/canonical/nemotron-3-nano-snap)
 | Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
 | Nemotron 3.5 Lightning | text, thinking, tools | `snap install nemotron-3-5-lightning` | [repo](https://github.com/canonical/nemotron-3.5-lightning-snap)
