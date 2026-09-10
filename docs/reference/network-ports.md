@@ -21,7 +21,7 @@ The following table lists the default port assignments for each inference snap. 
 | [Qwen 3.6](https://snapcraft.io/qwen3-6) | 8342, 8343 |
 | [SmolLM2](https://snapcraft.io/smollm2) | 8344, 8345 |
 | [Nomic Embed Text v1.5](https://snapcraft.io/nomic-embed-text-v1-5) | 8348, 8349 |
-| [Whisper ASR](https://snapcraft.io/whisper-asr) | 8350 |
+| [Whisper ASR](https://snapcraft.io/whisper-asr) | 8350, 8351 |
 | [Qwen 3.5](https://snapcraft.io/qwen3-5) | 8352, 8353 |
 | [Qwen 3.8](https://snapcraft.io/qwen3-8) | 8356, 8357 |
 | [GLM 4.7 Flash](https://snapcraft.io/glm-4-7-flash) | 8354, 8355 |
