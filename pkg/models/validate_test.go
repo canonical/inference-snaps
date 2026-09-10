@@ -15,6 +15,7 @@ func templateManifest() Manifest {
 		Alias:        "test-alias",
 		Description:  "test",
 		ModelCardUrl: "https://example.com/model-card",
+		Format:       "GGUF",
 		Quantization: "Q4_K_M",
 		Capabilities: []string{"text"},
 		DiskSize:     "6G",
@@ -122,6 +123,37 @@ func TestQuantizationOptional(t *testing.T) {
 	err := manifest.validate("test")
 	if err != nil {
 		t.Fatalf("quantization field is optional, got error: %v", err)
+	}
+}
+
+func TestFormatOptional(t *testing.T) {
+	manifest := templateManifest()
+	manifest.Format = ""
+
+	err := manifest.validate("test")
+	if err != nil {
+		t.Fatalf("format field is optional, got error: %v", err)
+	}
+}
+
+func TestFormatUnsupported(t *testing.T) {
+	manifest := templateManifest()
+	manifest.Format = "jpeg"
+
+	err := manifest.validate("test")
+	if err == nil {
+		t.Fatal("expected an error for unsupported format")
+	}
+}
+
+func TestFormatSupportedValues(t *testing.T) {
+	for _, format := range SupportedFormats() {
+		manifest := templateManifest()
+		manifest.Format = format
+
+		if err := manifest.validate("test"); err != nil {
+			t.Fatalf("%q is a supported format, got error: %v", format, err)
+		}
 	}
 }
 

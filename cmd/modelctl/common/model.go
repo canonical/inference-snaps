@@ -15,6 +15,7 @@ type ModelDetails struct {
 
 	Description  string   `json:"description" yaml:"description"`
 	ModelCardUrl string   `json:"model-card-url" yaml:"model-card-url"`
+	Format       string   `json:"format" yaml:"format"`
 	Quantization string   `json:"quantization" yaml:"quantization"`
 	Capabilities []string `json:"capabilities" yaml:"capabilities"`
 
@@ -31,6 +32,7 @@ func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
 	modelDetails.Alias = manifest.Alias
 	modelDetails.Description = manifest.Description
 	modelDetails.ModelCardUrl = manifest.ModelCardUrl
+	modelDetails.Format = manifest.Format
 	modelDetails.Quantization = manifest.Quantization
 	modelDetails.Capabilities = manifest.Capabilities
 	modelDetails.Components = manifest.Components

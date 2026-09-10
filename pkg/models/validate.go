@@ -114,6 +114,10 @@ func (manifest Manifest) validate(expectedModelName string) error {
 		}
 	}
 
+	if manifest.Format != "" && !slices.Contains(SupportedFormats(), manifest.Format) {
+		return fmt.Errorf("unsupported format: %q", manifest.Format)
+	}
+
 	for _, cap := range manifest.Capabilities {
 		if !slices.Contains(SupportedCapabilities(), cap) {
 			return fmt.Errorf("unsupported capability: %q", cap)

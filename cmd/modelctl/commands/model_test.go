@@ -56,6 +56,7 @@ func Example_modelCommand_printModelDetailsYaml() {
 	// alias: 4b-it
 	// description: OpenVino 4b test model
 	// model-card-url: https://example.com/model-card
+	// format: OpenVINO_IR
 	// quantization: int4-fq
 	// capabilities:
 	//     - text
@@ -95,6 +96,7 @@ func Example_modelCommand_printModelDetailsJson() {
 	//   "alias": "4b-it",
 	//   "description": "OpenVino 4b test model",
 	//   "model-card-url": "https://example.com/model-card",
+	//   "format": "OpenVINO_IR",
 	//   "quantization": "int4-fq",
 	//   "capabilities": [
 	//     "text"

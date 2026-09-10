@@ -2,6 +2,7 @@ name: 30b-a3b-q4-k-m-gguf
 
 description: Test model description
 model-card-url: https://example.com/model-card
+format: GGUF
 quantization: Q4_K_M
 
 environment:
