@@ -7,16 +7,12 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"regexp"
 	"slices"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"go.yaml.in/yaml/v4"
 )
-
-// diskSizePattern matches a human-readable size such as "6G" or "512M".
-var diskSizePattern = regexp.MustCompile(`^\d+(\.\d+)?(K|M|G|T)i?B?$`)
 
 func Validate(manifestFilePath string) error {
 
@@ -127,8 +123,8 @@ func (manifest Manifest) validate(expectedModelName string) error {
 	if manifest.DiskSize == "" {
 		return fmt.Errorf("required field is not set: disk-size")
 	}
-	if !diskSizePattern.MatchString(manifest.DiskSize) {
-		return fmt.Errorf("invalid disk-size format: %s", manifest.DiskSize)
+	if _, err := utils.StringToBytes(manifest.DiskSize); err != nil {
+		return fmt.Errorf("invalid disk-size %q: %w", manifest.DiskSize, err)
 	}
 
 	// components are optional; when set, names must be non-empty. Cross-checking

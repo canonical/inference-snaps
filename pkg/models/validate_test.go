@@ -177,13 +177,31 @@ func TestCapabilityTextEmbedding(t *testing.T) {
 	}
 }
 
-func TestDiskSizeRequired(t *testing.T) {
-	manifest := templateManifest()
-	manifest.DiskSize = ""
+func TestDiskSizeValidation(t *testing.T) {
+	tests := []struct {
+		name     string
+		diskSize string
+		wantErr  bool
+	}{
+		{name: "required", diskSize: "", wantErr: true},
+		{name: "gibibytes", diskSize: "6G", wantErr: false},
+		{name: "bytes", diskSize: "6000000000", wantErr: false},
+		{name: "unsupported unit", diskSize: "6GiB", wantErr: true},
+	}
 
-	err := manifest.validate("test")
-	if err == nil {
-		t.Fatal("disk-size field is required")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			manifest := templateManifest()
+			manifest.DiskSize = tt.diskSize
+
+			err := manifest.validate("test")
+			if tt.wantErr && err == nil {
+				t.Fatalf("disk-size %q: expected an error, got nil", tt.diskSize)
+			}
+			if !tt.wantErr && err != nil {
+				t.Fatalf("disk-size %q: expected no error, got: %v", tt.diskSize, err)
+			}
+		})
 	}
 }
 

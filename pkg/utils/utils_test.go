@@ -5,102 +5,48 @@ import (
 	"testing"
 )
 
-func TestStringToBytesGigabytes(t *testing.T) {
-	sizeBytes, err := StringToBytes("4G")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if sizeBytes != 4*1024*1024*1024 {
-		t.Fatal("incorrectly parsed size")
-	}
-}
-
-func TestStringToBytesMegabytes(t *testing.T) {
-	sizeBytes, err := StringToBytes("256M")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if sizeBytes != 256*1024*1024 {
-		t.Fatal("incorrectly parsed size")
-	}
-}
-
-func TestStringToBytesFloat(t *testing.T) {
-	sizeBytes, err := StringToBytes("3.14M")
-	if err != nil {
-		t.Fatal(err)
-	}
-	// 3.14 * 1024*1024 = 3292528.64
-	expected := uint64(3292528)
-	if sizeBytes != expected {
-		t.Fatal("incorrectly parsed size")
-	}
-}
-
-func TestStringToBytesNaNFloat(t *testing.T) {
-	_, err := StringToBytes("NaNM")
-	if err == nil {
-		t.Fatal("NaN should not be parsed")
-	}
-}
-
-func TestStringToBytesPosInfFloat(t *testing.T) {
-	_, err := StringToBytes("+infM")
-	if err == nil {
-		t.Fatal("+inf should not be parsed")
-	}
-}
-
-func TestStringToBytesNegInfFloat(t *testing.T) {
-	_, err := StringToBytes("-infM")
-	if err == nil {
-		t.Fatal("-inf should not be parsed")
-	}
-}
-
-func TestStringToBytesTerabytes(t *testing.T) {
-	_, err := StringToBytes("2T")
-	if err == nil {
-		t.Fatal("Terabytes should not be supported")
-	}
-}
-
-func TestStringToBytesKilobytes(t *testing.T) {
-	_, err := StringToBytes("1024K")
-	if err == nil {
-		t.Fatal("Kilobytes should not be supported")
-	}
-}
-
-func TestStringToBytesUnknown(t *testing.T) {
-	_, err := StringToBytes("1024A")
-	if err == nil {
-		t.Fatal("Unknown unit should not be parsed")
-	}
-}
-
-func TestStringToBytesExponent(t *testing.T) {
-	// GO only supports exponents for floats
-	_, err := StringToBytes("10E4")
-	if err == nil {
-		t.Fatal("Exponents should not be supported")
-	}
-}
-
-func TestStringToBytesNegativeValues(t *testing.T) {
-	_, err := StringToBytes("-1024M")
-	if err == nil {
-		t.Fatal("Negative values should not be parsed")
-	}
-}
-
 func TestStringToBytes(t *testing.T) {
-	sizeBytes, err := StringToBytes("256")
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name    string
+		input   string
+		want    uint64
+		wantErr bool
+	}{
+		{name: "gibibytes", input: "4G", want: 4 * 1024 * 1024 * 1024},
+		{name: "mebibytes", input: "256M", want: 256 * 1024 * 1024},
+		{name: "float mebibytes", input: "3.14M", want: 3292528}, // 3.14 * 1024*1024 = 3292528.64
+		{name: "bytes", input: "256", want: 256},
+		{name: "NaN", input: "NaNM", wantErr: true},
+		{name: "positive infinity", input: "+infM", wantErr: true},
+		{name: "negative infinity", input: "-infM", wantErr: true},
+		{name: "tebibytes unsupported", input: "2T", wantErr: true},
+		{name: "kibibytes unsupported", input: "1024K", wantErr: true},
+		{name: "GB suffix unsupported", input: "6GB", wantErr: true},
+		{name: "GiB suffix unsupported", input: "6GiB", wantErr: true},
+		{name: "Gi suffix unsupported", input: "6Gi", wantErr: true},
+		{name: "unknown unit", input: "1024A", wantErr: true},
+		{name: "exponent notation unsupported", input: "10E4", wantErr: true},
+		{name: "negative values", input: "-1024M", wantErr: true},
+		{name: "overflows uint64", input: "20000000000G", wantErr: true},
+		{name: "exactly 2^64 boundary", input: "18446744073709551616", wantErr: true},
 	}
-	if sizeBytes != 256 {
-		t.Fatal("incorrectly parsed size")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := StringToBytes(tt.input)
+			if tt.wantErr {
+				if err == nil {
+					t.Fatalf("StringToBytes(%q) = %d, want error", tt.input, got)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("StringToBytes(%q) returned unexpected error: %v", tt.input, err)
+			}
+			if got != tt.want {
+				t.Fatalf("StringToBytes(%q) = %d, want %d", tt.input, got, tt.want)
+			}
+		})
 	}
 }
 

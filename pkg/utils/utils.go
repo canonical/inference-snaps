@@ -58,6 +58,9 @@ func FmtBytesShort(bytes uint64) string {
 	return fmt.Sprintf("%d", bytes)
 }
 
+// StringToBytes parses a size string into a byte count. Only numbers
+// (in bytes), or a number suffixed with "G" or "M", are supported.
+// Fractional values are accepted and truncated towards zero.
 func StringToBytes(sizeString string) (uint64, error) {
 	var sizeBytes float64
 	var scaling float64 = 1
@@ -86,6 +89,10 @@ func StringToBytes(sizeString string) (uint64, error) {
 		return 0, fmt.Errorf("size cannot be negative: %s", sizeString)
 	}
 	sizeBytes = sizeBytes * scaling
+
+	if sizeBytes >= math.MaxUint64 {
+		return 0, fmt.Errorf("size %q overflows uint64", sizeString)
+	}
 
 	return uint64(sizeBytes), nil
 }
