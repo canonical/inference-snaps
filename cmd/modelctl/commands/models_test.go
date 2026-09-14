@@ -106,7 +106,7 @@ func TestGetModelsTableAllModels(t *testing.T) {
 	}
 
 	expectedTable := `NAME                 CAPABILITIES               DISK   ENGINES                                                          
-26b-q4-k-m-gguf      text                       6G     cpu, cuda-generic, rocm-generic                                  
+26b-q4-k-m-gguf      text                       6G     arm-neon, cpu, cpu-avx1, cpu-avx2, cpu-avx512, cuda-generic, ro… 
 30b-a3b-q4-k-m-gguf  text, vision, audio, tool  6G     cpu, cuda-generic, rocm-generic                                  
 4b-it-int4-fq-ov*    text                       6G     intel-cpu, intel-gpu, intel-npu                                  
 `
@@ -215,7 +215,11 @@ func Example_printAllModelsJson() {
 	//         "mmproj-26b-bf16-gguf"
 	//       ],
 	//       "compatible-engines": [
+	//         "arm-neon",
 	//         "cpu",
+	//         "cpu-avx1",
+	//         "cpu-avx2",
+	//         "cpu-avx512",
 	//         "cuda-generic",
 	//         "rocm-generic"
 	//       ]

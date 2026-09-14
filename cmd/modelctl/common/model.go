@@ -133,6 +133,10 @@ func ModelStatus(ctx *Context) (map[string]string, error) {
 		return nil, fmt.Errorf("%s: %w", LookingUpActiveModel, err)
 	}
 
+	if activeModelId == "" {
+		return nil, ErrNoActiveModel
+	}
+
 	activeModelManifest, err := models.LoadManifest(ctx.ModelsDir, activeModelId)
 	if err != nil {
 		return nil, fmt.Errorf("loading model manifest: %v", err)

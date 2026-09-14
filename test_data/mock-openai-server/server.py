@@ -14,6 +14,8 @@ Usage:
 
 import argparse
 import json
+import signal
+import sys
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -274,6 +276,13 @@ class MockOpenAIHandler(BaseHTTPRequestHandler):
 # Entry point
 # ---------------------------------------------------------------------------
 
+def _handle_shutdown_signal(signum, frame):
+    # Raising SystemExit interrupts the blocking serve_forever() call so the
+    # process exits promptly on SIGTERM (e.g. when the service is restarted).
+    print(f"[mock-openai] Received signal {signum}, shutting down.")
+    sys.exit(0)
+
+
 def main():
     global RESPONSE_DELAY, TIME_TO_FIRST_TOKEN, INCLUDE_REASONING
 
@@ -330,10 +339,15 @@ def main():
     print(f"  GET  http://{args.host}:{args.port}/v3/models")
     print(f"  POST http://{args.host}:{args.port}/v3/chat/completions")
     print("[mock-openai] Press Ctrl+C to stop.")
+
+    signal.signal(signal.SIGTERM, _handle_shutdown_signal)
+    signal.signal(signal.SIGINT, _handle_shutdown_signal)
+
     try:
         httpd.serve_forever()
-    except KeyboardInterrupt:
+    except SystemExit:
         print("\n[mock-openai] Shutting down.")
+    finally:
         httpd.server_close()
 
 

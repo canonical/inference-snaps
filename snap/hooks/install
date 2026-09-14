@@ -10,17 +10,7 @@ exec 2> >(logger --stderr --priority error --tag=$tag)
 #
 # Set generic config
 #
-
-modelctl set --package verbose="false"
-
-# Main server http config
-modelctl set --package http.port="8322"
-modelctl set --package http.host="127.0.0.1"
-
-# Webui server config
-modelctl set --package webui.http.port="8323"
-modelctl set --package webui.http.host="127.0.0.1"
-
+"$SNAP/bin/set-default-config.sh"
 
 #
 # WSL workaround

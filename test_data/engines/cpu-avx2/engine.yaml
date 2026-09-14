@@ -9,4 +9,8 @@ devices:
       architecture: amd64
       flags: [sse4_2, f16c, fma, avx, avx2]
 
-
+runtime: llama-cpp-cpu
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 26b-q4-k-m-gguf

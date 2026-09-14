@@ -99,16 +99,33 @@ func ExampleUseEngine_noRestartWhenEngineAndModelUnchanged() {
 }
 
 func ExampleUseEngine_restartWhenEngineChanged() {
+	snapComponents, err := os.MkdirTemp("", "snap-components-*")
+	if err != nil {
+		panic(err)
+	}
+	defer os.RemoveAll(snapComponents)
+	for _, comp := range []string{"runtime-llama-cpp-cpu", "model-26b-a4b-q4-k-m-gguf", "mmproj-26b-bf16-gguf"} {
+		if err := os.Mkdir(snapComponents+"/"+comp, 0755); err != nil {
+			panic(err)
+		}
+	}
+	if err := os.Setenv("SNAP_COMPONENTS", snapComponents); err != nil {
+		panic(err)
+	}
+	defer os.Unsetenv("SNAP_COMPONENTS")
+
 	cache := storage.NewMockCache()
 	cache.SetActiveEngine("intel-gpu")
 	config := storage.NewMockConfig()
 	cmd := useEngineCommand{
 		assumeYes: true,
 		Context: &common.Context{
-			EnginesDir: "../../../test_data/engines",
-			Cache:      cache,
-			Config:     config,
-			Snap:       snap.Mock(),
+			EnginesDir:  "../../../test_data/engines",
+			RuntimesDir: "../../../test_data/runtimes",
+			ModelsDir:   "../../../test_data/models",
+			Cache:       cache,
+			Config:      config,
+			Snap:        snap.Mock(),
 		},
 	}
 
@@ -118,6 +135,7 @@ func ExampleUseEngine_restartWhenEngineChanged() {
 
 	// Output:
 	// Engine changed to "cpu-avx1".
+	// Model changed to "26b-q4-k-m-gguf".
 	// [mock] Restarting all services
 }
 

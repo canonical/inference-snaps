@@ -12,3 +12,8 @@ devices:
       architecture: arm64
       features: [asimd] # for ARMv8 ASIMD includes NEON instruction set
 
+runtime: llama-cpp-cpu
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 26b-q4-k-m-gguf
