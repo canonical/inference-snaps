@@ -9,6 +9,13 @@ confinement: strict
 adopt-info: version
 
 slots:
+  provider:
+    interface: content
+    content: inference-provider
+    source:
+      read:
+        - $SNAP_COMMON/share/provider
+  # Deprecated: use the provider slot
   status:
     interface: content
     content: inference-snap-status

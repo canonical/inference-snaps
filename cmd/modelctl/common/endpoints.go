@@ -188,7 +188,7 @@ func OpenAiBaseUrl(ctx *Context) (string, error) {
 	}
 	entrypoint, found := entrypoints[runtimes.OpenAiServerType]
 	if !found {
-		return "", fmt.Errorf("%q not found in server entrypoints", runtimes.OpenAiServerType)
+		return "", ErrNoOpenAiServer
 	}
 	if entrypoint.Url == "" {
 		return "", fmt.Errorf("%q entrypoint does not have a URL", runtimes.OpenAiServerType)

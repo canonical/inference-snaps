@@ -13,6 +13,7 @@ import (
 
 type Snap interface {
 	Restart(service ...string) error
+	SnapName() string
 	InstanceName() string
 	Dir() string
 	Version() string
@@ -37,6 +38,11 @@ func (*snap) Restart(service ...string) error {
 	return snapctl.Restart(service...).Run()
 }
 
+// SnapName returns the snap name.
+func (*snap) SnapName() string {
+	return SnapName()
+}
+
 // InstanceName returns the snap instance name.
 func (*snap) InstanceName() string {
 	return InstanceName()
@@ -50,6 +56,11 @@ func (*snap) Dir() string {
 // Version returns the snap version.
 func (*snap) Version() string {
 	return env.SnapVersion()
+}
+
+// SnapName returns the snap name.
+func SnapName() string {
+	return env.SnapName()
 }
 
 // InstanceName returns the snap instance name.

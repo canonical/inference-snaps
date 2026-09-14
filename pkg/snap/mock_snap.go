@@ -34,6 +34,10 @@ func (c *mockSnap) Restart(service ...string) error {
 	return nil
 }
 
+func (c *mockSnap) SnapName() string {
+	return "mock-snap"
+}
+
 func (c *mockSnap) InstanceName() string {
 	return "mock-snap"
 }

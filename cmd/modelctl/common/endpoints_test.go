@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -544,6 +545,88 @@ func TestServerWsUnixSocketEntrypoint(t *testing.T) {
 			}
 			if got.UnixSocketUrl != tc.wantSocketURL {
 				t.Fatalf("UnixSocketUrl: got %q, want %q", got.UnixSocketUrl, tc.wantSocketURL)
+			}
+		})
+	}
+}
+
+func TestOpenAiBaseUrl(t *testing.T) {
+	testCases := []struct {
+		name        string
+		runtimeYAML string
+		wantErr     error
+		wantURL     string
+	}{
+		{
+			name: "openai server present",
+			runtimeYAML: `
+servers:
+  openai:
+    protocol: http
+    base-path: /v1
+`,
+			wantURL: "http://127.0.0.1:8080/v1",
+		},
+		{
+			name: "no openai server",
+			runtimeYAML: `
+servers:
+  kserve:
+    protocol: http
+    base-path: /v2
+`,
+			wantErr: ErrNoOpenAiServer,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			enginesDir := t.TempDir()
+			runtimesDir := t.TempDir()
+
+			const (
+				engineName  = "test-engine"
+				runtimeName = "test-runtime"
+			)
+
+			writeEngineYAML(t, enginesDir, engineName, "name: test-engine\nruntime: test-runtime\n")
+			writeRuntimeYAML(t, runtimesDir, runtimeName, tc.runtimeYAML)
+
+			cache := storage.NewMockCache()
+			if err := cache.SetActiveEngine(engineName); err != nil {
+				t.Fatalf("SetActiveEngine: %v", err)
+			}
+
+			config := storage.NewMockConfig()
+			configs := map[string]string{
+				"http.port": "8080",
+				"http.host": "127.0.0.1",
+			}
+			for key, value := range configs {
+				if err := config.Set(key, value, storage.UserConfig); err != nil {
+					t.Fatalf("Set(%q): %v", key, err)
+				}
+			}
+
+			ctx := &Context{
+				EnginesDir:  enginesDir,
+				RuntimesDir: runtimesDir,
+				Config:      config,
+				Cache:       cache,
+			}
+
+			got, err := OpenAiBaseUrl(ctx)
+			if tc.wantErr != nil {
+				if !errors.Is(err, tc.wantErr) {
+					t.Fatalf("got error %v, want %v", err, tc.wantErr)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got != tc.wantURL {
+				t.Fatalf("got %q, want %q", got, tc.wantURL)
 			}
 		})
 	}

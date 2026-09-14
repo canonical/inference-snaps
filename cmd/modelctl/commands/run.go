@@ -1,22 +1,28 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/spf13/cobra"
 )
+
+const defaultProviderFilePath = "$SNAP_COMMON/share/provider/provider.env"
 
 type runCommand struct {
 	*common.Context
 
 	// flags
 	waitForComponents bool
+	shareProvider     string
 }
 
 func Run(ctx *common.Context) *cobra.Command {
@@ -40,8 +46,12 @@ func Run(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
+	// --wait-for-components
 	cobraCmd.Flags().BoolVar(&cmd.waitForComponents, "wait-for-components", false, "wait for engine components to be installed before running")
 	cobraCmd.Flags().MarkDeprecated("wait-for-components", "\"run\" always waits for components.")
+	// --share-provider [path]
+	cobraCmd.Flags().StringVar(&cmd.shareProvider, "share-provider", "", "write provider env file to a shared path")
+	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = defaultProviderFilePath
 
 	return cobraCmd
 }
@@ -67,6 +77,9 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 
 	if err := cmd.processEnvConfigs(); err != nil {
 		return fmt.Errorf("processing env configs: %v", err)
+	}
+	if err := cmd.writeShareProviderEnv(); err != nil {
+		return fmt.Errorf("writing share provider env: %v", err)
 	}
 
 	command := args[0]
@@ -98,5 +111,40 @@ func (cmd *runCommand) processEnvConfigs() error {
 	if err != nil {
 		return fmt.Errorf("setting environment variables: %v", err)
 	}
+	return nil
+}
+
+func (cmd *runCommand) writeShareProviderEnv() error {
+	if cmd.shareProvider == "" {
+		return nil
+	}
+
+	path := cmd.shareProvider
+	if strings.Contains(path, "$SNAP_COMMON") || strings.Contains(path, "$SNAP_INSTANCE_NAME") {
+		path = os.ExpandEnv(path)
+	}
+
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("creating provider env directory: %v", err)
+	}
+
+	content := "SNAP_NAME=" + snap.SnapName() + "\n"
+	content += "SNAP_INSTANCE_NAME=" + snap.InstanceName() + "\n"
+
+	baseURL, err := common.OpenAiBaseUrl(cmd.Context)
+	if err != nil && !errors.Is(err, common.ErrNoOpenAiServer) {
+		return fmt.Errorf("getting OpenAI base URL: %v", err)
+	} else if err == nil {
+		content += "OPENAI_BASE_URL=" + baseURL + "\n"
+	}
+
+	tmpPath := path + ".tmp"
+	if err := os.WriteFile(tmpPath, []byte(content), 0o644); err != nil {
+		return fmt.Errorf("writing provider env file: %v", err)
+	}
+	if err := os.Rename(tmpPath, path); err != nil {
+		return fmt.Errorf("renaming provider env file: %v", err)
+	}
+
 	return nil
 }
