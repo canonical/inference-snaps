@@ -57,13 +57,11 @@ gemma4 chat
 More open source models are coming soon.
 [Share your feedback](https://github.com/canonical/inference-snaps/discussions) and vote for what open-source models to support next.
 
-
 ## Documentation
 
 Head to https://documentation.ubuntu.com/inference-snaps
 
 The documentation is maintained inside the [docs](./docs) directory.
-
 
 ## Contributing
 
