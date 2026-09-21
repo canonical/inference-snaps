@@ -8,6 +8,7 @@ Whether you’re experimenting with Gemma 4, Qwen 3 Coder, or DeepSeek R1, you c
 
 Every device should be able to run intelligent software without dependency hell or optimization nightmares.
 
+
 ## Quick start
 
 Install the [accelerator driver](https://documentation.ubuntu.com/inference-snaps/how-to/install-drivers/).
@@ -57,11 +58,13 @@ gemma4 chat
 More open source models are coming soon.
 [Share your feedback](https://github.com/canonical/inference-snaps/discussions) and vote for what open-source models to support next.
 
+
 ## Documentation
 
 Head to https://documentation.ubuntu.com/inference-snaps
 
-The documentation is maintained inside the [docs](./docs) directory.
+The documentation is maintained inside the [docs](./docs) directory. 
+
 
 ## Contributing
 
