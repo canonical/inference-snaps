@@ -184,6 +184,25 @@ The inference snap for Nomic Embed Text v1.5 has been optimized for the followin
 
 {{explore_optimizations}}
 
+## Phi 4
+
+[![phi4 snap](https://snapcraft.io/phi4/badge.svg)](https://snapcraft.io/phi4)
+[![phi4 source][gh-badge]](https://github.com/canonical/phi4-snap)
+
+Phi 4 is a 14B parameter language model by Microsoft.
+The input and output are text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## Qwen 2.5 VL
 
 [![qwen-vl snap](https://snapcraft.io/qwen-vl/badge.svg)](https://snapcraft.io/qwen-vl)

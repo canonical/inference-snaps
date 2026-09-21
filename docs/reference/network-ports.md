@@ -26,4 +26,4 @@ The following table lists the default port assignments for each inference snap. 
 | [GLM 4.7 Flash](https://snapcraft.io/glm-4-7-flash) | 8354, 8355 |
 | [Qwen 3.8](https://snapcraft.io/qwen3-8) | 8356, 8357 |
 | [GLM-OCR](https://snapcraft.io/glm-ocr) | 8358, 8359 |
-
+| [Phi 4](https://snapcraft.io/phi4) | 8360, 8361 |
