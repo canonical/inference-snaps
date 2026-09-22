@@ -62,3 +62,7 @@
 	path = snaps/glm-ocr
 	url = https://github.com/canonical/glm-ocr-snap
 	branch = main
+[submodule "phi4-snap"]
+	path = snaps/phi4
+	url = https://github.com/canonical/phi4-snap
+	branch = main
