@@ -80,7 +80,7 @@ func TestWriteShareProviderEnv(t *testing.T) {
 		t.Setenv("SNAP_NAME", "gemma3-jane")
 		t.Setenv("SNAP_INSTANCE_NAME", "gemma3-jane")
 
-		cmd := runCommand{Context: testRunContext(t, "servers:\n  openai:\n    protocol: http\n    base-path: /v1\n"), shareProvider: defaultProviderFilePath}
+		cmd := runCommand{Context: testRunContext(t, "servers:\n  openai:\n    protocol: http\n    base-path: /v1\n"), shareProvider: defaultProviderDirectoryPath()}
 		if err := cmd.writeShareProviderEnv(); err != nil {
 			t.Fatalf("writeShareProviderEnv() error = %v", err)
 		}
@@ -101,13 +101,13 @@ func TestWriteShareProviderEnv(t *testing.T) {
 		t.Setenv("SNAP_NAME", "gemma3-jane")
 		t.Setenv("SNAP_INSTANCE_NAME", "gemma3-jane")
 
-		path := filepath.Join(t.TempDir(), "custom", "provider.env")
+		path := filepath.Join(t.TempDir(), "custom")
 		cmd := runCommand{Context: testRunContext(t, "servers:\n  openai:\n    protocol: http\n    base-path: /v1\n"), shareProvider: path}
 		if err := cmd.writeShareProviderEnv(); err != nil {
 			t.Fatalf("writeShareProviderEnv() error = %v", err)
 		}
 
-		content, err := os.ReadFile(path)
+		content, err := os.ReadFile(filepath.Join(path, "provider.env"))
 		if err != nil {
 			t.Fatalf("reading provider env file: %v", err)
 		}
@@ -122,13 +122,13 @@ func TestWriteShareProviderEnv(t *testing.T) {
 		t.Setenv("SNAP_NAME", "gemma3-jane")
 		t.Setenv("SNAP_INSTANCE_NAME", "gemma3-jane")
 
-		path := filepath.Join(t.TempDir(), "provider.env")
+		path := t.TempDir()
 		cmd := runCommand{Context: testRunContext(t, "servers:\n  kserve:\n    protocol: http\n    base-path: /v2\n"), shareProvider: path}
 		if err := cmd.writeShareProviderEnv(); err != nil {
 			t.Fatalf("writeShareProviderEnv() error = %v", err)
 		}
 
-		content, err := os.ReadFile(path)
+		content, err := os.ReadFile(filepath.Join(path, "provider.env"))
 		if err != nil {
 			t.Fatalf("reading provider env file: %v", err)
 		}
