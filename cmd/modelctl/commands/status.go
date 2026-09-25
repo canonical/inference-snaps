@@ -82,7 +82,7 @@ func (cmd *statusCommand) run(_ *cobra.Command, _ []string) error {
 
 func (cmd *statusCommand) statusYaml() (string, error) {
 	statusStr, err := common.SnapStatus(cmd.Context)
-	if err != nil {
+	if err != nil && err != common.ErrNoActiveModel {
 		return "", fmt.Errorf("getting status: %v", err)
 	}
 	yamlStr, err := yaml.Marshal(statusStr)
@@ -94,7 +94,7 @@ func (cmd *statusCommand) statusYaml() (string, error) {
 
 func (cmd *statusCommand) statusJson() (string, error) {
 	statusStr, err := common.SnapStatus(cmd.Context)
-	if err != nil {
+	if err != nil && err != common.ErrNoActiveModel {
 		return "", fmt.Errorf("getting status: %v", err)
 	}
 	jsonStr, err := json.MarshalIndent(statusStr, "", "  ")

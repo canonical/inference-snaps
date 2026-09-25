@@ -121,7 +121,9 @@ func unloadEngineEnvironmentFromSettings(settings *Settings) error {
 // and creates any necessary symlinks
 func LoadEngineEnvironment(ctx *Context) (func(), error) {
 	engineSettings, err := EngineSettings(ctx)
-	if err != nil {
+	if err == ErrNoActiveModel {
+		return nil, err
+	} else if err != nil {
 		return nil, fmt.Errorf("error loading engine component settings: %w", err)
 	}
 
@@ -199,30 +201,28 @@ and scores the engines according to their compatibility with the host.
 
 Warning: calls to this function can block for a number of seconds while the host machine information is being looked up.
 */
-func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, []string, error) {
+func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, *machine.MachineInfo, []string, error) {
 	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
-		return nil, nil, fmt.Errorf("loading engines: %w", err)
+		return nil, nil, nil, fmt.Errorf("loading engines: %w", err)
 	}
 
 	machineInfo, warnings, err := machineInfoGet(host.Real(), false)
 	if err != nil {
-		return nil, nil, fmt.Errorf("getting machine info: %w", err)
+		return nil, nil, nil, fmt.Errorf("getting machine info: %w", err)
 	}
 
 	scoredEngines, err := engineScorer(machineInfo, allEngines)
 	if err != nil {
-		return nil, nil, fmt.Errorf("scoring engines: %w", err)
+		return nil, nil, nil, fmt.Errorf("scoring engines: %w", err)
 	}
 
-	return scoredEngines, warnings, nil
+	return scoredEngines, machineInfo, warnings, nil
 }
 
-// ScoreEnginesWithSpinner is same as ScoreEngines but with a progress spinner.
-// It prints the warnings to stderr.
-func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, error) {
+func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, *machine.MachineInfo, error) {
 	stopProgress := StartProgressSpinner("Checking engine compatibility")
-	scoredEngines, warnings, err := ScoreEngines(ctx)
+	scoredEngines, machineInfo, warnings, err := ScoreEngines(ctx)
 	stopProgress()
 
 	if len(warnings) > 0 && ctx.Verbose {
@@ -231,5 +231,5 @@ func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, error) {
 		}
 	}
 
-	return scoredEngines, err
+	return scoredEngines, machineInfo, err
 }

@@ -91,3 +91,12 @@ func SuggestListModels(incompatibleModelsCount int, activeEngine string) string 
 	return fmt.Sprintf("Hint: "+hintTemplate+". Run %q to list them.",
 		incompatibleModelsCount, activeEngine, command)
 }
+
+func SuggestNotEnoughSpaceForModel(activeEngine string) string {
+	instanceName := snap.InstanceName()
+	if instanceName == "" { // not a snap
+		instanceName = "<snap-instance-name>"
+	}
+
+	return fmt.Sprintf("Not enough disk space to install a model compatible with the %s engine. Run '%s use-engine --auto --verbose' for details", activeEngine, instanceName)
+}

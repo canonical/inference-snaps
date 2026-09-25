@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
@@ -11,7 +12,7 @@ import (
 )
 
 // createTestContextForStatus creates a test context for Example tests
-func createTestContextForStatus() *common.Context {
+func createTestContextForStatus(addModel bool) *common.Context {
 	testDataDir := "../../../test_data"
 	enginesDir := filepath.Join(testDataDir, "engines")
 	runtimesDir := filepath.Join(testDataDir, "runtimes")
@@ -21,8 +22,10 @@ func createTestContextForStatus() *common.Context {
 	if err := cache.SetActiveEngine("cpu"); err != nil {
 		log.Fatalf("failed to set active engine: %v", err)
 	}
-	if err := cache.SetActiveModel("4b-it-int4-fq-ov"); err != nil {
-		log.Fatalf("failed to set active model: %v", err)
+	if addModel {
+		if err := cache.SetActiveModel("4b-it-int4-fq-ov"); err != nil {
+			log.Fatalf("failed to set active model: %v", err)
+		}
 	}
 
 	configs := map[string]string{
@@ -52,7 +55,7 @@ func createTestContextForStatus() *common.Context {
 }
 
 func Example_statusCommand_printStatusYaml() {
-	ctx := createTestContextForStatus()
+	ctx := createTestContextForStatus(true)
 	cmd := statusCommand{Context: ctx}
 
 	statusText, err := cmd.statusYaml()
@@ -77,7 +80,7 @@ func Example_statusCommand_printStatusYaml() {
 }
 
 func Example_statusCommand_printStatusJson() {
-	ctx := createTestContextForStatus()
+	ctx := createTestContextForStatus(true)
 	cmd := statusCommand{Context: ctx}
 
 	statusText, err := cmd.statusJson()
@@ -107,5 +110,68 @@ func Example_statusCommand_printStatusJson() {
 	//   "model": {
 	//     "name": "4b-it-int4-fq-ov"
 	//   }
+	// }
+}
+
+func Example_statusCommand_printStatusYamlNoActiveModel() {
+	os.Setenv("SNAP_INSTANCE_NAME", "mock-snap")
+	defer os.Unsetenv("SNAP_INSTANCE_NAME")
+	ctx := createTestContextForStatus(false)
+	cmd := statusCommand{Context: ctx}
+	statusText, err := cmd.statusYaml()
+	if err != nil {
+		log.Fatalf("failed to get status in yaml format: %v", err)
+	}
+	fmt.Print(statusText)
+
+	// Output:
+	// engine: cpu
+	// services:
+	//     llama-server: active
+	// entrypoints:
+	//     logger:
+	//         url: http://localhost:8081/
+	//     openai:
+	//         url: http://0.0.0.0:8080/v1
+	//     whisperlive:
+	//         unix-socket: /run/whisper.sock (ws://unix/realtime)
+	// model: null
+	// notices:
+	//     - Not enough disk space to install a model compatible with the cpu engine. Run 'mock-snap use-engine --auto --verbose' for details
+}
+
+func Example_statusCommand_printStatusJsonNoActiveModel() {
+	os.Setenv("SNAP_INSTANCE_NAME", "mock-snap")
+	defer os.Unsetenv("SNAP_INSTANCE_NAME")
+	ctx := createTestContextForStatus(false)
+	cmd := statusCommand{Context: ctx}
+	statusText, err := cmd.statusJson()
+	if err != nil {
+		log.Fatalf("failed to get status in yaml format: %v", err)
+	}
+	fmt.Print(statusText)
+
+	// Output:
+	// {
+	//   "engine": "cpu",
+	//   "services": {
+	//     "llama-server": "active"
+	//   },
+	//   "entrypoints": {
+	//     "logger": {
+	//       "url": "http://localhost:8081/"
+	//     },
+	//     "openai": {
+	//       "url": "http://0.0.0.0:8080/v1"
+	//     },
+	//     "whisperlive": {
+	//       "unix-socket": "/run/whisper.sock",
+	//       "unix-socket-url": "ws://unix/realtime"
+	//     }
+	//   },
+	//   "model": null,
+	//   "notices": [
+	//     "Not enough disk space to install a model compatible with the cpu engine. Run 'mock-snap use-engine --auto --verbose' for details"
+	//   ]
 	// }
 }

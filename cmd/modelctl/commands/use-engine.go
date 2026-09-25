@@ -11,6 +11,8 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/runtimes"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/host"
 	"github.com/spf13/cobra"
 )
 
@@ -101,7 +103,18 @@ func (cmd *useEngineCommand) run(_ *cobra.Command, args []string) error {
 		return err
 	} else {
 		if len(args) == 1 {
-			return cmd.switchEngine(args[0])
+			observable, err := cmd.Snap.HardwareObservable()
+			if err != nil {
+				return fmt.Errorf("checking hardware observability: %v", err)
+			}
+			if !observable {
+				return cmd.switchEngine(args[0])
+			}
+			machineInfo, _, err := machine.Get(host.Real(), true)
+			if err != nil {
+				return fmt.Errorf("getting machine info: %v", err)
+			}
+			return cmd.switchEngineWithMachineInfo(args[0], machineInfo)
 		} else {
 			return fmt.Errorf("engine name not specified")
 		}
@@ -119,15 +132,15 @@ func (cmd *useEngineCommand) autoSelectEngine() error {
 		return cmd.switchEngine(cmd.fallback)
 	}
 
-	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
+	scoredEngines, machineInfo, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("scoring engines: %v", err)
 	}
 
-	return cmd.autoSelectScoredEngine(scoredEngines)
+	return cmd.autoSelectScoredEngine(scoredEngines, machineInfo)
 }
 
-func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.ScoredManifest) error {
+func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.ScoredManifest, machineInfo *machine.MachineInfo) error {
 
 	fmt.Println("Evaluating engines for optimal hardware compatibility:")
 	for _, engine := range scoredEngines {
@@ -149,7 +162,7 @@ func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.Scor
 	}
 
 	if cmd.considerComponents {
-		ok, err := selectEngineForSeededComponents(cmd, scoredEngines)
+		ok, err := selectEngineForSeededComponents(cmd, scoredEngines, machineInfo)
 		if err != nil {
 			return err
 		}
@@ -166,7 +179,7 @@ func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.Scor
 
 	fmt.Printf("Selected engine: %s\n", selectedEngine.Name)
 
-	err = cmd.switchEngine(selectedEngine.Name)
+	err = cmd.switchEngineWithMachineInfo(selectedEngine.Name, machineInfo)
 	if err != nil {
 		return fmt.Errorf("use engine: %s", err)
 	}
@@ -174,10 +187,14 @@ func (cmd *useEngineCommand) autoSelectScoredEngine(scoredEngines []engines.Scor
 	return nil
 }
 
-// switchEngine changes the engine and model used by the snap
-// By default, the previous model will be used if it is compatible.
-// If it is not compatible, the engine's default model will be selected.
 func (cmd *useEngineCommand) switchEngine(engineName string) error {
+	return cmd.switchEngineWithMachineInfo(engineName, nil)
+}
+
+// switchEngineWithMachineInfo changes the engine and model used by the snap
+// By default, the previous model will be used if it is compatible.
+// If it is not compatible, another model will be selected based on the engine's default and available disk space.
+func (cmd *useEngineCommand) switchEngineWithMachineInfo(engineName string, machineInfo *machine.MachineInfo) error {
 	newEngineManifest, err := engines.LoadManifest(cmd.EnginesDir, engineName)
 	if err != nil {
 		if errors.Is(err, engines.ErrManifestNotFound) {
@@ -199,6 +216,18 @@ func (cmd *useEngineCommand) switchEngine(engineName string) error {
 		newModelID = activeModelID
 	} else {
 		newModelID = newEngineManifest.Model.Default
+	}
+
+	// Active model is not changed when autoselecting a new engine. SelectModel will respect the preferred model if possible.
+	if len(newEngineManifest.Model.Options) > 0 && machineInfo != nil {
+		var scoredModels []models.ScoredManifest
+		newModelID, scoredModels, err = common.SelectModel(cmd.Context, newEngineManifest.Model.Options, newModelID, machineInfo)
+		if cmd.auto {
+			cmd.printScoredModels(scoredModels, newModelID)
+		}
+		if err != nil && err != common.ErrInsufficientDiskSpaceForModel {
+			return fmt.Errorf("selecting model: %v", err)
+		}
 	}
 
 	return cmd.switchEngineAndModel(engineName, newModelID)
@@ -350,6 +379,29 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 	return nil
 }
 
+func (cmd *useEngineCommand) printScoredModels(scoredModels []models.ScoredManifest, newModelID string) {
+	if len(scoredModels) == 0 {
+		return
+	}
+	var compatibleModels []string
+	fmt.Println("Selecting a compatible model:")
+	for _, model := range scoredModels {
+		if model.CompatibilityReport.CompatibleDisk {
+			compatibleModels = append(compatibleModels, model.Name)
+			fmt.Printf("✔ %s\n", model.Name)
+		} else {
+			report := model.CompatibilityReport
+			fmt.Printf("✘ %s: requires %s disk space, has %s\n",
+				model.Name,
+				utils.FmtBytesShort(report.RequiredDiskSpace),
+				utils.FmtBytesShort(report.AvailableDiskSpace))
+		}
+	}
+	if slices.Contains(compatibleModels, newModelID) {
+		fmt.Printf("Selected model: %s\n", newModelID)
+	}
+}
+
 func (cmd *useEngineCommand) verboseIncompatibilityReasons(report engines.CompatibilityReport) []string {
 	var reasons []string
 	if !report.CompatibleMemory {
@@ -382,7 +434,7 @@ func engineNames[T any](items []T, getName func(T) string) []string {
 
 // selectEngineForSeededComponents looks at components that are currently installed,
 // tries to match these to an engine and model that are compatible, and switches to it.
-func selectEngineForSeededComponents(cmd *useEngineCommand, scoredEngines []engines.ScoredManifest) (bool, error) {
+func selectEngineForSeededComponents(cmd *useEngineCommand, scoredEngines []engines.ScoredManifest, machineInfo *machine.MachineInfo) (bool, error) {
 	fmt.Println("Checking preinstalled components to influence engine and model selection")
 
 	allEngines, err := engines.LoadManifests(cmd.EnginesDir)
@@ -511,7 +563,7 @@ func selectEngineForSeededComponents(cmd *useEngineCommand, scoredEngines []engi
 	}
 
 	if seededModelForEngine == "" {
-		err = cmd.switchEngine(topEngine.Name)
+		err = cmd.switchEngineWithMachineInfo(topEngine.Name, machineInfo)
 		if err != nil {
 			return false, fmt.Errorf("switching engine: %v", err)
 		}

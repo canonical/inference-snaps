@@ -94,7 +94,7 @@ func (cmd *engineCommand) showCurrentEngine() error {
 }
 
 func (cmd *engineCommand) engine(engineName string) error {
-	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
+	scoredEngines, _, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("scoring engines: %v", err)
 	}

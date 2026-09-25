@@ -2,6 +2,7 @@ package commands
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -45,7 +46,7 @@ type exportedOpenai struct {
 func (cmd *exportStatusCommand) run(_ *cobra.Command, args []string) error {
 
 	statusStr, err := common.SnapStatus(cmd.Context)
-	if err != nil {
+	if err != nil && !errors.Is(err, common.ErrNoActiveModel) {
 		return fmt.Errorf("getting status: %v", err)
 	}
 
@@ -56,9 +57,14 @@ func (cmd *exportStatusCommand) run(_ *cobra.Command, args []string) error {
 		}
 	}
 
+	var model map[string]string
+	if statusStr.Model != nil {
+		model = *statusStr.Model
+	}
+
 	sharedStatusStr := &exportedStatus{
 		Endpoints: urls,
-		Model:     statusStr.Model,
+		Model:     model,
 	}
 
 	var shareDir string

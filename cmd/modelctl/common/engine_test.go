@@ -707,7 +707,7 @@ func TestScoreEnginesLoadManifestsError(t *testing.T) {
 		Config:     storage.NewMockConfig(),
 		Cache:      storage.NewMockCache(),
 	}
-	_, _, err := ScoreEngines(ctx)
+	_, _, _, err := ScoreEngines(ctx)
 	if err == nil {
 		t.Fatal("expected error from missing engines dir")
 	}
@@ -726,7 +726,7 @@ func TestScoreEnginesMachineInfoError(t *testing.T) {
 		Config:     storage.NewMockConfig(),
 		Cache:      storage.NewMockCache(),
 	}
-	_, _, err := ScoreEngines(ctx)
+	_, _, _, err := ScoreEngines(ctx)
 	if err == nil || !strings.Contains(err.Error(), "hw error") {
 		t.Fatalf("expected hw error, got: %v", err)
 	}
@@ -751,7 +751,7 @@ func TestScoreEnginesScorerError(t *testing.T) {
 		Config:     storage.NewMockConfig(),
 		Cache:      storage.NewMockCache(),
 	}
-	_, _, err := ScoreEngines(ctx)
+	_, _, _, err := ScoreEngines(ctx)
 	if err == nil || !strings.Contains(err.Error(), "scorer error") {
 		t.Fatalf("expected scorer error, got: %v", err)
 	}
@@ -781,7 +781,7 @@ func TestScoreEnginesSuccess(t *testing.T) {
 		Config:     storage.NewMockConfig(),
 		Cache:      storage.NewMockCache(),
 	}
-	scored, warnings, err := ScoreEngines(ctx)
+	scored, _, warnings, err := ScoreEngines(ctx)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -814,7 +814,7 @@ func TestScoreEnginesWithSpinnerSuccess(t *testing.T) {
 		Config:     storage.NewMockConfig(),
 		Cache:      storage.NewMockCache(),
 	}
-	_, err := ScoreEnginesWithSpinner(ctx)
+	_, _, err := ScoreEnginesWithSpinner(ctx)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -840,7 +840,7 @@ func TestScoreEnginesWithSpinnerVerboseWarnings(t *testing.T) {
 		Cache:      storage.NewMockCache(),
 		Verbose:    true,
 	}
-	_, err := ScoreEnginesWithSpinner(ctx)
+	_, _, err := ScoreEnginesWithSpinner(ctx)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

@@ -65,6 +65,9 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	}
 
 	clean, err := common.LoadEngineEnvironment(cmd.Context)
+	if err == common.ErrNoActiveModel {
+		return fmt.Errorf("no active model")
+	}
 	if err != nil {
 		return fmt.Errorf("loading engine environment: %v", err)
 	}

@@ -78,6 +78,23 @@ func machineInfoFixture(name string) (*machine.MachineInfo, error) {
 				Architecture:   "amd64",
 				ManufacturerId: "GenuineIntel",
 			}},
+			Disk: map[string]disk.DirInfo{
+				"/var/lib/snapd/snaps": {Total: 1006451294208, Avail: 943543738368},
+			},
+		}, nil
+
+	case "low-disk-available-machine":
+		return &machine.MachineInfo{
+			Disk: map[string]disk.DirInfo{
+				"/var/lib/snapd/snaps": {Total: 1006451294208, Avail: 1024 * 1024 * 1024},
+			},
+		}, nil
+
+	case "no-disk-available-machine":
+		return &machine.MachineInfo{
+			Disk: map[string]disk.DirInfo{
+				"/var/lib/snapd/snaps": {Total: 1006451294208, Avail: 0},
+			},
 		}, nil
 
 	default:

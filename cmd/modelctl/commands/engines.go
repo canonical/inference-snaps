@@ -63,7 +63,7 @@ func newEnginesCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
 }
 
 func (cmd *enginesCommand) run(_ *cobra.Command, _ []string) error {
-	scoredEngines, err := common.ScoreEnginesWithSpinner(cmd.Context)
+	scoredEngines, _, err := common.ScoreEnginesWithSpinner(cmd.Context)
 	if err != nil {
 		return fmt.Errorf("scoring engines: %v", err)
 	}
