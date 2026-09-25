@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+	"path/filepath"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
@@ -69,7 +70,7 @@ func ServerEntrypoints(ctx *Context) (Entrypoints, error) {
 				return nil, fmt.Errorf("constructing HTTP entrypoint: %v", err)
 			}
 		case runtimes.ProtocolHttpUnix, runtimes.ProtocolHttpsUnix:
-			entrypoint, err = serverHttpOverUnixSocketEntrypoint(ctx, serverSettings)
+			entrypoint, err = serverHttpOverUnixSocketEntrypoint(ctx, serverName, serverSettings)
 			if err != nil {
 				return nil, fmt.Errorf("constructing HTTP Unix entrypoint: %v", err)
 			}
@@ -79,7 +80,7 @@ func ServerEntrypoints(ctx *Context) (Entrypoints, error) {
 				return nil, fmt.Errorf("constructing WebSocket entrypoint: %v", err)
 			}
 		case runtimes.ProtocolWebSocketUnix, runtimes.ProtocolWebSocketSecureUnix:
-			entrypoint, err = serverWsOverUnixSocketEntrypoint(ctx, serverSettings)
+			entrypoint, err = serverWsOverUnixSocketEntrypoint(ctx, serverName, serverSettings)
 			if err != nil {
 				return nil, fmt.Errorf("constructing WebSocket Unix entrypoint: %v", err)
 			}
@@ -130,18 +131,23 @@ func serverHttpEntrypoint(ctx *Context, server runtimes.Server) (*Entrypoint, er
 	return &Entrypoint{Url: entrypointUrl.String()}, nil
 }
 
-func serverHttpOverUnixSocketEntrypoint(ctx *Context, server runtimes.Server) (*Entrypoint, error) {
-
-	unixSocket, err := getConfigString(ctx, fullConfKey(runtimes.HttpUnixSocketConfKey, server.Namespace))
+func serverHttpOverUnixSocketEntrypoint(ctx *Context, serverName string, server runtimes.Server) (*Entrypoint, error) {
+	sharedDirectoryPath, err := ctx.Cache.GetSharedProviderDirectory()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("getting shared provider directory: %v", err)
 	}
+	if sharedDirectoryPath == "" {
+		return nil, fmt.Errorf("shared provider directory is not set")
+	}
+
+	unixSocketName := serverName + ".sock"
+	unixSocketPath := filepath.Join(sharedDirectoryPath, unixSocketName)
 
 	protocol := strings.TrimSuffix(server.Protocol, "+unix")
 	unixSocketUrl := fmt.Sprintf("%s://unix%s", protocol, server.BasePath) // remove +unix suffix for URL scheme
 
 	return &Entrypoint{
-		UnixSocket:    unixSocket,
+		UnixSocket:    unixSocketPath,
 		UnixSocketUrl: unixSocketUrl,
 	}, nil
 }
@@ -166,17 +172,22 @@ func serverWsEntrypoint(ctx *Context, server runtimes.Server) (*Entrypoint, erro
 	return &Entrypoint{Url: entrypointUrl.String()}, nil
 }
 
-func serverWsOverUnixSocketEntrypoint(ctx *Context, server runtimes.Server) (*Entrypoint, error) {
-	unixSocket, err := getConfigString(ctx, fullConfKey(runtimes.WebSocketUnixSocketConfKey, server.Namespace))
+func serverWsOverUnixSocketEntrypoint(ctx *Context, serverName string, server runtimes.Server) (*Entrypoint, error) {
+	sharedDirectoryPath, err := ctx.Cache.GetSharedProviderDirectory()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("getting shared provider directory: %v", err)
 	}
+	if sharedDirectoryPath == "" {
+		return nil, fmt.Errorf("shared provider directory is not set")
+	}
+	unixSocketName := serverName + ".sock"
+	unixSocketPath := filepath.Join(sharedDirectoryPath, unixSocketName)
 
 	protocol := strings.TrimSuffix(server.Protocol, "+unix") // remove +unix suffix for URL scheme
 	unixSocketUrl := fmt.Sprintf("%s://unix%s", protocol, server.BasePath)
 
 	return &Entrypoint{
-		UnixSocket:    unixSocket,
+		UnixSocket:    unixSocketPath,
 		UnixSocketUrl: unixSocketUrl,
 	}, nil
 }

@@ -3,6 +3,9 @@ package storage
 import (
 	"errors"
 	"fmt"
+	"os"
+
+	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
 )
 
 type Cache interface {
@@ -10,6 +13,8 @@ type Cache interface {
 	GetActiveEngine() (string, error)
 	SetActiveModel(model string) error
 	GetActiveModel() (string, error)
+	SetSharedProviderDirectory(string) error
+	GetSharedProviderDirectory() (string, error)
 }
 
 type cache struct {
@@ -24,10 +29,28 @@ func NewCache() Cache {
 }
 
 const (
-	cacheKeyPrefix  = "cache."
-	activeEngineKey = cacheKeyPrefix + "active-engine"
-	activeModelKey  = cacheKeyPrefix + "active-model"
+	cacheKeyPrefix             = "cache."
+	activeEngineKey            = cacheKeyPrefix + "active-engine"
+	activeModelKey             = cacheKeyPrefix + "active-model"
+	sharedProviderDirectoryKey = cacheKeyPrefix + "shared-provider-dir"
 )
+
+func (c *cache) SetSharedProviderDirectory(path string) error {
+	return c.storage.Set(sharedProviderDirectoryKey, path)
+}
+
+func (c *cache) GetSharedProviderDirectory() (string, error) {
+	data, err := c.storage.Get(sharedProviderDirectoryKey)
+	if err != nil {
+		if errors.Is(err, ErrorNotFound) { // cache miss
+			defaultValue := os.ExpandEnv(constants.DefaultShareProviderPath)
+			return defaultValue, nil
+		}
+		return "", err
+	}
+
+	return data[sharedProviderDirectoryKey].(string), nil
+}
 
 func (c *cache) SetActiveEngine(engine string) error {
 	if engine == "" {

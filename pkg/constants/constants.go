@@ -15,5 +15,6 @@ const (
 	Riscv64 = "riscv64"
 	S390x   = "s390x"
 
-	SnapStoragePath = "/var/lib/snapd/snaps" // https://snapcraft.io/docs/system-snap-directory
+	SnapStoragePath          = "/var/lib/snapd/snaps" // https://snapcraft.io/docs/system-snap-directory
+	DefaultShareProviderPath = "$SNAP_COMMON/share/provider"
 )

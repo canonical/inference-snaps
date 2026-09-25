@@ -15,18 +15,18 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 	var manifests []Manifest
 
 	// Iterate runtimes
-	files, err := os.ReadDir(manifestsDir)
+	runtimeDirs, err := os.ReadDir(manifestsDir)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
 	}
 
-	for _, file := range files {
-		// Engines dir should contain a dir per engine
-		if !file.IsDir() {
+	for _, runtimeDir := range runtimeDirs {
+		// Runtimes dir should contain a dir per runtime
+		if !runtimeDir.IsDir() {
 			continue
 		}
 
-		fileName := filepath.Join(manifestsDir, file.Name(), ManifestFilename)
+		fileName := filepath.Join(manifestsDir, runtimeDir.Name(), ManifestFilename)
 		data, err := os.ReadFile(fileName)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %s", fileName, err)
@@ -35,7 +35,11 @@ func LoadManifests(manifestsDir string) ([]Manifest, error) {
 		var manifest Manifest
 		err = yaml.Unmarshal(data, &manifest)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %s", manifestsDir, err)
+			return nil, fmt.Errorf("malformed manifest %s: %v", fileName, err)
+		}
+
+		if err := manifest.validate(runtimeDir.Name()); err != nil {
+			return nil, fmt.Errorf("invalid manifest %s: %v", fileName, err)
 		}
 
 		manifests = append(manifests, manifest)
@@ -59,7 +63,11 @@ func LoadManifest(manifestsDir, runtimeName string) (*Manifest, error) {
 	var manifest Manifest
 	err = yaml.Unmarshal(data, &manifest)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %s", manifestsDir, err)
+		return nil, fmt.Errorf("malformed manifest %s: %v", fileName, err)
+	}
+
+	if err := manifest.validate(runtimeName); err != nil {
+		return nil, fmt.Errorf("invalid manifest %s: %v", fileName, err)
 	}
 
 	return &manifest, nil

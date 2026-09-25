@@ -1,8 +1,9 @@
 package storage
 
 type mockCache struct {
-	activeEngine string
-	activeModel  string
+	activeEngine            string
+	activeModel             string
+	sharedProviderDirectory string
 }
 
 func NewMockCache() Cache {
@@ -27,4 +28,13 @@ func (c *mockCache) GetActiveEngine() (string, error) {
 // GetActiveModel returns the currently active model name, or an empty string if none is set
 func (c *mockCache) GetActiveModel() (string, error) {
 	return c.activeModel, nil
+}
+
+func (c *mockCache) SetSharedProviderDirectory(path string) error {
+	c.sharedProviderDirectory = path
+	return nil
+}
+
+func (c *mockCache) GetSharedProviderDirectory() (string, error) {
+	return c.sharedProviderDirectory, nil
 }
