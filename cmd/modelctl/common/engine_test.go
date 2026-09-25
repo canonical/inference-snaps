@@ -81,7 +81,12 @@ func setupEngineContext(t *testing.T, runtimeEnv, modelEnv []string, runtimeLayo
 		"name: test-engine\nruntime: test-runtime\n")
 
 	// Runtime manifest
-	runtimeYAML := "servers: {}\n"
+	runtimeYAML := `name: test-runtime
+servers:
+  openai:
+    protocol: http
+    base-path: /v1
+`
 	if len(runtimeEnv) > 0 {
 		runtimeYAML += "environment:\n"
 		for _, e := range runtimeEnv {
@@ -274,7 +279,7 @@ func TestEngineSettingsNoActiveModel(t *testing.T) {
 	writeFile(t, filepath.Join(enginesDir, "test-engine", "engine.yaml"),
 		"name: test-engine\nruntime: test-runtime\n")
 	writeFile(t, filepath.Join(runtimesDir, "test-runtime", "runtime.yaml"),
-		"servers: {}\n")
+		"name: test-runtime\nservers:\n  openai:\n    protocol: http\n    base-path: /v1\n")
 
 	cache := storage.NewMockCache()
 	_ = cache.SetActiveEngine("test-engine")
@@ -540,7 +545,7 @@ func TestEngineSettingsCacheErrorOnGetModel(t *testing.T) {
 	writeFile(t, filepath.Join(enginesDir, "test-engine", "engine.yaml"),
 		"name: test-engine\nruntime: test-runtime\n")
 	writeFile(t, filepath.Join(runtimesDir, "test-runtime", "runtime.yaml"),
-		"servers: {}\n")
+		"name: test-runtime\nservers:\n  openai:\n    protocol: http\n    base-path: /v1\n")
 
 	ctx := &Context{
 		EnginesDir:  enginesDir,

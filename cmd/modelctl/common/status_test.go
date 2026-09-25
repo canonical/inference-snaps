@@ -16,7 +16,8 @@ func TestStatusStruct(t *testing.T) {
 	writeEngineYAML(t, enginesDir, "my-engine", `name: my-engine
 runtime: my-runtime
 `)
-	writeRuntimeYAML(t, runtimesDir, "my-runtime", `servers:
+	writeRuntimeYAML(t, runtimesDir, "my-runtime", `name: my-runtime
+servers:
   openai:
     protocol: http
     base-path: /v1

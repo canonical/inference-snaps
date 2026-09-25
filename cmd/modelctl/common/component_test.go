@@ -57,7 +57,12 @@ model:
   options:
   - test-model
 `
-	runtimeYAML := `components:
+	runtimeYAML := `name: test-runtime
+servers:
+  openai:
+    protocol: http
+    base-path: /v1
+components:
   - test-runtime-component
 `
 	modelYAML := `components:
