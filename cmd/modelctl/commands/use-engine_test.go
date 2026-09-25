@@ -186,7 +186,7 @@ func ExampleUseEngine_autoSelectEngine() {
 	cmd.Verbose = true
 	var allEngines []engines.Manifest
 	for _, name := range []string{"not-compatible-engine", "cpu-exptl", "cpu"} {
-		e, err := engines.LoadManifest(cmd.Context.EnginesDir, name)
+		e, err := engines.LoadManifest(cmd.EnginesDir, name)
 		if err != nil {
 			panic(err)
 		}

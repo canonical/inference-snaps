@@ -27,11 +27,13 @@ func createTestContextForStatus(addModel bool) *common.Context {
 			log.Fatalf("failed to set active model: %v", err)
 		}
 	}
+	if err := cache.SetSharedProviderDirectory("/tmp/share/provider"); err != nil {
+		log.Fatalf("failed to set shared provider directory: %v", err)
+	}
 
 	configs := map[string]string{
-		"http.port":      "8080",
-		"http.host":      "0.0.0.0",
-		"ws.unix-socket": "/run/whisper.sock",
+		"http.port": "8080",
+		"http.host": "0.0.0.0",
 		// namespaced configurations
 		"logger.http.port": "8081",
 		"logger.http.host": "localhost",
@@ -74,7 +76,7 @@ func Example_statusCommand_printStatusYaml() {
 	//     openai:
 	//         url: http://0.0.0.0:8080/v1
 	//     whisperlive:
-	//         unix-socket: /run/whisper.sock (ws://unix/realtime)
+	//         unix-socket: /tmp/share/provider/whisperlive.sock (ws://unix/realtime)
 	// model:
 	//     name: 4b-it-int4-fq-ov
 }
@@ -103,7 +105,7 @@ func Example_statusCommand_printStatusJson() {
 	//       "url": "http://0.0.0.0:8080/v1"
 	//     },
 	//     "whisperlive": {
-	//       "unix-socket": "/run/whisper.sock",
+	//       "unix-socket": "/tmp/share/provider/whisperlive.sock",
 	//       "unix-socket-url": "ws://unix/realtime"
 	//     }
 	//   },
@@ -134,7 +136,7 @@ func Example_statusCommand_printStatusYamlNoActiveModel() {
 	//     openai:
 	//         url: http://0.0.0.0:8080/v1
 	//     whisperlive:
-	//         unix-socket: /run/whisper.sock (ws://unix/realtime)
+	//         unix-socket: /tmp/share/provider/whisperlive.sock (ws://unix/realtime)
 	// model: null
 	// notices:
 	//     - Not enough disk space to install a model compatible with the cpu engine. Run 'mock-snap use-engine --auto --verbose' for details
@@ -165,7 +167,7 @@ func Example_statusCommand_printStatusJsonNoActiveModel() {
 	//       "url": "http://0.0.0.0:8080/v1"
 	//     },
 	//     "whisperlive": {
-	//       "unix-socket": "/run/whisper.sock",
+	//       "unix-socket": "/tmp/share/provider/whisperlive.sock",
 	//       "unix-socket-url": "ws://unix/realtime"
 	//     }
 	//   },

@@ -94,6 +94,24 @@ func TestServersRequired(t *testing.T) {
 	}
 }
 
+func TestServerNameRejectsSlash(t *testing.T) {
+	manifest := templateManifest()
+	manifest.Servers = map[string]Server{
+		"whisper/server": {
+			Protocol: "http",
+			BasePath: "/v1",
+		},
+	}
+
+	err := manifest.validate("test")
+	if err == nil {
+		t.Fatal("server name containing '/' should be invalid")
+	}
+	if !strings.Contains(err.Error(), "invalid server name") {
+		t.Fatalf("expected error about invalid server name, got: %v", err)
+	}
+}
+
 func TestServerProtocolRequired(t *testing.T) {
 	manifest := templateManifest()
 	manifest.Servers = map[string]Server{

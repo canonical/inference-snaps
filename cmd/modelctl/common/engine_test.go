@@ -16,12 +16,14 @@ import (
 
 // errCache is a storage.Cache that returns errors from the specified methods.
 type errCache struct {
-	failGetEngine bool
-	failGetModel  bool
+	failGetEngine                  bool
+	failGetModel                   bool
+	failGetSharedProviderDirectory bool
 }
 
-func (c *errCache) SetActiveEngine(string) error { return nil }
-func (c *errCache) SetActiveModel(string) error  { return nil }
+func (c *errCache) SetActiveEngine(string) error            { return nil }
+func (c *errCache) SetActiveModel(string) error             { return nil }
+func (c *errCache) SetSharedProviderDirectory(string) error { return nil }
 func (c *errCache) GetActiveEngine() (string, error) {
 	if c.failGetEngine {
 		return "", errors.New("cache error: GetActiveEngine")
@@ -33,6 +35,12 @@ func (c *errCache) GetActiveModel() (string, error) {
 		return "", errors.New("cache error: GetActiveModel")
 	}
 	return "test-model", nil
+}
+func (c *errCache) GetSharedProviderDirectory() (string, error) {
+	if c.failGetSharedProviderDirectory {
+		return "", errors.New("cache error: GetSharedProviderDirectory")
+	}
+	return "/tmp/shared", nil
 }
 
 // writeFile writes content to path, creating all parent directories.

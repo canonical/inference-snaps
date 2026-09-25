@@ -148,6 +148,10 @@ func isValidNamespace(namespace string) bool {
 }
 
 func (server Server) validate(name string) error {
+	if strings.Contains(name, "/") {
+		return fmt.Errorf("invalid server name %q: must not contain '/'", name)
+	}
+
 	if server.Protocol == "" {
 		return fmt.Errorf("required field is not set for server %s: protocol", name)
 	}

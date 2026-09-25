@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
@@ -49,7 +50,7 @@ func Run(ctx *common.Context) *cobra.Command {
 	cobraCmd.Flags().MarkDeprecated("wait-for-components", "\"run\" always waits for components.")
 	// --share-provider [path]
 	cobraCmd.Flags().StringVar(&cmd.shareProvider, "share-provider", "", "write provider env file to a shared directory")
-	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = defaultProviderDirectoryPath()
+	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = cmd.defaultProviderDirectoryPath()
 
 	return cobraCmd
 }
@@ -115,8 +116,8 @@ func (cmd *runCommand) processEnvConfigs() error {
 	return nil
 }
 
-func defaultProviderDirectoryPath() string {
-	return filepath.Join(os.Getenv("SNAP_COMMON"), "share", "provider")
+func (cmd *runCommand) defaultProviderDirectoryPath() string {
+	return os.ExpandEnv(constants.DefaultShareProviderPath)
 }
 
 func (cmd *runCommand) writeShareProviderEnv() error {
@@ -126,6 +127,10 @@ func (cmd *runCommand) writeShareProviderEnv() error {
 
 	if err := os.MkdirAll(cmd.shareProvider, 0o755); err != nil {
 		return fmt.Errorf("creating provider env directory: %v", err)
+	}
+
+	if err := cmd.Cache.SetSharedProviderDirectory(cmd.shareProvider); err != nil {
+		return fmt.Errorf("saving shared provider directory: %v", err)
 	}
 
 	providerEnvPath := filepath.Join(cmd.shareProvider, "provider.env")
