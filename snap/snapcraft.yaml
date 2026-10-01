@@ -15,20 +15,6 @@ slots:
     source:
       read:
         - $SNAP_COMMON/share/provider
-  # Deprecated: use the provider slot
-  status:
-    interface: content
-    content: inference-snap-status
-    source:
-      read:
-        - $SNAP_COMMON/share
-  # Deprecated: remove when Open WebUI uses inference-snap-status
-  open-webui:
-    interface: content
-    content: open-webui-config
-    source:
-      read:
-        - $SNAP_COMMON/share
 
 plugs:
   intel-npu:
