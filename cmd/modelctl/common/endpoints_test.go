@@ -65,8 +65,8 @@ servers:
 				"webui":       "http://192.0.2.1:8080",
 			},
 			wantUnixSockets: map[string]string{
-				"openai-unix": "openai-unix.sock",
-				"kserve-unix": "kserve-unix.sock",
+				"openai-unix": "server.sock",
+				"kserve-unix": "kserve.sock",
 			},
 			wantUnixSocketUrls: map[string]string{
 				"openai-unix": "http://unix/v1",
@@ -108,7 +108,7 @@ servers:
 				"openai-unix": "",
 			},
 			wantUnixSockets: map[string]string{
-				"openai-unix": "openai-unix.sock",
+				"openai-unix": "server.sock",
 			},
 			wantUnixSocketUrls: map[string]string{
 				"openai-unix": "ws://unix/v1",
@@ -154,7 +154,7 @@ servers:
 				"openai-unix": "",
 			},
 			wantUnixSockets: map[string]string{
-				"openai-unix": "openai-unix.sock",
+				"openai-unix": "server.sock",
 			},
 			wantUnixSocketUrls: map[string]string{
 				"openai-unix": "wss://unix/v1",
@@ -368,7 +368,7 @@ func TestServerHttpUnixSocketEntrypoint(t *testing.T) {
 				Protocol: "http+unix",
 				BasePath: "/v1",
 			},
-			wantSocketName: "http unix default namespace.sock",
+			wantSocketName: "server.sock",
 			wantSocketURL:  "http://unix/v1",
 		},
 		{
@@ -378,7 +378,7 @@ func TestServerHttpUnixSocketEntrypoint(t *testing.T) {
 				BasePath:  "/api/v2",
 				Namespace: "proxy",
 			},
-			wantSocketName: "http unix with namespace.sock",
+			wantSocketName: "proxy.sock",
 			wantSocketURL:  "http://unix/api/v2",
 		},
 	}
@@ -396,7 +396,7 @@ func TestServerHttpUnixSocketEntrypoint(t *testing.T) {
 				Cache:  cache,
 			}
 
-			got, err := serverHttpOverUnixSocketEntrypoint(ctx, tc.name, tc.server)
+			got, err := serverHttpOverUnixSocketEntrypoint(ctx, tc.server)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -503,7 +503,7 @@ func TestServerWsUnixSocketEntrypoint(t *testing.T) {
 				Protocol: "ws+unix",
 				BasePath: "/v1",
 			},
-			wantSocketName: "ws unix default namespace.sock",
+			wantSocketName: "server.sock",
 			wantSocketURL:  "ws://unix/v1",
 		},
 		{
@@ -513,7 +513,7 @@ func TestServerWsUnixSocketEntrypoint(t *testing.T) {
 				BasePath:  "/api/stream",
 				Namespace: "proxy",
 			},
-			wantSocketName: "ws unix with namespace.sock",
+			wantSocketName: "proxy.sock",
 			wantSocketURL:  "ws://unix/api/stream",
 		},
 	}
@@ -531,7 +531,7 @@ func TestServerWsUnixSocketEntrypoint(t *testing.T) {
 				Cache:  cache,
 			}
 
-			got, err := serverWsOverUnixSocketEntrypoint(ctx, tc.name, tc.server)
+			got, err := serverWsOverUnixSocketEntrypoint(ctx, tc.server)
 			if err != nil {
 				t.Fatal(err)
 			}
