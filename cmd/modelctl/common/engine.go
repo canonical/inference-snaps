@@ -23,6 +23,33 @@ type Settings struct {
 	expandedLayout map[string]engines.Layout
 }
 
+// CurrentRuntimeManifest loads the manifest for the active engine's runtime.
+func CurrentRuntimeManifest(ctx *Context) (*runtimes.Manifest, error) {
+	activeEngineName, err := ctx.Cache.GetActiveEngine()
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", LookingUpActiveEngine, err)
+	}
+	if activeEngineName == "" {
+		return nil, ErrNoActiveEngine
+	}
+
+	activeEngineManifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngineName)
+	if err != nil {
+		return nil, fmt.Errorf("loading active engine manifest: %w", err)
+	}
+
+	if activeEngineManifest.Runtime == "" {
+		return nil, ErrEngineNoRuntime
+	}
+
+	runtimeManifest, err := runtimes.LoadManifest(ctx.RuntimesDir, activeEngineManifest.Runtime)
+	if err != nil {
+		return nil, fmt.Errorf("loading runtime manifest: %w", err)
+	}
+
+	return runtimeManifest, nil
+}
+
 func EngineSettings(ctx *Context) (*Settings, error) {
 	activeEngineName, err := ctx.Cache.GetActiveEngine()
 	if err != nil {

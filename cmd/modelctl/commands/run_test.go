@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -165,6 +166,126 @@ func TestWriteShareProviderEnv(t *testing.T) {
 		}
 	})
 
+	t.Run("openai server over unix socket", func(t *testing.T) {
+		t.Setenv("SNAP_NAME", "gemma3-jane")
+		t.Setenv("SNAP_INSTANCE_NAME", "gemma3-jane")
+
+		// OpenAiBaseUrl rejects an "openai" entrypoint that has no Url (e.g. a
+		// Unix socket entrypoint), so writeShareProviderEnv must not let that
+		// error abort the function before the UNIX_SOCKET entries are written.
+		path := t.TempDir()
+		cmd := runCommand{Context: testRunContext(t, "name: test-runtime\nservers:\n  openai:\n    protocol: http+unix\n    base-path: /v1\n"), shareProvider: path}
+		if err := cmd.writeShareProviderEnv(); err != nil {
+			t.Fatalf("writeShareProviderEnv() error = %v", err)
+		}
+
+		cachedShareProviderDirectory, err := cmd.Cache.GetSharedProviderDirectory()
+		if err != nil {
+			t.Fatalf("getting cached shared provider directory: %v", err)
+		}
+		if cachedShareProviderDirectory != path {
+			t.Fatalf("cached shared provider directory mismatch\nwant: %q\ngot:  %q", path, cachedShareProviderDirectory)
+		}
+
+		content, err := os.ReadFile(filepath.Join(path, "provider.env"))
+		if err != nil {
+			t.Fatalf("reading provider env file: %v", err)
+		}
+
+		want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\nUNIX_SOCKET=server.sock\n"
+		if string(content) != want {
+			t.Fatalf("provider env contents mismatch\nwant: %q\ngot:  %q", want, string(content))
+		}
+	})
+
+	tests := []struct {
+		name       string
+		serverName string
+		protocol   string
+		namespace  string
+		wantSocket string
+	}{
+		{
+			name:       "http unix socket",
+			serverName: "test",
+			protocol:   "http+unix",
+			wantSocket: "UNIX_SOCKET=server.sock",
+		},
+		{
+			name:       "https unix socket",
+			serverName: "example",
+			protocol:   "https+unix",
+			wantSocket: "UNIX_SOCKET=server.sock",
+		},
+		{
+			name:       "websocket unix socket",
+			serverName: "server",
+			protocol:   "ws+unix",
+			wantSocket: "UNIX_SOCKET=server.sock",
+		},
+		{
+			name:       "secure websocket unix socket",
+			serverName: "server",
+			protocol:   "wss+unix",
+			wantSocket: "UNIX_SOCKET=server.sock",
+		},
+		{
+			name:       "namespaced unix socket",
+			serverName: "server",
+			protocol:   "http+unix",
+			namespace:  "example",
+			wantSocket: "EXAMPLE_UNIX_SOCKET=example.sock",
+		},
+		{
+			name:       "namespaced https unix socket",
+			serverName: "example",
+			protocol:   "https+unix",
+			namespace:  "example",
+			wantSocket: "EXAMPLE_UNIX_SOCKET=example.sock",
+		},
+		{
+			name:       "namespaced websocket unix socket",
+			serverName: "server",
+			protocol:   "ws+unix",
+			namespace:  "example",
+			wantSocket: "EXAMPLE_UNIX_SOCKET=example.sock",
+		},
+		{
+			name:       "secure websocket unix socket",
+			serverName: "server",
+			protocol:   "wss+unix",
+			namespace:  "example",
+			wantSocket: "EXAMPLE_UNIX_SOCKET=example.sock",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("SNAP_NAME", "gemma3-jane")
+			t.Setenv("SNAP_INSTANCE_NAME", "gemma3-jane")
+
+			runtimeYAML := fmt.Sprintf("name: test-runtime\nservers:\n  %s:\n    protocol: %s\n    base-path: /v1\n", tt.serverName, tt.protocol)
+			if tt.namespace != "" {
+				runtimeYAML += fmt.Sprintf("    namespace: %s\n", tt.namespace)
+			}
+
+			path := t.TempDir()
+			cmd := runCommand{Context: testRunContext(t, runtimeYAML), shareProvider: path}
+			if err := cmd.writeShareProviderEnv(); err != nil {
+				t.Fatalf("writeShareProviderEnv() error = %v", err)
+			}
+
+			content, err := os.ReadFile(filepath.Join(path, "provider.env"))
+			if err != nil {
+				t.Fatalf("reading provider env file: %v", err)
+			}
+
+			want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\n" + tt.wantSocket + "\n"
+			if string(content) != want {
+				t.Fatalf("provider env contents mismatch\nwant: %q\ngot:  %q", want, string(content))
+			}
+		})
+	}
 }
 
 func TestNoActiveModel(t *testing.T) {
