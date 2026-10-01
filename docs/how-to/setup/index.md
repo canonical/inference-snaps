@@ -7,6 +7,7 @@ However, there are some additional steps to prepare your system for running infe
 :maxdepth: 1
 drivers
 wsl
+parallel-install
 ```
 
 <!--
