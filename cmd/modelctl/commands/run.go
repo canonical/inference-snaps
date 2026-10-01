@@ -20,8 +20,7 @@ type runCommand struct {
 	*common.Context
 
 	// flags
-	waitForComponents bool
-	shareProvider     string
+	shareProvider string
 }
 
 func Run(ctx *common.Context) *cobra.Command {
@@ -37,7 +36,7 @@ func Run(ctx *common.Context) *cobra.Command {
 			"double dashes (--) from the run command and its flags. ",
 		Example: "  modelctl run env\n" +
 			"  modelctl run -- echo \"Hello World!\"\n" +
-			"  modelctl run --wait-for-components -- python3 -m http.server",
+			"  modelctl run --share-provider -- python3 -m http.server",
 		Hidden:            true,
 		Args:              cobra.MinimumNArgs(1),
 		ValidArgsFunction: cobra.NoFileCompletions,
@@ -45,9 +44,6 @@ func Run(ctx *common.Context) *cobra.Command {
 	}
 
 	// flags
-	// --wait-for-components
-	cobraCmd.Flags().BoolVar(&cmd.waitForComponents, "wait-for-components", false, "wait for engine components to be installed before running")
-	cobraCmd.Flags().MarkDeprecated("wait-for-components", "\"run\" always waits for components.")
 	// --share-provider [path]
 	cobraCmd.Flags().StringVar(&cmd.shareProvider, "share-provider", "", "write provider env file to a shared directory")
 	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = cmd.defaultProviderDirectoryPath()
