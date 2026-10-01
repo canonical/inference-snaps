@@ -24,9 +24,7 @@ The instance key can contain letters and digits.
 Install three instances, naming each one after the model size it will serve:
 
 ```shell
-sudo snap install gemma4_e2b
-sudo snap install gemma4_e4b
-sudo snap install gemma4_12b
+sudo snap install gemma4_e2b gemma4_e4b gemma4_12b
 ```
 
 Each instance exposes its own CLI, named after the instance.
@@ -48,6 +46,8 @@ sudo gemma4_e4b set http.port=8436 webui.http.port=8437
 sudo gemma4_12b set http.port=8536 webui.http.port=8537
 ```
 
+When prompted, type `Y` to confirm the restart of each instance.
+
 ## Change the engine
 
 Some engines may not support every model size.
@@ -65,6 +65,8 @@ sudo gemma4_e4b use-engine cpu
 sudo gemma4_12b use-engine cpu
 ```
 
+When prompted, type `Y` to confirm the installation of any missing components and to confirm the restart of each instance.
+
 For more details, see {ref}`switch-between-engines`.
 
 ## Select a model for each instance
@@ -78,10 +80,12 @@ gemma4_e2b list-models
 Select the model matching each instance's size:
 
 ```shell
-sudo gemma4_e2b use-model gemma4-e2b
+sudo gemma4_e2b use-model gemma4-e2b 
 sudo gemma4_e4b use-model gemma4-e4b
 sudo gemma4_12b use-model gemma4-12b
 ```
+
+As before, when prompted, type `Y` to confirm.
 
 ## Verify the instances
 
