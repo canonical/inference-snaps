@@ -67,7 +67,6 @@ sudo gemma4_12b use-engine cpu
 
 For more details, see {ref}`switch-between-engines`.
 
-
 ## Select a model for each instance
 
 Use `list-models` to see the model IDs supported by the snap:
