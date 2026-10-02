@@ -91,10 +91,15 @@ As before, when prompted, type `Y` to confirm.
 
 Query each endpoint to confirm the served model:
 
-```{terminal}
-curl http://127.0.0.1:8336/v1/models | jq '.data[].id'
-curl http://127.0.0.1:8436/v1/models | jq '.data[].id'
-curl http://127.0.0.1:8536/v1/models | jq '.data[].id'
+```console
+$ curl http://127.0.0.1:8336/v1/models | jq '.data[].id'
+"gemma4-e2b"
+
+$ curl http://127.0.0.1:8436/v1/models | jq '.data[].id'
+"gemma4-e4b"
+
+$ curl http://127.0.0.1:8536/v1/models | jq '.data[].id'
+"gemma4-12b"
 ```
 
 Each instance now serves a different model on its own API and web UI ports.
