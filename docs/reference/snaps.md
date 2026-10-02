@@ -266,6 +266,26 @@ The inference snap for Qwen 3 Coder has been optimized for the following:
 
 {{explore_optimizations}}
 
+## Qwen3.5
+
+[![qwen3-5 snap](https://snapcraft.io/qwen3-5/badge.svg)](https://snapcraft.io/qwen3-5)
+[![qwen3-5 source][gh-badge]](https://github.com/canonical/qwen3.5-snap)
+
+Qwen 3.5 is a multimodal instruction-tuned model with vision capabilities.
+It supports text and image inputs, with text-based outputs.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| arm64 | NVIDIA Jetson Orin | CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices |
+
+{{explore_optimizations}}
+
 ## Qwen3.6
 
 [![qwen3-6 snap](https://snapcraft.io/qwen3-6/badge.svg)](https://snapcraft.io/qwen3-6)
