@@ -10,5 +10,6 @@ switch-between-engines
 configure-snap
 openai-api
 sideload-model
+parallel-install
 ```
 
