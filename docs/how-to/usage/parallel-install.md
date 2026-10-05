@@ -1,6 +1,6 @@
 (parallel-install)=
 
-# Add a parallel Gemma 4 instance
+# Serve multiple model sizes in parallel
 
 Assume `gemma4` is already installed and serving the `gemma4-e4b` model on its default API port, `8336`. To serve `gemma4-12b` at the same time, install a second, independent instance named `gemma4_12b` and give it a different pair of ports. The existing `gemma4` instance keeps its model, configuration, and endpoints.
 
