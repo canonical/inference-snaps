@@ -39,6 +39,7 @@ inferencing
 Intersphinx
 io
 JetBrains
+Jetson
 json
 JSON
 lang
