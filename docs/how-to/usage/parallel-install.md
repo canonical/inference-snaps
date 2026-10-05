@@ -50,7 +50,7 @@ sudo gemma4_12b use-engine cpu
 
 Confirm any prompts to install missing components and restart the instance. For more details, see {ref}`switch-between-engines`.
 
-List the model IDs supported by the current engine:  
+List the models supported by the current engine:  
 
 ```shell
 gemma4_12b models
