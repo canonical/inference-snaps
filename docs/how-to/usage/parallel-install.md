@@ -2,7 +2,7 @@
 
 # Serve multiple model sizes in parallel
 
-Each inference snap can serve a single model. You need to install a second instant of the snap to server a second model, such as a different model size or quantization. This method is also useful if you want to serve models on different silicon.
+Each inference snap can serve a single model. You need to install a second instance of the snap to serve a second model, such as a different model size or quantization. This method is also useful if you want to serve models on different silicons.
 
 ## Enable parallel installs
 
@@ -14,13 +14,13 @@ sudo snap set system experimental.parallel-instances=true
 
 ## Install the second instance
 
-Install the second instance of the same snap, using an instance key to distinguish it from the existing installation. The instance key is an arbitrary string added as a suffix to the snap name. For example, if [Gemma4](https://snapcraft.io/gemma41) is already installed and using the E4B model, and you want a second instance to server the 12B variable, use a `_12b`:
+Install the second instance of the same snap, using an instance key to distinguish it from the existing installation. The instance key is an arbitrary string added as a suffix to the snap name. For example, if [Gemma4](https://snapcraft.io/gemma4) is already installed and using the E4B model, and you want a second instance to serve the 12B model, use a `_12b`:
 
 ```shell
 sudo snap install gemma4_12b
 ```
 
-The new instance comes with its own CLI and configuration. Use `gemma4_12b` for commands that should affect the new instance; continue using `gemma4` to manage the existing instance with the E4b model.
+The new instance comes with its own CLI and configuration. Use `gemma4_12b` for commands that should affect the new instance; continue using `gemma4` to manage the existing instance with the E4B model.
 
 ## Assign unused ports
 
