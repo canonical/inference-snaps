@@ -62,15 +62,22 @@ download-models: download-model
 
 download-model:
 	$(hf) download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q4_K_XL.gguf \
-		--local-dir model-weights/model-q4-k-xl-gguf/
+		--local-dir components/model-q4-k-xl-gguf/
 ```
 
-This downloads the model file into its own directory under `model-weights/`. Each of these directories becomes a component of the snap.
+This downloads the model file into its own directory under `components/`, where the pipeline expects the files that become part of the snap. Each of these directories becomes a component of the snap.
 
-```{tip}
+````{tip}
 The Snap Store rejects components larger than 5 GB.
-For larger models, split the file with `llama-gguf-split --split --split-max-size 4G`, upload the parts to Hugging Face, and download each part into its own directory under `model-weights/`.
+For larger models, split the file into parts with the `llama-gguf-split` tool from llama.cpp, passing the source file and an output prefix:
+
+```shell
+llama-gguf-split --split --split-max-size 4G <model>.gguf <model>
 ```
+
+This creates `<model>-00001-of-0000N.gguf`, `<model>-00002-of-0000N.gguf`, and so on.
+Upload these parts to a Hugging Face repository, and in the `Makefile` download each part into its own directory under `components/`.
+````
 
 ### README
 
@@ -131,7 +138,7 @@ If the output is not `workshop`, stop here. Exit and check that Workshop launche
 
 ### Start OpenCode
 
-The workshop includes the `inference-snap-maker` SDK and ships with [OpenCode](https://opencode.ai/docs), a terminal UI for running LLM agents. 
+The workshop includes the `inference-snap-maker-sdk` and ships with [OpenCode](https://opencode.ai/docs), a terminal UI for running LLM agents. 
 
 Inside the Workshop shell, start OpenCode:
 
@@ -139,7 +146,7 @@ Inside the Workshop shell, start OpenCode:
 opencode --auto
 ```
 
-The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker` SDK. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
+The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker-sdk`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
 
 OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see {ref}`OpenCode configuration <configure-opencode>`. You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
 In order to do that you can send this command in the OpenCode TUI:
