@@ -57,9 +57,11 @@ gemma4_12b models
 ```
 
 Check that the 12B model is available. If it is, select it:
+
 ```shell
 sudo gemma4_12b use-model gemma4-12b
 ```
+
 Confirm the prompt to restart the instance.
 
 ## Verify both instances
