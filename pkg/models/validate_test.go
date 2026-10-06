@@ -177,6 +177,16 @@ func TestCapabilityTextEmbedding(t *testing.T) {
 	}
 }
 
+func TestCapabilityDecision(t *testing.T) {
+	manifest := templateManifest()
+	manifest.Capabilities = []string{"decision"}
+
+	err := manifest.validate("test")
+	if err != nil {
+		t.Fatalf("decision is a valid capability, got error: %v", err)
+	}
+}
+
 func TestDiskSizeValidation(t *testing.T) {
 	tests := []struct {
 		name     string
