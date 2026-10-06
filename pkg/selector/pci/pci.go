@@ -7,9 +7,9 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector/weights"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/canonical/lscompute/pkg/machine"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
-	"github.com/canonical/lscompute/pkg/machine/types"
 )
 
 type pciDevice struct {
@@ -17,15 +17,19 @@ type pciDevice struct {
 	Score int
 }
 
-func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (maxDeviceScore int, deviceIssues []string) {
+func Match(manifestDevice engines.Device, machine *machine.Machine) (maxDeviceScore int, deviceIssues []string) {
 	maxDeviceScore = 0
 
-	if machineInfo == nil {
+	if machine == nil {
 		deviceIssues = append(deviceIssues, "no machine info provided")
 		return
 	}
 
-	hostPciDevices := pciDevices(machineInfo)
+	var hostPciDevices []pciDevice
+	for _, d := range machine.PCIDevices {
+		hostPciDevices = append(hostPciDevices, pciDevice{Device: d})
+	}
+
 	if len(hostPciDevices) == 0 {
 		deviceIssues = append(deviceIssues, "no pci devices on host system")
 		return
@@ -47,34 +51,23 @@ func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (max
 	return
 }
 
-// pciDevices returns the PCI devices from a machine's info, skipping any non-PCI devices.
-func pciDevices(info *machine.MachineInfo) []pciDevice {
-	var devices []pciDevice
-	for _, device := range info.Devices {
-		if d, ok := device.(pci.Device); ok {
-			devices = append(devices, pciDevice{Device: d})
-		}
-	}
-	return devices
-}
-
 // filterPciDevices returns all PCI devices from the provided list, where the Vendor ID and the Device ID match.
 //
 // Filtering does not return compatibility issues. If we did, an engine with N device on a machine with M pci devices,
 // would print NxM issues. These will all read "vendor id mismatch" or "device id mismatch" for each NxM combination.
 // In the end the reason is just "device not found".
-func filterPciDevices(pciDevices []pciDevice, vendorId *types.HexInt, deviceId *types.HexInt) []pciDevice {
+func filterPciDevices(pciDevices []pciDevice, vendorId *utils.HexInt, deviceId *utils.HexInt) []pciDevice {
 	var foundDevices []pciDevice
 	for _, pciDevice := range pciDevices {
 		include := true
 
 		if vendorId != nil {
-			if *vendorId != pciDevice.VendorId {
+			if *vendorId != utils.HexInt(pciDevice.VendorId) {
 				include = false
 			} else {
 				// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
 				if deviceId != nil {
-					if *deviceId != pciDevice.DeviceId {
+					if *deviceId != utils.HexInt(pciDevice.DeviceId) {
 						include = false
 					}
 				}
@@ -114,12 +107,12 @@ func scorePciDevice(manifestDevice engines.Device, hostPciDevice pci.Device) (de
 	// Check if a specific device vendor or id is specified and adjust the score
 	if manifestDevice.VendorId != nil {
 
-		if *manifestDevice.VendorId == hostPciDevice.VendorId {
+		if *manifestDevice.VendorId == utils.HexInt(hostPciDevice.VendorId) {
 			deviceScore += weights.PciVendorId
 
 			// A model ID is only unique per vendor ID namespace. Only check it if the vendor is a match
 			if manifestDevice.DeviceId != nil {
-				if *manifestDevice.DeviceId == hostPciDevice.DeviceId {
+				if *manifestDevice.DeviceId == utils.HexInt(hostPciDevice.DeviceId) {
 					deviceScore += weights.PciDeviceId
 				} else {
 					deviceScore = 0

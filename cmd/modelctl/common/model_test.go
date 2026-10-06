@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/disk"
 )
 
 // writeModelYAML creates a model manifest at modelsDir/<name>/model.yaml with the given content.
@@ -213,5 +215,25 @@ func TestGetAllModelsWithEngines(t *testing.T) {
 		default:
 			t.Errorf("unexpected model name: %s", modelWithEngines.Name)
 		}
+	}
+}
+
+func TestAvailableDiskSpace(t *testing.T) {
+	machine := new(machine.Machine{})
+	machine.Disk = []disk.Disk{
+		{
+			Available:  1024,
+			Total:      2048,
+			Path:       "/var/lib/snapd/snaps",
+			MountPoint: new("/"),
+		},
+	}
+
+	diskSpace, err := availableDiskSpace(machine)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if diskSpace != 1024 {
+		t.Errorf("expected positive available disk space, got: %d", diskSpace)
 	}
 }

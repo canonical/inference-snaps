@@ -3,7 +3,6 @@ package debug
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -11,9 +10,10 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/host"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 type selectCommand struct {
@@ -22,6 +22,7 @@ type selectCommand struct {
 	// flags
 	format     string
 	enginesDir string
+	machineDir string
 }
 
 type EngineSelection struct {
@@ -45,17 +46,20 @@ func SelectCommand(ctx *common.Context) *cobra.Command {
 	// flags
 	cobraCmd.Flags().StringVar(&cmd.format, "format", "json", "engine selection results format")
 	cobraCmd.Flags().StringVar(&cmd.enginesDir, "engines", ctx.EnginesDir, "engine manifests directory")
+	cobraCmd.Flags().StringVar(&cmd.machineDir, "machine", "/", "machine info directory")
 
 	return cobraCmd
 }
 
 func (cmd *selectCommand) run(_ *cobra.Command, args []string) error {
-	data, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		return fmt.Errorf("reading machine info from stdin: %s", err)
+	var h host.Host
+	if cmd.machineDir == "/" {
+		h = host.Real()
+	} else {
+		h = host.Fake(cmd.machineDir)
 	}
+	machineInfo, _, err := machine.Get(h, true, true)
 
-	machineInfo, err := machine.Decode(data)
 	if err != nil {
 		return fmt.Errorf("decoding machine info: %s", err)
 	}

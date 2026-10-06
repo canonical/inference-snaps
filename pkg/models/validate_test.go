@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 func templateManifest() Manifest {

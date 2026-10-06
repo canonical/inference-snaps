@@ -5,16 +5,16 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
-	"github.com/canonical/lscompute/pkg/machine/types"
 )
 
 func TestCheckGpuVendor(t *testing.T) {
-	gpuVendorId := types.HexInt(0xb33f)
+	gpuVendorId := utils.HexInt(0xb33f)
 
 	hwInfoGpu := pci.Device{
 		DeviceClass:          0x0300,
-		VendorId:             gpuVendorId,
+		VendorId:             uint16(gpuVendorId),
 		DeviceId:             0,
 		SubvendorId:          nil,
 		SubdeviceId:          nil,
@@ -39,14 +39,14 @@ func TestCheckGpuVendor(t *testing.T) {
 	}
 
 	// Same value, upper case string
-	gpuVendorId = types.HexInt(0xB33F)
+	gpuVendorId = utils.HexInt(0xB33F)
 	availableDevices = filterPciDevices(testPciDevices, device.VendorId, device.DeviceId)
 	_, scoreIssues = scorePciDevices(device, availableDevices)
 	if len(scoreIssues) != 0 {
 		t.Fatalf("GPU vendor should match: %s", strings.Join(scoreIssues, ", "))
 	}
 
-	gpuVendorId = types.HexInt(0x1337)
+	gpuVendorId = utils.HexInt(0x1337)
 	availableDevices = filterPciDevices(testPciDevices, device.VendorId, device.DeviceId)
 	_, scoreIssues = scorePciDevices(device, availableDevices)
 	if len(scoreIssues) == 0 {
@@ -125,13 +125,13 @@ func TestCheckComputeCapability(t *testing.T) {
 }
 
 func TestCheckNpuDriver(t *testing.T) {
-	npuVendorId := types.HexInt(0x8086)
-	npuDeviceId := types.HexInt(0x643e)
+	npuVendorId := utils.HexInt(0x8086)
+	npuDeviceId := utils.HexInt(0x643e)
 
 	hwInfo := pci.Device{
 		DeviceClass: 0x1200,
-		VendorId:    npuVendorId,
-		DeviceId:    npuDeviceId,
+		VendorId:    uint16(npuVendorId),
+		DeviceId:    uint16(npuDeviceId),
 		SubvendorId: nil,
 		SubdeviceId: nil,
 	}

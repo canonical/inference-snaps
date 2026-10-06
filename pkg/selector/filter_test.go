@@ -13,7 +13,7 @@ import (
 If the model snap has no engines defined, scoring should pass, but finding a top engine should not be possible.
 */
 func TestFindTopEngineFromNone(t *testing.T) {
-	hwInfo := machine.MachineInfo{}
+	hwInfo := machine.Machine{}
 
 	allEngines, err := engines.LoadManifests("../../test_data/engines")
 	if err != nil {
@@ -33,7 +33,7 @@ func TestFindTopEngineFromNone(t *testing.T) {
 }
 
 func TestNoCpuInHwInfo(t *testing.T) {
-	hwInfo := machine.MachineInfo{
+	hwInfo := machine.Machine{
 		// All fields are nil or zero
 	}
 
@@ -47,7 +47,6 @@ func TestNoCpuInHwInfo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 
 	// No CPU in hardware info
 	_, report, err := checkEngine(&hwInfo, currentEngine)

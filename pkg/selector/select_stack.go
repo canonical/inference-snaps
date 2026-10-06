@@ -35,7 +35,7 @@ func TopEngine(scoredEngines []engines.ScoredManifest) (*engines.ScoredManifest,
 	return &compatibleEngines[0], nil
 }
 
-func ScoreEngines(machineInfo *machine.MachineInfo, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
+func ScoreEngines(machineInfo *machine.Machine, manifests []engines.Manifest) ([]engines.ScoredManifest, error) {
 	var scoredEngines []engines.ScoredManifest
 
 	for _, currentManifest := range manifests {
@@ -56,7 +56,7 @@ func ScoreEngines(machineInfo *machine.MachineInfo, manifests []engines.Manifest
 	return scoredEngines, nil
 }
 
-func checkEngine(machineInfo *machine.MachineInfo, manifest engines.Manifest) (int, engines.CompatibilityReport, error) {
+func checkEngine(machineInfo *machine.Machine, manifest engines.Manifest) (int, engines.CompatibilityReport, error) {
 	engineScore := 0
 	compatibilityReport := engines.CompatibilityReport{
 		CompatibleMemory:  true,
@@ -93,7 +93,7 @@ func checkEngine(machineInfo *machine.MachineInfo, manifest engines.Manifest) (i
 	return engineScore, compatibilityReport, nil
 }
 
-func scoreDevicesAll(machineInfo *machine.MachineInfo, devices []engines.Device) int {
+func scoreDevicesAll(machineInfo *machine.Machine, devices []engines.Device) int {
 	compatible := true
 	compatibilityScore := 0
 
@@ -140,7 +140,7 @@ func scoreDevicesAll(machineInfo *machine.MachineInfo, devices []engines.Device)
 	return compatibilityScore
 }
 
-func scoreDevicesAny(machineInfo *machine.MachineInfo, devices []engines.Device) int {
+func scoreDevicesAny(machineInfo *machine.Machine, devices []engines.Device) int {
 	compatible := true
 	compatibilityScore := 0
 	devicesFound := 0

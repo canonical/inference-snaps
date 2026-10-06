@@ -180,8 +180,8 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 	return allModelsWithEngines, nil
 }
 
-func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machineInfo *machine.MachineInfo) ([]models.ScoredManifest, error) {
-	availableDiskSpace, err := availableDiskSpace(machineInfo)
+func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine) ([]models.ScoredManifest, error) {
+	availableDiskSpace, err := availableDiskSpace(machine)
 	if err != nil {
 		return nil, err
 	}
@@ -221,7 +221,7 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 
 // SelectModel picks a model that fits the available disk: the preferred one if it fits, otherwise the largest fitting model.
 // Returns ErrInsufficientDiskSpaceForModel when none fit.
-func SelectModel(ctx *Context, modelOptions []string, preferredModel string, machineInfo *machine.MachineInfo) (string, []models.ScoredManifest, error) {
+func SelectModel(ctx *Context, modelOptions []string, preferredModel string, machine *machine.Machine) (string, []models.ScoredManifest, error) {
 	modelManifests, err := models.LoadManifests(ctx.ModelsDir)
 	if err != nil {
 		return "", nil, fmt.Errorf("%s: %w", LoadingModelManifests, err)
@@ -231,7 +231,7 @@ func SelectModel(ctx *Context, modelOptions []string, preferredModel string, mac
 		manifestsByName[manifest.Name] = manifest
 	}
 
-	scoredModels, err := ScoreModels(modelOptions, manifestsByName, machineInfo)
+	scoredModels, err := ScoreModels(modelOptions, manifestsByName, machine)
 	if err != nil {
 		return "", nil, err
 	}
@@ -261,10 +261,11 @@ func SelectModel(ctx *Context, modelOptions []string, preferredModel string, mac
 	return "", scoredModels, ErrInsufficientDiskSpaceForModel
 }
 
-func availableDiskSpace(machineInfo *machine.MachineInfo) (uint64, error) {
-	disk, ok := machineInfo.Disk[constants.SnapStoragePath]
-	if !ok {
-		return 0, fmt.Errorf("disk information unavailable for %s", constants.SnapStoragePath)
+func availableDiskSpace(machine *machine.Machine) (uint64, error) {
+	for _, disk := range machine.Disk {
+		if disk.Path == constants.SnapStoragePath {
+			return disk.Available, nil
+		}
 	}
-	return disk.Avail, nil
+	return 0, fmt.Errorf("disk information unavailable for %s", constants.SnapStoragePath)
 }

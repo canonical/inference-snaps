@@ -91,11 +91,11 @@ func ExampleUseEngine_noRestartWhenEngineAndModelUnchanged() {
 		},
 	}
 
-	machineInfo, err := machineInfoFixture("dummy-machine")
+	machine, err := machineFixture("dummy-machine")
 	if err != nil {
 		panic(err)
 	}
-	if err := cmd.switchEngineWithMachineInfo("intel-gpu", machineInfo); err != nil {
+	if err := cmd.switchEngineWithMachine("intel-gpu", machine); err != nil {
 		panic(err)
 	}
 
@@ -133,11 +133,11 @@ func ExampleUseEngine_restartWhenEngineChanged() {
 		},
 	}
 
-	machineInfo, err := machineInfoFixture("dummy-machine")
+	machine, err := machineFixture("dummy-machine")
 	if err != nil {
 		panic(err)
 	}
-	if err := cmd.switchEngineWithMachineInfo("cpu-avx1", machineInfo); err != nil {
+	if err := cmd.switchEngineWithMachine("cpu-avx1", machine); err != nil {
 		panic(err)
 	}
 
@@ -192,7 +192,7 @@ func ExampleUseEngine_autoSelectEngine() {
 		}
 		allEngines = append(allEngines, *e)
 	}
-	machine, err := machineInfoFixture("mustang")
+	machine, err := machineFixture("mustang")
 	if err != nil {
 		panic(err)
 	}
@@ -258,12 +258,12 @@ func ExampleUseEngine_printIncompatibleModels() {
 	}
 	defer os.Unsetenv("SNAP_COMPONENTS")
 	cmd.Verbose = true
-	machine, err := machineInfoFixture("no-disk-available-machine")
+	machine, err := machineFixture("no-disk-available-machine")
 	if err != nil {
 		panic(err)
 	}
 
-	if err := cmd.switchEngineWithMachineInfo("cpu", machine); err != nil {
+	if err := cmd.switchEngineWithMachine("cpu", machine); err != nil {
 		panic(err)
 	}
 
@@ -376,14 +376,14 @@ func TestSwitchEngine_withModelID(t *testing.T) {
 	}
 }
 
-func TestSwitchEngineWithMachineInfo_lowDisk(t *testing.T) {
+func TestSwitchEngineWithMachine_lowDisk(t *testing.T) {
 	setupSnapComponents(t)
 	cmd := newUseEngineCmd()
-	machineInfo, err := machineInfoFixture("low-disk-available-machine")
+	machine, err := machineFixture("low-disk-available-machine")
 	if err != nil {
 		t.Fatalf("unexpected error getting machine info fixture: %v", err)
 	}
-	err = cmd.switchEngineWithMachineInfo("cpu", machineInfo)
+	err = cmd.switchEngineWithMachine("cpu", machine)
 	if err != nil {
 		t.Fatalf("unexpected error switching engine: %v", err)
 	}
@@ -399,11 +399,11 @@ func TestSwitchEngineWithMachineInfo_lowDisk(t *testing.T) {
 func TestSwitchEngineWithMachineInfo_noDiskNoModel(t *testing.T) {
 	setupSnapComponents(t)
 	cmd := newUseEngineCmd()
-	machineInfo, err := machineInfoFixture("no-disk-available-machine")
+	machine, err := machineFixture("no-disk-available-machine")
 	if err != nil {
 		t.Fatalf("unexpected error getting machine info fixture: %v", err)
 	}
-	err = cmd.switchEngineWithMachineInfo("cpu", machineInfo)
+	err = cmd.switchEngineWithMachine("cpu", machine)
 	if err != nil {
 		t.Fatalf("unexpected error switching engine: %v", err)
 	}
@@ -645,11 +645,11 @@ func TestSwitchToPreinstalledEngineAndModel(t *testing.T) {
 			}
 
 			cmd := newUseEngineCmd()
-			machineInfo, err := machineInfoFixture("dummy-machine")
+			machine, err := machineFixture("dummy-machine")
 			if err != nil {
 				t.Fatalf("loading machine fixture: %v", err)
 			}
-			switched, err := selectEngineForSeededComponents(cmd, scored, machineInfo)
+			switched, err := selectEngineForSeededComponents(cmd, scored, machine)
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
