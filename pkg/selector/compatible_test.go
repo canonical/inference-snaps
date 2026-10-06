@@ -322,7 +322,7 @@ func TestEngine(t *testing.T) {
 func testValidHw(t *testing.T, engineName string, hwName string) {
 	manifestFile := fmt.Sprintf("../../test_data/engines/%s/%s", engineName, engines.ManifestFilename)
 
-	machineInfo, err := machineInfoFixture(hwName)
+	machineInfo, err := machineFixture(hwName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -355,7 +355,7 @@ func testValidHw(t *testing.T, engineName string, hwName string) {
 func testInvalidHw(t *testing.T, engineName string, hwName string) {
 	manifestFile := fmt.Sprintf("../../test_data/engines/%s/%s", engineName, engines.ManifestFilename)
 
-	machineInfo, err := machineInfoFixture(hwName)
+	machineInfo, err := machineFixture(hwName)
 	if err != nil {
 		t.Fatal(err)
 	}

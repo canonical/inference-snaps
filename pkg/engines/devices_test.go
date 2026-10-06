@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
-	"github.com/canonical/lscompute/pkg/machine/types"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 )
 
 func TestDeviceType(t *testing.T) {
@@ -62,7 +62,7 @@ func TestDeviceGpu(t *testing.T) {
 	device.Bus = ""
 
 	t.Run("GPU valid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 
@@ -79,7 +79,7 @@ func TestDeviceGpu(t *testing.T) {
 	})
 
 	t.Run("GPU invalid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 
@@ -126,7 +126,7 @@ func TestDeviceNpu(t *testing.T) {
 	device.Bus = ""
 
 	t.Run("NPU valid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 
@@ -137,7 +137,7 @@ func TestDeviceNpu(t *testing.T) {
 	})
 
 	t.Run("NPU invalid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 
@@ -165,7 +165,7 @@ func TestDeviceNpu(t *testing.T) {
 
 	t.Run("NPU fastrpc invalid fields", func(t *testing.T) {
 		device = Device{Type: "npu", Bus: "fastrpc"}
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 
 		err := device.validate()
@@ -182,7 +182,7 @@ func TestDeviceTypeless(t *testing.T) {
 	device.Bus = "pci"
 
 	t.Run("PCI valid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 		err := device.validate()
@@ -192,7 +192,7 @@ func TestDeviceTypeless(t *testing.T) {
 	})
 
 	t.Run("PCI invalid fields", func(t *testing.T) {
-		hexValue := types.HexInt(0xAA)
+		hexValue := utils.HexInt(0xAA)
 		device.VendorId = &hexValue
 		device.DeviceId = &hexValue
 		device.Features = []string{"one", "two"}

@@ -11,16 +11,12 @@ import (
 	lsfastrpc "github.com/canonical/lscompute/pkg/machine/device/fastrpc"
 )
 
-func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (int, []string) {
-	if machineInfo == nil {
+func Match(manifestDevice engines.Device, machine *machine.Machine) (int, []string) {
+	if machine == nil {
 		return 0, []string{"no machine info provided"}
 	}
 
-	for _, device := range machineInfo.Devices {
-		fastRPCDevice, ok := device.(lsfastrpc.Device)
-		if !ok || fastRPCDevice.Bus != lsfastrpc.BusName {
-			continue
-		}
+	for _, fastRPCDevice := range machine.FastRPCDevices {
 		if manifestDevice.Type != "" && manifestDevice.Type != "npu" {
 			continue
 		}

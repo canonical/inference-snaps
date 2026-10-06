@@ -9,8 +9,8 @@ import (
 )
 
 func TestFastRPCNPUSelection(t *testing.T) {
-	machineInfo := &machine.MachineInfo{
-		Devices: []any{
+	machineInfo := &machine.Machine{
+		FastRPCDevices: []lsfastrpc.Device{
 			lsfastrpc.Device{
 				Bus:    lsfastrpc.BusName,
 				Domain: lsfastrpc.CDSPDomain,
@@ -43,8 +43,8 @@ func TestFastRPCNPUSelection(t *testing.T) {
 }
 
 func TestFastRPCNPURejectsNonCDSPSelection(t *testing.T) {
-	machineInfo := &machine.MachineInfo{
-		Devices: []any{
+	machineInfo := &machine.Machine{
+		FastRPCDevices: []lsfastrpc.Device{
 			lsfastrpc.Device{
 				Bus:    lsfastrpc.BusName,
 				Domain: lsfastrpc.ADSPDomain,

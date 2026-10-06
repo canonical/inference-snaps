@@ -16,7 +16,7 @@ Match takes a Device with type CPU, and checks if it matches any of the CPU mode
 A score, a string slice with reasons and an error are returned. If there is a matching CPU on the system, the score will be positive and the error will be nil.
 If no CPU is found, the score will be zero and there will be one or more reasons for the mismatch.
 */
-func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (maxCpuScore int, deviceIssues []string) {
+func Match(manifestDevice engines.Device, machineInfo *machine.Machine) (maxCpuScore int, deviceIssues []string) {
 	maxCpuScore = 0
 
 	if machineInfo == nil {
@@ -24,7 +24,7 @@ func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (max
 		return
 	}
 
-	hostCpus := machineInfo.Cpus
+	hostCpus := machineInfo.CPUs
 	if hostCpus == nil {
 		deviceIssues = append(deviceIssues, "no cpu found on host system")
 	}
@@ -50,7 +50,7 @@ func Match(manifestDevice engines.Device, machineInfo *machine.MachineInfo) (max
 	return
 }
 
-func CheckCpu(manifestDevice engines.Device, hostCpu cpu.CpuInfo) (cpuScore int, issues []string) {
+func CheckCpu(manifestDevice engines.Device, hostCpu cpu.CPU) (cpuScore int, issues []string) {
 	cpuScore = weights.CpuDevice
 
 	// architecture
@@ -91,7 +91,7 @@ func CheckCpu(manifestDevice engines.Device, hostCpu cpu.CpuInfo) (cpuScore int,
 	if hostCpu.Architecture == constants.Arm64 {
 		// arm64 implementer ID
 		if manifestDevice.ImplementerId != nil {
-			if *manifestDevice.ImplementerId == hostCpu.ImplementerId {
+			if uint64(*manifestDevice.ImplementerId) == hostCpu.ImplementerId {
 				cpuScore += weights.CpuVendor
 			} else {
 				issues = append(issues, fmt.Sprintf("implementer id mismatch: %x", hostCpu.ImplementerId))
@@ -100,7 +100,7 @@ func CheckCpu(manifestDevice engines.Device, hostCpu cpu.CpuInfo) (cpuScore int,
 
 		// arm64 part number
 		if manifestDevice.PartNumber != nil {
-			if *manifestDevice.PartNumber == hostCpu.PartNumber {
+			if uint64(*manifestDevice.PartNumber) == hostCpu.PartNumber {
 				cpuScore += weights.CpuModel
 			} else {
 				issues = append(issues, fmt.Sprintf("part number mismatch: %x", hostCpu.PartNumber))

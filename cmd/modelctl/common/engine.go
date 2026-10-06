@@ -218,8 +218,8 @@ func UnsetEngineConfig(engineName string, unsetUserOverrides bool, ctx *Context)
 // machineInfoGet and engineScorer are package-level variables so tests can
 // inject fakes without changing any production behaviour.
 var (
-	machineInfoGet = machine.Get
-	engineScorer   = selector.ScoreEngines
+	machineGet   = machine.Get
+	engineScorer = selector.ScoreEngines
 )
 
 /*
@@ -228,13 +228,13 @@ and scores the engines according to their compatibility with the host.
 
 Warning: calls to this function can block for a number of seconds while the host machine information is being looked up.
 */
-func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, *machine.MachineInfo, []string, error) {
+func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, *machine.Machine, []string, error) {
 	allEngines, err := engines.LoadManifests(ctx.EnginesDir)
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("loading engines: %w", err)
 	}
 
-	machineInfo, warnings, err := machineInfoGet(host.Real(), false)
+	machineInfo, warnings, err := machineGet(host.Real(), false, true)
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("getting machine info: %w", err)
 	}
@@ -247,7 +247,7 @@ func ScoreEngines(ctx *Context) ([]engines.ScoredManifest, *machine.MachineInfo,
 	return scoredEngines, machineInfo, warnings, nil
 }
 
-func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, *machine.MachineInfo, error) {
+func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, *machine.Machine, error) {
 	stopProgress := StartProgressSpinner("Checking engine compatibility")
 	scoredEngines, machineInfo, warnings, err := ScoreEngines(ctx)
 	stopProgress()

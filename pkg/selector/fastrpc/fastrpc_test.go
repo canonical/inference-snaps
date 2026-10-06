@@ -10,13 +10,11 @@ import (
 
 func TestMatch(t *testing.T) {
 	t.Run("FastRPC NPU matches CDSP", func(t *testing.T) {
-		machineInfo := &machine.MachineInfo{
-			Devices: []any{
-				lsfastrpc.Device{
-					Bus:    lsfastrpc.BusName,
-					Domain: lsfastrpc.CDSPDomain,
-				},
-			},
+		machineInfo := &machine.Machine{
+			FastRPCDevices: []lsfastrpc.Device{{
+				Bus:    lsfastrpc.BusName,
+				Domain: lsfastrpc.CDSPDomain,
+			}},
 		}
 		device := engines.Device{Type: "npu", Bus: "fastrpc"}
 
@@ -35,9 +33,9 @@ func TestMatch(t *testing.T) {
 		}
 		for _, domain := range domains {
 			t.Run(string(domain), func(t *testing.T) {
-				machineInfo := &machine.MachineInfo{
-					Devices: []any{
-						lsfastrpc.Device{
+				machineInfo := &machine.Machine{
+					FastRPCDevices: []lsfastrpc.Device{
+						{
 							Bus:    lsfastrpc.BusName,
 							Domain: domain,
 						},
@@ -66,9 +64,9 @@ func TestMatch(t *testing.T) {
 		}
 		for _, domain := range domains {
 			t.Run(string(domain), func(t *testing.T) {
-				machineInfo := &machine.MachineInfo{
-					Devices: []any{
-						lsfastrpc.Device{
+				machineInfo := &machine.Machine{
+					FastRPCDevices: []lsfastrpc.Device{
+						{
 							Bus:    lsfastrpc.BusName,
 							Domain: domain,
 						},
@@ -85,7 +83,7 @@ func TestMatch(t *testing.T) {
 	})
 
 	t.Run("no FastRPC devices", func(t *testing.T) {
-		machineInfo := &machine.MachineInfo{}
+		machineInfo := &machine.Machine{}
 		device := engines.Device{Type: "npu", Bus: "fastrpc"}
 
 		score, issues := Match(device, machineInfo)
