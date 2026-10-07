@@ -138,7 +138,7 @@ If the output is not `workshop`, stop here. Exit and check that Workshop launche
 
 ### Start OpenCode
 
-The workshop includes the `inference-snap-maker-sdk` and ships with [OpenCode](https://opencode.ai/docs), a terminal UI for running LLM agents. 
+The workshop includes the `inference-snap-maker` SDK and ships with [OpenCode](https://opencode.ai/docs), a terminal UI for running LLM agents. 
 
 Inside the Workshop shell, start OpenCode:
 
@@ -146,7 +146,7 @@ Inside the Workshop shell, start OpenCode:
 opencode --auto
 ```
 
-The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker-sdk`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
+The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
 
 OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see {ref}`OpenCode configuration <configure-opencode>`. You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
 In order to do that you can send this command in the OpenCode TUI:
