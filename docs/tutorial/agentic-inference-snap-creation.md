@@ -1,6 +1,6 @@
 # Using agentic AI to create inference snaps
 
-In this tutorial, you'll package an inference snap with Workshop and the `inference-snap-maker` SDK.
+In this tutorial, you'll package an inference snap with Workshop and the [inference snap maker SDK](https://github.com/canonical/inference-snap-maker-sdk).
 Starting from a repository created from the inference snap template, you'll prepare two input files, run the packaging pipeline through an LLM agent, then install and start the snap on your machine.
 
 You'll do this with the help of an LLM of your choice.
@@ -34,12 +34,12 @@ git clone <your-inference-snap-repo-url>
 cd <your-inference-snap-repo>
 ```
 
-List the directory contents. You should see three files:
+List the directory contents. You should see the following:
 
 ```{terminal}
 ls
 
-Makefile  README.md  workshop.yaml
+dev Makefile  README.md  renovate.json workshop.yaml
 ```
 
 These files are the inputs for the packaging pipeline.
@@ -51,35 +51,27 @@ You provide these by editing the `Makefile` and the `README.md`.
 
 ### Makefile
 
-First, open the `Makefile` and replace its contents with the following, which downloads a single *Qwen 3.5* model file:
+First, open the `Makefile`. Keep the existing targets, set `SNAP_NAME`, and replace the example download targets at the end of the file with the following, which downloads a single *Qwen 3.5* model file:
 
 ```makefile
-SHELL := /bin/bash
+SNAP_NAME ?= qwen3-5
 
-.PHONY: download-models setup-hf-cli
+# ...
 
-all: download-models
-
-download-models: download-model
-
-setup-hf-cli:
-	sudo apt-get install -y python3-venv
-	python3 -m venv .venv
-	. .venv/bin/activate && pip install --upgrade pip && pip install -U huggingface_hub
-
-download-model: setup-hf-cli
-	. .venv/bin/activate && hf download hf://unsloth/Qwen3.5-4B-GGUF/Qwen3.5-4B-UD-Q4_K_XL.gguf --local-dir components/model-q4-k-xl-gguf
+download-models:
+	$(hf) download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q4_K_XL.gguf \
+		--local-dir model-weights/model-q4-k-xl-gguf/
 ```
 
-This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `components/` directory, where the pipeline expects the files that become part of the snap.
+This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `model-weights/` directory, where the pipeline expects the files that become part of the snap.
 
 ### README
 
-Next, open `README.md` and fill in the metadata block at the top of the file, between the `<!--` and `-->` comment tags, with these values:
+Next, open `README.md` and fill in the YAML frontmatter at the top of the file, between the two `---` lines, with these values:
 
-```text
+```yaml
 snap-name: qwen3-5
-snap-friendly-name: Qwen 3.5
+snap-title: Qwen 3.5
 model-card: https://qwen.ai/blog?id=qwen3.5
 http-port: 8352
 webui-http-port: 8353
@@ -88,7 +80,7 @@ engines: cpu
 
 Notice a few things about this block:
 
-- `snap-name` uses only lowercase letters, digits, and hyphens. It becomes the CLI command users run after installation.
+- `snap-name` uses only lowercase letters, digits, and hyphens. It becomes the CLI command users run after installation. It must match `SNAP_NAME` in the `Makefile`.
 - The ports `8352` and `8353` must not clash with entries in the [Network ports registry](../reference/network-ports.md).
 - `engines: cpu` keeps this first build simple by targeting a single hardware optimization.
 
@@ -151,6 +143,10 @@ In order to do that you can send this command in the OpenCode TUI:
 
 You will be prompted to select a provider and enter your API key or redirected to a web page to log in. After you connect, you can use the remote model for the packaging pipeline.
 By default, OpenCode uses the `Big Pickle` model from OpenCode Zen. You are free to use any model you prefer.
+
+```{note}
+The pipeline runs several agents in sequence that write many files. Small models, such as local models with a few billion parameters, can report a stage as successful without writing any files. Use a large model with strong tool-calling capabilities.
+```
 
 ### Run the packaging pipeline
 
