@@ -9,7 +9,7 @@ Endpoints:
   POST /{v1,v3}/chat/completions
 
 Usage:
-  python3 server.py --host 127.0.0.1 --port 8080
+  python3 server.py --host 127.0.0.1 --port 8080 [--panic-after SECONDS]
 """
 
 import argparse
@@ -283,6 +283,17 @@ def _handle_shutdown_signal(signum, frame):
     sys.exit(0)
 
 
+def _handle_panic_signal(signum, frame):
+    raise RuntimeError("Injected panic")
+
+
+def _positive_float(value):
+    parsed = float(value)
+    if not 0 < parsed < float("inf"):
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
+
+
 def main():
     global RESPONSE_DELAY, TIME_TO_FIRST_TOKEN, INCLUDE_REASONING
 
@@ -320,6 +331,12 @@ def main():
         default=False,
         help="Include reasoning_content in responses (default: off)",
     )
+    parser.add_argument(
+        "--panic-after",
+        type=_positive_float,
+        metavar="SECONDS",
+        help="Inject a panic this many seconds after startup (default: disabled)",
+    )
     args = parser.parse_args()
 
     RESPONSE_DELAY = args.delay
@@ -342,6 +359,10 @@ def main():
 
     signal.signal(signal.SIGTERM, _handle_shutdown_signal)
     signal.signal(signal.SIGINT, _handle_shutdown_signal)
+    if args.panic_after is not None:
+        signal.signal(signal.SIGALRM, _handle_panic_signal)
+        signal.setitimer(signal.ITIMER_REAL, args.panic_after)
+        print(f"[mock-openai] Panic scheduled after {args.panic_after}s")
 
     try:
         httpd.serve_forever()
@@ -353,4 +374,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -3,13 +3,17 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"net"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/fallbackserver"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
@@ -20,7 +24,8 @@ type runCommand struct {
 	*common.Context
 
 	// flags
-	shareProvider string
+	shareProvider  string
+	fallbackServer bool
 }
 
 func Run(ctx *common.Context) *cobra.Command {
@@ -47,6 +52,8 @@ func Run(ctx *common.Context) *cobra.Command {
 	// --share-provider [path]
 	cobraCmd.Flags().StringVar(&cmd.shareProvider, "share-provider", "", "write provider env file to a shared directory")
 	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = cmd.defaultProviderDirectoryPath()
+	// --fallback-server
+	cobraCmd.Flags().BoolVar(&cmd.fallbackServer, "fallback-server", false, "if the command fails to run, start a fallback server")
 
 	return cobraCmd
 }
@@ -62,8 +69,8 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	}
 
 	clean, err := common.LoadEngineEnvironment(cmd.Context)
-	if err == common.ErrNoActiveModel {
-		return fmt.Errorf("no active model")
+	if errors.Is(err, common.ErrNoActiveModel) {
+		return cmd.fallback(err)
 	}
 	if err != nil {
 		return fmt.Errorf("loading engine environment: %v", err)
@@ -85,7 +92,99 @@ func (cmd *runCommand) run(_ *cobra.Command, args []string) error {
 	execCmd := exec.Command(command, args[1:]...)
 	execCmd.Stdout = os.Stdout
 	execCmd.Stderr = os.Stderr
-	return execCmd.Run()
+	err = execCmd.Run()
+	if err != nil {
+		return cmd.fallback(err)
+	}
+	return err
+}
+
+func (cmd *runCommand) fallback(commandErr error) error {
+	if !cmd.fallbackServer {
+		return commandErr
+	}
+
+	// If the child process is stopped with a direct sigterm or sigkill signal,
+	// interpret it as an expected exit which does not require a fallback server.
+	if cmd.commandStopped(commandErr) {
+		return commandErr
+	}
+
+	// For now only serve a fallback server if the engine defines an openai endpoint
+	baseUrl, err := common.OpenAiBaseUrl(cmd.Context)
+	if err != nil && errors.Is(err, common.ErrNoOpenAiServer) {
+		return commandErr
+	} else if err != nil {
+		return fmt.Errorf("getting OpenAI base URL: %v", err)
+	}
+
+	fallbackListenAddress, err := cmd.listenAddress(baseUrl)
+	if err != nil {
+		return fmt.Errorf("parsing OpenAI base URL: %v", err)
+	}
+
+	return cmd.startFallbackServer(fallbackListenAddress)
+}
+
+// listenAddress parses a URL and returns the host:port address
+func (*runCommand) listenAddress(baseURL string) (string, error) {
+	parsed, err := url.Parse(baseURL)
+	if err != nil {
+		return "", fmt.Errorf("parsing base URL: %w", err)
+	}
+	if parsed.Hostname() == "" {
+		return "", fmt.Errorf("base URL %q does not contain a host", baseURL)
+	}
+
+	port := parsed.Port()
+	if port == "" {
+		port = "80" // default for http url without a port
+	}
+	return net.JoinHostPort(parsed.Hostname(), port), nil
+}
+
+// startFallbackServer gathers error messages explaining why the command failed,
+// then runs a fallback server on the provided address
+func (cmd *runCommand) startFallbackServer(address string) error {
+	servedErrorMessage := "Inference server failed to start. Please check the logs for more information."
+
+	statusStr, err := common.SnapStatus(cmd.Context)
+	if err != nil {
+		switch {
+		case errors.Is(err, common.ErrNoActiveEngine):
+			servedErrorMessage = "No active engine is set. Please set an active engine and try again."
+		case errors.Is(err, common.ErrNoActiveModel):
+			servedErrorMessage = "No active model is set. Please set an active model and try again."
+		default:
+			return fmt.Errorf("getting status: %v", err)
+		}
+	}
+	if statusStr == nil {
+		return fmt.Errorf("empty status reported")
+	}
+
+	fmt.Println("Starting fallback server...")
+
+	if err := fallbackserver.Run(address, servedErrorMessage); err != nil {
+		return fmt.Errorf("running fallback server: %v", err)
+	}
+
+	return nil
+}
+
+func (*runCommand) commandStopped(err error) bool {
+	var exitErr *exec.ExitError
+	if !errors.As(err, &exitErr) {
+		return false
+	}
+
+	status, ok := exitErr.ProcessState.Sys().(syscall.WaitStatus)
+	if !ok || !status.Signaled() {
+		return false
+	}
+
+	signal := status.Signal()
+	return signal == syscall.SIGTERM || signal == syscall.SIGINT
 }
 
 func (cmd *runCommand) processEnvConfigs() error {
