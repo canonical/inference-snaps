@@ -184,6 +184,26 @@ The inference snap for Nomic Embed Text v1.5 has been optimized for the followin
 
 {{explore_optimizations}}
 
+## OpenJEV
+
+[![openjev snap](https://snapcraft.io/openjev/badge.svg)](https://snapcraft.io/openjev)
+[![openjev source][gh-badge]](https://github.com/canonical/openjev-snap)
+
+OpenJev is an open-weights decision model. You describe the decision in plain words at request time, with your own labels, and it answers with a choice, a yes / no probability or a score.
+The input can be a combination of an image and text, with the output being text or decisions.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
+{{explore_optimizations}}
+
 ## Phi 4
 
 [![phi4 snap](https://snapcraft.io/phi4/badge.svg)](https://snapcraft.io/phi4)
