@@ -38,6 +38,7 @@ gemma4 chat
 
 | Model | Capabilities | Install | Source |
 |---|---|---|---|
+| Clef Flash | decision, vision | `snap install clef-flash` | [repo](https://github.com/canonical/clef-flash-snap)
 | DeepSeek R1 | text, thinking | `snap install deepseek-r1` | [repo](https://github.com/canonical/deepseek-r1-snap)
 | Gemma 3 | text, thinking, vision | `snap install gemma3` | [repo](https://github.com/canonical/gemma3-snap)
 | Gemma 4 | text, thinking, vision, tools | `snap install gemma4` | [repo](https://github.com/canonical/gemma4-snap)

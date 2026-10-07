@@ -4,6 +4,24 @@
 
 This page contains a list of inference snaps and the available optimizations.
 
+## Clef Flash
+
+[![clef-flash snap](https://snapcraft.io/clef-flash/badge.svg)](https://snapcraft.io/clef-flash)
+[![clef-flash source][gh-badge]](https://github.com/canonical/clef-flash-snap)
+
+Clef Flash is an open-weights decision model. You describe the decision in plain words at request time, with your own labels, and it answers with a choice, a yes / no probability or a score.
+The input can be a combination of an image and text, with the output being decisions.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+
 ## DeepSeek R1
 
 [![deepseek-r1 snap](https://snapcraft.io/deepseek-r1/badge.svg)](https://snapcraft.io/deepseek-r1)
