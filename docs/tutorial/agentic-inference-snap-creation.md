@@ -58,26 +58,12 @@ SNAP_NAME ?= qwen3-5
 
 # ...
 
-download-models: download-model
-
-download-model:
+download-models:
 	$(hf) download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q4_K_XL.gguf \
-		--local-dir components/model-q4-k-xl-gguf/
+		--local-dir model-weights/model-q4-k-xl-gguf/
 ```
 
-This downloads the model file into its own directory under `components/`, where the pipeline expects the files that become part of the snap. Each of these directories becomes a component of the snap.
-
-````{tip}
-The Snap Store rejects components larger than 5 GB.
-If a file is in GGUF format and it's more than 5GB, split the file into parts with the `llama-gguf-split` tool from llama.cpp, passing the source file and an output prefix:
-
-```shell
-llama-gguf-split --split-max-size 5G <model>.gguf <model>
-```
-
-This creates `<model>-00001-of-0000N.gguf`, `<model>-00002-of-0000N.gguf`, and so on.
-Upload these parts to a Hugging Face repository, and in the `Makefile` download each part into its own directory under `components/`.
-````
+This sets up the Hugging Face CLI in a local virtual environment and downloads the model file into the `model-weights/` directory, where the pipeline expects the files that become part of the snap.
 
 ### README
 
@@ -95,7 +81,7 @@ engines: cpu
 Notice a few things about this block:
 
 - `snap-name` uses only lowercase letters, digits, and hyphens. It becomes the CLI command users run after installation. It must match `SNAP_NAME` in the `Makefile`.
-- `8352` and `8353` are the ports reserved for `qwen3-5` in the [Network ports registry](../reference/network-ports.md). A new snap must use the next free pair of ports instead.
+- The ports `8352` and `8353` must not clash with entries in the [Network ports registry](../reference/network-ports.md).
 - `engines: cpu` keeps this first build simple by targeting a single hardware optimization.
 
 Your two inputs are now ready: the `Makefile` downloads the model, and the `README.md` metadata describes the snap.
@@ -146,7 +132,7 @@ Inside the Workshop shell, start OpenCode:
 opencode --auto
 ```
 
-The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker`. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
+The OpenCode TUI opens with the skills and agents installed by the `inference-snap-maker` SDK. The `--auto` flag approves permission prompts automatically, which is safe here because the Workshop environment is sandboxed.
 
 OpenCode can be configured to use a local LLM or a remote API. If you want to use a local model, see {ref}`OpenCode configuration <configure-opencode>`. You can also use a remote model by providing an API key for a service like Claude or OpenAI. 
 In order to do that you can send this command in the OpenCode TUI:
