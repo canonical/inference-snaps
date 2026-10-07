@@ -22,7 +22,7 @@ All responses include `Access-Control-Allow-Origin: *` CORS headers.
 ## Usage
 
 ```bash
-python3 server.py [--host HOST] [--port PORT] [--delay SECONDS]
+python3 server.py [--host HOST] [--port PORT] [--delay SECONDS] [--panic-after SECONDS]
 ```
 
 ### Arguments
@@ -32,6 +32,9 @@ python3 server.py [--host HOST] [--port PORT] [--delay SECONDS]
 | `--host` | `127.0.0.1` | Network interface to bind to |
 | `--port` | `8080` | TCP port to listen on |
 | `--delay` | `0.5` | Seconds to wait before each response and between SSE chunks |
+| `--ttft` | `0` | Seconds to wait before sending the first streaming response chunk |
+| `--reasoning` | off | Include `reasoning_content` in responses |
+| `--panic-after` | disabled | Inject a panic the specified number of seconds after startup |
 
 ### Examples
 
@@ -44,6 +47,9 @@ python3 server.py --host 0.0.0.0 --port 11434 --delay 0
 
 # Simulate a slow server (2 s per token)
 python3 server.py --delay 2.0
+
+# Crash with an injected panic 30 seconds after startup
+python3 server.py --panic-after 30
 ```
 
 ## Sample Responses
