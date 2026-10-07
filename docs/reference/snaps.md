@@ -108,6 +108,25 @@ This inference snap is optimized for the following hardware:
 
 {{explore_optimizations}}
 
+## MiMo V2.6
+
+[![mimo-v2-6 snap](https://snapcraft.io/mimo-v2-6/badge.svg)](https://snapcraft.io/mimo-v2-6)
+[![mimo-v2-6 code][gh-badge]](https://github.com/canonical/mimo-v2.6-snap)
+
+MiMo V2.6 Distill Qwen is an agentic Large Language Model by Xiaomi MiMo, fine-tuned from Qwen3.5 for coding, tool calling, and visual tasks.
+The input can be a combination of an image and text, with the output being text-based.
+
+This inference snap is optimized for the following hardware:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+
+{{explore_optimizations}}
+
 ## Nemotron 3 Nano
 
 [![nemotron-3-nano snap](https://snapcraft.io/nemotron-3-nano/badge.svg)](https://snapcraft.io/nemotron-3-nano)

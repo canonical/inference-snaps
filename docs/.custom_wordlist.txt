@@ -20,6 +20,7 @@ fonts
 Fosstodon
 freefont
 frontend
+frontmatter
 gemma
 Gemma
 Gemma's
@@ -54,6 +55,7 @@ lscompute
 Makefile
 microarchitecture
 microarchitectures
+MiMo
 multimodal
 Multipass
 MyST
@@ -125,6 +127,7 @@ whitespace
 whitespaces
 wordlist
 xetex
+Xiaomi
 xindy
 xml
 yaml
