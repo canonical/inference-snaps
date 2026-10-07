@@ -66,7 +66,7 @@
 	path = snaps/phi4
 	url = https://github.com/canonical/phi4-snap
 	branch = main
-[submodule "snaps/openjev"]
+[submodule "openjev"]
 	path = snaps/openjev
 	url = https://github.com/canonical/openjev-snap.git
 	branch = main
