@@ -27,4 +27,5 @@ The following table lists the default port assignments for each inference snap. 
 | [Qwen 3.8](https://snapcraft.io/qwen3-8) | 8356, 8357 |
 | [GLM-OCR](https://snapcraft.io/glm-ocr) | 8358, 8359 |
 | [Phi 4](https://snapcraft.io/phi4) | 8360, 8361 |
+| [MiMo v2.6](https://snapcraft.io/mimo-v2-6) | 8362, 8363 |
 | [OpenJev](https://snapcraft.io/openjev) | 8364, 8365 |
