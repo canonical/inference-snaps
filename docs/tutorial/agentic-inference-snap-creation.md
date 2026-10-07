@@ -56,7 +56,7 @@ First, open the `Makefile`. Keep the existing targets, set `SNAP_NAME`, and repl
 ```makefile
 SNAP_NAME ?= qwen3-5
 
-...
+# ...
 
 download-models: download-model
 
@@ -72,7 +72,7 @@ The Snap Store rejects components larger than 5 GB.
 If a file is in GGUF format and it's more than 5GB, split the file into parts with the `llama-gguf-split` tool from llama.cpp, passing the source file and an output prefix:
 
 ```shell
-llama-gguf-split --split --split-max-size 4G <model>.gguf <model>
+llama-gguf-split --split-max-size 5G <model>.gguf <model>
 ```
 
 This creates `<model>-00001-of-0000N.gguf`, `<model>-00002-of-0000N.gguf`, and so on.
