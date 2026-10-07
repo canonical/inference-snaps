@@ -69,7 +69,7 @@ This downloads the model file into its own directory under `components/`, where 
 
 ````{tip}
 The Snap Store rejects components larger than 5 GB.
-For larger models, split the file into parts with the `llama-gguf-split` tool from llama.cpp, passing the source file and an output prefix:
+If a file is in GGUF format and it's more than 5GB, split the file into parts with the `llama-gguf-split` tool from llama.cpp, passing the source file and an output prefix:
 
 ```shell
 llama-gguf-split --split --split-max-size 4G <model>.gguf <model>
