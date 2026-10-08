@@ -65,7 +65,8 @@ type. The remaining fields depend on the device type and bus. See
 
 **Type:** string. **Required:** no.
 
-The name of the runtime manifest used by the engine, for example `llamacpp-cuda`.
+The name of the {ref}`runtime manifest <runtime-manifest>` used by the engine,
+for example `llamacpp-cuda`.
 
 ## `model`
 
@@ -76,7 +77,7 @@ The models supported by the engine:
 - `default` (string): the model name used by default when selecting the engine.
 - `options` (list of strings): the model names available for the engine.
 
-These names reference model manifests.
+These names reference {ref}`model manifests <model-manifest>`.
 
 ## `configurations`
 
@@ -156,7 +157,7 @@ implemented. Entries with `bus: usb` fail validation.
 when device requirements are not met. It can appear in serialized results, but
 must not be supplied in an authored engine manifest.
 
-## Example YAML {spellexception}`serialization` of an engine manifest
+## Example YAML serialization of an engine manifest
 
 ```yaml
 # engines/nvidia-gpu/engine.yaml

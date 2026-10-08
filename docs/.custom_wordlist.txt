@@ -91,6 +91,7 @@ runtimes
 sandboxed
 SDK
 SDKs
+serialization
 sideload
 sideloaded
 sideloading
