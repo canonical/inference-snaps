@@ -4,9 +4,9 @@ backend
 backends
 Battlemage
 Charmcraft
-Clef
 chatbot
 cjk
+Clef
 config
 Continue
 cpu
