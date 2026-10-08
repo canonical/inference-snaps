@@ -6,6 +6,7 @@ Battlemage
 Charmcraft
 chatbot
 cjk
+Clef
 config
 Continue
 cpu
