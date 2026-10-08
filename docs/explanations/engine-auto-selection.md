@@ -1,45 +1,41 @@
 # Engine auto selection
 
-During installation of an inference snap, the most appropriate engine is selected from the set of available engines in the respective snap.
-This reference describes the engine auto selection process.
-
-At build time an inference snap is built with a set of engines, targeting a range of specific and generic hardware.
-During install time the most appropriate one of these need to be chosen.
+An inference snap includes engines targeting a range of specific and generic hardware.
+During installation, automatic selection chooses the most appropriate engine for the host system.
 
 ## Engine selection process
 
 During installation, or when a user manually calls `<inference snap> use-engine --auto`, the following steps are performed:
 
 1. A summary of available compute hardware is made using the `lscompute` library.
-2. The list of available engines is filtered to remove any engines that can not run on the available hardware.
+2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied.
 3. The remaining engines are sorted by how specifically they target and match the available hardware.
-
-We'll discuss step 2 and 3 in more detail below.
 
 ## Filtering step
 
-An engine lists required hardware under the devices section in the engine manifest file.
-Some devices are always required, and listed under `all-of`.
-Other devices can have multiple options, and are listed under `any-of`.
+An engine lists required hardware under the `devices` section in the engine manifest file.
+Devices that are always required are listed under `allof`.
+Alternative devices are listed under `anyof`.
 
-For example if an engine always requires an arm64 cpu, it will be listed under `all-of`.
-If an engine can run on either an AMD GPU or an NVIDIA GPU, the two GPU devices, with their vendor IDs will be listed under `any-of`.
+For example, if an engine always requires an `arm64` CPU, it will be listed under `allof`.
+If an engine can run on either an AMD GPU or an NVIDIA GPU, the two GPU devices, with their vendor IDs, will be listed under `anyof`.
 
-During filtering, the list of all-of and any-of devices are compared to the list of available compute devices on the host system.
-If the host's hardware matches all of the devices listed under `all-of`, and at least one of the devices listed under `any-of`, the engine is considered compatible with the host system.
+During filtering, the device requirements are compared to the list of available compute devices on the host system.
+Requirements under `allof` must all be satisfied.
+Requirements under `anyof` provide alternatives, at least one of which must be satisfied.
+An engine is considered compatible when the host system satisfies its device requirements.
 Otherwise it is filtered out and not considered for selection.
+
+Experimental engines are excluded from automatic selection.
 
 ## Sorting step
 
 The device definition in the engine manifest has a number of optional properties.
 Some of them can be generic like CPU architecture, while other properties can be specific like PCI device ID.
 
-The more properties are defined, the more specifically this engine targets a specific hardware.
-An engine that targets a specific device is considered to perform better than an engine that targets a generic device.
+In general, defining more hardware properties makes an engine's requirements more specific.
+Matching more specific hardware requirements generally results in a higher score.
+Compatible engines are ranked using these scores, with higher scores indicating a stronger preference for an engine based on its match to the host hardware.
+The score is not a measurement or guarantee of performance.
 
-To sort engines from least specific (more generic) to most specific (more targeted), a scoring mechanism is used.
-Each property that is listed in the device definition contributes a "weight" to the score.
-A higher score therefore indicates that a device definition, or in other words an engine, targets and matches the host system more specifically that an engine with a lower score.
-
-After filtering, all remaining engines are scored, and the engine with the highest score is selected as the most appropriate engine for the host system.
-
+The highest-scoring eligible engine is selected as the most appropriate engine for the host system.
