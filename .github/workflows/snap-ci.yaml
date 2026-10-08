@@ -49,7 +49,7 @@ jobs:
         id: snapcraft
 
       - name: Upload snap artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.SNAP_NAME }}-${{ runner.arch }}
           path: |
@@ -75,7 +75,7 @@ jobs:
           sudo snap refresh snapd || sudo snap install snapd
 
       - name: Download snap artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.SNAP_NAME }}-${{ runner.arch }}
 
@@ -99,7 +99,7 @@ jobs:
 
     steps:
       - name: Download snap artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ${{ env.SNAP_NAME }}-*
           path: artifacts
