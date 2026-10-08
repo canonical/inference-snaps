@@ -5,11 +5,11 @@ During installation, automatic selection chooses the most appropriate engine for
 
 ## Engine selection process
 
-During installation, or when a user manually calls `<inference snap> use-engine --auto`, the following steps are performed:
+During installation, or when a user manually calls `<inference-snap> use-engine --auto`, the following steps are performed:
 
 1. A summary of available compute hardware is made using the `lscompute` library.
 2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied.
-3. The remaining engines are sorted by how specifically they target and match the available hardware.
+3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware.
 
 ## Filtering step
 
@@ -30,12 +30,12 @@ Experimental engines are excluded from automatic selection.
 
 ## Sorting step
 
-The device definition in the engine manifest has a number of optional properties.
-Some of them can be generic like CPU architecture, while other properties can be specific like PCI device ID.
+Compatible engines are ranked using a score that reflects how they match the host hardware.
+The highest-scoring eligible engine is selected.
 
-In general, defining more hardware properties makes an engine's requirements more specific.
-Matching more specific hardware requirements generally results in a higher score.
-Compatible engines are ranked using these scores, with higher scores indicating a stronger preference for an engine based on its match to the host hardware.
-The score is not a measurement or guarantee of performance.
+An engine manifest can describe broad requirements, such as a CPU architecture, or more specific ones, such as a PCI device ID.
+Defining more hardware properties generally makes the requirements more specific.
+When these requirements match the host hardware, a more specific match generally earns a higher score.
 
-The highest-scoring eligible engine is selected as the most appropriate engine for the host system.
+The score also accounts for hardware preferences, such as favoring discrete GPUs over integrated GPUs.
+GPU and NPU engines can therefore rank above CPU-only engines, but no device type is guaranteed to take priority: the overall match determines the ranking.
