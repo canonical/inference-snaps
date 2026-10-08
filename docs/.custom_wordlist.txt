@@ -3,6 +3,8 @@ artifacts
 backend
 backends
 Battlemage
+boolean
+booleans
 Charmcraft
 chatbot
 cjk
@@ -91,6 +93,7 @@ runtimes
 sandboxed
 SDK
 SDKs
+serialization
 sideload
 sideloaded
 sideloading
