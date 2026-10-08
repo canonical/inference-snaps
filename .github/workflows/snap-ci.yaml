@@ -17,7 +17,7 @@ env:
 
 jobs:
   unit-test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: Checkout code
@@ -95,7 +95,7 @@ jobs:
   publish:
     needs: [ smoke-test ]
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: Download snap artifacts
