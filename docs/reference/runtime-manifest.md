@@ -69,7 +69,7 @@ zero or more lowercase letters, digits, or hyphens.
 
 For TCP endpoints, a non-empty namespace prefixes configuration keys with
 `<namespace>.`. For example, `namespace: api` selects `api.http.host` and
-`api.http.port` for HTTP. An empty namespace uses the unprefixed keys.
+`api.http.port` for HTTP. An empty namespace uses the keys without a prefix.
 
 For Unix socket endpoints, the filename is `<namespace>.sock`, or `server.sock`
 when the namespace is empty.

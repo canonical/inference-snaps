@@ -87,6 +87,7 @@ Default engine configurations, with string keys and scalar values (strings,
 numbers, or booleans). Nested mappings and lists are not supported.
 
 (device-specific-fields)=
+
 ## Device-specific fields
 
 Device entries may also have the following device-specific fields:
@@ -108,6 +109,7 @@ architecture-specific:
 CPU entries do not accept `bus`, PCI identifiers, or `snap-connections`.
 
 (pci-peripherals)=
+
 ### PCI peripherals
 
 - `bus`: `pci`. This is the default when `bus` is omitted for a non-CPU device.
@@ -129,7 +131,7 @@ specify:
   1024 cubed bytes, respectively, for example `512M` or `4G`.
 - `compute-capability`: a single version-constraint string for NVIDIA GPUs
   (`vendor-id: 0x10de`), not a YAML list. Constraints use
-  [Masterminds semver syntax](https://github.com/Masterminds/semver#checking-version-constraints).
+  [Masterminds semantic version constraints](https://github.com/Masterminds/semver#checking-version-constraints).
   For example, `">=6.0, <7.0"` requires both comparisons to match, while
   `"=5.3 || >=6.2"` accepts either alternative.
 - `microarchitecture`: the required GPU microarchitecture string, matched

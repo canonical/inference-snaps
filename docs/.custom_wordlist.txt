@@ -3,6 +3,8 @@ artifacts
 backend
 backends
 Battlemage
+boolean
+booleans
 Charmcraft
 chatbot
 cjk
