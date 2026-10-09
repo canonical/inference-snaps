@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -570,5 +571,40 @@ func TestCommandStopped(t *testing.T) {
 				t.Fatalf("commandStopped() = %v, want %v (status %v)", got, tt.want, status)
 			}
 		})
+	}
+}
+
+func TestRunFallbackPrintsCommandError(t *testing.T) {
+	originalStderr := os.Stderr
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("creating stderr pipe: %v", err)
+	}
+	t.Cleanup(func() {
+		os.Stderr = originalStderr
+		_ = reader.Close()
+		_ = writer.Close()
+	})
+	os.Stderr = writer
+
+	cmd := runCommand{
+		Context:        &common.Context{Cache: storage.NewMockCache()},
+		fallbackServer: true,
+	}
+	if err := cmd.fallback(errors.New("command failed")); err == nil {
+		t.Fatal("fallback unexpectedly succeeded")
+	}
+
+	if err := writer.Close(); err != nil {
+		t.Fatalf("closing stderr writer: %v", err)
+	}
+	os.Stderr = originalStderr
+
+	output, err := io.ReadAll(reader)
+	if err != nil {
+		t.Fatalf("reading captured stderr: %v", err)
+	}
+	if got, want := string(output), "Error: command failed\n"; got != want {
+		t.Errorf("stderr = %q, want %q", got, want)
 	}
 }
