@@ -110,6 +110,9 @@ func (cmd *runCommand) fallback(commandErr error) error {
 		return commandErr
 	}
 
+	// Log the command error before preparing the fallback server preparation
+	fmt.Fprintf(os.Stderr, "Error: %v\n", commandErr)
+
 	// For now only serve a fallback server if the engine defines an openai endpoint
 	baseUrl, err := common.OpenAiBaseUrl(cmd.Context)
 	if err != nil && errors.Is(err, common.ErrNoOpenAiServer) {
