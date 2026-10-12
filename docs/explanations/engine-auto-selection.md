@@ -12,6 +12,7 @@ During installation, or when a user manually calls `<inference-snap> use-engine 
 3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware. See the {ref}`ranking step <ranking-step>`.
 
 (filtering-step)=
+
 ### Filtering step
 
 An engine lists required hardware under the `devices` section of its manifest.
@@ -29,6 +30,7 @@ Otherwise it is filtered out and not considered for selection.
 Experimental engines are excluded from automatic selection.
 
 (ranking-step)=
+
 ### Ranking step
 
 Compatible engines are ranked using a score that reflects how they match the host hardware.
