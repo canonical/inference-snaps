@@ -8,9 +8,10 @@ During installation, automatic selection chooses the most appropriate engine for
 During installation, or when a user manually calls `<inference-snap> use-engine --auto`, the following steps are performed:
 
 1. A summary of available compute hardware is made using the [lscompute](https://github.com/canonical/lscompute) library.
-2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied. See the [filtering step](#filtering-step).
-3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware. See the [ranking step](#ranking-step).
+2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied. See the {ref}`filtering step <filtering-step>`.
+3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware. See the {ref}`ranking step <ranking-step>`.
 
+(filtering-step)=
 ### Filtering step
 
 An engine lists required hardware under the `devices` section of its manifest.
@@ -27,6 +28,7 @@ Otherwise it is filtered out and not considered for selection.
 
 Experimental engines are excluded from automatic selection.
 
+(ranking-step)=
 ### Ranking step
 
 Compatible engines are ranked using a score that reflects how they match the host hardware.
