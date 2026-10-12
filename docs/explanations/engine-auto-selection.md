@@ -7,19 +7,18 @@ During installation, automatic selection chooses the most appropriate engine for
 
 During installation, or when a user manually calls `<inference-snap> use-engine --auto`, the following steps are performed:
 
-1. A summary of available compute hardware is made using the `lscompute` library.
-2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied.
-3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware.
+1. A summary of available compute hardware is made using the [lscompute](https://github.com/canonical/lscompute) library.
+2. The list of available engines is filtered to remove any engines whose hardware requirements are not satisfied. See the [filtering step](#filtering-step).
+3. The remaining engines are ranked according to their hardware matches and preferences for compute hardware. See the [ranking step](#ranking-step).
 
-## Filtering step
+### Filtering step
 
-An engine lists required hardware under the `devices` section in the engine manifest file.
+An engine lists required hardware under the `devices` section of its manifest.
 Devices that are always required are listed under `allof`.
 Alternative devices are listed under `anyof`.
 
 For example, if an engine always requires an `arm64` CPU, it will be listed under `allof`.
-If an engine can run on either an AMD GPU or an NVIDIA GPU, the two GPU devices, with their vendor IDs, will be listed under `anyof`.
-
+If an engine can run on either an AMD GPU or an NVIDIA GPU, the two GPU devices will be listed under `anyof`.
 During filtering, the device requirements are compared to the list of available compute devices on the host system.
 Requirements under `allof` must all be satisfied.
 Requirements under `anyof` provide alternatives, at least one of which must be satisfied.
@@ -28,12 +27,12 @@ Otherwise it is filtered out and not considered for selection.
 
 Experimental engines are excluded from automatic selection.
 
-## Sorting step
+### Ranking step
 
 Compatible engines are ranked using a score that reflects how they match the host hardware.
 The highest-scoring eligible engine is selected.
 
-An engine manifest can describe broad requirements, such as a CPU architecture, or more specific ones, such as a PCI device ID.
+An {ref}`engine manifest <engine-manifest>` can describe broad requirements, such as a CPU architecture, or more specific ones, such as a PCI device ID.
 Defining more hardware properties generally makes the requirements more specific.
 When these requirements match the host hardware, a more specific match generally earns a higher score.
 
