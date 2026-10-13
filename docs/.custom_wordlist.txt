@@ -20,7 +20,6 @@ fonts
 Fosstodon
 freefont
 frontend
-frontmatter
 gemma
 Gemma
 Gemma's
