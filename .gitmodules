@@ -70,3 +70,7 @@
 	path = snaps/openjev
 	url = https://github.com/canonical/openjev-snap.git
 	branch = main
+[submodule "mimo-v2.6-snap"]
+	path = snaps/mimo-v2.6
+	url = https://github.com/canonical/mimo-v2.6-snap
+	branch = main
