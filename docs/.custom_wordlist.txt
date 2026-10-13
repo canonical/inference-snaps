@@ -71,6 +71,7 @@ Omni
 OpenAI
 OpenClaw
 OpenCode
+OpenJev
 OpenShell
 OpenShell's
 OpenVINO
