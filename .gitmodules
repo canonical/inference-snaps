@@ -69,6 +69,7 @@
 [submodule "clef-flash"]
 	path = snaps/clef-flash
 	url = https://github.com/canonical/clef-flash-snap
+	branch = main
 [submodule "openjev"]
 	path = snaps/openjev
 	url = https://github.com/canonical/openjev-snap.git
