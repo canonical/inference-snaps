@@ -15,7 +15,7 @@ type ModelDetails struct {
 	Name  string `json:"name" yaml:"name"`
 	Alias string `json:"alias,omitempty" yaml:"alias,omitempty"`
 
-	Description  string   `json:"description" yaml:"description"`
+	Description  string   `json:"description,omitempty" yaml:"description,omitempty"`
 	ModelCardUrl string   `json:"model-card-url,omitempty" yaml:"model-card-url,omitempty"`
 	Format       string   `json:"format,omitempty" yaml:"format,omitempty"`
 	Quantization string   `json:"quantization,omitempty" yaml:"quantization,omitempty"`

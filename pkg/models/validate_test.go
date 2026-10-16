@@ -86,13 +86,13 @@ func TestNameRequired(t *testing.T) {
 	}
 }
 
-func TestDescriptionRequired(t *testing.T) {
+func TestDescriptionOptional(t *testing.T) {
 	manifest := templateManifest()
 	manifest.Description = ""
 
 	err := manifest.validate("test")
-	if err == nil {
-		t.Fatal("description field is required")
+	if err != nil {
+		t.Fatalf("description should be optional: %v", err)
 	}
 }
 
