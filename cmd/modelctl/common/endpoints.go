@@ -18,6 +18,24 @@ type Entrypoint struct {
 	UnixSocketUrl string `json:"unix-socket-url,omitempty" yaml:"-"`
 }
 
+func ReportedURL(rawURL string) (string, error) {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return "", fmt.Errorf("parsing reported URL: %w", err)
+	}
+	switch parsed.Hostname() {
+	case "0.0.0.0", "127.0.0.1":
+		port := parsed.Port()
+		parsed.Host = "localhost"
+		if port != "" {
+			parsed.Host = net.JoinHostPort("localhost", port)
+		}
+	default:
+		return rawURL, nil
+	}
+	return parsed.String(), nil
+}
+
 func (e Entrypoint) MarshalYAML() (any, error) {
 	type entrypointYAML Entrypoint
 

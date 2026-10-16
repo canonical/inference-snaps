@@ -246,6 +246,10 @@ func (cmd *runCommand) writeShareProviderEnv() error {
 	if err != nil && !errors.Is(err, common.ErrNoOpenAiServer) && !errors.Is(err, common.ErrOpenAiServerNoUrl) {
 		return fmt.Errorf("getting OpenAI base URL: %v", err)
 	} else if err == nil {
+		baseURL, err = common.ReportedURL(baseURL)
+		if err != nil {
+			return fmt.Errorf("formatting OpenAI base URL: %w", err)
+		}
 		content.WriteString("OPENAI_BASE_URL=")
 		content.WriteString(baseURL)
 		content.WriteString("\n")

@@ -173,7 +173,7 @@ func TestWriteShareProviderEnv(t *testing.T) {
 			t.Fatalf("reading provider env file: %v", err)
 		}
 
-		want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\nOPENAI_BASE_URL=http://127.0.0.1:8080/v1\n"
+		want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\nOPENAI_BASE_URL=http://localhost:8080/v1\n"
 		if string(content) != want {
 			t.Fatalf("provider env contents mismatch\nwant: %q\ngot:  %q", want, string(content))
 		}
@@ -185,6 +185,9 @@ func TestWriteShareProviderEnv(t *testing.T) {
 
 		path := filepath.Join(t.TempDir(), "custom")
 		cmd := runCommand{Context: testRunContext(t, "name: test-runtime\nservers:\n  openai:\n    protocol: http\n    base-path: /v1\n"), shareProvider: path}
+		if err := cmd.Config.Set("http.host", "0.0.0.0", storage.UserConfig); err != nil {
+			t.Fatalf("setting HTTP host: %v", err)
+		}
 		if err := cmd.writeShareProviderEnv(); err != nil {
 			t.Fatalf("writeShareProviderEnv() error = %v", err)
 		}
@@ -202,7 +205,7 @@ func TestWriteShareProviderEnv(t *testing.T) {
 			t.Fatalf("reading provider env file: %v", err)
 		}
 
-		want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\nOPENAI_BASE_URL=http://127.0.0.1:8080/v1\n"
+		want := "SNAP_NAME=gemma3-jane\nSNAP_INSTANCE_NAME=gemma3-jane\nOPENAI_BASE_URL=http://localhost:8080/v1\n"
 		if string(content) != want {
 			t.Fatalf("provider env contents mismatch\nwant: %q\ngot:  %q", want, string(content))
 		}

@@ -74,7 +74,7 @@ func Example_statusCommand_printStatusYaml() {
 	//     logger:
 	//         url: http://localhost:8081/
 	//     openai:
-	//         url: http://0.0.0.0:8080/v1
+	//         url: http://localhost:8080/v1
 	//     whisperlive:
 	//         unix-socket: /tmp/share/provider/server.sock (ws://unix/realtime)
 	// model:
@@ -102,7 +102,7 @@ func Example_statusCommand_printStatusJson() {
 	//       "url": "http://localhost:8081/"
 	//     },
 	//     "openai": {
-	//       "url": "http://0.0.0.0:8080/v1"
+	//       "url": "http://localhost:8080/v1"
 	//     },
 	//     "whisperlive": {
 	//       "unix-socket": "/tmp/share/provider/server.sock",
@@ -134,7 +134,7 @@ func Example_statusCommand_printStatusYamlNoActiveModel() {
 	//     logger:
 	//         url: http://localhost:8081/
 	//     openai:
-	//         url: http://0.0.0.0:8080/v1
+	//         url: http://localhost:8080/v1
 	//     whisperlive:
 	//         unix-socket: /tmp/share/provider/server.sock (ws://unix/realtime)
 	// model: null
@@ -164,7 +164,7 @@ func Example_statusCommand_printStatusJsonNoActiveModel() {
 	//       "url": "http://localhost:8081/"
 	//     },
 	//     "openai": {
-	//       "url": "http://0.0.0.0:8080/v1"
+	//       "url": "http://localhost:8080/v1"
 	//     },
 	//     "whisperlive": {
 	//       "unix-socket": "/tmp/share/provider/server.sock",

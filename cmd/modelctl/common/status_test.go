@@ -56,8 +56,15 @@ servers:
 	if status.Services["llama-server"] != "active" {
 		t.Errorf("service status: got %q, want %q", status.Services["llama-server"], "active")
 	}
-	if status.Entrypoints["openai"].Url != "http://127.0.0.1:8080/v1" {
-		t.Errorf("openai entrypoint URL: got %q, want %q", status.Entrypoints["openai"].Url, "http://127.0.0.1:8080/v1")
+	if status.Entrypoints["openai"].Url != "http://localhost:8080/v1" {
+		t.Errorf("openai entrypoint URL: got %q, want %q", status.Entrypoints["openai"].Url, "http://localhost:8080/v1")
+	}
+	baseURL, err := OpenAiBaseUrl(ctx)
+	if err != nil {
+		t.Fatalf("OpenAiBaseUrl: %v", err)
+	}
+	if baseURL != "http://127.0.0.1:8080/v1" {
+		t.Errorf("original OpenAI URL changed: got %q", baseURL)
 	}
 	if status.Model == nil || (*status.Model)["name"] != "my-model" {
 		t.Errorf("model name: got %v, want %q", status.Model, "my-model")
