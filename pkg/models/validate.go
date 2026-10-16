@@ -100,10 +100,6 @@ func (manifest Manifest) validate(expectedModelName string) error {
 		}
 	}
 
-	if manifest.Description == "" {
-		return fmt.Errorf("required field is not set: description")
-	}
-
 	if manifest.ModelCardUrl != "" {
 		if u, err := url.ParseRequestURI(manifest.ModelCardUrl); err != nil || u.Scheme == "" || u.Host == "" {
 			return fmt.Errorf("invalid model-card-url: %s", manifest.ModelCardUrl)
