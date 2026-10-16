@@ -36,6 +36,13 @@ func SnapStatus(ctx *Context) (*Status, error) {
 	if err != nil {
 		return nil, fmt.Errorf("getting server entrypoints: %v", err)
 	}
+	for name, entrypoint := range entrypoints {
+		entrypoint.Url, err = ReportedURL(entrypoint.Url)
+		if err != nil {
+			return nil, fmt.Errorf("formatting server entrypoint %q: %w", name, err)
+		}
+		entrypoints[name] = entrypoint
+	}
 	statusStr.Entrypoints = entrypoints
 
 	modelStatus, err := ModelStatus(ctx)

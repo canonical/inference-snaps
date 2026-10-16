@@ -50,6 +50,11 @@ func (cmd *serveWebUiCommand) serveWebUi(_ *cobra.Command, args []string) error 
 		return fmt.Errorf("getting OpenAI base URL: %v", err)
 	}
 
+	baseURL, err = common.ReportedURL(baseURL)
+	if err != nil {
+		return fmt.Errorf("formatting OpenAI base URL: %w", err)
+	}
+
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
 		return fmt.Errorf("getting active engine: %v", err)

@@ -10,6 +10,35 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
 )
 
+func TestReportedURL(t *testing.T) {
+	testCases := []struct {
+		name    string
+		input   string
+		want    string
+		wantErr bool
+	}{
+		{name: "wildcard", input: "http://0.0.0.0:8080/v1", want: "http://localhost:8080/v1"},
+		{name: "loopback", input: "https://127.0.0.1:8443/v1", want: "https://localhost:8443/v1"},
+		{name: "no port", input: "http://127.0.0.1/v1", want: "http://localhost/v1"},
+		{name: "URL components", input: "ws://user:pass@0.0.0.0:8080/a%2Fb?host=127.0.0.1#fragment", want: "ws://user:pass@localhost:8080/a%2Fb?host=127.0.0.1#fragment"},
+		{name: "external host", input: "http://192.0.2.1:8080/v1", want: "http://192.0.2.1:8080/v1"},
+		{name: "IPv6", input: "http://[::1]:8080/v1", want: "http://[::1]:8080/v1"},
+		{name: "empty", input: "", want: ""},
+		{name: "invalid", input: "http://%invalid", wantErr: true},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			got, err := ReportedURL(testCase.input)
+			if (err != nil) != testCase.wantErr {
+				t.Fatalf("ReportedURL(%q) error = %v, wantErr %v", testCase.input, err, testCase.wantErr)
+			}
+			if got != testCase.want {
+				t.Fatalf("ReportedURL(%q) = %q, want %q", testCase.input, got, testCase.want)
+			}
+		})
+	}
+}
+
 func TestServerEntrypoints(t *testing.T) {
 	testCases := []struct {
 		name               string
