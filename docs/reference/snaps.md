@@ -188,7 +188,7 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 [![nemotron-3-5-bolt snap](https://snapcraft.io/nemotron-3-5-bolt/badge.svg)](https://snapcraft.io/nemotron-3-5-bolt)
 [![nemotron-3-5-bolt source][gh-badge]](https://github.com/canonical/nemotron-3.5-bolt-snap)
 
-Nemotron 3.5 Bolt is a 74B A9B Large Language Model designed for reasoning and non-reasoning tasks.
+Nemotron 3.5 Bolt is an LLM designed for both reasoning and non-reasoning tasks.
 It supports text and image inputs, with text-based outputs.
 
 This inference snap is optimized for the following hardware:
