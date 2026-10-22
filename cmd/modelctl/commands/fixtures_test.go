@@ -39,7 +39,8 @@ func machineFixture(name string) (*machine.Machine, error) {
 				FriendlyNames: pci.FriendlyNames{
 					VendorName:    "Intel Corporation",
 					SubvendorName: "Hewlett-Packard Company",
-				}},
+				},
+			},
 			}}, nil
 
 	case "i7-1165G7":
@@ -48,6 +49,25 @@ func machineFixture(name string) (*machine.Machine, error) {
 				Architecture:   "amd64",
 				ManufacturerId: "GenuineIntel",
 				Flags:          []string{"sse4_2", "f16c", "fma", "avx", "avx2", "avx512f"},
+			}},
+			Memory: memory.Memory{TotalRam: 16 * 1024 * 1024 * 1024},
+			Disk: []disk.Disk{{
+				Total:     1006451294208,
+				Available: 943543738368,
+				Path:      "/var/lib/snapd/snaps",
+			}},
+			PCIDevices: []pci.Device{{
+				Bus:         "pci",
+				Slot:        "0000:00:02.0",
+				DeviceClass: 0x0300,
+				VendorId:    0x8086,
+				DeviceId:    0x56a0,
+				FriendlyNames: pci.FriendlyNames{
+					VendorName: "Intel Corporation",
+				},
+				AdditionalProperties: map[string]any{
+					"vram": uint64(16 * 1024 * 1024 * 1024),
+				},
 			}},
 		}, nil
 
@@ -91,6 +111,7 @@ func machineFixture(name string) (*machine.Machine, error) {
 				Architecture:   "amd64",
 				ManufacturerId: "GenuineIntel",
 			}},
+			Memory: memory.Memory{TotalRam: 5 * 1024 * 1024 * 1024, TotalSwap: 5 * 1024 * 1024 * 1024},
 			Disk: []disk.Disk{{
 				Total:     1006451294208,
 				Available: 1024 * 1024 * 1024,
@@ -104,6 +125,7 @@ func machineFixture(name string) (*machine.Machine, error) {
 				Architecture:   "amd64",
 				ManufacturerId: "GenuineIntel",
 			}},
+			Memory: memory.Memory{TotalRam: 1024},
 			Disk: []disk.Disk{{
 				Total:     1006451294208,
 				Available: 0,

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"maps"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
@@ -259,4 +260,14 @@ func ScoreEnginesWithSpinner(ctx *Context) ([]engines.ScoredManifest, *machine.M
 	}
 
 	return scoredEngines, machineInfo, err
+}
+
+func GetEngineGpuDevices(engineManifest engines.Manifest) (gpuDevices []engines.Device) {
+	for _, device := range slices.Concat(engineManifest.Devices.Allof, engineManifest.Devices.Anyof) {
+		if device.Type == "gpu" {
+			gpuDevices = append(gpuDevices, device)
+		}
+	}
+
+	return gpuDevices
 }

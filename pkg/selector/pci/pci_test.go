@@ -18,7 +18,7 @@ func TestCheckGpuVendor(t *testing.T) {
 		DeviceId:             0,
 		SubvendorId:          nil,
 		SubdeviceId:          nil,
-		AdditionalProperties: map[string]string{
+		AdditionalProperties: map[string]any{
 			//VRam:              nil,
 			//ComputeCapability: nil,
 		},
@@ -62,8 +62,8 @@ func TestCheckGpuVram(t *testing.T) {
 		DeviceId:    0x0,
 		SubvendorId: nil,
 		SubdeviceId: nil,
-		AdditionalProperties: map[string]string{
-			"vram": "5000000000",
+		AdditionalProperties: map[string]any{
+			"vram": uint64(5000000000),
 		},
 	}
 
@@ -95,7 +95,7 @@ func TestCheckComputeCapability(t *testing.T) {
 
 	hwInfoGpu := pci.Device{
 		DeviceClass: 0x0300,
-		AdditionalProperties: map[string]string{
+		AdditionalProperties: map[string]any{
 			"compute-capability": "6.1",
 		},
 	}
@@ -158,7 +158,7 @@ func TestCheckMicroarchitecture(t *testing.T) {
 
 	hwInfoGpu := pci.Device{
 		DeviceClass: 0x0300,
-		AdditionalProperties: map[string]string{
+		AdditionalProperties: map[string]any{
 			"microarchitecture": "gfx1152",
 		},
 	}

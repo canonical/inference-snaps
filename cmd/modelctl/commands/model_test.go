@@ -37,11 +37,16 @@ func Example_modelCommand_printModelDetailsYaml() {
 	}
 
 	ctx := &common.Context{
-		ModelsDir:  "../../../test_data/models",
-		EnginesDir: "../../../test_data/engines",
-		Cache:      cache,
+		ModelsDir:   "../../../test_data/models",
+		EnginesDir:  "../../../test_data/engines",
+		RuntimesDir: "../../../test_data/runtimes",
+		Cache:       cache,
 	}
-	modelDetails, err := common.GetModelDetailsByNameOrAlias(ctx, "4b-it-int4-fq-ov")
+	machine, err := machineFixture("i7-1165G7")
+	if err != nil {
+		panic(fmt.Sprintf("could not create machine fixture: %v", err))
+	}
+	modelDetails, err := common.GetModelDetailsByNameOrAlias(ctx, "4b-it-int4-fq-ov", machine)
 	if err != nil {
 		panic(fmt.Sprintf("failed to load model details: %v", err))
 	}
@@ -80,7 +85,11 @@ func Example_modelCommand_printModelDetailsJson() {
 		EnginesDir: "../../../test_data/engines",
 		Cache:      cache,
 	}
-	modelDetails, err := common.GetModelDetailsByNameOrAlias(ctx, "4b-it-int4-fq-ov")
+	machine, err := machineFixture("i7-1165G7")
+	if err != nil {
+		panic(fmt.Sprintf("could not create machine fixture: %v", err))
+	}
+	modelDetails, err := common.GetModelDetailsByNameOrAlias(ctx, "4b-it-int4-fq-ov", machine)
 	if err != nil {
 		panic(fmt.Sprintf("failed to load model details: %v", err))
 	}

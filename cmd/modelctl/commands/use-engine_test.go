@@ -7,6 +7,7 @@ import (
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/selector"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/snap"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
@@ -95,11 +96,29 @@ func ExampleUseEngine_noRestartWhenEngineAndModelUnchanged() {
 	if err != nil {
 		panic(err)
 	}
+	machine.PCIDevices[0].DeviceClass = 0x0300
+	machine.PCIDevices[0].DeviceId = 0x56a0
+	machine.PCIDevices[0].AdditionalProperties = map[string]any{"vram": uint64(16 * 1024 * 1024 * 1024)}
 	if err := cmd.switchEngineWithMachine("intel-gpu", machine); err != nil {
 		panic(err)
 	}
 
 	// Output:
+}
+
+func ExampleUseEngine_printMemoryIncompatibleModels() {
+	cmd := useEngineCommand{Context: &common.Context{}}
+	cmd.printScoredModels([]models.ScoredManifest{
+		{Manifest: models.Manifest{Name: "fits"}, CompatibilityReport: models.CompatibilityReport{CompatibleDisk: true, RequiredMemory: 4, TotalMemory: 8}},
+		{Manifest: models.Manifest{Name: "exceeds-ram"}, CompatibilityReport: models.CompatibilityReport{CompatibleDisk: true, RequiredMemory: 16, TotalMemory: 8}},
+		{Manifest: models.Manifest{Name: "exceeds-vram"}, CompatibilityReport: models.CompatibilityReport{CompatibleDisk: true, RequiredVram: 16, TotalVram: 8}},
+	}, "fits")
+
+	// Output:
+	// Selecting a compatible model:
+	// ✔ fits: best match
+	// ✘ exceeds-ram
+	// ✘ exceeds-vram
 }
 
 func ExampleUseEngine_restartWhenEngineChanged() {
@@ -279,13 +298,19 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	// Evaluating engines for optimal hardware compatibility:
 	// ✘ not-compatible-engine
 	//   - required device not found
-	// ✔ cpu-exptl: score=10
+	// ✔ cpu-exptl: score=10, experimental
 	// ✔ cpu: score=10, best match
 	//
 	// Selecting a compatible model:
-	// ✘ 30m-q4-k-m-gguf: requires 1M disk space, has 0
-	// ✘ 26b-q4-k-m-gguf: requires 6G disk space, has 0
-	// ✘ 30b-a3b-q4-k-m-gguf: requires 5.9T disk space, has 0
+	// ✘ 30m-q4-k-m-gguf:
+	//   - requires 1024.0KiB memory, has 1024
+	//   - requires 1024.0KiB disk space, has 0
+	// ✘ 26b-q4-k-m-gguf:
+	//   - requires 8.0GiB memory, has 1024
+	//   - requires 6.0GiB disk space, has 0
+	// ✘ 30b-a3b-q4-k-m-gguf:
+	//   - requires 5.9TiB memory, has 1024
+	//   - requires 5.9TiB disk space, has 0
 	//
 	// Engine changed to "cpu".
 	// [mock] Restarting all services
@@ -338,9 +363,15 @@ func ExampleUseEngine_printIncompatibleModels() {
 
 	// Output:
 	// Selecting a compatible model:
-	// ✘ 30m-q4-k-m-gguf: requires 1M disk space, has 0
-	// ✘ 26b-q4-k-m-gguf: requires 6G disk space, has 0
-	// ✘ 30b-a3b-q4-k-m-gguf: requires 5.9T disk space, has 0
+	// ✘ 30m-q4-k-m-gguf:
+	//   - requires 1024.0KiB memory, has 1024
+	//   - requires 1024.0KiB disk space, has 0
+	// ✘ 26b-q4-k-m-gguf:
+	//   - requires 8.0GiB memory, has 1024
+	//   - requires 6.0GiB disk space, has 0
+	// ✘ 30b-a3b-q4-k-m-gguf:
+	//   - requires 5.9TiB memory, has 1024
+	//   - requires 5.9TiB disk space, has 0
 	//
 	// Engine changed to "cpu".
 	// [mock] Restarting all services

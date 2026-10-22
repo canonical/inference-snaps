@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
@@ -125,19 +124,23 @@ type ApusysDeviceDetails struct {
 }
 
 type PciAdditionalDeviceProperties struct {
-	Microarchitecture string `json:"microarchitecture,omitempty" yaml:"microarchitecture,omitempty"`
-	Vram              uint64 `json:"vram,omitempty" yaml:"vram,omitempty"`
-	ComputeCapability string `json:"compute-capability,omitempty" yaml:"compute-capability,omitempty"`
+	Microarchitecture string  `json:"microarchitecture,omitempty" yaml:"microarchitecture,omitempty"`
+	Vram              *uint64 `json:"vram" yaml:"vram"`
+	ComputeCapability string  `json:"compute-capability,omitempty" yaml:"compute-capability,omitempty"`
 }
 
 func (a PciAdditionalDeviceProperties) MarshalYAML() (any, error) {
+	var vramOutput string
+	if a.Vram != nil {
+		vramOutput = utils.FmtBytesShort(*a.Vram)
+	}
 	return struct {
 		Microarchitecture string `yaml:"microarchitecture,omitempty"`
-		Vram              any    `yaml:"vram,omitempty"`
+		Vram              string `yaml:"vram,omitempty"`
 		ComputeCapability string `yaml:"compute-capability,omitempty"`
 	}{
 		Microarchitecture: a.Microarchitecture,
-		Vram:              utils.FmtBytesShort(a.Vram),
+		Vram:              vramOutput,
 		ComputeCapability: a.ComputeCapability,
 	}, nil
 }
@@ -251,18 +254,26 @@ func NewMachineDetails(info *machine.Machine) *MachineDetails {
 	return v
 }
 
-func newPciAdditionalDeviceProperties(props map[string]string) *PciAdditionalDeviceProperties {
+func newPciAdditionalDeviceProperties(props map[string]any) *PciAdditionalDeviceProperties {
 	if len(props) == 0 {
 		return nil
 	}
 
-	ap := &PciAdditionalDeviceProperties{
-		Microarchitecture: props["microarchitecture"],
-		ComputeCapability: props["compute-capability"],
+	ap := &PciAdditionalDeviceProperties{}
+	if v, ok := props["microarchitecture"].(string); ok {
+		ap.Microarchitecture = v
+	}
+	if v, ok := props["compute-capability"].(string); ok {
+		ap.ComputeCapability = v
 	}
 	if v, ok := props["vram"]; ok {
-		if n, err := strconv.ParseUint(v, 10, 64); err == nil {
-			ap.Vram = n
+		if v != nil {
+			if s, ok := v.(uint64); ok {
+				ap.Vram = &s
+			} else {
+				fmt.Fprintf(os.Stderr, "Warning: it was not possible to parse VRAM value: expected uint64, got %T (%v).\n", v, v)
+				ap.Vram = nil
+			}
 		}
 	}
 	if *ap == (PciAdditionalDeviceProperties{}) {

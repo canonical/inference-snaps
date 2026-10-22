@@ -1,12 +1,16 @@
 package common
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/storage"
+	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/device/pci"
 	"github.com/canonical/lscompute/pkg/machine/disk"
 )
 
@@ -235,5 +239,61 @@ func TestAvailableDiskSpace(t *testing.T) {
 	}
 	if diskSpace != 1024 {
 		t.Errorf("expected positive available disk space, got: %d", diskSpace)
+	}
+}
+
+func TestSelectModelMemory(t *testing.T) {
+	for _, test := range []struct {
+		name          string
+		options       []string
+		preferred     string
+		totalMemory   uint64
+		availableDisk uint64
+		gpu           bool
+		vram          any
+		wantModel     string
+		wantErr       error
+	}{
+		{name: "preferred exceeds RAM", options: []string{"small", "large"}, preferred: "large", totalMemory: 8, availableDisk: 100, wantModel: "small"},
+		{name: "largest exceeds RAM", options: []string{"small", "large"}, totalMemory: 8, availableDisk: 100, wantModel: "small"},
+		{name: "exact memory fit", options: []string{"large"}, preferred: "large", totalMemory: 16, availableDisk: 100, wantModel: "large"},
+		{name: "no model fits RAM", options: []string{"small", "large"}, totalMemory: 1, availableDisk: 100, wantErr: ErrInsufficientMemoryForModel},
+		{name: "no model fits disk", options: []string{"small", "large"}, totalMemory: 100, availableDisk: 1, wantErr: ErrInsufficientDiskSpaceForModel},
+		{name: "memory defaults to disk size", options: []string{"implicit"}, totalMemory: 8, availableDisk: 100, wantErr: ErrInsufficientMemoryForModel},
+		{name: "preferred exceeds VRAM", options: []string{"small", "large"}, preferred: "large", totalMemory: 100, availableDisk: 100, gpu: true, vram: uint64(8), wantModel: "small"},
+		{name: "no model fits VRAM", options: []string{"small", "large"}, totalMemory: 100, availableDisk: 100, gpu: true, vram: uint64(1), wantErr: ErrInsufficientMemoryForModel},
+		{name: "exact VRAM fit", options: []string{"large"}, totalMemory: 1, availableDisk: 100, gpu: true, vram: uint64(16), wantModel: "large"},
+		{name: "unified memory uses RAM", options: []string{"small", "large"}, preferred: "large", totalMemory: 8, availableDisk: 100, gpu: true, wantModel: "small"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			modelsDir := t.TempDir()
+			writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 2\nrequired-memory: 4\n")
+			writeModelYAML(t, modelsDir, "large", "name: large\ndisk-size: 4\nrequired-memory: 16\n")
+			writeModelYAML(t, modelsDir, "implicit", "name: implicit\ndisk-size: 16\n")
+			hostMachine := &machine.Machine{}
+			hostMachine.Memory.TotalRam = test.totalMemory
+			hostMachine.Disk = []disk.Disk{{Path: "/var/lib/snapd/snaps", Available: test.availableDisk}}
+			engine := engines.Manifest{Model: engines.Model{Options: test.options}}
+			if test.gpu {
+				engine.Devices.Allof = []engines.Device{{Type: "gpu", VendorId: new(utils.HexInt(0x8086))}}
+				hostMachine.PCIDevices = []pci.Device{{
+					DeviceClass:          0x0300,
+					VendorId:             0x8086,
+					AdditionalProperties: map[string]any{"vram": test.vram},
+				}}
+			}
+			selected, scoredModels, err := SelectModel(&Context{ModelsDir: modelsDir}, engine, test.preferred, hostMachine)
+			if !errors.Is(err, test.wantErr) {
+				t.Fatalf("error = %v, want %v", err, test.wantErr)
+			}
+			if selected != test.wantModel {
+				t.Errorf("selected = %q, want %q", selected, test.wantModel)
+			}
+			for _, model := range scoredModels {
+				if !model.CompatibilityReport.Compatible() && model.Score != 0 {
+					t.Errorf("incompatible model %q has score %d", model.Name, model.Score)
+				}
+			}
+		})
 	}
 }

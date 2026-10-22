@@ -7,8 +7,10 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/pkg/constants"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
+	selectorpci "github.com/canonical/inference-snaps-cli/v2/pkg/selector/pci"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/utils"
 	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/device/pci"
 )
 
 type ModelDetails struct {
@@ -21,11 +23,28 @@ type ModelDetails struct {
 	Quantization string   `json:"quantization,omitempty" yaml:"quantization,omitempty"`
 	Capabilities []string `json:"capabilities,omitempty" yaml:"capabilities,omitempty"`
 
-	DiskSize string `json:"disk-size" yaml:"disk-size"`
+	DiskSize       string `json:"disk-size" yaml:"disk-size"`
+	RequiredMemory string `json:"required-memory,omitempty" yaml:"required-memory,omitempty"`
 
 	Components []string `json:"components,omitempty" yaml:"components,omitempty"`
 
-	CompatibleEngines []string `json:"compatible-engines,omitempty" yaml:"compatible-engines,omitempty"`
+	CompatibleEngines   []string `json:"compatible-engines,omitempty" yaml:"compatible-engines,omitempty"`
+	CompatibilityIssues []string `json:"compatibility-issues,omitempty" yaml:"compatibility-issues,omitempty"`
+}
+
+func (m *ModelDetails) fillIncompatibilityIssues(report models.CompatibilityReport) {
+	var issues []string
+	if report.TotalVram < report.RequiredVram {
+		issues = append(issues, "insufficient VRAM")
+	} else if report.TotalMemory < report.RequiredMemory {
+		issues = append(issues, "insufficient system memory")
+	}
+
+	if !report.CompatibleDisk {
+		issues = append(issues, "insufficient disk space")
+	}
+
+	m.CompatibilityIssues = issues
 }
 
 func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
@@ -40,11 +59,19 @@ func NewModelDetails(manifest *models.Manifest) (ModelDetails, error) {
 	modelDetails.Components = manifest.Components
 
 	// Change disk size to largest possible unit representation
-	diskSizeBytes, err := utils.StringToBytes(manifest.DiskSize)
+	diskSize, err := utils.NormalizeFormattedBytes(manifest.DiskSize)
 	if err != nil {
 		return modelDetails, ErrInsufficientDiskSpaceForModel
 	}
-	modelDetails.DiskSize = utils.FmtBytesShort(diskSizeBytes)
+	modelDetails.DiskSize = diskSize
+
+	if manifest.RequiredMemory != "" {
+		requiredMemory, err := utils.NormalizeFormattedBytes(manifest.RequiredMemory)
+		if err != nil {
+			return modelDetails, err
+		}
+		modelDetails.RequiredMemory = requiredMemory
+	}
 
 	return modelDetails, nil
 }
@@ -97,7 +124,7 @@ func GetModelManifestByNameOrAlias(ctx *Context, modelName string) (*models.Mani
 	return manifest, nil
 }
 
-func GetModelDetailsByNameOrAlias(ctx *Context, modelName string) (*ModelDetails, error) {
+func GetModelDetailsByNameOrAlias(ctx *Context, modelName string, machine *machine.Machine) (*ModelDetails, error) {
 	modelManifest, err := GetModelManifestByNameOrAlias(ctx, modelName)
 	if err != nil {
 		return nil, err
@@ -111,7 +138,36 @@ func GetModelDetailsByNameOrAlias(ctx *Context, modelName string) (*ModelDetails
 		return nil, err
 	}
 	modelDetails.CompatibleEngines = compatibleEngines
-	return &modelDetails, nil
+	activeEngine, err := ctx.Cache.GetActiveEngine()
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", LookingUpActiveEngine, err)
+	}
+	if activeEngine == "" {
+		return nil, ErrNoActiveEngine
+	}
+	activeEngineManifest, err := engines.LoadManifest(ctx.EnginesDir, activeEngine)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", LoadingEngineManifest, err)
+	}
+	modelManifests, err := models.LoadManifests(ctx.ModelsDir)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", LoadingModelManifests, err)
+	}
+	manifestsByName := make(map[string]models.Manifest, len(modelManifests))
+	for _, manifest := range modelManifests {
+		manifestsByName[manifest.Name] = manifest
+	}
+	scoredModels, err := ScoreModels(activeEngineManifest.Model.Options, manifestsByName, machine, *activeEngineManifest)
+	if err != nil {
+		return nil, err
+	}
+	for _, model := range scoredModels {
+		if model.Name == modelDetails.Name {
+			modelDetails.fillIncompatibilityIssues(model.CompatibilityReport)
+			return &modelDetails, nil
+		}
+	}
+	return nil, fmt.Errorf("model %q not found in scored models", modelDetails.Name)
 }
 
 func GetCompatibleEnginesByModelName(ctx *Context, modelName string) ([]string, error) {
@@ -180,8 +236,19 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 	return allModelsWithEngines, nil
 }
 
-func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine) ([]models.ScoredManifest, error) {
+func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest) ([]models.ScoredManifest, error) {
 	availableDiskSpace, err := availableDiskSpace(machine)
+	if err != nil {
+		return nil, err
+	}
+
+	systemMemory, err := getSystemMemory(machine)
+	if err != nil {
+		return nil, err
+	}
+
+	enginesRequiredGpus := GetEngineGpuDevices(activeEngineManifest)
+	vRam, isUnifiedMemory, err := getTopGpuVram(machine, enginesRequiredGpus)
 	if err != nil {
 		return nil, err
 	}
@@ -193,20 +260,42 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 			return nil, fmt.Errorf("model manifest not found: %s", modelID)
 		}
 
-		size, err := utils.StringToBytes(manifest.DiskSize)
+		diskSize, err := utils.StringToBytes(manifest.DiskSize)
 		if err != nil {
 			return nil, fmt.Errorf("parsing disk size for model %q: %w", modelID, err)
 		}
 
+		var modelRequiredMemory uint64
+		if manifest.RequiredMemory == "" {
+			modelRequiredMemory = diskSize
+		} else {
+			modelRequiredMemory, err = utils.StringToBytes(manifest.RequiredMemory)
+			if err != nil {
+				return nil, fmt.Errorf("parsing required memory for model %q: %w", modelID, err)
+			}
+		}
+
+		requiredVram := uint64(0)
+		requiredMemory := uint64(0)
+		if len(enginesRequiredGpus) > 0 && !isUnifiedMemory {
+			requiredVram = modelRequiredMemory
+		} else {
+			requiredMemory = modelRequiredMemory
+		}
+
 		report := models.CompatibilityReport{
-			CompatibleDisk:     size <= availableDiskSpace,
-			RequiredDiskSpace:  size,
+			CompatibleDisk:     diskSize <= availableDiskSpace,
+			RequiredDiskSpace:  diskSize,
 			AvailableDiskSpace: availableDiskSpace,
+			RequiredMemory:     requiredMemory,
+			TotalMemory:        systemMemory,
+			RequiredVram:       requiredVram,
+			TotalVram:          vRam,
 		}
 
 		score := uint64(0)
-		if report.CompatibleDisk {
-			score = size
+		if report.Compatible() {
+			score = diskSize
 		}
 
 		scoredModels = append(scoredModels, models.ScoredManifest{
@@ -219,9 +308,9 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 	return scoredModels, nil
 }
 
-// SelectModel picks a model that fits the available disk: the preferred one if it fits, otherwise the largest fitting model.
-// Returns ErrInsufficientDiskSpaceForModel when none fit.
-func SelectModel(ctx *Context, modelOptions []string, preferredModel string, machine *machine.Machine) (string, []models.ScoredManifest, error) {
+// SelectModel picks a model that fits the available disk and memory: the preferred one if it fits, otherwise the largest fitting model.
+// Returns ErrInsufficientDiskSpaceForModel or ErrInsufficientMemoryForModel when none fit.
+func SelectModel(ctx *Context, engineManifest engines.Manifest, preferredModel string, machine *machine.Machine) (string, []models.ScoredManifest, error) {
 	modelManifests, err := models.LoadManifests(ctx.ModelsDir)
 	if err != nil {
 		return "", nil, fmt.Errorf("%s: %w", LoadingModelManifests, err)
@@ -231,14 +320,14 @@ func SelectModel(ctx *Context, modelOptions []string, preferredModel string, mac
 		manifestsByName[manifest.Name] = manifest
 	}
 
-	scoredModels, err := ScoreModels(modelOptions, manifestsByName, machine)
+	scoredModels, err := ScoreModels(engineManifest.Model.Options, manifestsByName, machine, engineManifest)
 	if err != nil {
 		return "", nil, err
 	}
 
 	if preferredModel != "" {
 		for _, model := range scoredModels {
-			if model.Name == preferredModel && model.CompatibilityReport.CompatibleDisk {
+			if model.Name == preferredModel && model.CompatibilityReport.Compatible() {
 				return preferredModel, scoredModels, nil
 			}
 		}
@@ -248,7 +337,7 @@ func SelectModel(ctx *Context, modelOptions []string, preferredModel string, mac
 	selectedSize := uint64(0)
 	for _, model := range scoredModels {
 		size := model.CompatibilityReport.RequiredDiskSpace
-		if model.CompatibilityReport.CompatibleDisk && (selected == "" || size > selectedSize) {
+		if model.CompatibilityReport.Compatible() && (selected == "" || size > selectedSize) {
 			selected = model.Name
 			selectedSize = size
 		}
@@ -258,6 +347,11 @@ func SelectModel(ctx *Context, modelOptions []string, preferredModel string, mac
 		return selected, scoredModels, nil
 	}
 
+	for _, model := range scoredModels {
+		if model.CompatibilityReport.CompatibleDisk {
+			return "", scoredModels, ErrInsufficientMemoryForModel
+		}
+	}
 	return "", scoredModels, ErrInsufficientDiskSpaceForModel
 }
 
@@ -268,4 +362,41 @@ func availableDiskSpace(machine *machine.Machine) (uint64, error) {
 		}
 	}
 	return 0, fmt.Errorf("disk information unavailable for %s", constants.SnapStoragePath)
+}
+
+func getTopGpuVram(machine *machine.Machine, gpuDevices []engines.Device) (uint64, bool, error) {
+	isUnifiedMemory := false
+
+	var bestDevice *pci.Device
+	bestScore := 0
+	for _, gpuDevice := range gpuDevices {
+		hostDevice, score := selectorpci.BestMatch(gpuDevice, machine)
+		if hostDevice != nil && score > bestScore {
+			bestDevice = hostDevice
+			bestScore = score
+		}
+	}
+	if bestDevice == nil {
+		return 0, isUnifiedMemory, nil
+	}
+	vram, ok := bestDevice.AdditionalProperties["vram"]
+	if !ok {
+		return 0, isUnifiedMemory, nil
+	} else if vram == nil {
+		// assume unified memory
+		isUnifiedMemory = true
+		return 0, isUnifiedMemory, nil
+	}
+	vramValue, ok := vram.(uint64)
+	if !ok {
+		return 0, isUnifiedMemory, fmt.Errorf("parsing vram %q for pci device %s", vram, bestDevice.Slot)
+	}
+	return vramValue, isUnifiedMemory, nil
+}
+
+func getSystemMemory(machine *machine.Machine) (uint64, error) {
+	if machine.Memory.TotalRam == 0 {
+		return 0, ErrSystemMemoryUnavailable
+	}
+	return machine.Memory.TotalRam, nil
 }

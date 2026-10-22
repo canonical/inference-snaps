@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"os"
 	"testing"
 
 	"github.com/canonical/lscompute/pkg/machine"
@@ -93,6 +94,33 @@ func Example_machineCommand_printMachineYaml() {
 	//       subdevice-id: "0x89C6"
 	//       vendor-name: Intel Corporation
 	//       subvendor-name: Hewlett-Packard Company
+}
+
+func Test_newPciAdditionalDeviceProperties_invalidVRAM(t *testing.T) {
+	stderr, err := os.CreateTemp(t.TempDir(), "stderr-*")
+	if err != nil {
+		t.Fatal(err)
+	}
+	originalStderr := os.Stderr
+	os.Stderr = stderr
+	t.Cleanup(func() {
+		os.Stderr = originalStderr
+		stderr.Close()
+	})
+
+	properties := newPciAdditionalDeviceProperties(map[string]any{"vram": "8G"})
+	if properties != nil {
+		t.Errorf("expected nil properties for invalid VRAM, got %+v", properties)
+	}
+
+	output, err := os.ReadFile(stderr.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "Warning: it was not possible to parse VRAM value: expected uint64, got string (8G).\n"
+	if string(output) != want {
+		t.Errorf("warning = %q, want %q", output, want)
+	}
 }
 
 func Test_printMachine_unknownFormat(t *testing.T) {

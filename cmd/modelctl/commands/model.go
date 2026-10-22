@@ -9,6 +9,8 @@ import (
 	"github.com/canonical/inference-snaps-cli/v2/cmd/modelctl/common"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/engines"
 	"github.com/canonical/inference-snaps-cli/v2/pkg/models"
+	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/host"
 	"github.com/spf13/cobra"
 	"go.yaml.in/yaml/v4"
 )
@@ -109,7 +111,11 @@ func (cmd *modelCommand) showCurrentModel() error {
 }
 
 func (cmd *modelCommand) model(modelNameOrAlias string) error {
-	modelDetails, err := common.GetModelDetailsByNameOrAlias(cmd.Context, modelNameOrAlias)
+	machine, _, err := machine.Get(host.Real(), true, true)
+	if err != nil {
+		return fmt.Errorf("getting machine info: %v", err)
+	}
+	modelDetails, err := common.GetModelDetailsByNameOrAlias(cmd.Context, modelNameOrAlias, machine)
 	if err != nil {
 		return err
 	}

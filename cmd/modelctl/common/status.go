@@ -54,7 +54,7 @@ func SnapStatus(ctx *Context) (*Status, error) {
 			return nil, fmt.Errorf("loading engine manifest: %w", mErr)
 		}
 		if len(engineManifest.Model.Options) > 0 {
-			statusStr.Notices = append(statusStr.Notices, SuggestNotEnoughSpaceForModel(activeEngineName))
+			statusStr.Notices = append(statusStr.Notices, SuggestNoActiveModel(activeEngineName))
 		}
 		return &statusStr, err
 	} else if err != nil {
