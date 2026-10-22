@@ -207,7 +207,18 @@ components:
     <<: *test-component
   model-30b-a3b-q4-k-m-gguf-6-of-6:
     <<: *test-component
+  model-30m-q4-k-m-gguf:
+    <<: *test-component
 
+hooks:
+  install:
+    plugs:
+      - hardware-observe
+      - opengl
+  post-refresh:
+    plugs:
+      - hardware-observe
+      - opengl
 apps:
   stack-utils:
     command: bin/modelctl
