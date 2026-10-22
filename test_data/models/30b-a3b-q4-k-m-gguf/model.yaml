@@ -12,7 +12,7 @@ environment:
   # The model file path is set to the first shard's symlink:
   - MODEL_FILE=/tmp/nemotron-3-nano-shards/Nemotron-Nano-3-30B-A3B-Q4_K_M-00001-of-00006.gguf
 
-disk-size: 6G # metadata
+disk-size: 6000G # metadata
 
 capabilities:
   - text

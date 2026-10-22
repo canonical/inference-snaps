@@ -7,3 +7,7 @@ devices:
     - type: cpu
       architecture: amd64
       flags: [nonexistent_flag]
+model:
+  default: 30b-a3b-q4-k-m-gguf
+  options:
+    - 30b-a3b-q4-k-m-gguf

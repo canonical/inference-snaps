@@ -84,7 +84,7 @@ func TestGetModelsTable(t *testing.T) {
 
 	expectedTable := `NAME                 CAPABILITIES               DISK 
 26b-q4-k-m-gguf      text                       6G   
-30b-a3b-q4-k-m-gguf  text, vision, audio, tool  6G   
+30b-a3b-q4-k-m-gguf  text, vision, audio, tool  5.9T 
 30m-q4-k-m-gguf      text, vision, audio, tool  1M   
 4b-it-int4-fq-ov*    text                       6G   
 `
@@ -108,7 +108,7 @@ func TestGetModelsTableAllModels(t *testing.T) {
 
 	expectedTable := `NAME                 CAPABILITIES               DISK   ENGINES                                                          
 26b-q4-k-m-gguf      text                       6G     arm-neon, cpu, cpu-avx1, cpu-avx2, cpu-avx512, cuda-generic, ro… 
-30b-a3b-q4-k-m-gguf  text, vision, audio, tool  6G     cpu, cuda-generic, rocm-generic                                  
+30b-a3b-q4-k-m-gguf  text, vision, audio, tool  5.9T   cpu, cuda-generic, not-compatible-engine, rocm-generic           
 30m-q4-k-m-gguf      text, vision, audio, tool  1M     cpu                                                              
 4b-it-int4-fq-ov*    text                       6G     intel-cpu, intel-gpu, intel-npu                                  
 `
@@ -238,7 +238,7 @@ func Example_printAllModelsJson() {
 	//         "audio",
 	//         "tool"
 	//       ],
-	//       "disk-size": "6G",
+	//       "disk-size": "5.9T",
 	//       "components": [
 	//         "model-30b-a3b-q4-k-m-gguf-1-of-6",
 	//         "model-30b-a3b-q4-k-m-gguf-2-of-6",
@@ -250,6 +250,7 @@ func Example_printAllModelsJson() {
 	//       "compatible-engines": [
 	//         "cpu",
 	//         "cuda-generic",
+	//         "not-compatible-engine",
 	//         "rocm-generic"
 	//       ]
 	//     },
