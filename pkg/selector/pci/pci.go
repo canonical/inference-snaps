@@ -51,6 +51,32 @@ func Match(manifestDevice engines.Device, machine *machine.Machine) (maxDeviceSc
 	return
 }
 
+// BestMatch returns the highest-scoring host PCI device that satisfies manifestDevice, or nil if none does.
+func BestMatch(manifestDevice engines.Device, machine *machine.Machine) (*pci.Device, int) {
+	if machine == nil {
+		return nil, 0
+	}
+
+	var hostPciDevices []pciDevice
+	for _, d := range machine.PCIDevices {
+		hostPciDevices = append(hostPciDevices, pciDevice{Device: d})
+	}
+
+	availableDevices := filterPciDevices(hostPciDevices, manifestDevice.VendorId, manifestDevice.DeviceId)
+	scoredDevices, _ := scorePciDevices(manifestDevice, availableDevices)
+
+	var best *pciDevice
+	for i := range scoredDevices {
+		if scoredDevices[i].Score > 0 && (best == nil || scoredDevices[i].Score > best.Score) {
+			best = &scoredDevices[i]
+		}
+	}
+	if best == nil {
+		return nil, 0
+	}
+	return &best.Device, best.Score
+}
+
 // filterPciDevices returns all PCI devices from the provided list, where the Vendor ID and the Device ID match.
 //
 // Filtering does not return compatibility issues. If we did, an engine with N device on a machine with M pci devices,

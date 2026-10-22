@@ -139,7 +139,7 @@ func Example_statusCommand_printStatusYamlNoActiveModel() {
 	//         unix-socket: /tmp/share/provider/server.sock (ws://unix/realtime)
 	// model: null
 	// notices:
-	//     - Not enough disk space to install a model compatible with the cpu engine. Run 'mock-snap use-engine --auto --verbose' for details
+	//     - No model for cpu engine fits system requirements. Run 'mock-snap use-engine --auto --verbose' for details
 }
 
 func Example_statusCommand_printStatusJsonNoActiveModel() {
@@ -173,7 +173,7 @@ func Example_statusCommand_printStatusJsonNoActiveModel() {
 	//   },
 	//   "model": null,
 	//   "notices": [
-	//     "Not enough disk space to install a model compatible with the cpu engine. Run 'mock-snap use-engine --auto --verbose' for details"
+	//     "No model for cpu engine fits system requirements. Run 'mock-snap use-engine --auto --verbose' for details"
 	//   ]
 	// }
 }

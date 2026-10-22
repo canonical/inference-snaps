@@ -97,6 +97,14 @@ func StringToBytes(sizeString string) (uint64, error) {
 	return uint64(sizeBytes), nil
 }
 
+func NormalizeFormattedBytes(value string) (string, error) {
+	sizeBytes, err := StringToBytes(value)
+	if err != nil {
+		return "", err
+	}
+	return FmtBytesShort(sizeBytes), nil
+}
+
 // SplitPathIntoDirectories takes a file path and returns a slice of strings containing the individual directory names that makes up the path
 func SplitPathIntoDirectories(p string) []string {
 	var parts []string

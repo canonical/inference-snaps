@@ -100,3 +100,13 @@ func SuggestNotEnoughSpaceForModel(activeEngine string) string {
 
 	return fmt.Sprintf("Not enough disk space to install a model compatible with the %s engine. Run '%s use-engine --auto --verbose' for details", activeEngine, instanceName)
 }
+
+func SuggestNoActiveModel(activeEngine string) string {
+
+	instanceName := snap.InstanceName()
+	if instanceName == "" { // not a snap
+		instanceName = "<snap-instance-name>"
+	}
+
+	return fmt.Sprintf("No model for %s engine fits system requirements. Run '%s use-engine --auto --verbose' for details", activeEngine, instanceName)
+}

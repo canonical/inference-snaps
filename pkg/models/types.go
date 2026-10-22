@@ -26,6 +26,14 @@ type CompatibilityReport struct {
 	CompatibleDisk     bool
 	RequiredDiskSpace  uint64
 	AvailableDiskSpace uint64
+	RequiredMemory     uint64
+	TotalMemory        uint64
+	RequiredVram       uint64
+	TotalVram          uint64
+}
+
+func (report CompatibilityReport) Compatible() bool {
+	return report.CompatibleDisk && report.RequiredMemory <= report.TotalMemory && report.RequiredVram <= report.TotalVram
 }
 
 type ScoredManifest struct {
@@ -44,9 +52,9 @@ type Manifest struct {
 	Quantization string   `json:"quantization" yaml:"quantization"`
 	Capabilities []string `json:"capabilities" yaml:"capabilities"`
 
-	DiskSize string `json:"disk-size" yaml:"disk-size"`
-
-	Components []string `json:"components" yaml:"components"`
+	DiskSize       string   `json:"disk-size" yaml:"disk-size"`
+	RequiredMemory string   `json:"required-memory,omitempty" yaml:"required-memory,omitempty"`
+	Components     []string `json:"components" yaml:"components"`
 
 	Environment []string `json:"environment" yaml:"environment"`
 

@@ -6,6 +6,7 @@ format: GGUF
 quantization: Q4_K_M
 
 disk-size: 6G # metadata
+required-memory: 8G # metadata
 
 capabilities:
   - text

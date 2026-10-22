@@ -22,6 +22,7 @@ model:
   options:
     - 26b-q4-k-m-gguf
     - 30b-a3b-q4-k-m-gguf
+    - 30m-q4-k-m-gguf
 
 configurations:
   sleep-idle-seconds: 600

@@ -50,6 +50,38 @@ func TestStringToBytes(t *testing.T) {
 	}
 }
 
+func TestNormalizeFormattedBytes(t *testing.T) {
+	for _, test := range []struct {
+		name    string
+		input   string
+		want    string
+		wantErr bool
+	}{
+		{name: "normalize units", input: "8192M", want: "8G"},
+		{name: "fractional size", input: "1.5G", want: "1.5G"},
+		{name: "raw bytes", input: "1024", want: "1K"},
+		{name: "zero", input: "0", want: "0"},
+		{name: "invalid", input: "invalid", wantErr: true},
+		{name: "empty", input: "", wantErr: true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := NormalizeFormattedBytes(test.input)
+			if test.wantErr {
+				if err == nil {
+					t.Fatal("expected an error")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got != test.want {
+				t.Errorf("NormalizeFormattedBytes(%q) = %q, want %q", test.input, got, test.want)
+			}
+		})
+	}
+}
+
 func TestIsPrimitive(t *testing.T) {
 	if !IsPrimitive(1) {
 		t.Fatal("int should be primitive")
