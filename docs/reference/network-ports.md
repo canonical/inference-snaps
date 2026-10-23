@@ -30,5 +30,6 @@ The following table lists the default port assignments for each inference snap. 
 | [MiMo v2.6](https://snapcraft.io/mimo-v2-6) | 8362, 8363 |
 | [OpenJev](https://snapcraft.io/openjev) | 8364, 8365 |
 | [Clef Flash](https://snapcraft.io/clef-flash) | 8366, 8367 |
+| [Nemotron 3.5 Super VL](https://snapcraft.io/nemotron-3-5-super-vl) | 8368, 8369 |
 | [Nemotron 3.5 Bolt](https://snapcraft.io/nemotron-3-5-bolt) | 8370, 8371 |
 

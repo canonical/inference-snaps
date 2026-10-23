@@ -82,3 +82,7 @@
 	path = snaps/nemotron-3.5-bolt
 	url = https://github.com/canonical/nemotron-3.5-bolt-snap
 	branch = main
+[submodule "nemotron-3.5-super-vl-snap"]
+	path = snaps/nemotron-3.5-super-vl-snap
+	url = https://github.com/canonical/nemotron-3.5-super-vl-snap.git
+	branch = main

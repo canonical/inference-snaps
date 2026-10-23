@@ -221,6 +221,27 @@ The inference snap for Nemotron 3.5 Lightning has been optimized for the followi
 
 {{explore_optimizations}}
 
+## Nemotron 3.5 Super VL
+
+[![nemotron-3-5-super-vl snap](https://snapcraft.io/nemotron-3-5-super-vl/badge.svg)](https://snapcraft.io/nemotron-3-5-super-vl)
+[![nemotron-3-5-super-vl source][gh-badge]](https://github.com/canonical/nemotron-3.5-super-vl-snap)
+
+Nemotron 3.5 Super VL combines reasoning, instruction following, and tool use with text, image, document, and video understanding.
+Output is text-based.
+
+The inference snap for Nemotron 3.5 Super VL has been optimized for the following:
+
+| Arch | Optimization | Description |
+|--------------|--------------|-------------|
+| amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
+| amd64 | NVIDIA GPU (cc10+) | CUDA optimized for NVIDIA Blackwell GPUs or later |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| arm64 | NVIDIA GPU (cc10+) | CUDA optimized for NVIDIA Blackwell GPUs or later |
+
+{{explore_optimizations}}
+
 ## Nomic Embed Text v1.5
 
 [![nomic-embed-text-v1-5 snap](https://snapcraft.io/nomic-embed-text-v1-5/badge.svg)](https://snapcraft.io/nomic-embed-text-v1-5)

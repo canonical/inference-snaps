@@ -48,6 +48,7 @@ gemma4 chat
 | Nemotron 3 Nano Omni | text, thinking, vision, tools | `snap install nemotron-3-nano-omni` | [repo](https://github.com/canonical/nemotron-3-nano-omni-snap)
 | Nemotron 3.5 Bolt | text, thinking, vision | `snap install nemotron-3-5-bolt` | [repo](https://github.com/canonical/nemotron-3.5-bolt-snap)
 | Nemotron 3.5 Lightning | text, thinking, tools | `snap install nemotron-3-5-lightning` | [repo](https://github.com/canonical/nemotron-3.5-lightning-snap)
+| Nemotron 3.5 Super VL | text, thinking, tools, vision | `snap install nemotron-3-5-super-vl` | [repo](https://github.com/canonical/nemotron-3.5-super-vl-snap)
 | Nomic Embed Text v1.5 | text embedding | `snap install nomic-embed-text-v1-5` | [repo](https://github.com/canonical/nomic-embed-text-v1.5-snap)
 | OpenJev | decision, text, vision | `snap install openjev` | [repo](https://github.com/canonical/openjev-snap)
 | Phi 4 | text | `snap install phi4` | [repo](https://github.com/canonical/phi4-snap)
