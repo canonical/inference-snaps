@@ -79,12 +79,16 @@ This inference snap is optimized for the following hardware:
 
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
+| amd64 | AMD GPU | ROCm-optimized for workstation GPUs |
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
 | amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
+| amd64 | Intel oneMKL | Intel CPU-optimized for workstations using oneMKL |
+| amd64 | Vulkan | Vulkan engine optimized for generic GPUs |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| arm64 | Vulkan | Vulkan engine optimized for generic GPUs |
 
 {{explore_optimizations}}
 

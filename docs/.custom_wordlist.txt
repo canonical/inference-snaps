@@ -122,6 +122,7 @@ VL
 VLM
 VMs
 vRAM
+Vulkan
 WCAG
 WebUI
 whitespace
