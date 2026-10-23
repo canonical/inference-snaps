@@ -57,9 +57,9 @@ This inference snap is optimized for the following hardware:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
-| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
@@ -79,15 +79,15 @@ This inference snap is optimized for the following hardware:
 
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
-| amd64 | AMD GPU | ROCm-optimized for workstation GPUs |
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
+| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | Intel CPU | Optimized for best performance on Intel CPUs |
 | amd64 | Intel GPU | Optimized for Intel integrated and discrete graphics |
 | amd64 | Intel oneMKL | Intel CPU-optimized for workstations using oneMKL |
-| amd64 | Vulkan | Vulkan engine optimized for generic GPUs |
-| arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
+| amd64 | AMD GPU | ROCm-optimized for workstation GPUs |
+| amd64 | Vulkan | Vulkan engine optimized for generic GPUs |
 | arm64 | Vulkan | Vulkan engine optimized for generic GPUs |
 
 {{explore_optimizations}}
@@ -162,8 +162,8 @@ The inference snap for Nemotron 3 Nano has been optimized for the following:
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
@@ -181,8 +181,8 @@ The inference snap for Nemotron 3 Nano Omni supports text and image, and has bee
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
@@ -219,8 +219,8 @@ The inference snap for Nemotron 3.5 Lightning has been optimized for the followi
 | Arch | Optimization | Description |
 |--------------|--------------|-------------|
 | amd64 | Generic CPU | Optimized for several x86 CPU variants |
-| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | Generic CPU | Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs |
+| amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 
 {{explore_optimizations}}
