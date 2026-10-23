@@ -1,4 +1,6 @@
 agentic
+armv8
+armv9
 artifacts
 backend
 backends
@@ -89,6 +91,7 @@ quantized
 Qwen
 readthedocs
 Rockcraft
+ROCm
 rst
 runtimes
 sandboxed
@@ -122,6 +125,7 @@ VL
 VLM
 VMs
 vRAM
+Vulkan
 WCAG
 WebUI
 whitespace
