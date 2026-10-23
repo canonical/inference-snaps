@@ -323,6 +323,7 @@ The inference snap for Qwen 3 has been optimized for the following:
 | amd64 | NVIDIA GPU | CUDA-enabled GPU acceleration on x86 platforms |
 | arm64 | NVIDIA GPU | CUDA-enabled GPU acceleration on arm64 platforms |
 | amd64 | AMD GPU | {spellexception}`ROCm`-enabled GPU acceleration on x86 platforms |
+| arm64 | MediaTek NPU | MediaTek NeuroPilot NPU-accelerated inference |
 
 {{explore_optimizations}}
 
