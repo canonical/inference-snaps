@@ -160,7 +160,7 @@ parts:
 
   webui:
     plugin: dump
-    source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.1.0/inference-snaps-webui.tar.xz
+    source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.1.1/inference-snaps-webui.tar.xz
     organize:
       "*": webui/
 
