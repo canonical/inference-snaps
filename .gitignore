@@ -2,3 +2,4 @@
 *.comp
 squashfs-root
 /modelctl
+/test_data/build/
