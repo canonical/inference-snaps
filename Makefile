@@ -8,7 +8,7 @@ GO_BUILD := go build
 all: build
 
 build:
-	$(GO_BUILD) -o modelctl ./cmd/modelctl
+	$(GO_BUILD) -o modelctl .
 
 test:
 	go test -count 1 -failfast ./...
@@ -16,7 +16,7 @@ test:
 stage:
 	rm -rf $(STAGE_DIR)
 	mkdir -p $(STAGE_DIR)/cli/bin $(STAGE_DIR)/completer
-	$(GO_BUILD) -o $(STAGE_DIR)/cli/bin/modelctl ./cmd/modelctl
+	$(GO_BUILD) -o $(STAGE_DIR)/cli/bin/modelctl .
 	cp completer/snap.bash $(STAGE_DIR)/completer/
 	git describe --always --dirty > $(STAGE_DIR)/version
 
