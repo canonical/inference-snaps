@@ -11,7 +11,7 @@ require (
 	github.com/creack/pty v1.1.24
 	github.com/fatih/color v1.19.0
 	github.com/olekukonko/tablewriter v1.1.5
-	github.com/openai/openai-go/v3 v3.86.0
+	github.com/openai/openai-go/v3 v3.89.0
 	github.com/spf13/cobra v1.10.2
 	go.yaml.in/yaml/v4 v4.0.0-rc.6
 	golang.org/x/term v0.47.0
