@@ -1,8 +1,9 @@
-name: stack-utils
+name: modelctl-test
 base: core24
-summary: Utilities for selecting hardware optimised engines
+summary: Test snap for developing the inference snaps CLI
 description: |
-  These utilities help decide which components should be installed on a particular system.
+  A snap for developing and testing modelctl, the inference snaps CLI.
+  It bundles the CLI with test engines, runtimes, models and a mock OpenAI server.
 
 grade: devel
 confinement: strict
@@ -51,12 +52,11 @@ environment:
 
 parts:
   version:
-    plugin: dump
-    source: .
-    build-packages:
-      - git-lfs
+    plugin: nil
+    source: build
     override-pull: |
-      craftctl set version="$(git -C $SNAPCRAFT_PROJECT_DIR describe --always --dirty)"
+      craftctl default
+      craftctl set version="$(cat version)"
 
   local-scripts:
     source: snap/local
@@ -65,39 +65,36 @@ parts:
       "*": bin/
 
   completer:
-    source: completer
+    source: build/completer
     plugin: dump
     organize:
       "snap.bash": bin/completion.bash
 
   engines:
     plugin: dump
-    source: test_data/engines
+    source: engines
     organize:
       "*": engines/
 
   runtimes:
     plugin: dump
-    source: test_data/runtimes
+    source: runtimes
     organize:
       "*": runtimes/
 
   models:
     plugin: dump
-    source: test_data/models
+    source: models
     organize:
       "*": models/
 
   cli:
-    plugin: go
-    build-snaps:
-      - go/1.26/stable
-    source: .
-    source-type: local
+    plugin: dump
+    source: build/cli
     override-build: |
       craftctl default
       # For tab completion
-      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/stack-utils
+      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/modelctl-test
 
   cli-dependencies:
     plugin: nil
@@ -166,7 +163,7 @@ parts:
 
   mock-openai-server:
     plugin: dump
-    source: test_data/mock-openai-server
+    source: mock-openai-server
     organize:
       "*": bin/mock-openai-server/
 
@@ -220,7 +217,7 @@ hooks:
       - hardware-observe
       - opengl
 apps:
-  stack-utils:
+  modelctl-test:
     command: bin/modelctl
     completer: bin/completion.bash
     plugs:
