@@ -8,6 +8,8 @@ github.com/canonical/lscompute v1.0.0-beta h1:TRSCN5EA74Brogg4yrwAx7/OIK3hyjQq17
 github.com/canonical/lscompute v1.0.0-beta/go.mod h1:5uy33xH1i5SmlqgrEFiyTn46scCVHLnJ1XmOxUCBwNU=
 github.com/canonical/lscompute v1.0.0-beta.4 h1:JJajPBB5zfY8KzdIlM3N50Xxa6sMRjIU12RZdGB/20Q=
 github.com/canonical/lscompute v1.0.0-beta.4/go.mod h1:5uy33xH1i5SmlqgrEFiyTn46scCVHLnJ1XmOxUCBwNU=
+github.com/canonical/lscompute v1.0.0-beta.5 h1:B/RDrxh+AN013NPTODK8qGkdJF1+0qh/PHxRVn4JX/4=
+github.com/canonical/lscompute v1.0.0-beta.5/go.mod h1:5uy33xH1i5SmlqgrEFiyTn46scCVHLnJ1XmOxUCBwNU=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/chzyer/logex v1.2.1 h1:XHDu3E6q+gdHgsdTPH6ImJMIp436vR6MPtH8gP05QzM=
