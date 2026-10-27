@@ -45,7 +45,7 @@ jobs:
           GOOS: ${{ matrix.runner.goos }}
           GOARCH: ${{ matrix.runner.goarch }}
         run: |
-          go build -ldflags="-s -w" -o ./modelctl ./cmd/modelctl
+          go build -ldflags="-s -w" -o ./modelctl .
 
       - name: Generate artifact
         run: |

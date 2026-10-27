@@ -19,7 +19,7 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}/../../..
       run: |
-        go install ./cmd/modelctl
+        go build -o "$(go env GOPATH)/bin/modelctl" .
         echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
     - name: Lint package manifests
