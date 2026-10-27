@@ -154,6 +154,31 @@ func TestCheckNpuDriver(t *testing.T) {
 	// TODO test the negative case
 }
 
+func TestCheckNpuTypeSignalProcessing(t *testing.T) {
+	tests := []struct {
+		name     string
+		device   pci.Device
+		expected bool
+	}{
+		{"amd xdna2 npu", pci.Device{DeviceClass: 0x1180, VendorId: 0x1022, DeviceId: 0x17f0}, true},
+		{"amd xdna1 npu", pci.Device{DeviceClass: 0x1180, VendorId: 0x1022, DeviceId: 0x1502}, true},
+		{"other signal processing subclass", pci.Device{DeviceClass: 0x1101, VendorId: 0x8086, DeviceId: 0x0001}, true},
+		{"host bridge", pci.Device{DeviceClass: 0x0600, VendorId: 0x1022, DeviceId: 0x17f0}, false},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			for _, typ := range []string{"npu", "tpu"} {
+				if got := checkType(typ, tc.device); got != tc.expected {
+					t.Errorf("checkType(%q) = %v, want %v", typ, got, tc.expected)
+				}
+			}
+			if checkType("gpu", tc.device) {
+				t.Errorf("checkType(gpu) must not match")
+			}
+		})
+	}
+}
+
 func TestCheckMicroarchitecture(t *testing.T) {
 
 	hwInfoGpu := pci.Device{
