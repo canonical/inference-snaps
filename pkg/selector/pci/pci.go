@@ -221,6 +221,7 @@ func checkType(requiredType string, pciDevice pci.Device) bool {
 	/*
 		Base class 0x12 = Processing Accelerator - Intel Lunar Lake NPU identifies as this class
 		Base class 0x0B = Processor, Sub class 0x40 = Co-Processor - Hailo PCI devices identify as this class
+		Base class 0x11 = Signal processing controller - AMD XDNA NPUs identify as this class
 	*/
 	if requiredType == "npu" || requiredType == "tpu" {
 		if pciDevice.DeviceClass&0xFF00 == 0x1200 {
@@ -229,6 +230,10 @@ func checkType(requiredType string, pciDevice pci.Device) bool {
 		}
 		if pciDevice.DeviceClass == 0x0B40 {
 			// Coprocessor
+			return true
+		}
+		if pciDevice.DeviceClass&0xFF00 == 0x1100 {
+			// Signal processing controller
 			return true
 		}
 	}
