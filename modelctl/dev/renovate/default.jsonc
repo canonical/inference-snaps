@@ -1,0 +1,83 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "git-submodules": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Automerge inference-snaps-dev update PRs",
+      "matchManagers": [
+        "git-submodules"
+      ],
+      "matchDepNames": [
+        "dev"
+      ],
+      "commitBody": "[skip ci]",
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": true
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update inference-snaps-cli release and lint action ref",
+      "managerFilePatterns": [
+        "snap/snapcraft.yaml",
+        ".github/workflows/pr-checks.yaml"
+      ],
+      "matchStrings": [
+        "https://github\\.com/canonical/inference-snaps-cli/releases/download/(?<currentValue>v[^/]+)/inference-snaps-cli",
+        "canonical/inference-snaps-cli/\\.github/actions/lint-package@(?<currentValue>v[^\\s#]+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "canonical/inference-snaps-cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update inference-snaps-webui",
+      "managerFilePatterns": [
+        "snap/snapcraft.yaml"
+      ],
+      "matchStrings": [
+        "https://github\\.com/canonical/inference-snaps-webui/releases/download/(?<currentValue>v[^/]+)/inference-snaps-webui"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "canonical/inference-snaps-webui",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update openvino-model-server",
+      "managerFilePatterns": [
+        "snap/snapcraft.yaml"
+      ],
+      "matchStrings": [
+        "https://github\\.com/openvinotoolkit/model_server/releases/download/(?<currentValue>v[^/]+)/ovms"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "openvinotoolkit/model_server",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "description": "Update llama.cpp builds",
+      "managerFilePatterns": [
+        "snap/snapcraft.yaml"
+      ],
+      // The llama.cpp builds are single auto-incrementing build numbers, e.g. b10154.
+      // Capture the numeric part from the URL:
+      "matchStrings": [
+        "https://github\\.com/canonical/llama\\.cpp-builds/releases/download/b(?<currentValue>\\d+)/llamacpp"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "canonical/llama.cpp-builds",
+      // GitHub release tags are prefixed with "b", e.g. b10154.
+      // Strip that prefix from datasource results before version comparison.
+      "extractVersionTemplate": "^b(?<version>\\d+)$",
+      // Compare the captured numeric build number as the minor semantic version: 0.<minor>.0
+      "versioningTemplate": "regex:^(?<minor>\\d+)$"
+    }
+  ]
+}

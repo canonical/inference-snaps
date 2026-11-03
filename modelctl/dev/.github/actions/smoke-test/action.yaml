@@ -1,0 +1,25 @@
+name: Run smoke tests
+
+inputs:
+  snap-name:
+    description: Installed snap name to test
+    required: true
+  engine:
+    description: Engine to validate during smoke tests
+    required: true
+  features:
+    description: Comma separated list of features to validate during smoke tests
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Run smoke tests
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        action_repo_root="$(realpath "$GITHUB_ACTION_PATH/../../..")"
+
+        sudo --preserve-env=GITHUB_ACTIONS \
+          "$action_repo_root/smoke-test.sh" "${{ inputs.snap-name }}" "${{ inputs.engine }}" --features="${{ inputs.features }}"
