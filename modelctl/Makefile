@@ -15,8 +15,7 @@ test:
 	go test -count 1 -failfast ./...
 
 docs-cli:
-	rm -rf docs/reference/cli
-	go run ./internal/tools/docgen -out docs/reference/cli
+	go run ./internal/tools/docgen -out docs/reference/cli.md
 
 stage:
 	rm -rf $(STAGE_DIR)
