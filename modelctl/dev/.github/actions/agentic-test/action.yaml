@@ -1,0 +1,76 @@
+name: Agentic test
+description: Run the agentic snap test via Workshop & OpenCode and gate on its verdict.
+
+inputs:
+  snap-name:
+    description: Name of the snap to test
+    required: true
+  snap-channel:
+    description: Snap Store channel to test
+    required: false
+    default: edge
+  openrouter-model:
+    description: OpenRouter model to use for the testing agent
+    required: false
+    default: deepseek/deepseek-v4-flash
+  issue-repo:
+    description: Repository where GitHub issues are filed for new findings
+    required: false
+    default: canonical/inference-snaps
+  create-issues:
+    description: Automatically file GitHub issues for NEW findings in the tracker repo or label existing ones
+    required: false
+    default: "false"
+  openrouter-api-key:
+    description: OpenRouter API key used by the testing agent
+    required: true
+  issue-create-token:
+    description: GitHub token used to create issues in the issue tracker repo
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve test directory
+      shell: bash
+      run: |
+        : Resolve test directory
+        TEST_DIR="$(realpath "$GITHUB_ACTION_PATH/../../../tests/agentic")"
+        echo "TEST_DIR=$TEST_DIR" >> "$GITHUB_ENV"
+
+    - name: Launch Workshop
+      uses: canonical/launch-workshop@v1
+      with:
+        project: ${{ env.TEST_DIR }}
+
+    - name: Run agentic snap test
+      shell: bash
+      working-directory: ${{ env.TEST_DIR }}
+      env:
+        SNAP_NAME: ${{ inputs.snap-name }}
+        SNAP_CHANNEL: ${{ inputs.snap-channel }}
+        OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
+        OPENROUTER_MODEL: ${{ inputs.openrouter-model }}
+        ISSUE_REPO: ${{ inputs.issue-repo }}
+        CREATE_ISSUES: ${{ inputs.create-issues }}
+        ISSUE_CREATE_TOKEN: ${{ inputs.issue-create-token }}
+      run: ./run.sh
+
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: snap-test-report
+        path: ${{ env.TEST_DIR }}/snap-test-report.json
+        archive: false
+        if-no-files-found: warn
+
+    - name: Upload triage report
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: snap-triage-report
+        path: ${{ env.TEST_DIR }}/snap-triage-report.json
+        archive: false
+        if-no-files-found: ignore

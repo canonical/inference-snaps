@@ -1,0 +1,127 @@
+# This workflow is designed to be called by another workflow on push events from the default branch.
+
+name: CICD
+
+on:
+  workflow_call:
+    inputs:
+      build-runner:
+        description: |
+          JSON array containing runner configurations for each architecture.
+          
+          The input should be a JSON array of runner configurations. For example:
+          - '[["self-hosted", "amd64"], ["self-hosted", "arm64"]]'
+          - '["ubuntu-24.04", "ubuntu-24.04-arm"]' for single label per architecture
+          
+          The input must be quoted and passed as a string.
+        required: true
+        type: string
+        default: '["ubuntu-24.04", "ubuntu-24.04-arm"]'
+
+      timeout-minutes:
+        description: Timeout for building and publishing (combined), in minutes.
+        required: false
+        type: number
+        default: 360
+
+      build-init-script: # Deprecated
+        description: |
+          Script to run before building the snap
+
+          Deprecated: Supply a Makefile with 'make init' target instead of passing a script name. 
+        required: false
+        type: string
+
+      snap-name:
+        description: Name of the snap to build and publish
+        required: true
+        type: string
+
+      smoke-test-runner:
+        description: |
+          JSON array containing runner configurations for each architecture for smoke testing.  
+          The input should be a JSON array of runner configurations. For example:
+          - '[["self-hosted", "amd64"], ["self-hosted", "arm64"]]'
+          - '["ubuntu-24.04", "ubuntu-24.04-arm"]' for single label per architecture
+          The input must be quoted and passed as a string.
+        required: false
+        type: string
+        default: '["ubuntu-24.04", "ubuntu-24.04-arm"]'
+
+      smoke-test-engine:
+        description: Engine to validate during smoke tests
+        required: true
+        type: string
+
+      smoke-test-features:
+        description: Comma separated list of features to validate during smoke testing
+        required: false
+        type: string
+      
+      store-track:
+        description: Snap Store track to publish to
+        required: false
+        type: string
+        default: "latest"
+    secrets:
+      store-credentials:
+        description: Snap Store credentials for publishing the snap to the specified channel
+        required: true
+
+
+jobs:
+  build-edge:
+    uses: ./.github/workflows/build-publish-snap.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: ${{ fromJSON(inputs.build-runner) }}
+    with:
+      runner: "${{ toJSON(matrix.runner) }}"
+      init-build-script: ${{ inputs.build-init-script }}
+      publish-channel: ${{ inputs.store-track }}/edge
+      timeout-minutes: ${{ inputs.timeout-minutes }}
+    secrets:
+      store-credentials: ${{ secrets.store-credentials }} 
+
+  smoke-test:
+    needs: [build-edge]
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: ${{ fromJSON(inputs.smoke-test-runner) }}
+    runs-on: ${{ matrix.runner }}
+    
+    steps:
+      - name: Refresh/Install snapd
+        run: |
+          sudo snap refresh snapd || sudo snap install snapd
+
+      - name: Install inference snap
+        shell: bash
+        run: |
+          sudo snap install ${{ inputs.snap-name }} --channel ${{ inputs.store-track }}/edge
+  
+      - name: Run smoke tests
+        uses: canonical/inference-snaps-dev/.github/actions/smoke-test@v2
+        with:
+          snap-name: ${{ inputs.snap-name }}
+          engine: ${{ inputs.smoke-test-engine }}
+          features: ${{ inputs.smoke-test-features }}
+  
+  promote-beta:
+    needs: [smoke-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install snapcraft
+        shell: bash
+        run: |
+          sudo snap install snapcraft --classic
+      
+      - name: Promote to beta
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.store-credentials }} 
+        run: |
+          snapcraft promote ${{ inputs.snap-name }} --yes \
+            --from-channel "${{ inputs.store-track }}/edge" \
+            --to-channel   "${{ inputs.store-track }}/beta"

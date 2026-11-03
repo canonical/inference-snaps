@@ -1,0 +1,352 @@
+package commands
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
+	"github.com/canonical/inference-snaps-cli/v2/internal/selector"
+)
+
+func TestInfoLong(t *testing.T) {
+	engine, err := engines.LoadManifest("../test_data/engines", "intel-gpu")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
+
+	cmd := engineCommand{
+		format: "yaml",
+	}
+	err = cmd.printEngineManifest(scoredEngine)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestInfoShort(t *testing.T) {
+	engine, err := engines.LoadManifest("../test_data/engines", "cpu-avx1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var scoredEngine = engines.ScoredManifest{Manifest: *engine}
+
+	cmd := engineCommand{
+		format: "yaml",
+	}
+	err = cmd.printEngineManifest(scoredEngine)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func scoreEngineAgainstMachine(engineName string, machineName string) (*engines.ScoredManifest, error) {
+	engineManifest, err := engines.LoadManifest("../test_data/engines", engineName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load engine manifest: %v", err)
+	}
+	info, err := machineFixture(machineName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get hardware info: %v", err)
+	}
+	scoredEngines, err := selector.ScoreEngines(info, []engines.Manifest{*engineManifest})
+	if err != nil {
+		return nil, fmt.Errorf("failed to score engines: %v", err)
+	}
+
+	if len(scoredEngines) != 1 {
+		return nil, fmt.Errorf("invalid scored engines count: %d, expected 1", len(scoredEngines))
+	}
+
+	return &scoredEngines[0], nil
+}
+
+func TestUnsupportedFormatResultsInError(t *testing.T) {
+	engineManifest, err := scoreEngineAgainstMachine("cpu-avx1", "dummy-machine")
+	if err != nil {
+		t.Fatalf("could not score manifest: %v", err)
+	}
+
+	cmd := engineCommand{format: "invalid-format"}
+	err = cmd.printEngineManifest(*engineManifest)
+
+	if err == nil {
+		t.Fatalf("expected unsupported format to error out, got nil error")
+	}
+}
+
+func Example_engineCommand_printEngineManifestYaml() {
+	engineManifest, err := scoreEngineAgainstMachine("cuda-generic", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "yaml"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// name: cuda-generic
+	// summary: CUDA generic engine
+	// description: Nvidia GPUs using CUDA. All major CUDA versions are targeted.
+	// vendor: Canonical Ltd
+	// devices:
+	//     allof:
+	//         - type: cpu
+	//           architecture: amd64
+	//           flags:
+	//             - sse4_2
+	//             - f16c
+	//             - fma
+	//             - avx
+	//             - avx2
+	//           compatibility-issues:
+	//             - flag sse4_2 missing
+	//             - flag f16c missing
+	//             - flag fma missing
+	//             - flag avx missing
+	//             - flag avx2 missing
+	//         - type: gpu
+	//           bus: pci
+	//           vendor-id: "0x10DE"
+	//           vram: 5G
+	//           compatibility-issues:
+	//             - device not found
+	// runtime: llama-cpp-cuda
+	// model:
+	//     default: 26b-q4-k-m-gguf
+	//     options:
+	//         - 26b-q4-k-m-gguf
+	//         - 30b-a3b-q4-k-m-gguf
+	// configurations:
+	//     sleep-idle-seconds: 600
+	// score: 0
+	// compatible: false
+	// compatibility-issues:
+	//     - required device not found
+}
+
+func Example_engineCommand_printEngineManifestJson() {
+	engineManifest, err := scoreEngineAgainstMachine("cuda-generic", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "json"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// {
+	//   "name": "cuda-generic",
+	//   "summary": "CUDA generic engine",
+	//   "description": "Nvidia GPUs using CUDA. All major CUDA versions are targeted.",
+	//   "vendor": "Canonical Ltd",
+	//   "devices": {
+	//     "anyof": null,
+	//     "allof": [
+	//       {
+	//         "type": "cpu",
+	//         "architecture": "amd64",
+	//         "flags": [
+	//           "sse4_2",
+	//           "f16c",
+	//           "fma",
+	//           "avx",
+	//           "avx2"
+	//         ],
+	//         "compatibility-issues": [
+	//           "flag sse4_2 missing",
+	//           "flag f16c missing",
+	//           "flag fma missing",
+	//           "flag avx missing",
+	//           "flag avx2 missing"
+	//         ]
+	//       },
+	//       {
+	//         "type": "gpu",
+	//         "bus": "pci",
+	//         "vendor-id": "0x10DE",
+	//         "vram": "5G",
+	//         "compatibility-issues": [
+	//           "device not found"
+	//         ]
+	//       }
+	//     ]
+	//   },
+	//   "runtime": "llama-cpp-cuda",
+	//   "model": {
+	//     "default": "26b-q4-k-m-gguf",
+	//     "options": [
+	//       "26b-q4-k-m-gguf",
+	//       "30b-a3b-q4-k-m-gguf"
+	//     ]
+	//   },
+	//   "configurations": {
+	//     "sleep-idle-seconds": 600
+	//   },
+	//   "score": 0,
+	//   "compatible": false,
+	//   "compatibility-issues": [
+	//     "required device not found"
+	//   ]
+	// }
+}
+
+func Example_engineCommand_printHappyEngineManifestYaml() {
+	engineManifest, err := scoreEngineAgainstMachine("intel-cpu", "i7-1165G7")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "yaml"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// name: intel-cpu
+	// summary: Intel CPU engine
+	// description: Use Intel CPUs
+	// vendor: Intel Corporation
+	// devices:
+	//     allof:
+	//         - type: cpu
+	//           architecture: amd64
+	//           manufacturer-id: GenuineIntel
+	// runtime: openvino-model-server
+	// model:
+	//     default: 4b-it-int4-fq-ov
+	//     options:
+	//         - 4b-it-int4-fq-ov
+	// configurations:
+	//     target-device: CPU
+	// score: 16
+	// compatible: true
+}
+
+func Example_engineCommand_printHappyEngineManifestJson() {
+	engineManifest, err := scoreEngineAgainstMachine("intel-cpu", "i7-1165G7")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "json"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// {
+	//   "name": "intel-cpu",
+	//   "summary": "Intel CPU engine",
+	//   "description": "Use Intel CPUs",
+	//   "vendor": "Intel Corporation",
+	//   "devices": {
+	//     "anyof": null,
+	//     "allof": [
+	//       {
+	//         "type": "cpu",
+	//         "architecture": "amd64",
+	//         "manufacturer-id": "GenuineIntel"
+	//       }
+	//     ]
+	//   },
+	//   "runtime": "openvino-model-server",
+	//   "model": {
+	//     "default": "4b-it-int4-fq-ov",
+	//     "options": [
+	//       "4b-it-int4-fq-ov"
+	//     ]
+	//   },
+	//   "configurations": {
+	//     "target-device": "CPU"
+	//   },
+	//   "score": 16,
+	//   "compatible": true
+	// }
+}
+
+func Example_engineCommand_printEngineManifestWithLineBreaksInDescriptionYaml() {
+	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "yaml"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// name: amd-gpu
+	// summary: AMD GPU engine
+	// description: |
+	//     AMD specific engine targeting one microarchitecture:
+	//       - gfx1032
+	// vendor: Canonical Ltd
+	// devices:
+	//     allof:
+	//         - type: cpu
+	//           architecture: amd64
+	//         - type: gpu
+	//           vendor-id: "0x1002"
+	//           microarchitecture: gfx1032
+	//           compatibility-issues:
+	//             - device not found
+	// configurations: {}
+	// score: 0
+	// compatible: false
+	// compatibility-issues:
+	//     - required device not found
+}
+
+func Example_engineCommand_printEngineManifestWithLineBreaksInDescriptionJson() {
+	engineManifest, err := scoreEngineAgainstMachine("amd-gpu", "dummy-machine")
+	if err != nil {
+		panic(fmt.Sprintf("failed to score engine against machine: %v", err))
+	}
+
+	cmd := engineCommand{format: "json"}
+	if err := cmd.printEngineManifest(*engineManifest); err != nil {
+		panic(fmt.Sprintf("failed to print engine manifest: %v", err))
+	}
+
+	// Output:
+	// {
+	//   "name": "amd-gpu",
+	//   "summary": "AMD GPU engine",
+	//   "description": "AMD specific engine targeting one microarchitecture:\n  - gfx1032\n",
+	//   "vendor": "Canonical Ltd",
+	//   "devices": {
+	//     "anyof": null,
+	//     "allof": [
+	//       {
+	//         "type": "cpu",
+	//         "architecture": "amd64"
+	//       },
+	//       {
+	//         "type": "gpu",
+	//         "vendor-id": "0x1002",
+	//         "microarchitecture": "gfx1032",
+	//         "compatibility-issues": [
+	//           "device not found"
+	//         ]
+	//       }
+	//     ]
+	//   },
+	//   "runtime": "",
+	//   "model": {
+	//     "default": "",
+	//     "options": null
+	//   },
+	//   "configurations": null,
+	//   "score": 0,
+	//   "compatible": false,
+	//   "compatibility-issues": [
+	//     "required device not found"
+	//   ]
+	// }
+}

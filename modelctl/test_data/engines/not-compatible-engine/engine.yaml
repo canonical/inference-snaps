@@ -1,0 +1,13 @@
+name: not-compatible-engine
+summary: This summary is too long and should trigger a validation error because it exceeds the maximum allowed characters.
+vendor: Canonical Ltd
+experimental: false
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+      flags: [nonexistent_flag]
+model:
+  default: 30b-a3b-q4-k-m-gguf
+  options:
+    - 30b-a3b-q4-k-m-gguf

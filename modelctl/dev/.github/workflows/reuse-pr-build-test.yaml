@@ -1,0 +1,157 @@
+# This workflow is designed to be called by another workflow on pull request labels.
+# It performs build or build+test depending on the label that triggered it.
+
+name: CI
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
+
+on:
+  workflow_call:
+    inputs:
+      trigger-label:
+        description: Label that triggered the workflow
+        required: true
+        type: string
+      pr-number:
+        description: Pull request number
+        required: true
+        type: string
+      build-runner:
+        description: |
+          JSON array containing runner configurations for builds.
+          Example:
+          - '["ubuntu-24.04", "ubuntu-24.04-arm"]'
+          - '[["self-hosted", "amd64"], ["self-hosted", "arm64"]]'
+        required: false
+        type: string
+        default: '["ubuntu-latest"]'
+      store-track:
+        description: Snap Store track to publish to
+        required: false
+        type: string
+        default: "latest"
+      snap-name:
+        description: Snap name for test jobs
+        required: true
+        type: string
+      test-jobs-matrix:
+        description: |
+          JSON array of test job objects
+          Example:
+          [
+            {
+              "job-queue": "maas-systemtests-amd64",
+              "provision-data": "distro: noble",
+              "select-engine": "cpu",
+              "test-chat-tps": true
+            },
+            {
+              "job-queue": "anbox-nvidia-amd64",
+              "provision-data": "distro: noble",
+              "install-nvidia-driver-version": 595,
+              "select-engine": "nvidia-gpu",
+              "test-chat-tps": true,
+              "expected-tps": 9.4
+            }
+          ]
+        required: true
+        type: string
+      testflinger-client-id:
+        description: Testflinger client ID for test job
+        required: true
+        type: string
+      timeout-minutes:
+        description: Timeout for building and publishing (combined), in minutes.
+        required: false
+        type: number
+        default: 360
+    secrets:
+      store-credentials:
+        description: Snap Store credentials for publishing PR builds
+        required: true
+      github-token:
+        description: GitHub token used by build pre-check and label operations
+        required: true
+      testflinger-secret-key:
+        description: Testflinger secret key for test job
+        required: true
+
+jobs:
+  remove-trigger-labels:
+    name: Remove trigger label
+    # Run only for trigger labels, not any other label
+    if: ${{ inputs.trigger-label == 'trigger-build' || inputs.trigger-label == 'trigger-tests' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Remove label
+        uses: canonical/inference-snaps-dev/.github/actions/remove-label@v2
+        with:
+          label: ${{ inputs.trigger-label }}
+
+  build-pre-check:
+    name: Check for existing build
+    # Run only for trigger labels, not any other label
+    if: ${{ inputs.trigger-label == 'trigger-build' || inputs.trigger-label == 'trigger-tests' }}
+    runs-on: ubuntu-latest
+    outputs:
+      build-success: ${{ steps.build-pre-check.outputs.build-success }}
+    steps:
+      - id: build-pre-check
+        name: Check for existing successful build
+        uses: canonical/inference-snaps-testing/.github/actions/build-pre-check@v1
+        env:
+          GH_TOKEN: ${{ secrets.github-token }}
+        with:
+          workflow-name: ${{ github.workflow }}
+
+  build-and-publish:
+    needs: [build-pre-check]
+    # Run only for trigger labels, not any other label
+    # Run only if not already built successfully
+    if: ${{ (inputs.trigger-label == 'trigger-build' || inputs.trigger-label == 'trigger-tests') && needs.build-pre-check.outputs.build-success == 'false' }}
+    uses: ./.github/workflows/build-publish-snap.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: ${{ fromJSON(inputs.build-runner) }}
+    with:
+      runner: "${{ toJSON(matrix.runner) }}"
+      publish-channel: ${{ inputs.store-track }}/edge/pr-${{ inputs.pr-number }} # E.g. latest/edge/pr-123
+      timeout-minutes: ${{ inputs.timeout-minutes }}
+    secrets:
+      store-credentials: ${{ secrets.store-credentials }}
+
+  test:
+    needs: [build-and-publish]
+    # Run only for trigger-tests label, not any other label
+    # Run even if previous job was skipped (!cancelled)
+    # Run only if build hasn't failed
+    if: ${{ inputs.trigger-label == 'trigger-tests' && !cancelled() && needs.build-and-publish.result != 'failure' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJSON(inputs.test-jobs-matrix) }}
+    uses: canonical/inference-snaps-testing/.github/workflows/test-snap.yaml@v1
+    with:
+      job-queue: ${{ matrix.jobs.job-queue }}
+      provision-data: ${{ matrix.jobs.provision-data }}
+      snap-name: ${{ inputs.snap-name }}
+      snap-channel: ${{ inputs.store-track }}/edge/pr-${{ inputs.pr-number }} # E.g. latest/edge/pr-123
+      install-nvidia-driver-version: ${{ matrix.jobs.install-nvidia-driver-version }}
+      install-intel-npu-driver: ${{ matrix.jobs.install-intel-npu-driver == true }}
+      snap-connections: ${{ matrix.jobs.snap-connections }}
+      expected-engine: ${{ matrix.jobs.expected-engine }}
+      select-engine: ${{ matrix.jobs.select-engine }}
+      test-chat-tps: ${{ matrix.jobs.test-chat-tps == true }}
+      expected-tps: ${{ matrix.jobs.expected-tps }}
+      test-image-prompt: ${{ matrix.jobs.test-image-prompt == true}}
+      devmode: ${{ matrix.jobs.devmode == true }}
+      testflinger-client-id: ${{ inputs.testflinger-client-id }}
+    secrets:
+      testflinger-secret-key: ${{ secrets.testflinger-secret-key }}

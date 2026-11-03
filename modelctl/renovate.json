@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "config:recommended",
+    "github>canonical/inference-snaps-dev//renovate/default.jsonc#v2"
+  ]
+}

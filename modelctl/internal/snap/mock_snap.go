@@ -1,0 +1,73 @@
+package snap
+
+import (
+	"fmt"
+)
+
+type mockSnap struct {
+	installComponentFn func(name string) error
+	serviceStatuses    map[string]string
+}
+
+// Mock returns a no-op Snap suitable for tests that don't exercise InstallComponent or ServiceStatuses.
+func Mock() Snap {
+	return &mockSnap{}
+}
+
+// MockWithInstall returns a Snap whose InstallComponent calls fn.
+// Use a closure to simulate sequences of errors across multiple calls.
+func MockWithInstall(fn func(name string) error) Snap {
+	return &mockSnap{installComponentFn: fn}
+}
+
+// MockWithServiceStatuses returns a Snap that returns the given statuses from ServiceStatuses.
+func MockWithServiceStatuses(statuses map[string]string) Snap {
+	return &mockSnap{serviceStatuses: statuses}
+}
+
+func (c *mockSnap) Restart(service ...string) error {
+	if len(service) == 0 {
+		fmt.Println("[mock] Restarting all services")
+		return nil
+	}
+	fmt.Println("[mock] Restarting services:", service)
+	return nil
+}
+
+func (c *mockSnap) SnapName() string {
+	return "mock-snap"
+}
+
+func (c *mockSnap) InstanceName() string {
+	return "mock-snap"
+}
+
+func (c *mockSnap) Dir() string {
+	return "/tmp/mock-snap"
+}
+
+func (c *mockSnap) Version() string {
+	return "mock-version"
+}
+
+func (c *mockSnap) HardwareObservable() (bool, error) {
+	return false, nil
+}
+
+func (c *mockSnap) InstallComponent(name string) error {
+	if c.installComponentFn != nil {
+		return c.installComponentFn(name)
+	}
+	return nil
+}
+
+func (c *mockSnap) RemoveComponents(name ...string) error {
+	return nil
+}
+
+func (c *mockSnap) ServiceStatuses() (map[string]string, error) {
+	if c.serviceStatuses != nil {
+		return c.serviceStatuses, nil
+	}
+	return map[string]string{}, nil
+}

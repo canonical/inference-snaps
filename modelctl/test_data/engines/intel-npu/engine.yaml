@@ -1,0 +1,27 @@
+name: intel-npu
+description: Intel NPUs
+summary: Intel NPU engine
+vendor: Intel Corporation
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+  anyof:
+    - bus: pci
+      vendor-id: 0x8086 # Intel Corporation
+      device-id: 643e # Lunar Lake NPU
+      snap-connections: [ intel-npu, npu-libs ]
+    - bus: pci
+      vendor-id: 0x8086
+      device-id: 7d1d # Meteor Lake NPU
+      snap-connections: [ intel-npu, npu-libs ]
+
+runtime: openvino-model-server
+
+model:
+  default: 4b-it-int4-fq-ov
+  options:
+    - 4b-it-int4-fq-ov
+
+configurations:
+  target-device: NPU

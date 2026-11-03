@@ -1,0 +1,21 @@
+name: Remove label
+description: Remove a label from a pull request
+
+inputs:
+  label:
+    description: The name of the label that gets removed
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Remove label
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        # No checkout happens here, so GH_REPO must be set explicitly for gh to target the right repo
+        GH_REPO: ${{ github.repository }}
+        LABEL: ${{ inputs.label }}
+      run: |
+        PR_NUMBER="${{ github.event.pull_request.number }}"
+        gh pr edit "$PR_NUMBER" --remove-label "$LABEL"
