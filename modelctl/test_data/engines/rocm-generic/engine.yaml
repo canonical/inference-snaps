@@ -1,0 +1,28 @@
+name: rocm-generic
+description: AMD GPUs using ROCm. All major ROCm versions are targeted.
+summary: ROCm generic engine
+vendor: Canonical Ltd
+experimental: false
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+  anyof:
+    - type: gpu
+      vendor-id: 0x1002 # AMD Corporation
+      microarchitecture: gfx1152
+    - type: gpu
+      vendor-id: 0x1002 # AMD Corporation
+      microarchitecture: gfx1030
+
+runtime: llama-cpp-rocm
+
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+    - 26b-q4-k-m-gguf
+    - 30b-a3b-q4-k-m-gguf
+    - 30m-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600

@@ -1,0 +1,19 @@
+name: arm-neon
+description: ARM CPUs with NEON instruction set
+summary: ARM NEON engine
+vendor: Canonical Ltd
+experimental: false
+devices:
+  anyof:
+#    - type: cpu
+#      architecture: armhf
+#      features: [neon] # for ARMv7
+    - type: cpu
+      architecture: arm64
+      features: [asimd] # for ARMv8 ASIMD includes NEON instruction set
+
+runtime: llama-cpp-cpu
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 26b-q4-k-m-gguf
