@@ -22,13 +22,13 @@ env:
   SNAP_NAME: modelctl-test
   SNAP_DIR: modelctl/test_data
 
-defaults:
-  run:
-    working-directory: modelctl
-
 jobs:
   unit-test:
     runs-on: ubuntu-26.04
+    
+    defaults:
+      run:
+        working-directory: modelctl
 
     steps:
       - name: Checkout code
@@ -50,6 +50,10 @@ jobs:
           - ubuntu-24.04
           - ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
+    
+    defaults:
+      run:
+        working-directory: modelctl
 
     steps:
       - name: Checkout code
