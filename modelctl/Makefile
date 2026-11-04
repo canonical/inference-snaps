@@ -31,4 +31,4 @@ clean:
 	rm -rf modelctl $(STAGE_DIR) $(SNAP_DIR)/*.snap $(SNAP_DIR)/*.comp
 
 test_data/dev/build.sh:
-	git submodule update --init modelctl/test_data/dev
+	git submodule update --init test_data/dev
