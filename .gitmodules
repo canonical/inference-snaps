@@ -1,4 +1,4 @@
-[submodule "dev"]
+[submodule "modelctl/dev"]
 	path = modelctl/dev
 	url = https://github.com/canonical/inference-snaps-dev
 	branch = v2
