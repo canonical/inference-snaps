@@ -9,5 +9,7 @@ These documents provide specifications for different set ups when using or modif
    snaps
    architecture
    engine-manifest
+   model-manifest
+   runtime-manifest
    models-cli
    network-ports
