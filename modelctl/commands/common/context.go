@@ -9,6 +9,7 @@ type Context struct {
 	EnginesDir  string
 	RuntimesDir string
 	ModelsDir   string
+	Version     string
 	Verbose     bool
 	Cache       storage.Cache
 	Config      storage.Config

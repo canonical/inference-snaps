@@ -53,7 +53,9 @@ jobs:
           GOOS: ${{ matrix.runner.goos }}
           GOARCH: ${{ matrix.runner.goarch }}
         run: |
-          go build -ldflags="-s -w" -o ./bin/modelctl
+          go build \
+            -ldflags="-s -w -X 'main.version=${{ github.event.release.tag_name }}'" \
+            -o ./bin/modelctl
 
       - name: Generate artifact
         run: |

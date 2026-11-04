@@ -14,6 +14,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// version is set at build time
+var version string
+
 func main() {
 	s := snap.New()
 	snapDir := s.Dir()
@@ -21,6 +24,7 @@ func main() {
 		EnginesDir:  filepath.Join(snapDir, "engines"),
 		RuntimesDir: filepath.Join(snapDir, "runtimes"),
 		ModelsDir:   filepath.Join(snapDir, "models"),
+		Version:     version,
 		Cache:       storage.NewCache(),
 		Config:      storage.NewConfig(),
 		Snap:        s,
