@@ -1,4 +1,4 @@
-name: Modelctl CI
+name: modelctl
 
 on:
   push:
@@ -20,7 +20,7 @@ concurrency:
 
 env:
   SNAP_NAME: modelctl-test
-  SNAP_DIR: test_data
+  SNAP_DIR: modelctl/test_data
 
 defaults:
   run:
