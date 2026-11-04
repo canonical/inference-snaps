@@ -3,9 +3,9 @@ package commands
 import (
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
-	"github.com/canonical/inference-snaps-cli/v2/internal/storage"
-	"github.com/canonical/inference-snaps-cli/v2/internal/utils"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/spf13/cobra"
 )
 

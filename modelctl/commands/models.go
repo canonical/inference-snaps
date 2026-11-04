@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/renderer"

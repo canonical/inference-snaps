@@ -1,7 +1,7 @@
 package engines
 
 import (
-	"github.com/canonical/inference-snaps-cli/v2/internal/utils"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 )
 
 type CompatibilityReport struct {

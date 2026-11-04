@@ -5,10 +5,10 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector"
-	"github.com/canonical/inference-snaps-cli/v2/internal/storage"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 )
 
 func prepareTestData() (*enginesCommand, *outputEngines, error) {

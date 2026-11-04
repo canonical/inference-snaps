@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 )
 
 type EngineDetails struct {

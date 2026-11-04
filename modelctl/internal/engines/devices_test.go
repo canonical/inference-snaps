@@ -3,8 +3,8 @@ package engines
 import (
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/constants"
-	"github.com/canonical/inference-snaps-cli/v2/internal/utils"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 )
 
 func TestDeviceType(t *testing.T) {

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
-	"github.com/canonical/inference-snaps-cli/v2/internal/models"
-	"github.com/canonical/inference-snaps-cli/v2/internal/webui"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/models"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/webui"
 	"github.com/spf13/cobra"
 )
 

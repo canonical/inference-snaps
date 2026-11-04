@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/constants"
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
-	"github.com/canonical/inference-snaps-cli/v2/internal/models"
-	selectorpci "github.com/canonical/inference-snaps-cli/v2/internal/selector/pci"
-	"github.com/canonical/inference-snaps-cli/v2/internal/utils"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/models"
+	selectorpci "github.com/canonical/inference-snaps/modelctl/v2/internal/selector/pci"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
 )

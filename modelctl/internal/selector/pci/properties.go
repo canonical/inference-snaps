@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector/weights"
-	"github.com/canonical/inference-snaps-cli/v2/internal/utils"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector/weights"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
 )
 

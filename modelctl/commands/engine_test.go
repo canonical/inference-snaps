@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector"
 )
 
 func TestInfoLong(t *testing.T) {

@@ -20,7 +20,7 @@ import (
 	"github.com/openai/openai-go/v3/option"
 	"github.com/openai/openai-go/v3/packages/ssestream"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/runtimes"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/runtimes"
 )
 
 type chatClient struct {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/constants"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
 )
 
 type Cache interface {

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 	"go.yaml.in/yaml/v4"
 )
 

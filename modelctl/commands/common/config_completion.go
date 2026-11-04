@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/storage"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 )
 
 func CompleteConfigKeys(config storage.Config, toComplete string, appendEquals bool, excludedKeys map[string]struct{}) []string {

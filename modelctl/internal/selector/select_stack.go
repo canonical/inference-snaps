@@ -4,10 +4,10 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector/cpu"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector/fastrpc"
-	"github.com/canonical/inference-snaps-cli/v2/internal/selector/pci"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector/cpu"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector/fastrpc"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/selector/pci"
 	"github.com/canonical/lscompute/pkg/machine"
 )
 

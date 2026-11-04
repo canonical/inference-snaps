@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/runtimes"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/runtimes"
 )
 
 type Entrypoints map[string]Entrypoint

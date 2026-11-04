@@ -1,7 +1,7 @@
 package debug
 
 import (
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
 	"github.com/spf13/cobra"
 )
 

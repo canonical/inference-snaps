@@ -6,11 +6,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/canonical/inference-snaps-cli/v2/commands"
-	"github.com/canonical/inference-snaps-cli/v2/commands/common"
-	"github.com/canonical/inference-snaps-cli/v2/commands/debug"
-	"github.com/canonical/inference-snaps-cli/v2/internal/snap"
-	"github.com/canonical/inference-snaps-cli/v2/internal/storage"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/commands/debug"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/snap"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 	"github.com/spf13/cobra"
 )
 

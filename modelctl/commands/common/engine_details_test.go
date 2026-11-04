@@ -3,7 +3,7 @@ package common
 import (
 	"testing"
 
-	"github.com/canonical/inference-snaps-cli/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 )
 
 func TestFillIncompatibilityIssues(t *testing.T) {
