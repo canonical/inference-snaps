@@ -1,0 +1,74 @@
+name: Release modelctl
+
+on:
+  release:
+    types: [published]
+
+defaults:
+  run:
+    working-directory: modelctl
+
+jobs:
+  build-and-release:
+    permissions:
+      contents: write # to upload release assets
+
+    strategy:
+      matrix:
+        runner:
+          - name: linux-amd64
+            runs-on: ubuntu-24.04
+            goos: linux
+            goarch: amd64
+
+          - name: linux-arm64
+            runs-on: ubuntu-24.04-arm
+            goos: linux
+            goarch: arm64
+
+    env:
+      ARTIFACT_NAME: "modelctl-${{ matrix.runner.name }}.tar.xz"
+
+    runs-on: ${{ matrix.runner.runs-on }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.27.x'
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Create bin directory
+        run: mkdir -p bin
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.runner.goos }}
+          GOARCH: ${{ matrix.runner.goarch }}
+        run: |
+          go build -ldflags="-s -w" -o ./bin/modelctl
+
+      - name: Generate artifact
+        run: |
+          cp ./completer/snap.bash ./bin/snap-completer.bash
+          cp ./LICENSE ./bin/LICENSE
+
+          # Create archive with LICENSE in root and bin/ subdirectory
+          tar -Jcvf ${{ env.ARTIFACT_NAME }} \
+            -C . LICENSE \
+            -C . bin/modelctl \
+            -C . bin/snap-completer.bash
+
+      - name: Upload release asset
+        run: |
+          # --clobber overwrites existing assets of the same name
+          gh release upload ${{ github.event.release.tag_name }} ${{ env.ARTIFACT_NAME }} --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

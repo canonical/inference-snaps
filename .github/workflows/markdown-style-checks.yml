@@ -6,12 +6,10 @@ on:
     branches:
     - main
     paths:
-    - 'docs/**'   # Only run on changes to the docs directory
+    - 'docs/**'
   pull_request:
-    branches:
-    - '*'
     paths:
-    - 'docs/**'   # Only run on changes to the docs directory
+    - 'docs/**'
 
 jobs:
   markdown-lint:

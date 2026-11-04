@@ -3,10 +3,13 @@ name: Automatic doc checks
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - 'docs/**' 
   pull_request:
     paths:
-      - 'docs/**'   # Only run on changes to the docs directory
+      - 'docs/**' 
 
   workflow_dispatch:
     # Manual trigger
