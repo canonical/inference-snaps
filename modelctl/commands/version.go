@@ -3,7 +3,6 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
-	"runtime/debug"
 	"strings"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
@@ -73,15 +72,8 @@ func (cmd *versionCommand) run(_ *cobra.Command, _ []string) error {
 func (cmd *versionCommand) getVersionData() versionModel {
 	return versionModel{
 		Snap: cleanVersionString(cmd.Snap.Version()),
-		Cli:  cleanVersionString(getCliVersion()),
+		Cli:  cleanVersionString(cmd.Version),
 	}
-}
-
-func getCliVersion() string {
-	if buildInfo, ok := debug.ReadBuildInfo(); ok {
-		return buildInfo.Main.Version
-	}
-	return ""
 }
 
 func cleanVersionString(version string) string {
