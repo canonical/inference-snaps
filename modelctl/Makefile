@@ -1,7 +1,8 @@
 SNAP_DIR  := test_data
 STAGE_DIR := $(SNAP_DIR)/build
 
-GO_BUILD := go build
+VERSION  := $(shell git describe --tags --always --dirty)
+GO_BUILD := go build -ldflags="-X 'main.version=$(VERSION)'"
 
 .PHONY: all build test stage snap install clean
 
