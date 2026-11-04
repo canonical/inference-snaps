@@ -1,0 +1,28 @@
+#!/bin/bash -eu
+
+tag="snap.$SNAP_INSTANCE_NAME.hook.install"
+
+# Redirect stdout to stdout+syslog
+exec 1> >(tee >(logger --tag=$tag))
+# Redirect stderr to stderr+syslog
+exec 2> >(logger --stderr --priority error --tag=$tag)
+
+#
+# Set generic config
+#
+"$SNAP/bin/set-default-config.sh"
+
+#
+# WSL workaround
+#
+# With a layout we bind $SNAP_COMMON/usr/lib/wsl to /usr/lib/wsl.
+# The layout automatically creates the source directory if it does not exist.
+# We then create symlinks in this dir for the lib and drivers subdirectories,
+# so they appear at /usr/lib/wsl/lib and /usr/lib/wsl/drivers in the layout.
+ln -s /var/lib/snapd/hostfs/usr/lib/wsl/lib $SNAP_COMMON/usr/lib/wsl/lib
+ln -s /var/lib/snapd/hostfs/usr/lib/wsl/drivers $SNAP_COMMON/usr/lib/wsl/drivers
+
+#
+# Auto select an engine
+#
+modelctl use-engine --auto --components --assume-yes --fallback=cpu

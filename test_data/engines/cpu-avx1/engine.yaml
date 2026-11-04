@@ -1,0 +1,16 @@
+name: cpu-avx1
+description: Legacy CPUs with only SSE4.2 (2008) and AVX (2011)
+summary: CPU AVX1 engine
+vendor: Canonical Ltd
+experimental: false
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+      flags: [sse4_2, avx]
+
+runtime: llama-cpp-cpu
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 26b-q4-k-m-gguf

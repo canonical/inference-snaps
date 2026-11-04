@@ -1,0 +1,23 @@
+name: cpu
+description: General CPU engine
+summary: General CPU engine
+vendor: Canonical Ltd
+experimental: false
+devices:
+  anyof:
+    - type: cpu
+      architecture: amd64
+    - type: cpu
+      architecture: arm64
+
+runtime: llama-cpp-cpu
+
+model:
+  default: 26b-q4-k-m-gguf
+  options:
+  - 30m-q4-k-m-gguf
+  - 26b-q4-k-m-gguf
+  - 30b-a3b-q4-k-m-gguf
+
+configurations:
+  sleep-idle-seconds: 600
