@@ -1,3 +1,7 @@
+[submodule "dev"]
+	path = dev
+	url = https://github.com/canonical/inference-snaps-dev
+	branch = v2
 [submodule "deepseek-r1-snap"]
 	path = snaps/deepseek-r1
 	url = https://github.com/canonical/deepseek-r1-snap

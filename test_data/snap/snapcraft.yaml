@@ -1,0 +1,256 @@
+name: modelctl-test
+base: core24
+summary: Test snap for developing the inference snaps CLI
+description: |
+  A snap for developing and testing modelctl, the inference snaps CLI.
+  It bundles the CLI with test engines, runtimes, models and a mock OpenAI server.
+
+grade: devel
+confinement: strict
+adopt-info: version
+
+slots:
+  provider:
+    interface: content
+    content: inference-provider
+    source:
+      read:
+        - $SNAP_COMMON/share/provider
+
+plugs:
+  intel-npu:
+    interface: custom-device
+    custom-device: intel-npu-device
+  npu-libs:
+    interface: content
+    content: npu-libs-2404
+    target: $SNAP/npu-libs
+
+layout:
+  # OpenCL looks in /etc/OpenCL/vendors for .icd files containing the paths to shared objects
+  /etc/OpenCL/vendors:
+    bind: $SNAP/etc/OpenCL/vendors
+  # Intel icd files use an absolute path to Intel OpenCL shared objects. Use a layout to mount the so files at the expected location
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl:
+    bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/intel-opencl
+  # Under wsl the libraries are expected in /usr/lib/wsl
+  /usr/lib/wsl:
+    bind: $SNAP_COMMON/usr/lib/wsl
+  # PCI and USB ID databases bundled with the snap
+  /usr/share/misc/pci.ids:
+    bind-file: $SNAP/usr/share/misc/pci.ids
+  /usr/share/misc/usb.ids:
+    bind-file: $SNAP/usr/share/misc/usb.ids
+
+environment:
+  # Path to access current revision of components
+  SNAP_COMPONENTS: /snap/$SNAP_INSTANCE_NAME/components/$SNAP_REVISION
+  ARCH_TRIPLET: $CRAFT_ARCH_TRIPLET_BUILD_FOR
+  # This is to find the intel.icd file, containing the path to libigdrcl.so
+  # Required for Intel GPU detection and communication
+  OCL_ICD_VENDORS: $SNAP/etc/OpenCL/vendors
+
+parts:
+  version:
+    plugin: nil
+    source: build
+    override-pull: |
+      craftctl default
+      craftctl set version="$(cat version)"
+
+  local-scripts:
+    source: snap/local
+    plugin: dump
+    organize:
+      "*": bin/
+
+  completer:
+    source: build/completer
+    plugin: dump
+    organize:
+      "snap.bash": bin/completion.bash
+
+  engines:
+    plugin: dump
+    source: engines
+    organize:
+      "*": engines/
+
+  runtimes:
+    plugin: dump
+    source: runtimes
+    organize:
+      "*": runtimes/
+
+  models:
+    plugin: dump
+    source: models
+    organize:
+      "*": models/
+
+  cli:
+    plugin: dump
+    source: build/cli
+    override-build: |
+      craftctl default
+      # For tab completion
+      ln --symbolic ./modelctl $CRAFT_PART_INSTALL/bin/modelctl-test
+
+  cli-dependencies:
+    plugin: nil
+    stage-packages:
+      - clinfo # used for Intel GPU vRAM detection. It depends on intel-opencl-icd
+
+  # PCI ID database downloaded at build time for friendly device name lookups.
+  pci-ids:
+    plugin: dump
+    source: https://pci-ids.ucw.cz/v2.2/pci.ids
+    source-type: file
+    organize:
+      pci.ids: usr/share/misc/pci.ids
+
+  # USB ID database for friendly device name lookups.
+  usb-ids:
+    plugin: nil
+    stage-packages:
+      - usb.ids
+
+  # Used for NVIDIA vRAM and CUDA Capability detection.
+  # Only the binary is included to avoid staging libraries, which should instead be provided by the host through the opengl interface.
+  cli-nvidia-smi:
+    plugin: nil
+    build-packages:
+      - nvidia-utils-580
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      cp /usr/bin/nvidia-smi $CRAFT_PART_INSTALL/usr/bin/
+      
+      license_dir=$CRAFT_PART_INSTALL/usr/share/doc/nvidia-utils-580/
+      mkdir -p $license_dir
+      cp /usr/share/doc/nvidia-utils-580/copyright $license_dir/
+
+  # OpenCL ICD and libigdgmm are required for Intel GPU vRAM lookup with clinfo
+  cli-intel-opencl-icd:
+    plugin: nil
+    build-packages:
+      - wget
+    override-build: |
+      if [ "$CRAFT_ARCH_BUILD_FOR" == "amd64" ]; then
+        # Legacy
+        wget -nv https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb
+        wget -nv https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/libigdgmm12_22.5.0_amd64.deb
+      
+        # Latest
+        wget -nv https://github.com/intel/compute-runtime/releases/download/26.01.36711.4/intel-opencl-icd_26.01.36711.4-0_amd64.deb
+        wget -nv https://github.com/intel/compute-runtime/releases/download/26.01.36711.4/libigdgmm12_22.9.0_amd64.deb
+      
+        dpkg --root=$CRAFT_PART_INSTALL --force-all -i *.deb
+      
+        # Two symlinks are created when installing intel-opencl-icd-legacy: 
+        # etc/alternatives/ocloc -> /usr/bin/ocloc-24.35.0, usr/bin/ocloc -> /etc/alternatives/ocloc
+        # These point to outside of the snap and fails store review. They are not required, so remove it.
+        rm $CRAFT_PART_INSTALL/etc/alternatives/ocloc
+        rm $CRAFT_PART_INSTALL/usr/bin/ocloc
+      fi
+      
+      craftctl default
+
+  webui:
+    plugin: dump
+    source: https://github.com/canonical/inference-snaps-webui/releases/download/v1.1.1/inference-snaps-webui.tar.xz
+    organize:
+      "*": webui/
+
+  mock-openai-server:
+    plugin: dump
+    source: mock-openai-server
+    organize:
+      "*": bin/mock-openai-server/
+
+components:
+  #
+  # Runtimes
+  #
+
+  runtime-llama-cpp-cpu: &test-component
+    type: standard
+    summary: Just a test component
+    description: Component for testing purposes
+  runtime-llama-cpp-cuda:
+    <<: *test-component
+  runtime-llama-cpp-rocm:
+    <<: *test-component
+  runtime-openvino-model-server:
+    <<: *test-component
+
+  #
+  # Models
+  #
+  model-4b-it-int4-fq-ov:
+    <<: *test-component
+  model-26b-a4b-q4-k-m-gguf:
+    <<: *test-component
+  mmproj-26b-bf16-gguf:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-1-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-2-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-3-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-4-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-5-of-6:
+    <<: *test-component
+  model-30b-a3b-q4-k-m-gguf-6-of-6:
+    <<: *test-component
+  model-30m-q4-k-m-gguf:
+    <<: *test-component
+
+hooks:
+  install:
+    plugs:
+      - hardware-observe
+      - opengl
+  post-refresh:
+    plugs:
+      - hardware-observe
+      - opengl
+apps:
+  modelctl-test:
+    command: bin/modelctl
+    completer: bin/completion.bash
+    plugs:
+      - hardware-observe
+      - home
+      - network
+      - network-bind # for serving webui 
+      - opengl
+      - desktop # for xdg-open
+    environment:
+      ADDITIONAL_FEATURES: chat, webui
+
+  clinfo:
+    plugs:
+      - hardware-observe
+      - opengl
+      - network
+    command: usr/bin/clinfo
+
+  nvidia-smi:
+    plugs:
+      - hardware-observe
+      - opengl
+    command: usr/bin/nvidia-smi
+
+  server:
+    command: bin/server.sh
+    daemon: simple
+    plugs:
+      - network-bind
+
+  server-webui:
+    command: bin/server-webui.sh
+    daemon: simple
+    plugs:
+      - network-bind

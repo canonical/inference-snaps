@@ -1,0 +1,17 @@
+name: 30m-q4-k-m-gguf
+
+description: Test model description
+model-card-url: https://example.com/model-card
+format: GGUF
+quantization: Q4_K_M
+
+disk-size: 1M # metadata
+
+capabilities:
+  - text
+  - vision
+  - audio
+  - tool
+
+components:
+  - model-30m-q4-k-m-gguf

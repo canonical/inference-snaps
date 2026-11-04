@@ -1,0 +1,20 @@
+name: intel-cpu
+description: Use Intel CPUs
+summary: Intel CPU engine
+vendor: Intel Corporation
+experimental: false
+devices:
+  allof:
+    - type: cpu
+      architecture: amd64
+      manufacturer-id: GenuineIntel
+
+runtime: openvino-model-server
+
+model:
+  default: 4b-it-int4-fq-ov
+  options:
+    - 4b-it-int4-fq-ov
+
+configurations:
+  target-device: CPU
