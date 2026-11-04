@@ -28,7 +28,8 @@ install: test_data/dev/build.sh
 
 clean:
 	cd $(SNAP_DIR) && snapcraft clean
-	rm -rf modelctl $(STAGE_DIR) $(SNAP_DIR)/*.snap $(SNAP_DIR)/*.comp
+	rm -f modelctl
+	rm -rf $(STAGE_DIR) $(SNAP_DIR)/*.snap $(SNAP_DIR)/*.comp
 
 test_data/dev/build.sh:
 	git submodule update --init test_data/dev
