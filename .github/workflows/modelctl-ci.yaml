@@ -1,10 +1,14 @@
-name: Snap CI
+name: Modelctl CI
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'modelctl/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'modelctl/**'
   # Allow manual trigger
   workflow_dispatch:
 

@@ -1,4 +1,4 @@
-name: Build and upload release artifacts
+name: Release modelctl
 
 on:
   release:
@@ -23,9 +23,14 @@ jobs:
             goarch: arm64
 
     env:
-      ARTIFACT_NAME: "inference-snaps-cli-${{ matrix.runner.name }}.tar.xz"
+      ARTIFACT_NAME: "modelctl-${{ matrix.runner.name }}.tar.xz"
 
     runs-on: ${{ matrix.runner.runs-on }}
+    
+    defaults:
+      run:
+        working-directory: modelctl
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -40,25 +45,26 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
+      - name: Create bin directory
+        run: mkdir -p bin
+
       - name: Build binary
         env:
           GOOS: ${{ matrix.runner.goos }}
           GOARCH: ${{ matrix.runner.goarch }}
         run: |
-          go build -ldflags="-s -w" -o ./modelctl ./cmd/modelctl
+          go build -ldflags="-s -w" -o ./bin/modelctl
 
       - name: Generate artifact
         run: |
-          # Organize files
-          mkdir -p bin
-          mv ./modelctl ./bin/modelctl
-          mv ./completer/snap.bash ./bin/snap-completer.bash
+          cp ./completer/snap.bash ./bin/snap-completer.bash
+          cp ./LICENSE ./bin/LICENSE
 
-          # Create archive
+          # Create archive with LICENSE in root and bin/ subdirectory
           tar -Jcvf ${{ env.ARTIFACT_NAME }} \
-            ./bin/modelctl \
-            ./bin/snap-completer.bash \
-            ./LICENSE
+            -C . LICENSE \
+            -C . bin/modelctl \
+            -C . bin/snap-completer.bash
 
       - name: Upload release asset
         run: |
