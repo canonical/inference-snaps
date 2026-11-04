@@ -1,0 +1,5 @@
+name: agentic-snap-testing
+base: ubuntu@24.04
+sdks:
+  - name: opencode
+    channel: latest/stable
