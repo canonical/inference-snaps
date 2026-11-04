@@ -4,6 +4,10 @@ on:
   release:
     types: [published]
 
+defaults:
+  run:
+    working-directory: modelctl
+
 jobs:
   build-and-release:
     permissions:
@@ -26,10 +30,6 @@ jobs:
       ARTIFACT_NAME: "modelctl-${{ matrix.runner.name }}.tar.xz"
 
     runs-on: ${{ matrix.runner.runs-on }}
-    
-    defaults:
-      run:
-        working-directory: modelctl
     
     steps:
       - name: Checkout code

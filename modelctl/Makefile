@@ -20,15 +20,15 @@ stage:
 	cp completer/snap.bash $(STAGE_DIR)/completer/
 	git describe --always --dirty > $(STAGE_DIR)/version
 
-snap: stage dev/build.sh
-	cd $(SNAP_DIR) && ../dev/build.sh
+snap: stage test_data/dev/build.sh
+	cd $(SNAP_DIR) && dev/build.sh
 
-install: dev/build.sh
-	cd $(SNAP_DIR) && ../dev/install.sh
+install: test_data/dev/build.sh
+	cd $(SNAP_DIR) && dev/install.sh
 
 clean:
 	cd $(SNAP_DIR) && snapcraft clean
 	rm -rf modelctl $(STAGE_DIR) $(SNAP_DIR)/*.snap $(SNAP_DIR)/*.comp
 
-dev/build.sh:
-	git submodule update --init dev
+test_data/dev/build.sh:
+	git submodule update --init modelctl/test_data/dev

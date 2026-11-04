@@ -1,5 +1,5 @@
-[submodule "modelctl/dev"]
-	path = modelctl/dev
+[submodule "modelctl/test_data/dev"]
+	path = modelctl/test_data/dev
 	url = https://github.com/canonical/inference-snaps-dev
 	branch = v2
 [submodule "deepseek-r1-snap"]
