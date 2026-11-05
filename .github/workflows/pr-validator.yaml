@@ -10,7 +10,7 @@ on:
     types:
       - opened
       - edited
-      # - synchronize # Uncomment to trigger on every commit for required checks
+      - synchronize
 
 jobs:
   semantic-title:
