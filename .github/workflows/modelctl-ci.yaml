@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - 'modelctl/**'
+      - 'docs/reuse/cli-commands.txt'
   pull_request:
     branches:
       - main
     paths:
       - 'modelctl/**'
+      - 'docs/reuse/cli-commands.txt'
   # Allow manual trigger
   workflow_dispatch:
 
@@ -60,7 +62,11 @@ jobs:
         run: make docs-cli
 
       - name: Fail if generated docs are stale
-        run: git diff --exit-code -- ../docs/reuse/cli-commands.txt
+        run: |
+          if ! git diff --exit-code -- ../docs/reuse/cli-commands.txt; then
+            echo "::error::CLI docs are stale. Run 'make docs-cli' in modelctl/ and commit the result."
+            exit 1
+          fi
 
   build:
     needs: [ unit-test ]
