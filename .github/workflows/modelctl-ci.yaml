@@ -41,6 +41,27 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
+  docs-drift:
+    runs-on: ubuntu-26.04
+
+    defaults:
+      run:
+        working-directory: modelctl
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.27.x'
+
+      - name: Regenerate CLI docs
+        run: make docs-cli
+
+      - name: Fail if generated docs are stale
+        run: git diff --exit-code -- ../docs/reuse/cli-commands.txt
+
   build:
     needs: [ unit-test ]
     strategy:
