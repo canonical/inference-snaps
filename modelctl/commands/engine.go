@@ -34,7 +34,7 @@ func newEngineCmd(ctx *common.Context, use, deprecated string) *cobra.Command {
 	cobraCmd := &cobra.Command{
 		Use:   use,
 		Short: "Print information about an engine",
-		Long:  "Print information about the active engine, or the specified bla",
+		Long:  "Print information about the active engine, or the specified engine",
 		// Args
 		// modelctl use-engine <engine> requires 1 argument
 		// modelctl use-engine --auto does not support any arguments
