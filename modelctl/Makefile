@@ -2,7 +2,7 @@ SNAP_DIR  := test_data
 STAGE_DIR := $(SNAP_DIR)/build
 
 VERSION  := $(shell git describe --tags --always --dirty)
-LDFLAGS  := -X 'main.version=$(VERSION)'
+LDFLAGS  := -s -w -X 'main.version=$(VERSION)'
 
 # CGO_ENABLED=0 produces a statically linked binary
 GO_BUILD := CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)"
