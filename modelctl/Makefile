@@ -1,6 +1,7 @@
 SNAP_DIR  := test_data
 STAGE_DIR := $(SNAP_DIR)/build
 
+BIN      := modelctl
 VERSION  := $(shell git describe --tags --always --dirty)
 LDFLAGS  := -s -w -X 'main.version=$(VERSION)'
 
@@ -12,7 +13,7 @@ GO_BUILD := CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)"
 all: build
 
 build:
-	$(GO_BUILD) -o modelctl .
+	$(GO_BUILD) -o $(BIN) .
 
 test:
 	go test -count 1 -failfast ./...
