@@ -2,7 +2,10 @@ SNAP_DIR  := test_data
 STAGE_DIR := $(SNAP_DIR)/build
 
 VERSION  := $(shell git describe --tags --always --dirty)
-GO_BUILD := go build -ldflags="-X 'main.version=$(VERSION)'"
+LDFLAGS  := -X 'main.version=$(VERSION)'
+
+# CGO_ENABLED=0 produces a statically linked binary
+GO_BUILD := CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)"
 
 .PHONY: all build test stage snap install clean
 
