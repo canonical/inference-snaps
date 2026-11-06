@@ -2,8 +2,9 @@ SNAP_DIR  := test_data
 STAGE_DIR := $(SNAP_DIR)/build
 
 BIN      := modelctl
-VERSION  := $(shell git describe --tags --always --dirty)
-LDFLAGS  := -s -w -X 'main.version=$(VERSION)'
+
+export VERSION := $(shell git describe --tags --always --dirty)
+LDFLAGS  := -s -w -X 'main.version=$$VERSION'
 
 # CGO_ENABLED=0 produces a statically linked binary
 GO_BUILD := CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)"
