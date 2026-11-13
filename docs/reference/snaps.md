@@ -3,7 +3,7 @@
 # Available snaps
 
 This page contains a list of inference snaps and the available optimizations.
-Select a model family to see its inference snaps.
+Search for a snap, or select a model family to see its inference snaps.
 
 <!--
 This page is generated from snaps.yaml in this directory using Jinja templating.
