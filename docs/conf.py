@@ -259,6 +259,7 @@ html_css_files = [
 html_js_files = [
     "issue_links.js",
     "family-picker.js",
+    "snap-filter.js",
 ]
 
 # Appends extra markup to the end of every document written in reST
