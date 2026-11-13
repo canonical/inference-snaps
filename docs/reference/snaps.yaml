@@ -1,0 +1,597 @@
+# Data for docs/reference/snaps.md, rendered with Jinja at build time (see conf.py).
+#
+# Families are shown as tabs in the order listed here.
+# Within a family, list snaps newest first; they are shown in this order.
+#
+# To add a snap, add an entry at the top of its family, or add a new family.
+# Text fields are MyST Markdown.
+#
+#   name:                  Display name of the model
+#   anchor:                Link target, for example {ref}`gemma3`; keep it stable once published
+#   snap:                  Snap name on the Snap Store
+#   source:                URL of the snap's source repository
+#   description:           Model description
+#   hardware_intro:        Sentence shown above the hardware table
+#   hardware:              Rows of the hardware optimizations table
+#   explore_optimizations: Show the "list-engines/show-engine" note
+#   wsl:                   Show the WSL 2 support note
+
+families:
+- name: Clef
+  snaps:
+  - name: Clef Flash
+    anchor: clef-flash
+    snap: clef-flash
+    source: https://github.com/canonical/clef-flash-snap
+    description: |-
+      Clef Flash is an open-weights decision model. You describe the decision in plain words at request time, with your own labels, and it answers with a choice, a yes / no probability or a score.
+      The input can be a combination of an image and text, with the output being decisions.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+- name: DeepSeek
+  snaps:
+  - name: DeepSeek R1
+    anchor: deepseek-r1
+    snap: deepseek-r1
+    source: https://github.com/canonical/deepseek-r1-snap
+    description: |-
+      DeepSeek R1 is a reasoning Large Language Model mainly meant for chat completions.
+      Input and output is text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: Intel GPU
+      description: Optimized for Intel integrated and discrete graphics
+    - arch: amd64
+      optimization: Intel NPU
+      description: Intel Neural Processing Unit acceleration
+    - arch: amd64
+      optimization: Intel CPU
+      description: Intel-specific CPU optimizations
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: arm64
+      optimization: Ampere {spellexception}`Altra`/One CPUs
+      description: Optimized for Ampere processors
+    explore_optimizations: true
+- name: Gemma
+  snaps:
+  - name: Gemma4
+    anchor: gemma4
+    snap: gemma4
+    source: https://github.com/canonical/gemma4-snap
+    description: Gemma 4 is a Large Language Model supporting text and image inputs, with text-based outputs.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: Intel CPU
+      description: Optimized for best performance on Intel CPUs
+    - arch: amd64
+      optimization: Intel GPU
+      description: Optimized for Intel integrated and discrete graphics
+    - arch: amd64
+      optimization: Intel oneMKL
+      description: Intel CPU-optimized for workstations using oneMKL
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-optimized for workstation GPUs
+    - arch: amd64
+      optimization: Vulkan
+      description: Vulkan engine optimized for generic GPUs
+    - arch: arm64
+      optimization: Vulkan
+      description: Vulkan engine optimized for generic GPUs
+    explore_optimizations: true
+  - name: Gemma3
+    anchor: gemma3
+    snap: gemma3
+    source: https://github.com/canonical/gemma3-snap
+    description: Gemma 3 is a Large Language Model supporting text and image inputs, with text-based outputs.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: Intel CPU
+      description: Optimized for best performance on Intel CPUs
+    - arch: amd64
+      optimization: Intel GPU
+      description: Optimized for Intel integrated and discrete graphics
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+    explore_optimizations: true
+    wsl: true
+- name: GLM
+  snaps:
+  - name: GLM-OCR
+    anchor: glm-ocr
+    snap: glm-ocr
+    source: https://github.com/canonical/glm-ocr-snap
+    description: |-
+      GLM-OCR is a vision-language model specialized for OCR and document understanding.
+      The input can be a combination of an image and text, with the output being text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+  - name: GLM 4.7 Flash
+    anchor: glm-4-7-flash
+    snap: glm-4-7-flash
+    source: https://github.com/canonical/glm-4.7-flash-snap
+    description: |-
+      GLM 4.7 Flash is a Mixture-of-Experts Large Language Model designed for reasoning and tool-calling tasks.
+      The input and output are text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+- name: MiMo
+  snaps:
+  - name: MiMo V2.6
+    anchor: mimo-v2-6
+    snap: mimo-v2-6
+    source: https://github.com/canonical/mimo-v2.6-snap
+    description: |-
+      MiMo V2.6 Distill Qwen is an agentic Large Language Model by Xiaomi MiMo, fine-tuned from Qwen3.5 for coding, tool calling, and visual tasks.
+      The input can be a combination of an image and text, with the output being text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+- name: Nemotron
+  snaps:
+  - name: Nemotron 3.5 Bolt
+    anchor: nemotron-3-5-bolt
+    snap: nemotron-3-5-bolt
+    source: https://github.com/canonical/nemotron-3.5-bolt-snap
+    description: |-
+      Nemotron 3.5 Bolt is an LLM designed for both reasoning and non-reasoning tasks.
+      It supports text and image inputs, with text-based outputs.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for x86 CPUs
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+  - name: Nemotron 3.5 Super VL
+    anchor: nemotron-3-5-super-vl
+    snap: nemotron-3-5-super-vl
+    source: https://github.com/canonical/nemotron-3.5-super-vl-snap
+    description: |-
+      Nemotron 3.5 Super VL combines reasoning, instruction following, and tool use with text, image, document, and video understanding.
+      Output is text-based.
+    hardware_intro: 'The inference snap for Nemotron 3.5 Super VL has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: amd64
+      optimization: NVIDIA GPU (cc10+)
+      description: CUDA optimized for NVIDIA Blackwell GPUs or later
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for {spellexception}`armv8` and {spellexception}`armv9` CPUs
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU (cc10+)
+      description: CUDA optimized for NVIDIA Blackwell GPUs or later
+    explore_optimizations: true
+  - name: Nemotron 3.5 Lightning
+    anchor: nemotron-3-5-lightning
+    snap: nemotron-3-5-lightning
+    source: https://github.com/canonical/nemotron-3.5-lightning-snap
+    description: |-
+      Nemotron 3.5 Lightning is an LLM designed for both reasoning and non-reasoning tasks.
+      The input and output are text-based.
+    hardware_intro: 'The inference snap for Nemotron 3.5 Lightning has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+  - name: Nemotron 3 Nano Omni
+    anchor: nemotron-3-nano-omni
+    snap: nemotron-3-nano-omni
+    source: https://github.com/canonical/nemotron-3-nano-omni-snap
+    description: |-
+      Nemotron 3 Nano Omni is an LLM designed for both reasoning and non-reasoning tasks.
+      The input can be a combination of text, image, video and audio, with the output being text-based.
+    hardware_intro: 'The inference snap for Nemotron 3 Nano Omni supports text and image, and has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+  - name: Nemotron 3 Nano
+    anchor: nemotron-3-nano
+    snap: nemotron-3-nano
+    source: https://github.com/canonical/nemotron-3-nano-snap
+    description: |-
+      Nemotron 3 Nano is an LLM designed for both reasoning and non-reasoning tasks.
+      The input and output are text-based.
+    hardware_intro: 'The inference snap for Nemotron 3 Nano has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+- name: Nomic
+  snaps:
+  - name: Nomic Embed Text v1.5
+    anchor: nomic-embed-text-v1-5
+    snap: nomic-embed-text-v1-5
+    source: https://github.com/canonical/nomic-embed-text-v1.5-snap
+    description: |-
+      Nomic Embed Text v1.5 is a high-performance text embedding model that produces dense vector representations for retrieval and semantic search.
+      The input is text-based, with the output being embedding vectors.
+    hardware_intro: 'The inference snap for Nomic Embed Text v1.5 has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+- name: OpenJEV
+  snaps:
+  - name: OpenJEV
+    anchor: openjev
+    snap: openjev
+    source: https://github.com/canonical/openjev-snap
+    description: |-
+      OpenJev is an open-weights decision model. You describe the decision in plain words at request time, with your own labels, and it answers with a choice, a yes / no probability or a score.
+      The input can be a combination of an image and text, with the output being text or decisions.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+    explore_optimizations: true
+- name: Phi
+  snaps:
+  - name: Phi 4
+    anchor: phi-4
+    snap: phi4
+    source: https://github.com/canonical/phi4-snap
+    description: |-
+      Phi 4 is a 14B parameter language model by Microsoft.
+      The input and output are text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+- name: Qwen
+  snaps:
+  - name: Qwen3.8
+    anchor: qwen3-8
+    snap: qwen3-8
+    source: https://github.com/canonical/qwen3.8-snap
+    description: Qwen3.8 is a native vision-language model that understands images and videos, with flexible thinking control, designed to carry complex, multi-step tasks through to completion with greater reliability.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true
+  - name: Qwen3.6
+    anchor: qwen3-6
+    snap: qwen3-6
+    source: https://github.com/canonical/qwen3.6-snap
+    description: |-
+      Qwen3.6 is a Mixture-of-Experts Large Language Model designed for reasoning and chat completions.
+      It supports text and image inputs, with text-based outputs.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+    explore_optimizations: true
+  - name: Qwen3.5
+    anchor: qwen3-5
+    snap: qwen3-5
+    source: https://github.com/canonical/qwen3.5-snap
+    description: |-
+      Qwen 3.5 is a multimodal instruction-tuned model with vision capabilities.
+      It supports text and image inputs, with text-based outputs.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: arm64
+      optimization: NVIDIA Jetson Orin
+      description: CUDA-enabled GPU acceleration for NVIDIA Jetson Orin devices
+    explore_optimizations: true
+  - name: Qwen 3 Coder
+    anchor: qwen-3-coder
+    snap: qwen3-coder
+    source: https://github.com/canonical/qwen3-coder-snap
+    description: |-
+      Qwen 3 Coder is a Large Language Model designed for coding and software development tasks.
+      The input and output are text-based.
+    hardware_intro: 'The inference snap for Qwen 3 Coder has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+    explore_optimizations: true
+  - name: Qwen 3
+    anchor: qwen-3
+    snap: qwen3
+    source: https://github.com/canonical/qwen3-snap
+    description: |-
+      Qwen 3 is a Large Language Model designed for reasoning and chat completions.
+      The input and output are text-based.
+    hardware_intro: 'The inference snap for Qwen 3 has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: amd64
+      optimization: AMD GPU
+      description: ROCm-enabled GPU acceleration on x86 platforms
+    - arch: arm64
+      optimization: MediaTek NPU
+      description: MediaTek NeuroPilot NPU-accelerated inference
+    explore_optimizations: true
+  - name: Qwen 2.5 VL
+    anchor: qwen-2-5-vl
+    snap: qwen-vl
+    source: https://github.com/canonical/qwen-vl-snap
+    description: |-
+      Qwen 2.5 VL is a Vision Language Model which has the ability to process both visual and textual data.
+      The input can be a combination of an image and text, with the output being text-based.
+    hardware_intro: 'The inference snap for Qwen 2.5 VL has been optimized for the following:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: Intel GPU
+      description: Optimized for Intel integrated and discrete graphics
+    - arch: amd64
+      optimization: Intel NPU
+      description: Intel Neural Processing Unit acceleration
+    - arch: amd64
+      optimization: Intel CPU
+      description: Intel-specific CPU optimizations
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    - arch: arm64
+      optimization: Ampere {spellexception}`Altra`/One CPUs
+      description: Optimized for Ampere processors
+    explore_optimizations: true
+- name: SmolLM
+  snaps:
+  - name: SmolLM2
+    anchor: smollm2
+    snap: smollm2
+    source: https://github.com/canonical/smollm2-snap
+    description: |-
+      SmolLM2 is a compact Large Language Model developed by Hugging Face, designed for efficient text generation and natural language tasks.
+      The input and output are text-based.
+    hardware_intro: 'This inference snap is optimized for the following hardware:'
+    hardware:
+    - arch: amd64
+      optimization: Generic CPU
+      description: Optimized for several x86 CPU variants
+    - arch: arm64
+      optimization: Generic CPU
+      description: Optimized for armv8 and armv9 CPUs
+    - arch: amd64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration
+    - arch: arm64
+      optimization: NVIDIA GPU
+      description: CUDA-enabled GPU acceleration on arm64 platforms
+    explore_optimizations: true

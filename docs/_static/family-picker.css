@@ -1,0 +1,47 @@
+/* Restyles sphinx-design tab sets with the "family-picker" class as pill selectors */
+
+.family-picker.sd-tab-set {
+  gap: 0.4rem;
+}
+
+.family-picker.sd-tab-set > label {
+  border: 1px solid var(--color-background-border);
+  border-radius: 999px;
+  margin: 0;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--color-foreground-secondary);
+  background: var(--color-background-primary);
+}
+
+.family-picker.sd-tab-set > label:hover {
+  border-color: #e95420;
+  color: var(--color-foreground-primary);
+}
+
+.family-picker.sd-tab-set > input:checked + label {
+  background: #e95420;
+  border-color: #e95420;
+  color: #fff;
+}
+
+.family-picker.sd-tab-set > input:focus-visible + label {
+  outline: 2px solid #e95420;
+  outline-offset: 2px;
+}
+
+.family-picker.sd-tab-set > .sd-tab-content {
+  box-shadow: none;
+  padding: 1rem 0 0;
+}
+
+.family-picker .snap-card {
+  margin-bottom: 1.25rem;
+}
+
+.family-picker .snap-card .rubric.snap-name {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}

@@ -1,6 +1,7 @@
 import datetime
 import os
 import textwrap
+import jinja2
 import yaml
 
 # Configuration for the Sphinx documentation builder.
@@ -250,13 +251,14 @@ exclude_patterns = [
 ]
 
 # Adds custom CSS files, located remotely or in 'html_static_path'.
-# html_css_files = [
-#     "https://assets.ubuntu.com/v1/d86746ef-cookie_banner.css",
-# ]
+html_css_files = [
+    "family-picker.css",
+]
 
 # Adds custom JavaScript files, located remotely or in 'html_static_path'.
 html_js_files = [
     "issue_links.js",
+    "family-picker.js",
 ]
 
 # Appends extra markup to the end of every document written in reST
@@ -298,6 +300,34 @@ rst_prolog = """
 if os.path.exists('./reuse/substitutions.yaml'):
     with open('./reuse/substitutions.yaml', 'r') as fd:
         myst_substitutions = yaml.safe_load(fd.read())
+
+# Pages rendered as Jinja templates before parsing, mapped to their YAML data file.
+# Substitutions from substitutions.yaml are also available in these templates.
+jinja_pages = {
+    "reference/snaps": "reference/snaps.yaml",
+}
+
+
+def render_jinja_pages(app, docname, source):
+    data_file = jinja_pages.get(docname)
+    if not data_file:
+        return
+    data_path = os.path.join(app.srcdir, data_file)
+    # Rebuild the page when its data file changes
+    app.env.note_dependency(data_path)
+    with open(data_path) as fd:
+        data = yaml.safe_load(fd)
+    env = jinja2.Environment(
+        trim_blocks=True,
+        lstrip_blocks=True,
+        keep_trailing_newline=True,
+        undefined=jinja2.StrictUndefined,
+    )
+    source[0] = env.from_string(source[0]).render(**app.config.myst_substitutions, **data)
+
+
+def setup(app):
+    app.connect("source-read", render_jinja_pages)
 
 # Configuration for Intersphinx projects
 #
