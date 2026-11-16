@@ -146,6 +146,30 @@ func TestProcessEnvConfigs(t *testing.T) {
 	}
 }
 
+func TestEmbeddingBatchEnvironmentOverrides(t *testing.T) {
+	t.Setenv("LLAMA_ARG_BATCH", "2048")
+	t.Setenv("LLAMA_ARG_UBATCH", "512")
+	ctx := &common.Context{Config: storage.NewMockConfig()}
+	setCmd := setCommand{Context: ctx, noRestart: true}
+	if err := setCmd.set([]string{
+		"env.llama-arg-batch=2048",
+		"env.llama-arg-ubatch=2048",
+	}); err != nil {
+		t.Fatalf("setting embedding batch overrides: %v", err)
+	}
+
+	runCmd := runCommand{Context: ctx}
+	if err := runCmd.processEnvConfigs(); err != nil {
+		t.Fatalf("processing embedding batch overrides: %v", err)
+	}
+
+	for _, name := range []string{"LLAMA_ARG_BATCH", "LLAMA_ARG_UBATCH"} {
+		if got := os.Getenv(name); got != "2048" {
+			t.Errorf("expected %s to be 2048, got %q", name, got)
+		}
+	}
+}
+
 func TestWriteShareProviderEnv(t *testing.T) {
 	t.Run("default path", func(t *testing.T) {
 		t.Setenv("SNAP_COMMON", t.TempDir())
