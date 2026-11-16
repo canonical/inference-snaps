@@ -290,8 +290,8 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	if err != nil {
 		panic(err)
 	}
-	if err := cmd.autoSelectScoredEngine(scoredEngines, machine); err != nil {
-		panic(err)
+	if err := cmd.autoSelectScoredEngine(scoredEngines, machine); err == nil {
+		panic("expected error when no compatible model fits")
 	}
 
 	// Output:
@@ -312,8 +312,6 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
 	//
-	// Engine changed to "cpu".
-	// [mock] Restarting all services
 }
 
 func ExampleUseEngine_printIncompatibleModels() {
@@ -357,8 +355,8 @@ func ExampleUseEngine_printIncompatibleModels() {
 		panic(err)
 	}
 
-	if err := cmd.switchEngineWithMachine("cpu", machine); err != nil {
-		panic(err)
+	if err := cmd.switchEngineWithMachine("cpu", machine); err == nil {
+		panic("expected error when no compatible model fits")
 	}
 
 	// Output:
@@ -372,9 +370,6 @@ func ExampleUseEngine_printIncompatibleModels() {
 	// ✘ 30b-a3b-q4-k-m-gguf:
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
-	//
-	// Engine changed to "cpu".
-	// [mock] Restarting all services
 }
 
 // TestSwitchEngine_withModelID verifies that switchEngineAndModel respects an
@@ -505,8 +500,16 @@ func TestSwitchEngineWithMachineInfo_noDiskNoModel(t *testing.T) {
 		t.Fatalf("unexpected error getting machine info fixture: %v", err)
 	}
 	err = cmd.switchEngineWithMachine("cpu", machine)
+	if err == nil {
+		t.Fatal("expected error switching engine when no compatible model fits, got nil")
+	}
+	// The engine change is still applied, but no model could be selected.
+	activeEngine, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
-		t.Fatalf("unexpected error switching engine: %v", err)
+		t.Fatalf("unexpected error getting active engine: %v", err)
+	}
+	if activeEngine != "cpu" {
+		t.Errorf("active engine = %q, want %q", activeEngine, "cpu")
 	}
 	activeModel, err := cmd.Cache.GetActiveModel()
 	if err != nil {
