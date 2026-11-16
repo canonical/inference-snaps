@@ -209,7 +209,7 @@ func (c *chatClient) checkServerReady() error {
 }
 
 func (c *chatClient) lookupModelName() error {
-	stopProgress := StartProgressSpinner("Looking up model name")
+	stopProgress := StartProgressSpinner("Waiting for model to be ready")
 	defer stopProgress()
 
 	modelService := openai.NewModelService(option.WithBaseURL(c.baseUrl))
