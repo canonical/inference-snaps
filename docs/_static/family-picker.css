@@ -46,6 +46,25 @@
   font-weight: 500;
 }
 
+/* "All" pill (the first tab): show every family, each under its family name.
+   While searching, snap-filter.js decides which families are visible instead. */
+.family-picker.sd-tab-set:not(.is-filtering):has(> input:first-of-type:checked) > .sd-tab-content {
+  display: block;
+}
+
+/* Family names come from data-family, set by family-picker.js; also used while searching */
+.family-picker:has(> input:first-of-type:checked) > .sd-tab-content:not(.all-snaps)::before,
+.family-picker.is-filtering > .sd-tab-content::before {
+  content: attr(data-family);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-foreground-secondary);
+}
+
 /* Search box added by snap-filter.js */
 .snap-filter {
   margin: 1rem 0 1.25rem;
@@ -88,17 +107,6 @@
 
 .family-picker.sd-tab-set.is-filtering > .sd-tab-content {
   display: block;
-}
-
-.family-picker.is-filtering > .sd-tab-content::before {
-  content: attr(data-family);
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-foreground-secondary);
 }
 
 .family-picker .snap-filter-hidden,

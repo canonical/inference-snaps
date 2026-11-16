@@ -3,7 +3,7 @@
 # Available snaps
 
 This page contains a list of inference snaps and the available optimizations.
-Search for a snap, or select a model family to see its inference snaps.
+Search for a snap, or select a model family to see only its inference snaps.
 
 <!--
 This page is generated from snaps.yaml in this directory using Jinja templating.
@@ -12,6 +12,12 @@ To add or update a snap, edit snaps.yaml, not this file.
 
 ``````{tab-set}
 :class: family-picker
+
+`````{tab-item} All
+:class-content: all-snaps
+
+All {{ families | map(attribute="snaps") | map("length") | sum }} inference snaps are listed below.
+`````
 
 {% for family in families %}
 `````{tab-item} {{ family.name }}
