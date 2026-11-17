@@ -379,16 +379,17 @@ func getTopGpuVram(machine *machine.Machine, gpuDevices []engines.Device) (uint6
 	if bestDevice == nil {
 		// no suitable GPU device found
 		// return the vRAM of the best GPU on the machine and an error
+		var bestVram uint64
 		for _, pciDevice := range machine.PCIDevices {
 			vram, ok := pciDevice.AdditionalProperties["vram"]
 			if ok && vram != nil {
 				vramValue, ok := vram.(uint64)
-				if ok {
-					return vramValue, isUnifiedMemory, ErrNoSuitableGpuDevice
+				if ok && vramValue > bestVram {
+					bestVram = vramValue
 				}
 			}
 		}
-		return 0, isUnifiedMemory, ErrNoSuitableGpuDevice
+		return bestVram, isUnifiedMemory, ErrNoSuitableGpuDevice
 	}
 	vram, ok := bestDevice.AdditionalProperties["vram"]
 	if !ok {
