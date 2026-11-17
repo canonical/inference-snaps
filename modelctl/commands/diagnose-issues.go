@@ -1,11 +1,13 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"strings"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/fallbackserver"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +43,7 @@ func (cmd *diagnoseIssuesCommand) run(cobraCmd *cobra.Command, _ []string) error
 			if err != nil {
 				return err
 			}
-			return startFallbackServer(address, diagnosisErr)
+			return cmd.startFallbackServer(address, diagnosisErr)
 		}
 	default:
 		return fmt.Errorf("unsupported fallback protocol %q", cmd.serveFallback)
@@ -63,4 +65,20 @@ func (cmd *diagnoseIssuesCommand) fallbackListenAddress() (string, error) {
 		values[i] = strings.TrimSpace(fmt.Sprint(value))
 	}
 	return net.JoinHostPort(values[0], values[1]), nil
+}
+
+func (cmd *diagnoseIssuesCommand) startFallbackServer(address string, diagnosisErr error) error {
+	message := "Inference server failed to start. Please check the logs for more information."
+	switch {
+	case errors.Is(diagnosisErr, common.ErrNoActiveEngine):
+		message = "No active engine is set. Please set an active engine and try again."
+	case errors.Is(diagnosisErr, common.ErrNoActiveModel):
+		message = "No active model is set. Please set an active model and try again."
+	}
+
+	fmt.Println("Starting fallback server...")
+	if err := fallbackserver.Run(address, message); err != nil {
+		return fmt.Errorf("running fallback server: %w", err)
+	}
+	return nil
 }

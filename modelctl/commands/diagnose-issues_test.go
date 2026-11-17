@@ -252,3 +252,17 @@ func TestDiagnoseFallbackHelper(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func availableTCPPort(t *testing.T) int {
+	t.Helper()
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("reserving TCP port: %v", err)
+	}
+	port := listener.Addr().(*net.TCPAddr).Port
+	if err := listener.Close(); err != nil {
+		t.Fatalf("releasing TCP port: %v", err)
+	}
+	return port
+}
