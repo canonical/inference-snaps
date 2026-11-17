@@ -113,5 +113,5 @@ func SuggestNoActiveModel(activeEngine string) string {
 
 func SuggestNoCompatibleModel(newEngine string) string {
 
-	return fmt.Sprintf("no model for %q fits system requirements, select a model manually", newEngine)
+	return fmt.Sprintf("no model for %q fits system requirements, select a model manually.", newEngine)
 }
