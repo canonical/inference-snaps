@@ -120,7 +120,8 @@ Print information about the active engine, or the specified engine
 
 ### `use-engine`
 
-Select an engine
+Switch to the specified engine, installing any missing components.
+Use --auto to select the best engine for the host, for example after installing drivers or new hardware.
 
 ```shell
 <inference-snap> use-engine [<engine>]
@@ -199,7 +200,9 @@ Print information about the host machine, including hardware and compute resourc
 
 ### `prune-cache`
 
-Remove cached data
+Remove installed components not needed by the active engine and model.
+Use --engine to only remove components of the specified engine.
+Disk space may not be freed immediately, as snapd removes components asynchronously.
 
 ```shell
 <inference-snap> prune-cache
