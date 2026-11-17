@@ -43,14 +43,14 @@ Listing... Done
 nvidia-driver-580/noble-updates,noble-security,now 580.95.05-0ubuntu0.24.04.2 amd64 [installed]
 ```
 
-If not installed, or if the installed version is lower than 525, you can install or upgrade the driver using the following commands:
+If not installed, or if the installed version is lower than 575, you can install or upgrade the driver using the following commands:
 
 ```shell
 sudo apt update
 sudo apt install nvidia-driver-xxx
 ```
 
-Replace `xxx` with the driver version (e.g., `525`, etc.). 
+Replace `xxx` with the driver version (e.g., `575`, etc.). 
 The latest version is usually recommended and found by running: `apt list nvidia-driver*`
 
 ```{tip}
