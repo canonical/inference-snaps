@@ -29,8 +29,7 @@ func PruneCache(ctx *common.Context) *cobra.Command {
 		Use:   "prune-cache",
 		Short: "Remove cached data",
 		Long: "Remove installed components not needed by the active engine and model.\n" +
-			"Use --engine to only remove components of the specified engine.\n" +
-			"Disk space may not be freed immediately, as snapd removes components asynchronously.",
+			"Use --engine to only remove components of the specified engine.",
 		RunE: cmd.run,
 	}
 
