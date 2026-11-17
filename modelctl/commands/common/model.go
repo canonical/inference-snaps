@@ -249,7 +249,7 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 
 	enginesRequiredGpus := GetEngineGpuDevices(activeEngineManifest)
 	vRam, isUnifiedMemory, err := getTopGpuVram(machine, enginesRequiredGpus)
-	if err != nil {
+	if err != nil && err != ErrNoSuitableGpuDevice {
 		return nil, err
 	}
 
@@ -377,7 +377,18 @@ func getTopGpuVram(machine *machine.Machine, gpuDevices []engines.Device) (uint6
 		}
 	}
 	if bestDevice == nil {
-		return 0, isUnifiedMemory, nil
+		// no suitable GPU device found
+		// return the vRAM of the best GPU on the machine and an error
+		for _, pciDevice := range machine.PCIDevices {
+			vram, ok := pciDevice.AdditionalProperties["vram"]
+			if ok && vram != nil {
+				vramValue, ok := vram.(uint64)
+				if ok {
+					return vramValue, isUnifiedMemory, ErrNoSuitableGpuDevice
+				}
+			}
+		}
+		return 0, isUnifiedMemory, ErrNoSuitableGpuDevice
 	}
 	vram, ok := bestDevice.AdditionalProperties["vram"]
 	if !ok {
