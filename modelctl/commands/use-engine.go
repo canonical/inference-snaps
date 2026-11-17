@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"os"
 	"slices"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
@@ -242,8 +243,8 @@ func (cmd *useEngineCommand) switchEngineWithMachine(engineName string, machine 
 		}
 		if err != nil && err != common.ErrInsufficientDiskSpaceForModel && err != common.ErrInsufficientMemoryForModel {
 			return fmt.Errorf("selecting model: %v", err)
-		} else if newModelID == "" && cmd.auto {
-			return fmt.Errorf("no model for %q fits system requirements, select a model manually", engineName)
+		} else if newModelID == "" {
+			fmt.Fprintf(os.Stderr, "Warning: No model for %q fits system requirements. Pick a model or switch to another engine manually.\n", engineName)
 		}
 	}
 
@@ -301,8 +302,12 @@ func (cmd *useEngineCommand) switchEngineAndModel(newEngineName string, newModel
 
 	if activeEngineName == newEngineName && activeModelID == newModelID {
 		// Neither engine nor model changed. Nothing left to do.
-		if newModelID == "" && len(newEngineManifest.Model.Options) > 0 && !cmd.auto {
-			return fmt.Errorf("no model for %q fits system requirements, select a model manually", newEngineName)
+		if newModelID == "" && len(newEngineManifest.Model.Options) > 0 {
+			if !cmd.auto {
+				return fmt.Errorf("no model for %q fits system requirements, select a model manually", newEngineName)
+			} else {
+				fmt.Fprintf(os.Stderr, "Error: No model for %q fits system requirements. Pick a model or switch to another engine manually.\n", newEngineName)
+			}
 		}
 		return nil
 	}
@@ -340,8 +345,12 @@ func (cmd *useEngineCommand) switchEngineAndModel(newEngineName string, newModel
 	// The engine requires a model but none could be selected. Apply the engine
 	// change but don't restart, and return an error so the command exits
 	// non-zero, prompting the user to select a model manually.
-	if newModelID == "" && len(newEngineManifest.Model.Options) > 0 && !cmd.auto {
-		return fmt.Errorf("no model for %q fits system requirements, select a model manually", newEngineName)
+	if newModelID == "" && len(newEngineManifest.Model.Options) > 0 {
+		if !cmd.auto {
+			return fmt.Errorf("no model for %q fits system requirements, select a model manually", newEngineName)
+		} else {
+			fmt.Fprintf(os.Stderr, "Error: No model for %q fits system requirements. Pick a model or switch to another engine manually.\n", newEngineName)
+		}
 	}
 
 	// Ask if the user wants to restart

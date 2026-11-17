@@ -290,8 +290,8 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	if err != nil {
 		panic(err)
 	}
-	if err := cmd.autoSelectScoredEngine(scoredEngines, machine); err == nil {
-		panic("expected error when no compatible model fits")
+	if err := cmd.autoSelectScoredEngine(scoredEngines, machine); err != nil {
+		panic(err)
 	}
 
 	// Output:
@@ -312,6 +312,8 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
 	//
+	// Engine changed to "cpu".
+	// [mock] Restarting all services
 }
 
 func ExampleUseEngine_printIncompatibleModels() {
@@ -355,8 +357,8 @@ func ExampleUseEngine_printIncompatibleModels() {
 		panic(err)
 	}
 
-	if err := cmd.switchEngineWithMachine("cpu", machine); err == nil {
-		panic("expected error when no compatible model fits")
+	if err := cmd.switchEngineWithMachine("cpu", machine); err != nil {
+		panic(err)
 	}
 
 	// Output:
@@ -370,6 +372,9 @@ func ExampleUseEngine_printIncompatibleModels() {
 	// ✘ 30b-a3b-q4-k-m-gguf:
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
+	//
+	// Engine changed to "cpu".
+	// [mock] Restarting all services
 }
 
 // TestSwitchEngine_withModelID verifies that switchEngineAndModel respects an
