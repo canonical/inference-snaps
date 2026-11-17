@@ -23,7 +23,6 @@ import (
 const runFallbackHelperEnv = "GO_WANT_RUN_FALLBACK_HELPER"
 
 func TestListenAddress(t *testing.T) {
-	cmd := runCommand{}
 	tests := []struct {
 		name    string
 		baseURL string
@@ -46,7 +45,7 @@ func TestListenAddress(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := cmd.listenAddress(tt.baseURL)
+			got, err := listenAddress(tt.baseURL)
 			if tt.wantErr {
 				if err == nil {
 					t.Fatalf("listenAddress(%q) unexpectedly succeeded with %q", tt.baseURL, got)

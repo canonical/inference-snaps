@@ -3,8 +3,6 @@ package commands
 import (
 	"errors"
 	"fmt"
-	"net"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,7 +11,6 @@ import (
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
-	"github.com/canonical/inference-snaps/modelctl/v2/internal/fallbackserver"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/snap"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
@@ -121,7 +118,7 @@ func (cmd *runCommand) fallback(commandErr error) error {
 		return fmt.Errorf("getting OpenAI base URL: %v", err)
 	}
 
-	fallbackListenAddress, err := cmd.listenAddress(baseUrl)
+	fallbackListenAddress, err := listenAddress(baseUrl)
 	if err != nil {
 		return fmt.Errorf("parsing OpenAI base URL: %v", err)
 	}
@@ -129,50 +126,18 @@ func (cmd *runCommand) fallback(commandErr error) error {
 	return cmd.startFallbackServer(fallbackListenAddress)
 }
 
-// listenAddress parses a URL and returns the host:port address
-func (*runCommand) listenAddress(baseURL string) (string, error) {
-	parsed, err := url.Parse(baseURL)
-	if err != nil {
-		return "", fmt.Errorf("parsing base URL: %w", err)
-	}
-	if parsed.Hostname() == "" {
-		return "", fmt.Errorf("base URL %q does not contain a host", baseURL)
-	}
-
-	port := parsed.Port()
-	if port == "" {
-		port = "80" // default for http url without a port
-	}
-	return net.JoinHostPort(parsed.Hostname(), port), nil
-}
-
 // startFallbackServer gathers error messages explaining why the command failed,
 // then runs a fallback server on the provided address
 func (cmd *runCommand) startFallbackServer(address string) error {
-	servedErrorMessage := "Inference server failed to start. Please check the logs for more information."
-
 	statusStr, err := common.SnapStatus(cmd.Context)
-	if err != nil {
-		switch {
-		case errors.Is(err, common.ErrNoActiveEngine):
-			servedErrorMessage = "No active engine is set. Please set an active engine and try again."
-		case errors.Is(err, common.ErrNoActiveModel):
-			servedErrorMessage = "No active model is set. Please set an active model and try again."
-		default:
-			return fmt.Errorf("getting status: %v", err)
-		}
+	if err != nil && !errors.Is(err, common.ErrNoActiveEngine) && !errors.Is(err, common.ErrNoActiveModel) {
+		return fmt.Errorf("getting status: %v", err)
 	}
-	if statusStr == nil {
+	if statusStr == nil && err == nil {
 		return fmt.Errorf("empty status reported")
 	}
 
-	fmt.Println("Starting fallback server...")
-
-	if err := fallbackserver.Run(address, servedErrorMessage); err != nil {
-		return fmt.Errorf("running fallback server: %v", err)
-	}
-
-	return nil
+	return startFallbackServer(address, err)
 }
 
 func (*runCommand) commandStopped(err error) bool {
