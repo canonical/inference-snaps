@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands"
@@ -92,7 +93,7 @@ func writeCommand(buf *bytes.Buffer, root, cmd *cobra.Command) {
 	// The MyST target lets other pages reference the command with {ref}, e.g. "use-engine" -> "(cli-use-engine)="
 	fmt.Fprintf(buf, "\n(cli-%s)=\n\n", strings.ReplaceAll(name, " ", "-"))
 	fmt.Fprintf(buf, "### `%s`\n\n", name)
-	fmt.Fprintf(buf, "%s\n\n", escapeMarkdown(description))
+	fmt.Fprintf(buf, "%s\n\n", formatDescription(description))
 	buf.WriteString(codeBlock("shell", usage))
 
 	// Hidden flags are omitted, and so is help since every command has it
@@ -114,6 +115,15 @@ func writeCommand(buf *bytes.Buffer, root, cmd *cobra.Command) {
 // A trailing newline in text is dropped, since flag usages end with one but examples don't
 func codeBlock(lang, text string) string {
 	return "```" + lang + "\n" + strings.TrimSuffix(text, "\n") + "\n```\n"
+}
+
+// flagPattern matches flags such as --auto or a bare --, unless already inside a code span
+var flagPattern = regexp.MustCompile("(^|[^\\w`-])(--[\\w-]*)")
+
+// formatDescription renders help text as MyST markdown, wrapping flags in code spans,
+// e.g. "Use --auto" -> "Use `--auto`", so that Sphinx doesn't convert "--" to an en dash
+func formatDescription(text string) string {
+	return flagPattern.ReplaceAllString(escapeMarkdown(strings.TrimSpace(text)), "$1`$2`")
 }
 
 // escapeMarkdown escapes help text that would otherwise be parsed as HTML, such as <key>
