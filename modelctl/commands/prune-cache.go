@@ -28,7 +28,9 @@ func PruneCache(ctx *common.Context) *cobra.Command {
 	cobraCmd := &cobra.Command{
 		Use:   "prune-cache",
 		Short: "Remove cached data",
-		RunE:  cmd.run,
+		Long: "Remove installed components not needed by the active engine and model.\n" +
+			"Use --engine to only remove components of the specified engine.",
+		RunE: cmd.run,
 	}
 
 	// flags

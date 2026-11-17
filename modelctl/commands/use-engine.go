@@ -36,6 +36,8 @@ func UseEngine(ctx *common.Context) *cobra.Command {
 	cobraCmd := &cobra.Command{
 		Use:   "use-engine [<engine>]",
 		Short: "Select an engine",
+		Long: "Switch to the specified engine, installing any missing components.\n" +
+			"Use --auto to select the best engine for the host, for example after installing drivers or new hardware.",
 		// Args
 		// modelctl use-engine <engine> requires 1 argument
 		// modelctl use-engine --auto does not support any arguments

@@ -9,7 +9,7 @@ LDFLAGS  := -s -w -X 'main.version=$$VERSION'
 # CGO_ENABLED=0 produces a statically linked binary
 GO_BUILD := CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)"
 
-.PHONY: all build test stage snap install clean
+.PHONY: all build test docs-cli stage snap install clean
 
 all: build
 
@@ -18,6 +18,9 @@ build:
 
 test:
 	go test -count 1 -failfast ./...
+
+docs-cli:
+	go run ./internal/tools/docgen -out ../docs/reuse/cli-commands.txt
 
 stage:
 	rm -rf $(STAGE_DIR)
