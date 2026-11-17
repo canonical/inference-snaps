@@ -24,14 +24,15 @@ func processTestStream(body string) (*openai.ChatCompletionMessageParamUnion, er
 }
 
 func TestProcessStreamEmpty(t *testing.T) {
+	wantErr := "server returned an empty response\n\n" + SuggestServerLogs()
 	for name, body := range map[string]string{
 		"no events": "",
 		"done only": "data: [DONE]\n\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			msg, err := processTestStream(body)
-			if err == nil {
-				t.Fatalf("expected an error, got message %v", msg)
+			if err == nil || err.Error() != wantErr {
+				t.Fatalf("expected error %q, got %v (message %v)", wantErr, err, msg)
 			}
 		})
 	}
