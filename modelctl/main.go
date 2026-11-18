@@ -179,6 +179,7 @@ func registerCommands(rootCmd *cobra.Command, ctx *common.Context) error {
 
 	// Hidden commands
 	addCommands(rootCmd,
+		commands.Diagnose(ctx),
 		commands.Run(ctx),
 		commands.ServeWebUi(ctx),
 		debug.DebugCommand(ctx),
