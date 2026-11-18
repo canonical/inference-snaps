@@ -17,8 +17,6 @@ import (
 // version is set at build time
 var version string
 
-var ExportedWithoutComment = "test"
-
 func main() {
 	s := snap.New()
 	snapDir := s.Dir()
@@ -58,9 +56,6 @@ func main() {
 			})
 		}
 	}
-
-	var Id = "test"
-	fmt.Println(Id)
 
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&ctx.Verbose, "verbose", "v", false, "Enable verbose logging")
