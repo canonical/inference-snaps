@@ -373,7 +373,7 @@ func TestGetTopGpuVram(t *testing.T) {
 	if err != ErrNoSuitableGpuDevice {
 		t.Fatalf("getTopGpuVram returned error: %v, want ErrNoSuitableGpuDevice", err)
 	}
-	if topVram != uint64(vramInt) {
-		t.Errorf("got top VRAM %d, want %d", topVram, vramInt)
+	if topVram != 0 {
+		t.Errorf("got top VRAM %d, want %d", topVram, 0)
 	}
 }
