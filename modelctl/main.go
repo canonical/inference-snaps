@@ -1,7 +1,7 @@
 package main
 
 import (
-         	"fmt"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -18,7 +18,7 @@ import (
 var version string
 
 func main() {
-	  s := snap.New()
+	s := snap.New()
 	snapDir := s.Dir()
 	ctx := &common.Context{
 		EnginesDir:  filepath.Join(snapDir, "engines"),
