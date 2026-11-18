@@ -361,6 +361,11 @@ func (c *chatClient) processStream(stream *ssestream.Stream[openai.ChatCompletio
 			SuggestServerLogs())
 	}
 
+	if len(acc.Choices) == 0 {
+		return nil, fmt.Errorf("server returned an empty response\n\n%s",
+			SuggestServerLogs())
+	}
+
 	// After the stream is finished, acc can be used like a ChatCompletion
 	appendParam := acc.Choices[0].Message.ToParam()
 	if acc.Choices[0].Message.Content == "" {
