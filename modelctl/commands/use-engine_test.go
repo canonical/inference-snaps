@@ -383,13 +383,16 @@ func ExampleUseEngine_printIncompatibleModels() {
 //   - an unsupported model returns an error and leaves state unchanged
 func TestSwitchEngine_withModelID(t *testing.T) {
 	tests := []struct {
-		name                string
-		engineName          string
-		modelID             string
-		installedComponents []string
-		wantErr             bool
-		wantEngine          string
-		wantModel           string
+		name                     string
+		engineName               string
+		modelID                  string
+		installedComponents      []string
+		wantErr                  bool
+		wantEngine               string
+		wantModel                string
+		autoSelect               bool
+		setPreviousActiveEngine  string
+		setPreviousActiveModel   string
 	}{
 		{
 			// Switch to the cpu engine and explicitly request the non-default
@@ -438,6 +441,70 @@ func TestSwitchEngine_withModelID(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			// Request an engine with no models that fits the system's available resources.
+			// switchEngineAndModel should return an error if autoselection is disable
+			name:       "no suitable models available",
+			engineName: "cpu",
+			modelID:    "",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+			},
+			wantErr:    true,
+			wantEngine: "cpu",
+			autoSelect: false,
+			wantModel:  "",
+		},
+		{
+			// Request an engine with no models that fits the system's available resources.
+			// switchEngineAndModel should just print an error if autoselection is enabled
+			name:       "no suitable models available autoselection",
+			engineName: "cpu",
+			modelID:    "",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+			},
+			wantErr:    false,
+			autoSelect: true,
+			wantEngine: "cpu",
+			wantModel:  "",
+		},
+		{
+			// Switch to the same engine with an empty model ID when no model is currently active.
+			// The engine has model options available but none were selected.
+			// switchEngineAndModel should return an error if autoselection is disabled
+			name:       "no change and unselected model with autoselect disabled",
+			engineName: "cpu",
+			modelID:    "",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+				"model-26b-a4b-q4-k-m-gguf",
+				"mmproj-26b-bf16-gguf",
+			},
+			wantErr:                 true,
+			autoSelect:              false,
+			wantEngine:              "cpu",
+			wantModel:               "",
+			setPreviousActiveEngine: "cpu",
+		},
+		{
+			// Switch to the same engine with an empty model ID when no model is currently active.
+			// The engine has model options available but none were selected.
+			// switchEngineAndModel should just print an error if autoselection is enabled
+			name:       "no change and unselected model with autoselect enabled",
+			engineName: "cpu",
+			modelID:    "",
+			installedComponents: []string{
+				"runtime-llama-cpp-cpu",
+				"model-26b-a4b-q4-k-m-gguf",
+				"mmproj-26b-bf16-gguf",
+			},
+			wantErr:                 false,
+			autoSelect:              true,
+			wantEngine:              "cpu",
+			wantModel:               "",
+			setPreviousActiveEngine: "cpu",
+		},
 	}
 
 	for _, tt := range tests {
@@ -445,7 +512,22 @@ func TestSwitchEngine_withModelID(t *testing.T) {
 			setupSnapComponents(t, tt.installedComponents...)
 
 			cmd := newUseEngineCmd()
-			err := cmd.switchEngineAndModel(tt.engineName, tt.modelID)
+			if tt.autoSelect {
+				cmd.auto = true
+			} else {
+				cmd.auto = false
+			}
+			err := cmd.Cache.SetActiveModel(tt.setPreviousActiveModel)
+			if err != nil {
+				t.Fatalf("unexpected error setting active model: %v", err)
+			}
+
+			err = cmd.Cache.SetActiveEngine(tt.setPreviousActiveEngine)
+			if err != nil {
+				t.Fatalf("unexpected error setting active engine: %v", err)
+			}
+
+			err = cmd.switchEngineAndModel(tt.engineName, tt.modelID)
 
 			if tt.wantErr {
 				if err == nil {
