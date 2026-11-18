@@ -236,6 +236,50 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 	return allModelsWithEngines, nil
 }
 
+// getRequiredDiskSpaceForModel calculates the actual disk space needed for a model,
+// accounting for components that are already installed.
+// If the model's components are not all installed, we cannot accurately determine how much
+// space is still needed (as component sizes may not be available), so we return the full
+// model disk size as a conservative estimate.
+func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) uint64 {
+	diskSize, err := utils.StringToBytes(manifest.DiskSize)
+	if err != nil {
+		// If we can't parse disk size, return the parsed size (or treat as full size)
+		return diskSize
+	}
+
+	// If the model has no components, we can't reduce the disk space requirement
+	if len(manifest.Components) == 0 {
+		return diskSize
+	}
+
+	// Check if all model components are already installed
+	allComponentsInstalled := true
+	for _, component := range manifest.Components {
+		found := false
+		for _, installed := range installedComponents {
+			if installed == component {
+				found = true
+				break
+			}
+		}
+		if !found {
+			allComponentsInstalled = false
+			break
+		}
+	}
+
+	// If all components are already installed, the model is already available
+	// and no additional disk space is needed
+	if allComponentsInstalled {
+		return 0
+	}
+
+	// If not all components are installed, conservatively assume the full model size
+	// is needed since we cannot accurately determine the size of missing components
+	return diskSize
+}
+
 func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest) ([]models.ScoredManifest, error) {
 	availableDiskSpace, err := availableDiskSpace(machine)
 	if err != nil {
@@ -253,6 +297,13 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 		return nil, err
 	}
 
+	// Get list of installed components to adjust disk space requirements
+	installedComponents, err := InstalledComponents()
+	if err != nil {
+		// If we can't get installed components, we'll conservatively use full disk size
+		installedComponents = []string{}
+	}
+
 	scoredModels := make([]models.ScoredManifest, 0, len(modelOptions))
 	for _, modelID := range modelOptions {
 		manifest, ok := manifests[modelID]
@@ -264,6 +315,9 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 		if err != nil {
 			return nil, fmt.Errorf("parsing disk size for model %q: %w", modelID, err)
 		}
+
+		// Calculate required disk space accounting for already-installed components
+		requiredDiskSpace := getRequiredDiskSpaceForModel(&manifest, installedComponents)
 
 		var modelRequiredMemory uint64
 		if manifest.RequiredMemory == "" {
@@ -284,7 +338,7 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 		}
 
 		report := models.CompatibilityReport{
-			CompatibleDisk:     diskSize <= availableDiskSpace,
+			CompatibleDisk:     requiredDiskSpace <= availableDiskSpace,
 			RequiredDiskSpace:  diskSize,
 			AvailableDiskSpace: availableDiskSpace,
 			RequiredMemory:     requiredMemory,
