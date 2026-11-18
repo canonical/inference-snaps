@@ -24,15 +24,15 @@ env:
 
 jobs:
   lint:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
-          go-version: '1.26.x'
+          go-version: '1.27.x'
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v8
@@ -42,8 +42,7 @@ jobs:
           working-directory: modelctl
 
   unit-test:
-    needs: [ lint ]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     
     defaults:
       run:
@@ -61,7 +60,7 @@ jobs:
         run: go test -v ./...
 
   build:
-    needs: [ unit-test ]
+    needs: [ unit-test, lint ]
     strategy:
       fail-fast: false
       matrix:
