@@ -4,14 +4,17 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine"
+	"github.com/canonical/lscompute/pkg/machine/cpu"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
 	"github.com/canonical/lscompute/pkg/machine/disk"
+	"github.com/canonical/lscompute/pkg/machine/memory"
 )
 
 // writeModelYAML creates a model manifest at modelsDir/<name>/model.yaml with the given content.
@@ -295,5 +298,82 @@ func TestSelectModelMemory(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestGetTopGpuVram(t *testing.T) {
+	m := &machine.Machine{
+		CPUs: []cpu.CPU{{
+			Architecture:   "amd64",
+			ManufacturerId: "GenuineIntel",
+			Flags:          []string{"fpu", "vme", "de"},
+		}},
+		Memory: memory.Memory{TotalRam: 67012501504, TotalSwap: 0},
+		Disk: []disk.Disk{{
+			Total:     1006451294208,
+			Available: 943543738368,
+			Path:      "/var/lib/snapd/snaps",
+		}},
+		PCIDevices: []pci.Device{
+			{
+				Bus:         "pci",
+				Slot:        "0000:00:02.0",
+				BusNumber:   0x0,
+				DeviceClass: 0x0300,
+				VendorId:    0x8086,
+				DeviceId:    0x56a0,
+				FriendlyNames: pci.FriendlyNames{
+					VendorName: "Intel Corporation",
+					DeviceName: "UHD Graphics 630",
+				},
+				AdditionalProperties: map[string]any{
+					"vram": uint64(4 * 1024 * 1024 * 1024),
+				},
+			},
+		}}
+
+	arch := "amd64"
+	mfg := "GenuineIntel"
+	vendorID := utils.HexInt(0x8086)
+	deviceID := utils.HexInt(0x56a0)
+	vram := strconv.FormatInt(int64(4*1024*1024*1024), 10)
+
+	devices := []engines.Device{
+		{
+			Type:           "cpu",
+			Bus:            "pci",
+			Architecture:   &arch,
+			ManufacturerId: &mfg,
+		},
+		{
+			Type: "usb",
+			Bus:  "usb",
+		},
+		{
+			Type:     "gpu",
+			Bus:      "pci",
+			VendorId: &vendorID,
+			DeviceId: &deviceID,
+			VRam:     &vram,
+		},
+	}
+	vramInt, _ := strconv.Atoi(vram)
+	topVram, isUnified, err := getTopGpuVram(m, devices)
+	if err != nil {
+		t.Fatalf("getTopGpuVram returned error: %v", err)
+	}
+	if topVram != uint64(vramInt) {
+		t.Errorf("got top VRAM %d, want %d", topVram, vramInt)
+	}
+	if isUnified {
+		t.Errorf("got isUnified = true, want false")
+	}
+	m.PCIDevices[0].DeviceId = 0x0000
+	topVram, isUnified, err = getTopGpuVram(m, devices)
+	if err != ErrNoSuitableGpuDevice {
+		t.Fatalf("getTopGpuVram returned error: %v, want ErrNoSuitableGpuDevice", err)
+	}
+	if topVram != uint64(vramInt) {
+		t.Errorf("got top VRAM %d, want %d", topVram, vramInt)
 	}
 }
