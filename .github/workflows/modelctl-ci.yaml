@@ -23,8 +23,31 @@ env:
   SNAP_DIR: modelctl/test_data
 
 jobs:
+  lint:
+    runs-on: ubuntu-24.04
+  
+    defaults:
+      run:
+        working-directory: modelctl
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.x'
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          only-new-issues: true
+          #args: "--config=./modelctl/.golangci.yaml"
+
   unit-test:
-    runs-on: ubuntu-26.04
+    needs: [ lint ]
+    runs-on: ubuntu-24.04
     
     defaults:
       run:
