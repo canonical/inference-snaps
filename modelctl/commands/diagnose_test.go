@@ -21,7 +21,7 @@ import (
 
 const diagnoseRuntime = "name: test-runtime\nservers:\n  openai:\n    protocol: http\n    base-path: /v1\n"
 
-func TestDiagnoseIssues(t *testing.T) {
+func TestDiagnose(t *testing.T) {
 	tests := []struct {
 		name       string
 		noEngine   bool
@@ -58,7 +58,7 @@ func TestDiagnoseIssues(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			cmd := DiagnoseIssues(ctx)
+			cmd := Diagnose(ctx)
 			cmd.SetArgs(append([]string{}, tt.args...))
 			cmd.SetOut(&bytes.Buffer{})
 			cmd.SetErr(&bytes.Buffer{})
@@ -79,7 +79,7 @@ func TestDiagnoseIssues(t *testing.T) {
 	}
 }
 
-func TestDiagnoseIssuesMissingManifest(t *testing.T) {
+func TestDiagnoseMissingManifest(t *testing.T) {
 	for _, manifest := range []string{"engine", "model"} {
 		t.Run(manifest, func(t *testing.T) {
 			ctx := testRunContext(t, diagnoseRuntime)
@@ -91,7 +91,7 @@ func TestDiagnoseIssuesMissingManifest(t *testing.T) {
 			if err := os.Remove(path); err != nil {
 				t.Fatal(err)
 			}
-			cmd := DiagnoseIssues(ctx)
+			cmd := Diagnose(ctx)
 			cmd.SetArgs([]string{})
 			cmd.SetErr(&bytes.Buffer{})
 			if err := cmd.Execute(); err == nil {
@@ -109,14 +109,14 @@ func TestDiagnoseFallbackListenAddress(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		address, err := (&diagnoseIssuesCommand{Context: ctx}).fallbackListenAddress()
+		address, err := (&diagnoseCommand{Context: ctx}).fallbackListenAddress()
 		if err != nil || address != "127.0.0.1:8080" {
 			t.Fatalf("address = %q, error = %v", address, err)
 		}
 	})
 	t.Run("no OpenAI endpoint", func(t *testing.T) {
 		ctx := testRunContext(t, "name: test-runtime\nservers:\n  kserve:\n    protocol: http\n    base-path: /v2\n")
-		address, err := (&diagnoseIssuesCommand{Context: ctx}).fallbackListenAddress()
+		address, err := (&diagnoseCommand{Context: ctx}).fallbackListenAddress()
 		if err != nil || address != "127.0.0.1:8080" {
 			t.Fatalf("address = %q, error = %v", address, err)
 		}
@@ -126,7 +126,7 @@ func TestDiagnoseFallbackListenAddress(t *testing.T) {
 		if err := ctx.Config.Set("http.host", "::1", storage.UserConfig); err != nil {
 			t.Fatal(err)
 		}
-		address, err := (&diagnoseIssuesCommand{Context: ctx}).fallbackListenAddress()
+		address, err := (&diagnoseCommand{Context: ctx}).fallbackListenAddress()
 		if err != nil || address != "[::1]:8080" {
 			t.Fatalf("address = %q, error = %v", address, err)
 		}
@@ -137,7 +137,7 @@ func TestDiagnoseFallbackListenAddress(t *testing.T) {
 			if err := ctx.Config.Set(key, "", storage.UserConfig); err != nil {
 				t.Fatal(err)
 			}
-			_, err := (&diagnoseIssuesCommand{Context: ctx}).fallbackListenAddress()
+			_, err := (&diagnoseCommand{Context: ctx}).fallbackListenAddress()
 			if err == nil || !strings.Contains(err.Error(), key) {
 				t.Fatalf("error = %v, want missing %s", err, key)
 			}
@@ -156,7 +156,7 @@ func TestDiagnoseFallbackBindFailure(t *testing.T) {
 	if err := ctx.Config.Set("http.port", port, storage.UserConfig); err != nil {
 		t.Fatal(err)
 	}
-	cmd := DiagnoseIssues(ctx)
+	cmd := Diagnose(ctx)
 	cmd.SetArgs([]string{"--serve-fallback=openai"})
 	cmd.SetErr(&bytes.Buffer{})
 	if err := cmd.Execute(); err == nil || !strings.Contains(err.Error(), "running fallback server") {
@@ -246,7 +246,7 @@ func TestDiagnoseFallbackHelper(t *testing.T) {
 	if mode == "no-engine" {
 		activateTestModel(t, ctx)
 	}
-	cmd := DiagnoseIssues(ctx)
+	cmd := Diagnose(ctx)
 	cmd.SetArgs([]string{"--serve-fallback=openai"})
 	if err := cmd.Execute(); err != nil {
 		t.Fatal(err)

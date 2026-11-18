@@ -11,16 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type diagnoseIssuesCommand struct {
+type diagnoseCommand struct {
 	*common.Context
 
 	serveFallback string
 }
 
-func DiagnoseIssues(ctx *common.Context) *cobra.Command {
-	cmd := diagnoseIssuesCommand{Context: ctx}
+func Diagnose(ctx *common.Context) *cobra.Command {
+	cmd := diagnoseCommand{Context: ctx}
 	cobraCmd := &cobra.Command{
-		Use:               "diagnose-issues",
+		Use:               "diagnose",
 		Short:             "Check that an active engine and model are available",
 		Hidden:            true,
 		Args:              cobra.NoArgs,
@@ -31,7 +31,7 @@ func DiagnoseIssues(ctx *common.Context) *cobra.Command {
 	return cobraCmd
 }
 
-func (cmd *diagnoseIssuesCommand) run(cobraCmd *cobra.Command, _ []string) error {
+func (cmd *diagnoseCommand) run(cobraCmd *cobra.Command, _ []string) error {
 	_, diagnosisErr := common.EngineSettings(cmd.Context)
 	switch cmd.serveFallback {
 	case "":
@@ -51,7 +51,7 @@ func (cmd *diagnoseIssuesCommand) run(cobraCmd *cobra.Command, _ []string) error
 	return nil
 }
 
-func (cmd *diagnoseIssuesCommand) fallbackListenAddress() (string, error) {
+func (cmd *diagnoseCommand) fallbackListenAddress() (string, error) {
 	config, err := cmd.Config.Get("http")
 	if err != nil {
 		return "", fmt.Errorf("getting fallback HTTP configuration: %w", err)
@@ -67,7 +67,7 @@ func (cmd *diagnoseIssuesCommand) fallbackListenAddress() (string, error) {
 	return net.JoinHostPort(values[0], values[1]), nil
 }
 
-func (cmd *diagnoseIssuesCommand) startFallbackServer(address string, diagnosisErr error) error {
+func (cmd *diagnoseCommand) startFallbackServer(address string, diagnosisErr error) error {
 	message := "Inference server failed to start. Please check the logs for more information."
 	switch {
 	case errors.Is(diagnosisErr, common.ErrNoActiveEngine):

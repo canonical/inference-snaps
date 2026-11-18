@@ -49,7 +49,7 @@ func Run(ctx *common.Context) *cobra.Command {
 	cobraCmd.Flags().Lookup("share-provider").NoOptDefVal = cmd.defaultProviderDirectoryPath()
 	// --fallback-server
 	cobraCmd.Flags().Bool("fallback-server", false, "deprecated; has no effect")
-	_ = cobraCmd.Flags().MarkDeprecated("fallback-server", "use diagnose-issues --serve-fallback=openai instead; this flag has no effect")
+	_ = cobraCmd.Flags().MarkDeprecated("fallback-server", "use diagnose --serve-fallback=openai instead; this flag has no effect")
 
 	return cobraCmd
 }

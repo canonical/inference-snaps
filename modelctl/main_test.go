@@ -31,7 +31,7 @@ func TestCommandNames(t *testing.T) {
 		"status", "get", "set", "unset",
 		"engines", "engine", "use-engine",
 		"models", "model", "use-model",
-		"diagnose-issues", "machine", "prune-cache", "version",
+		"diagnose", "machine", "prune-cache", "version",
 	}
 
 	got := map[string]bool{}
@@ -68,14 +68,14 @@ func TestDeprecatedCommandNames(t *testing.T) {
 	}
 }
 
-func TestDiagnoseIssuesHidden(t *testing.T) {
+func TestDiagnoseHidden(t *testing.T) {
 	root := setupRoot(t)
-	cmd, _, err := root.Find([]string{"diagnose-issues"})
+	cmd, _, err := root.Find([]string{"diagnose"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if cmd == root || !cmd.Hidden {
-		t.Fatal("diagnose-issues should be registered and hidden")
+		t.Fatal("diagnose should be registered and hidden")
 	}
 }
 
