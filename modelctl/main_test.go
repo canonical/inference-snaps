@@ -31,7 +31,7 @@ func TestCommandNames(t *testing.T) {
 		"status", "get", "set", "unset",
 		"engines", "engine", "use-engine",
 		"models", "model", "use-model",
-		"machine", "prune-cache", "version",
+		"diagnose", "machine", "prune-cache", "version",
 	}
 
 	got := map[string]bool{}
@@ -65,6 +65,17 @@ func TestDeprecatedCommandNames(t *testing.T) {
 		if !isOld && cmd.Deprecated != "" {
 			t.Errorf("%q should not be deprecated: %q", cmd.Name(), cmd.Deprecated)
 		}
+	}
+}
+
+func TestDiagnoseHidden(t *testing.T) {
+	root := setupRoot(t)
+	cmd, _, err := root.Find([]string{"diagnose"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cmd == root || !cmd.Hidden {
+		t.Fatal("diagnose should be registered and hidden")
 	}
 }
 
