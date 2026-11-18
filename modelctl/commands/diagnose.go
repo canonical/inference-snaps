@@ -48,7 +48,7 @@ func (cmd *diagnoseCommand) run(cobraCmd *cobra.Command, _ []string) error {
 	default:
 		return fmt.Errorf("unsupported fallback protocol %q", cmd.serveFallback)
 	}
-	return nil
+	return diagnosisErr
 }
 
 func (cmd *diagnoseCommand) fallbackListenAddress() (string, error) {
