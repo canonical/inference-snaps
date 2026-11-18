@@ -25,10 +25,6 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-24.04
-  
-    defaults:
-      run:
-        working-directory: modelctl
 
     steps:
       - name: Checkout code
@@ -43,6 +39,7 @@ jobs:
         with:
           version: latest
           only-new-issues: true
+          working-directory: modelctl
           #args: "--config=./modelctl/.golangci.yaml"
 
   unit-test:
