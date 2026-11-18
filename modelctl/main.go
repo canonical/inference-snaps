@@ -57,6 +57,9 @@ func main() {
 		}
 	}
 
+	var Id = "test"
+	fmt.Println(Id)
+
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&ctx.Verbose, "verbose", "v", false, "Enable verbose logging")
 
