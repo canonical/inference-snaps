@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/models"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine"
@@ -293,6 +294,109 @@ func TestSelectModelMemory(t *testing.T) {
 				if !model.CompatibilityReport.Compatible() && model.Score != 0 {
 					t.Errorf("incompatible model %q has score %d", model.Name, model.Score)
 				}
+			}
+		})
+	}
+}
+
+func TestGetRequiredDiskSpaceForModel(t *testing.T) {
+	for _, test := range []struct {
+		name                string
+		diskSize            string
+		components          []string
+		installedComponents []string
+		wantDiskSpace       uint64
+		shouldErr           bool
+	}{
+		{
+			name:                "no components in model, full disk required",
+			diskSize:            "10G",
+			components:          []string{},
+			installedComponents: []string{},
+			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "all components installed, zero disk required",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{"comp-a", "comp-b"},
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "one component installed, full disk required (conservative)",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{"comp-a"},
+			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "no components installed, full disk required",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{},
+			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "all components installed in different order, zero disk required",
+			diskSize:            "5G",
+			components:          []string{"comp-a", "comp-b", "comp-c"},
+			installedComponents: []string{"comp-c", "comp-a", "comp-b"},
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "single component installed when model needs it",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{"single-comp"},
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "single component missing",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{},
+			wantDiskSpace:       2 * 1024 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "extra installed components beyond model requirements",
+			diskSize:            "8G",
+			components:          []string{"comp-a"},
+			installedComponents: []string{"comp-a", "comp-b", "comp-c"},
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			modelsDir := t.TempDir()
+			componentsStr := ""
+			if len(test.components) > 0 {
+				componentsStr = "components:\n"
+				for _, comp := range test.components {
+					componentsStr += "  - " + comp + "\n"
+				}
+			}
+
+			modelYaml := "name: test-model\n" +
+				"disk-size: " + test.diskSize + "\n" +
+				componentsStr
+
+			writeModelYAML(t, modelsDir, "test-model", modelYaml)
+
+			manifest, err := models.LoadManifest(modelsDir, "test-model")
+			if err != nil {
+				t.Fatalf("failed to load model manifest: %v", err)
+			}
+
+			got := getRequiredDiskSpaceForModel(manifest, test.installedComponents)
+			if got != test.wantDiskSpace {
+				t.Errorf("getRequiredDiskSpaceForModel() = %d, want %d", got, test.wantDiskSpace)
 			}
 		})
 	}
