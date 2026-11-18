@@ -110,3 +110,8 @@ func SuggestNoActiveModel(activeEngine string) string {
 
 	return fmt.Sprintf("No model for %s engine fits system requirements. Run '%s use-engine --auto --verbose' for details", activeEngine, instanceName)
 }
+
+func SuggestNoCompatibleModel(newEngine string) string {
+
+	return fmt.Sprintf("no model for %q fits system requirements, select a model manually.", newEngine)
+}
