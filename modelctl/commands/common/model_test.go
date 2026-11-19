@@ -426,12 +426,21 @@ func TestSelectModelInstalledComponentsLowDisk(t *testing.T) {
 	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
 	defer func() {
 		if oldSnapComponents != "" {
-			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+			err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+			if err != nil {
+				t.Fatalf("failed to restore SNAP_COMPONENTS: %v", err)
+			}
 		} else {
-			os.Unsetenv("SNAP_COMPONENTS")
+			err := os.Unsetenv("SNAP_COMPONENTS")
+			if err != nil {
+				t.Fatalf("failed to unset SNAP_COMPONENTS: %v", err)
+			}
 		}
 	}()
-	os.Setenv("SNAP_COMPONENTS", componentsDir)
+	err := os.Setenv("SNAP_COMPONENTS", componentsDir)
+	if err != nil {
+		t.Fatalf("failed to set SNAP_COMPONENTS: %v", err)
+	}
 
 	hostMachine := &machine.Machine{}
 	hostMachine.Memory.TotalRam = 10 * 1024 * 1024 * 1024 // 10 GB
