@@ -401,3 +401,68 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 		})
 	}
 }
+
+func TestSelectModelInstalledComponentsLowDisk(t *testing.T) {
+	modelsDir := t.TempDir()
+	componentsDir := t.TempDir()
+
+	modelYAML := "name: installed-model\n" +
+		"disk-size: 4G\n" +
+		"required-memory: 2G\n" +
+		"components:\n" +
+		"  - comp-a\n" +
+		"  - comp-b\n"
+	writeModelYAML(t, modelsDir, "installed-model", modelYAML)
+
+	writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 1G\nrequired-memory: 2G\n")
+
+	if err := os.MkdirAll(filepath.Join(componentsDir, "comp-a"), 0755); err != nil {
+		t.Fatalf("MkdirAll comp-a: %v", err)
+	}
+	if err := os.MkdirAll(filepath.Join(componentsDir, "comp-b"), 0755); err != nil {
+		t.Fatalf("MkdirAll comp-b: %v", err)
+	}
+
+	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+	defer func() {
+		if oldSnapComponents != "" {
+			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+		} else {
+			os.Unsetenv("SNAP_COMPONENTS")
+		}
+	}()
+	os.Setenv("SNAP_COMPONENTS", componentsDir)
+
+	hostMachine := &machine.Machine{}
+	hostMachine.Memory.TotalRam = 10 * 1024 * 1024 * 1024 // 10 GB
+	hostMachine.Disk = []disk.Disk{{Path: "/var/lib/snapd/snaps", Available: 1}}
+
+	engine := engines.Manifest{Model: engines.Model{Options: []string{"installed-model", "small"}}}
+
+	selected, scoredModels, err := SelectModel(
+		&Context{ModelsDir: modelsDir},
+		engine,
+		"installed-model", // Preferred model with all components installed
+		hostMachine,
+	)
+
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	if selected != "installed-model" {
+		t.Errorf("selected = %q, want %q (model with installed components should be retained despite low disk)", selected, "installed-model")
+	}
+
+	for _, model := range scoredModels {
+		if model.Name == "installed-model" {
+			if !model.CompatibilityReport.CompatibleDisk {
+				t.Errorf("installed-model CompatibleDisk = false, want true (all components installed, so no additional disk needed)")
+			}
+			if !model.CompatibilityReport.Compatible() {
+				t.Errorf("installed-model Compatible() = false, want true")
+			}
+			break
+		}
+	}
+}
