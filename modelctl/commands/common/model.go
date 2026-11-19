@@ -238,22 +238,16 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 
 // getRequiredDiskSpaceForModel calculates the actual disk space needed for a model,
 // accounting for components that are already installed.
-// If the model's components are not all installed, we cannot accurately determine how much
-// space is still needed (as component sizes may not be available), so we return the full
-// model disk size as a conservative estimate.
 func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) uint64 {
 	diskSize, err := utils.StringToBytes(manifest.DiskSize)
 	if err != nil {
-		// If we can't parse disk size, return the parsed size (or treat as full size)
 		return diskSize
 	}
 
-	// If the model has no components, we can't reduce the disk space requirement
 	if len(manifest.Components) == 0 {
 		return diskSize
 	}
 
-	// Check if all model components are already installed
 	allComponentsInstalled := true
 	for _, component := range manifest.Components {
 		found := false
@@ -275,8 +269,8 @@ func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents
 		return 0
 	}
 
-	// If not all components are installed, conservatively assume the full model size
-	// is needed since we cannot accurately determine the size of missing components
+	// If not all components are installed, conservatively assume the full model size.
+	// This should never happen, mmproj and weights are installed together in most cases.
 	return diskSize
 }
 
@@ -297,10 +291,8 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 		return nil, err
 	}
 
-	// Get list of installed components to adjust disk space requirements
 	installedComponents, err := InstalledComponents()
 	if err != nil {
-		// If we can't get installed components, we'll conservatively use full disk size
 		installedComponents = []string{}
 	}
 
@@ -316,7 +308,6 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 			return nil, fmt.Errorf("parsing disk size for model %q: %w", modelID, err)
 		}
 
-		// Calculate required disk space accounting for already-installed components
 		requiredDiskSpace := getRequiredDiskSpaceForModel(&manifest, installedComponents)
 
 		var modelRequiredMemory uint64
