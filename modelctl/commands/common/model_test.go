@@ -369,7 +369,7 @@ func TestGetTopGpuVram(t *testing.T) {
 		t.Errorf("got isUnified = true, want false")
 	}
 	m.PCIDevices[0].DeviceId = 0x0000
-	topVram, isUnified, err = getTopGpuVram(m, devices)
+	topVram, _, err = getTopGpuVram(m, devices)
 	if err != ErrNoSuitableGpuDevice {
 		t.Fatalf("getTopGpuVram returned error: %v, want ErrNoSuitableGpuDevice", err)
 	}
