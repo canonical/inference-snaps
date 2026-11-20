@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -34,22 +33,32 @@ func TestModelUnsupportedFormatResultsInError(t *testing.T) {
 
 func Example_modelCommand_printModelDetailsYaml() {
 	// Create a temporary directory for SNAP_COMPONENTS
-	tmpComponentsDir, err := ioutil.TempDir("", "snap-components-")
+	tmpComponentsDir, err := os.MkdirTemp("", "snap-components-")
 	if err != nil {
 		panic(fmt.Sprintf("failed to create temp dir: %v", err))
 	}
-	defer os.RemoveAll(tmpComponentsDir)
+	defer func() {
+		if err := os.RemoveAll(tmpComponentsDir); err != nil {
+			panic(fmt.Sprintf("failed to remove temp dir: %v", err))
+		}
+	}()
 
 	// Set SNAP_COMPONENTS env var for InstalledComponents() calls
 	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
 	defer func() {
 		if oldSnapComponents != "" {
-			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+			if err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents); err != nil {
+				panic(fmt.Sprintf("failed to restore SNAP_COMPONENTS: %v", err))
+			}
 		} else {
-			os.Unsetenv("SNAP_COMPONENTS")
+			if err := os.Unsetenv("SNAP_COMPONENTS"); err != nil {
+				panic(fmt.Sprintf("failed to unset SNAP_COMPONENTS: %v", err))
+			}
 		}
 	}()
-	os.Setenv("SNAP_COMPONENTS", tmpComponentsDir)
+	if err := os.Setenv("SNAP_COMPONENTS", tmpComponentsDir); err != nil {
+		panic(fmt.Sprintf("failed to set SNAP_COMPONENTS: %v", err))
+	}
 
 	cache := storage.NewMockCache()
 	if err := cache.SetActiveEngine("intel-gpu"); err != nil {
@@ -96,22 +105,32 @@ func Example_modelCommand_printModelDetailsYaml() {
 
 func Example_modelCommand_printModelDetailsJson() {
 	// Create a temporary directory for SNAP_COMPONENTS
-	tmpComponentsDir, err := ioutil.TempDir("", "snap-components-")
+	tmpComponentsDir, err := os.MkdirTemp("", "snap-components-")
 	if err != nil {
 		panic(fmt.Sprintf("failed to create temp dir: %v", err))
 	}
-	defer os.RemoveAll(tmpComponentsDir)
+	defer func() {
+		if err := os.RemoveAll(tmpComponentsDir); err != nil {
+			panic(fmt.Sprintf("failed to remove temp dir: %v", err))
+		}
+	}()
 
 	// Set SNAP_COMPONENTS env var for InstalledComponents() calls
 	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
 	defer func() {
 		if oldSnapComponents != "" {
-			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+			if err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents); err != nil {
+				panic(fmt.Sprintf("failed to restore SNAP_COMPONENTS: %v", err))
+			}
 		} else {
-			os.Unsetenv("SNAP_COMPONENTS")
+			if err := os.Unsetenv("SNAP_COMPONENTS"); err != nil {
+				panic(fmt.Sprintf("failed to unset SNAP_COMPONENTS: %v", err))
+			}
 		}
 	}()
-	os.Setenv("SNAP_COMPONENTS", tmpComponentsDir)
+	if err := os.Setenv("SNAP_COMPONENTS", tmpComponentsDir); err != nil {
+		panic(fmt.Sprintf("failed to set SNAP_COMPONENTS: %v", err))
+	}
 
 	cache := storage.NewMockCache()
 	if err := cache.SetActiveEngine("intel-gpu"); err != nil {
