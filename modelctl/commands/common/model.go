@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
@@ -238,11 +239,18 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 }
 
 // getRequiredDiskSpaceForModel calculates the actual disk space needed for a model,
-// accounting for components that are already installed
+// accounting for components that are already installed and retrieving precise sizes
+// of missing components from the snap store.
 func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) (uint64, error) {
 	componentSizes, err := snap_store.ComponentSizes()
 	if err != nil {
-		return 0, fmt.Errorf("fetching component sizes: %v", err)
+		// If snap is not installed from store (e.g., running locally), gracefully degrade
+		// to conservative disk size estimation by using nil componentSizes
+		if strings.Contains(err.Error(), "not installed from store") {
+			componentSizes = nil
+		} else {
+			return 0, fmt.Errorf("fetching component sizes: %w", err)
+		}
 	}
 	return getRequiredDiskSpaceForModelWithSizes(manifest, installedComponents, componentSizes)
 }
