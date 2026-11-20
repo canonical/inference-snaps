@@ -307,7 +307,6 @@ func ExampleUseEngine_autoSelectEngineVerbose() {
 	//   - requires 1024.0KiB disk space, has 0
 	// ✘ 26b-q4-k-m-gguf:
 	//   - requires 8.0GiB memory, has 1024
-	//   - requires 6.0GiB disk space, has 0
 	// ✘ 30b-a3b-q4-k-m-gguf:
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
@@ -368,7 +367,6 @@ func ExampleUseEngine_printIncompatibleModels() {
 	//   - requires 1024.0KiB disk space, has 0
 	// ✘ 26b-q4-k-m-gguf:
 	//   - requires 8.0GiB memory, has 1024
-	//   - requires 6.0GiB disk space, has 0
 	// ✘ 30b-a3b-q4-k-m-gguf:
 	//   - requires 5.9TiB memory, has 1024
 	//   - requires 5.9TiB disk space, has 0
