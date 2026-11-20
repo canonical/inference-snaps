@@ -277,12 +277,21 @@ func TestSelectModelMemory(t *testing.T) {
 			oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
 			defer func() {
 				if oldSnapComponents != "" {
-					os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+					err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+					if err != nil {
+						t.Fatalf("failed to restore SNAP_COMPONENTS: %v", err)
+					}
 				} else {
-					os.Unsetenv("SNAP_COMPONENTS")
+					err := os.Unsetenv("SNAP_COMPONENTS")
+					if err != nil {
+						t.Fatalf("failed to unset SNAP_COMPONENTS: %v", err)
+					}
 				}
 			}()
-			os.Setenv("SNAP_COMPONENTS", componentsDir)
+			err := os.Setenv("SNAP_COMPONENTS", componentsDir)
+			if err != nil {
+				t.Fatalf("failed to set SNAP_COMPONENTS: %v", err)
+			}
 
 			writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 2\nrequired-memory: 4\n")
 			writeModelYAML(t, modelsDir, "large", "name: large\ndisk-size: 4\nrequired-memory: 16\n")
