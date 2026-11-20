@@ -271,6 +271,19 @@ func TestSelectModelMemory(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			modelsDir := t.TempDir()
+			componentsDir := t.TempDir()
+
+			// Set up SNAP_COMPONENTS for InstalledComponents() calls
+			oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+			defer func() {
+				if oldSnapComponents != "" {
+					os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+				} else {
+					os.Unsetenv("SNAP_COMPONENTS")
+				}
+			}()
+			os.Setenv("SNAP_COMPONENTS", componentsDir)
+
 			writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 2\nrequired-memory: 4\n")
 			writeModelYAML(t, modelsDir, "large", "name: large\ndisk-size: 4\nrequired-memory: 16\n")
 			writeModelYAML(t, modelsDir, "implicit", "name: implicit\ndisk-size: 16\n")
@@ -302,12 +315,13 @@ func TestSelectModelMemory(t *testing.T) {
 	}
 }
 
-func TestGetRequiredDiskSpaceForModel(t *testing.T) {
+func TestGetRequiredDiskSpaceForModelWithSizes(t *testing.T) {
 	for _, test := range []struct {
 		name                string
 		diskSize            string
 		components          []string
 		installedComponents []string
+		componentSizes      map[string]int64 // nil means no precise sizes available
 		wantDiskSpace       uint64
 		shouldErr           bool
 	}{
@@ -316,6 +330,7 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 			diskSize:            "10G",
 			components:          []string{},
 			installedComponents: []string{},
+			componentSizes:      nil,
 			wantDiskSpace:       10 * 1024 * 1024 * 1024,
 			shouldErr:           false,
 		},
@@ -324,23 +339,35 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 			diskSize:            "10G",
 			components:          []string{"comp-a", "comp-b"},
 			installedComponents: []string{"comp-a", "comp-b"},
+			componentSizes:      nil,
 			wantDiskSpace:       0,
 			shouldErr:           false,
 		},
 		{
-			name:                "one component installed, full disk required (conservative)",
+			name:                "one component installed, partial disk required (precise sizes)",
 			diskSize:            "10G",
 			components:          []string{"comp-a", "comp-b"},
 			installedComponents: []string{"comp-a"},
-			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			componentSizes:      map[string]int64{"comp-b": 3 * 1024 * 1024 * 1024},
+			wantDiskSpace:       3 * 1024 * 1024 * 1024, // Only comp-b's size
 			shouldErr:           false,
 		},
 		{
-			name:                "no components installed, full disk required",
+			name:                "no components installed, precise sizes available",
 			diskSize:            "10G",
 			components:          []string{"comp-a", "comp-b"},
 			installedComponents: []string{},
-			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			componentSizes:      map[string]int64{"comp-a": 4 * 1024 * 1024 * 1024, "comp-b": 3 * 1024 * 1024 * 1024},
+			wantDiskSpace:       7 * 1024 * 1024 * 1024, // comp-a + comp-b
+			shouldErr:           false,
+		},
+		{
+			name:                "no components installed, no precise sizes (conservative fallback)",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{},
+			componentSizes:      nil,                     // No precise sizes available
+			wantDiskSpace:       10 * 1024 * 1024 * 1024, // Falls back to full disk size
 			shouldErr:           false,
 		},
 		{
@@ -348,6 +375,7 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 			diskSize:            "5G",
 			components:          []string{"comp-a", "comp-b", "comp-c"},
 			installedComponents: []string{"comp-c", "comp-a", "comp-b"},
+			componentSizes:      nil,
 			wantDiskSpace:       0,
 			shouldErr:           false,
 		},
@@ -356,15 +384,26 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 			diskSize:            "2G",
 			components:          []string{"single-comp"},
 			installedComponents: []string{"single-comp"},
+			componentSizes:      nil,
 			wantDiskSpace:       0,
 			shouldErr:           false,
 		},
 		{
-			name:                "single component missing",
+			name:                "single component missing with precise size",
 			diskSize:            "2G",
 			components:          []string{"single-comp"},
 			installedComponents: []string{},
-			wantDiskSpace:       2 * 1024 * 1024 * 1024,
+			componentSizes:      map[string]int64{"single-comp": 1500 * 1024 * 1024}, // 1.5G
+			wantDiskSpace:       1500 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "missing component without size info (conservative fallback)",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{},
+			componentSizes:      map[string]int64{},     // Component not in sizes map
+			wantDiskSpace:       2 * 1024 * 1024 * 1024, // Falls back to full disk size
 			shouldErr:           false,
 		},
 		{
@@ -372,6 +411,7 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 			diskSize:            "8G",
 			components:          []string{"comp-a"},
 			installedComponents: []string{"comp-a", "comp-b", "comp-c"},
+			componentSizes:      nil,
 			wantDiskSpace:       0,
 			shouldErr:           false,
 		},
@@ -397,9 +437,12 @@ func TestGetRequiredDiskSpaceForModel(t *testing.T) {
 				t.Fatalf("failed to load model manifest: %v", err)
 			}
 
-			got := getRequiredDiskSpaceForModel(manifest, test.installedComponents)
+			got, err := getRequiredDiskSpaceForModelWithSizes(manifest, test.installedComponents, test.componentSizes)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 			if got != test.wantDiskSpace {
-				t.Errorf("getRequiredDiskSpaceForModel() = %d, want %d", got, test.wantDiskSpace)
+				t.Errorf("getRequiredDiskSpaceForModelWithSizes() = %d, want %d", got, test.wantDiskSpace)
 			}
 		})
 	}

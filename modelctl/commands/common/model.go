@@ -8,6 +8,7 @@ import (
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/models"
 	selectorpci "github.com/canonical/inference-snaps/modelctl/v2/internal/selector/pci"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/snap_store"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine"
 	"github.com/canonical/lscompute/pkg/machine/device/pci"
@@ -237,41 +238,51 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 }
 
 // getRequiredDiskSpaceForModel calculates the actual disk space needed for a model,
-// accounting for components that are already installed.
-func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) uint64 {
+// accounting for components that are already installed
+func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) (uint64, error) {
+	componentSizes, err := snap_store.ComponentSizes()
+	if err != nil {
+		return 0, fmt.Errorf("fetching component sizes: %v", err)
+	}
+	return getRequiredDiskSpaceForModelWithSizes(manifest, installedComponents, componentSizes)
+}
+
+func getRequiredDiskSpaceForModelWithSizes(manifest *models.Manifest, installedComponents []string, componentSizes map[string]int64) (uint64, error) {
 	diskSize, err := utils.StringToBytes(manifest.DiskSize)
 	if err != nil {
-		return diskSize
+		return 0, fmt.Errorf("parsing disk size for model %q: %w", manifest.Name, err)
 	}
 
 	if len(manifest.Components) == 0 {
-		return diskSize
+		return diskSize, nil
 	}
 
-	allComponentsInstalled := true
+	var missingComponents []string
 	for _, component := range manifest.Components {
-		found := false
-		for _, installed := range installedComponents {
-			if installed == component {
-				found = true
-				break
-			}
+		if !slices.Contains(installedComponents, component) {
+			missingComponents = append(missingComponents, component)
 		}
+	}
+
+	if len(missingComponents) == 0 {
+		return 0, nil
+	}
+
+	if componentSizes == nil {
+		return diskSize, nil
+	}
+
+	var totalMissingSize int64
+	for _, component := range missingComponents {
+		size, found := componentSizes[component]
 		if !found {
-			allComponentsInstalled = false
-			break
+			// If any component is missing from the map, fall back to conservative estimate
+			return diskSize, nil
 		}
+		totalMissingSize += size
 	}
 
-	// If all components are already installed, the model is already available
-	// and no additional disk space is needed
-	if allComponentsInstalled {
-		return 0
-	}
-
-	// If not all components are installed, conservatively assume the full model size.
-	// This should never happen, mmproj and weights are installed together in most cases.
-	return diskSize
+	return uint64(totalMissingSize), nil
 }
 
 func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest) ([]models.ScoredManifest, error) {
@@ -293,7 +304,7 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 
 	installedComponents, err := InstalledComponents()
 	if err != nil {
-		installedComponents = []string{}
+		return nil, err
 	}
 
 	scoredModels := make([]models.ScoredManifest, 0, len(modelOptions))
@@ -308,7 +319,10 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 			return nil, fmt.Errorf("parsing disk size for model %q: %w", modelID, err)
 		}
 
-		requiredDiskSpace := getRequiredDiskSpaceForModel(&manifest, installedComponents)
+		requiredDiskSpace, err := getRequiredDiskSpaceForModel(&manifest, installedComponents)
+		if err != nil {
+			return nil, fmt.Errorf("calculating required disk space for model %q: %w", modelID, err)
+		}
 
 		var modelRequiredMemory uint64
 		if manifest.RequiredMemory == "" {
