@@ -2,6 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
@@ -31,6 +33,24 @@ func TestModelUnsupportedFormatResultsInError(t *testing.T) {
 }
 
 func Example_modelCommand_printModelDetailsYaml() {
+	// Create a temporary directory for SNAP_COMPONENTS
+	tmpComponentsDir, err := ioutil.TempDir("", "snap-components-")
+	if err != nil {
+		panic(fmt.Sprintf("failed to create temp dir: %v", err))
+	}
+	defer os.RemoveAll(tmpComponentsDir)
+
+	// Set SNAP_COMPONENTS env var for InstalledComponents() calls
+	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+	defer func() {
+		if oldSnapComponents != "" {
+			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+		} else {
+			os.Unsetenv("SNAP_COMPONENTS")
+		}
+	}()
+	os.Setenv("SNAP_COMPONENTS", tmpComponentsDir)
+
 	cache := storage.NewMockCache()
 	if err := cache.SetActiveEngine("intel-gpu"); err != nil {
 		panic(fmt.Sprintf("failed to set active engine: %v", err))
@@ -75,6 +95,24 @@ func Example_modelCommand_printModelDetailsYaml() {
 }
 
 func Example_modelCommand_printModelDetailsJson() {
+	// Create a temporary directory for SNAP_COMPONENTS
+	tmpComponentsDir, err := ioutil.TempDir("", "snap-components-")
+	if err != nil {
+		panic(fmt.Sprintf("failed to create temp dir: %v", err))
+	}
+	defer os.RemoveAll(tmpComponentsDir)
+
+	// Set SNAP_COMPONENTS env var for InstalledComponents() calls
+	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+	defer func() {
+		if oldSnapComponents != "" {
+			os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+		} else {
+			os.Unsetenv("SNAP_COMPONENTS")
+		}
+	}()
+	os.Setenv("SNAP_COMPONENTS", tmpComponentsDir)
+
 	cache := storage.NewMockCache()
 	if err := cache.SetActiveEngine("intel-gpu"); err != nil {
 		panic(fmt.Sprintf("failed to set active engine: %v", err))
