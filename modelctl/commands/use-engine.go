@@ -241,7 +241,7 @@ func (cmd *useEngineCommand) switchEngineWithMachine(engineName string, machine 
 			fmt.Println()
 			cmd.printScoredModels(scoredModels, newModelID)
 		}
-		if err != nil && err != common.ErrInsufficientDiskSpaceForModel && err != common.ErrInsufficientMemoryForModel {
+		if err != nil && err != common.ErrInsufficientDiskSpaceForModel && err != common.ErrInsufficientMemoryForModel && err != common.ErrNoSuitableGpuDevice {
 			return fmt.Errorf("selecting model: %v", err)
 		}
 	}

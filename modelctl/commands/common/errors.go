@@ -13,6 +13,7 @@ var (
 	ErrInsufficientDiskSpaceForModel = errors.New("insufficient disk space for the selected model")
 	ErrInsufficientMemoryForModel    = errors.New("insufficient memory for the selected model")
 	ErrSystemMemoryUnavailable       = errors.New("system memory information unavailable")
+	ErrNoSuitableGpuDevice           = errors.New("no suitable GPU device found")
 )
 
 // Strings that are commonly used in error chains, but should not be used as error types
@@ -22,4 +23,6 @@ const (
 	LoadingEngineManifest         = "loading engine manifest"
 	LoadingModelManifests         = "loading model manifests"
 	InsufficientDiskSpaceForModel = "insufficient disk space for the selected model"
+	InsufficientMemoryForModel    = "insufficient memory for the selected model"
+	NoSuitableGpuDevice           = "no suitable GPU device found"
 )
