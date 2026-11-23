@@ -20,6 +20,7 @@ import (
 	"github.com/openai/openai-go/v3/option"
 	"github.com/openai/openai-go/v3/packages/ssestream"
 
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/fallbackserver"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/runtimes"
 )
 
@@ -185,6 +186,9 @@ func (c *chatClient) checkServerReady() error {
 		if err != nil {
 			var apiError *openai.Error
 			if errors.As(err, &apiError) {
+				if apiError.Code == fallbackserver.ErrorCode {
+					return fmt.Errorf("%s\n\n%s", apiError.Message, SuggestServerLogs())
+				}
 				// llama-server starting up
 				// Error: POST "http://localhost:8328/v1/chat/completions": 503 Service Unavailable {"message":"Loading model","type":"unavailable_error","code":503}
 				if apiError.StatusCode == http.StatusServiceUnavailable && apiError.Type == "unavailable_error" {
@@ -224,6 +228,9 @@ func (c *chatClient) lookupModelName() error {
 		if err != nil {
 			var apiError *openai.Error
 			if errors.As(err, &apiError) {
+				if apiError.Code == fallbackserver.ErrorCode {
+					return fmt.Errorf("%s\n\n%s", apiError.Message, SuggestServerLogs())
+				}
 				// llama-server starting up
 				// Error: GET "http://localhost:8330/v1/models": 503 Service Unavailable {"message":"Loading model","type":"unavailable_error","code":503}
 				if apiError.StatusCode == http.StatusServiceUnavailable && apiError.Type == "unavailable_error" {

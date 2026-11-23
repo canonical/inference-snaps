@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/fallbackserver"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 )
 
@@ -209,8 +210,12 @@ func TestDiagnoseFallbackServer(t *testing.T) {
 					if mode == "no-model" {
 						want = "No active model is set. Please set an active model and try again."
 					}
-					if response.StatusCode != http.StatusServiceUnavailable || body.Error.Message != want || body.Error.Code != "service_unavailable" {
+					if response.StatusCode != http.StatusServiceUnavailable || body.Error.Message != want || body.Error.Code != fallbackserver.ErrorCode {
 						t.Fatalf("unexpected fallback response: status %d, body %+v", response.StatusCode, body)
+					}
+					chatErr := common.ChatClient(fmt.Sprintf("http://127.0.0.1:%d/v1", port), "", false).WaitChatServerReady()
+					if wantErr := want + "\n\n" + common.SuggestServerLogs(); chatErr == nil || chatErr.Error() != wantErr {
+						t.Fatalf("chat error = %v, want %q", chatErr, wantErr)
 					}
 					return
 				}
