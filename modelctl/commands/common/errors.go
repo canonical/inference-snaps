@@ -14,6 +14,7 @@ var (
 	ErrInsufficientMemoryForModel    = errors.New("insufficient memory for the selected model")
 	ErrSystemMemoryUnavailable       = errors.New("system memory information unavailable")
 	ErrNoSuitableGpuDevice           = errors.New("no suitable GPU device found")
+	ErrNoPromptResponse              = errors.New("no response to the prompt could be read, use --assume-yes to run without prompts")
 )
 
 // Strings that are commonly used in error chains, but should not be used as error types

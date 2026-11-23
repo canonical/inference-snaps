@@ -2,39 +2,49 @@ package common
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
 
 // PromptYN prompts the user and returns true for 'y', false for 'n'.
-func PromptYN(prompt string, defaultResponse bool) bool {
+func PromptYN(prompt string, defaultResponse bool) (bool, error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		if defaultResponse == true {
-			fmt.Printf("%s [Y/n] ", prompt) // default is yes
+		if defaultResponse {
+			fmt.Printf("%s [Y/n] ", prompt)
 		} else {
-			fmt.Printf("%s [y/N] ", prompt) // default is no
+			fmt.Printf("%s [y/N] ", prompt)
 		}
 
 		input, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Printf("Error reading input: %v\n", err)
-			continue
+		inputEnded := errors.Is(err, io.EOF)
+		if err != nil && !inputEnded {
+			fmt.Println()
+			return false, fmt.Errorf("%w: %v", ErrNoPromptResponse, err)
 		}
 
-		input = strings.ToLower(strings.TrimSpace(input))
-		switch input {
-		case "": // default on empty input
-			return defaultResponse
-		case "Y", "y":
-			return true
-		case "N", "n":
-			return false
+		switch strings.ToLower(strings.TrimSpace(input)) {
+		case "y":
+			return true, nil
+		case "n":
+			return false, nil
+		case "":
+			if !inputEnded {
+				return defaultResponse, nil
+			}
 		default:
-			fmt.Println(`Invalid input. Please enter "y" or "n".`)
+			if !inputEnded {
+				fmt.Println(`Invalid input. Please enter "y" or "n".`)
+				continue
+			}
 		}
+
+		fmt.Println()
+		return false, ErrNoPromptResponse
 	}
 }
 
@@ -54,11 +64,19 @@ func PromptlnEnter(action string) bool {
 }
 
 func PromptRestartToApplyChanges(ctx *Context, assumeYes bool) error {
-	msg := fmt.Sprintf("Restart %s to apply the changes?", ctx.Snap.InstanceName())
-	if assumeYes || PromptYN(msg, true) {
-		if err := ctx.Snap.Restart(); err != nil {
-			return fmt.Errorf("restarting snap: %v", err)
+	if !assumeYes {
+		msg := fmt.Sprintf("Restart %s to apply the changes?", ctx.Snap.InstanceName())
+		restart, err := PromptYN(msg, true)
+		if err != nil {
+			return fmt.Errorf("changes are saved but %s was not restarted to apply them: %w", ctx.Snap.InstanceName(), err)
 		}
+		if !restart {
+			return nil
+		}
+	}
+
+	if err := ctx.Snap.Restart(); err != nil {
+		return fmt.Errorf("restarting snap: %v", err)
 	}
 	return nil
 }

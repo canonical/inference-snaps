@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/snap"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 )
@@ -450,6 +451,51 @@ func TestMissingComponents(t *testing.T) {
 			t.Errorf("expected empty slice, got %v", missing)
 		}
 	})
+}
+
+func TestInstallMissingComponentsConfirmation(t *testing.T) {
+	dirs := setupComponentTestDirs(t)
+	t.Setenv("SNAP_COMPONENTS", t.TempDir())
+	engineManifest := &engines.Manifest{Runtime: "test-runtime"}
+
+	tests := map[string]struct {
+		stdin         string
+		assumeYes     bool
+		wantErr       error
+		wantCancelled bool
+		wantInstalled bool
+	}{
+		"assume yes installs without prompting": {assumeYes: true, wantInstalled: true},
+		"confirmed installs":                    {stdin: "y\n", wantInstalled: true},
+		"declined cancels":                      {stdin: "n\n", wantCancelled: true},
+		"closed input fails":                    {wantErr: ErrNoPromptResponse},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			installed := false
+			ctx := &Context{
+				RuntimesDir: dirs.runtimesDir,
+				Snap: snap.MockWithInstall(func(_ string) error {
+					installed = true
+					return nil
+				}),
+			}
+
+			withStdin(tc.stdin, func() {
+				cancelled, err := InstallMissingComponents(ctx, tc.assumeYes, engineManifest, nil)
+				if !errors.Is(err, tc.wantErr) {
+					t.Errorf("expected error %v, got %v", tc.wantErr, err)
+				}
+				if cancelled != tc.wantCancelled {
+					t.Errorf("expected cancelled=%v, got %v", tc.wantCancelled, cancelled)
+				}
+			})
+			if installed != tc.wantInstalled {
+				t.Errorf("expected installed=%v, got %v", tc.wantInstalled, installed)
+			}
+		})
+	}
 }
 
 func TestInstallComponents(t *testing.T) {
