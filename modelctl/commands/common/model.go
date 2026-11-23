@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"os"
 	"slices"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
@@ -158,7 +159,7 @@ func GetModelDetailsByNameOrAlias(ctx *Context, modelName string, machine *machi
 	for _, manifest := range modelManifests {
 		manifestsByName[manifest.Name] = manifest
 	}
-	scoredModels, err := ScoreModels(activeEngineManifest.Model.Options, manifestsByName, machine, *activeEngineManifest)
+	scoredModels, err := ScoreModels(activeEngineManifest.Model.Options, manifestsByName, machine, *activeEngineManifest, ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -237,19 +238,6 @@ func GetAllModels(ctx *Context) ([]ModelDetails, error) {
 	return allModelsWithEngines, nil
 }
 
-// getRequiredDiskSpaceForModel calculates the actual disk space needed for a model,
-// accounting for components that are already installed and retrieving precise sizes
-// of missing components from the snap store.
-func getRequiredDiskSpaceForModel(manifest *models.Manifest, installedComponents []string) (uint64, error) {
-	componentSizes, err := snap_store.ComponentSizes()
-	if err != nil {
-		// Any error from snap store (offline, not installed from store, rate limited, etc.)
-		// is treated as "component sizes unavailable" - we'll use conservative full model size
-		componentSizes = nil
-	}
-	return getRequiredDiskSpaceForModelWithSizes(manifest, installedComponents, componentSizes)
-}
-
 func getRequiredDiskSpaceForModelWithSizes(manifest *models.Manifest, installedComponents []string, componentSizes map[string]int64) (uint64, error) {
 	diskSize, err := utils.StringToBytes(manifest.DiskSize)
 	if err != nil {
@@ -288,7 +276,7 @@ func getRequiredDiskSpaceForModelWithSizes(manifest *models.Manifest, installedC
 	return uint64(totalMissingSize), nil
 }
 
-func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest) ([]models.ScoredManifest, error) {
+func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest, ctx *Context) ([]models.ScoredManifest, error) {
 	availableDiskSpace, err := availableDiskSpace(machine)
 	if err != nil {
 		return nil, err
@@ -310,6 +298,14 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 		return nil, err
 	}
 
+	componentSizes, err := snap_store.ComponentSizes()
+	if err != nil {
+		if ctx.Verbose {
+			fmt.Fprintf(os.Stderr, "Warning: unable to query component sizes: %v\n", err)
+		}
+		componentSizes = nil
+	}
+
 	scoredModels := make([]models.ScoredManifest, 0, len(modelOptions))
 	for _, modelID := range modelOptions {
 		manifest, ok := manifests[modelID]
@@ -322,7 +318,7 @@ func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, ma
 			return nil, fmt.Errorf("parsing disk size for model %q: %w", modelID, err)
 		}
 
-		requiredDiskSpace, err := getRequiredDiskSpaceForModel(&manifest, installedComponents)
+		requiredDiskSpace, err := getRequiredDiskSpaceForModelWithSizes(&manifest, installedComponents, componentSizes)
 		if err != nil {
 			return nil, fmt.Errorf("calculating required disk space for model %q: %w", modelID, err)
 		}
@@ -382,7 +378,7 @@ func SelectModel(ctx *Context, engineManifest engines.Manifest, preferredModel s
 		manifestsByName[manifest.Name] = manifest
 	}
 
-	scoredModels, err := ScoreModels(engineManifest.Model.Options, manifestsByName, machine, engineManifest)
+	scoredModels, err := ScoreModels(engineManifest.Model.Options, manifestsByName, machine, engineManifest, ctx)
 	if err != nil {
 		return "", nil, err
 	}

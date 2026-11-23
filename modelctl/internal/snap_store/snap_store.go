@@ -4,15 +4,24 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var storeURL = "https://api.snapcraft.io"
 
+var cachedComponentSizes = sync.OnceValues(fetchComponentSizes)
+
 func ComponentSizes() (map[string]int64, error) {
+	sizes, err := cachedComponentSizes()
+	return maps.Clone(sizes), err
+}
+
+func fetchComponentSizes() (map[string]int64, error) {
 	components, err := componentsOfCurrentSnap()
 	if err != nil {
 		return nil, fmt.Errorf("finding snap components: %v", err)
