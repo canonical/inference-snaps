@@ -85,7 +85,7 @@ func Example_machineCommand_printMachineYaml() {
 	//       avail: 878.7G
 	// devices:
 	//     - bus: pci
-	//       slot: '0000:00:00.0'
+	//       slot: "0000:00:00.0"
 	//       bus-number: "0x0"
 	//       device-class: "0x600"
 	//       vendor-id: "0x8086"
