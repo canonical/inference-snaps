@@ -209,7 +209,7 @@ func (c *chatClient) checkServerReady() error {
 }
 
 func (c *chatClient) lookupModelName() error {
-	stopProgress := StartProgressSpinner("Looking up model name")
+	stopProgress := StartProgressSpinner("Waiting for model to be ready")
 	defer stopProgress()
 
 	modelService := openai.NewModelService(option.WithBaseURL(c.baseUrl))
@@ -358,6 +358,11 @@ func (c *chatClient) processStream(stream *ssestream.Stream[openai.ChatCompletio
 				SuggestServerLogs())
 		}
 		return nil, fmt.Errorf("%s\n\n%s", err,
+			SuggestServerLogs())
+	}
+
+	if len(acc.Choices) == 0 {
+		return nil, fmt.Errorf("server returned an empty response\n\n%s",
 			SuggestServerLogs())
 	}
 

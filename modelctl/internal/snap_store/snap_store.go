@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+var storeURL = "https://api.snapcraft.io"
+
 func ComponentSizes() (map[string]int64, error) {
 	components, err := componentsOfCurrentSnap()
 	if err != nil {
@@ -60,7 +62,7 @@ func componentsOfCurrentSnap() ([]snapResources, error) {
 // snapInfo fetches information about a respective snap from the store, based on its name
 // Docs: https://api.snapcraft.io/docs/info.html
 func snapInfo(snapName string) (*snapInfoResponse, error) {
-	url := "https://api.snapcraft.io/v2/snaps/info/" + snapName
+	url := storeURL + "/v2/snaps/info/" + snapName
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -139,7 +141,7 @@ func snapRefresh(snapId string, revision int, snapArch string) (*snapRefreshResp
 		return nil, fmt.Errorf("marshalling request: %v", err)
 	}
 
-	url := "https://api.snapcraft.io/v2/snaps/refresh"
+	url := storeURL + "/v2/snaps/refresh"
 
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
 	if err != nil {
