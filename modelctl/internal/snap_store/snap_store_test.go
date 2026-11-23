@@ -152,15 +152,19 @@ func TestComponentSizesCached(t *testing.T) {
 			t.Setenv("SNAP_ARCH", "amd64")
 			var infoRequests, refreshRequests atomic.Int32
 			mux := http.NewServeMux()
-			mux.HandleFunc(infoRoute, func(w http.ResponseWriter, r *http.Request) {
+			mux.HandleFunc(infoRoute, func(w http.ResponseWriter, _ *http.Request) {
 				infoRequests.Add(1)
 				w.WriteHeader(tc.status)
-				w.Write([]byte(infoFixture))
+				if _, err := w.Write([]byte(infoFixture)); err != nil {
+					t.Errorf("writing info response: %v", err)
+				}
 			})
-			mux.HandleFunc(refreshRoute, func(w http.ResponseWriter, r *http.Request) {
+			mux.HandleFunc(refreshRoute, func(w http.ResponseWriter, _ *http.Request) {
 				refreshRequests.Add(1)
 				w.WriteHeader(tc.refreshStatus)
-				w.Write([]byte(refreshFixture))
+				if _, err := w.Write([]byte(refreshFixture)); err != nil {
+					t.Errorf("writing refresh response: %v", err)
+				}
 			})
 			server := httptest.NewServer(mux)
 			t.Cleanup(server.Close)
