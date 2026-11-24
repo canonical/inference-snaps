@@ -20,7 +20,7 @@ test:
 	go test -count 1 -failfast ./...
 
 docs-cli:
-	go run ./internal/tools/docgen -out ../docs/reuse/cli-commands.txt
+	go run ./internal/tools/docgen -version "$$VERSION" -out ../docs/reuse/cli-commands.txt
 
 stage:
 	rm -rf $(STAGE_DIR)
