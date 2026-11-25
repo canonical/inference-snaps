@@ -111,6 +111,15 @@ func SuggestNoActiveModel(activeEngine string) string {
 	return fmt.Sprintf("No model for %s engine fits system requirements. Run '%s use-engine --auto --verbose' for details", activeEngine, instanceName)
 }
 
+func SuggestBetterEngine() string {
+	instanceName := snap.InstanceName()
+	if instanceName == "" {
+		instanceName = "<snap-instance-name>"
+	}
+
+	return fmt.Sprintf("There are better engines for your set up. Run %s use-engine --auto to switch.", instanceName)
+}
+
 func SuggestNoCompatibleModel(newEngine string) string {
 
 	return fmt.Sprintf("no model for %q fits system requirements, select a model manually.", newEngine)

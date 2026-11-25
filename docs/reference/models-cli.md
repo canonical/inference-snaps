@@ -75,9 +75,9 @@ Details shown:
 
 * Service status and active endpoints
 * Currently selected engine
+* A notice when the machine supports a higher-scoring engine
 
-<!-- * Availability of better engines, e.g., after attaching new hardware or installing drivers.
-* Missing drivers for available hardware
+<!-- * Missing drivers for available hardware
 * Resource usage by engines, including cached data -->
 
 ### `chat`
