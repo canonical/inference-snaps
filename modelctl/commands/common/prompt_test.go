@@ -79,7 +79,7 @@ func TestPromptYNWithoutResponse(t *testing.T) {
 			withStdin(tc.stdin, func() {
 				answer, err := PromptYN("Proceed?", tc.defaultResponse)
 				if !errors.Is(err, ErrNoPromptResponse) {
-					t.Errorf("expected ErrNoPromptResponse, got %v", err)
+					t.Errorf("expected %q, got: %v", ErrNoPromptResponse, err)
 				}
 				if answer {
 					t.Error("expected false without a response")
@@ -101,7 +101,7 @@ func TestPromptYNWithoutResponse(t *testing.T) {
 		t.Cleanup(func() { os.Stdin = originalStdin })
 
 		if _, err := PromptYN("Proceed?", true); !errors.Is(err, ErrNoPromptResponse) {
-			t.Errorf("expected ErrNoPromptResponse, got %v", err)
+			t.Errorf("expected %q, got: %v", ErrNoPromptResponse, err)
 		}
 	})
 }
@@ -148,7 +148,7 @@ func TestPromptRestartToApplyChangesWithoutResponse(t *testing.T) {
 	withStdin("", func() {
 		err := PromptRestartToApplyChanges(&Context{Snap: snap.Mock()}, false)
 		if !errors.Is(err, ErrNoPromptResponse) {
-			t.Errorf("expected ErrNoPromptResponse, got %v", err)
+			t.Errorf("expected %q, got: %v", ErrNoPromptResponse, err)
 		}
 	})
 }

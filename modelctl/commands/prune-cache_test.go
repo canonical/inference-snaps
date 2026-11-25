@@ -403,7 +403,7 @@ func TestPrintComponentsAndConfirm(t *testing.T) {
 
 		confirmed, err := cmd.printComponentsAndConfirm([]string{"comp-a"})
 		if !errors.Is(err, common.ErrNoPromptResponse) {
-			t.Errorf("expected ErrNoPromptResponse, got %v", err)
+			t.Errorf("expected %q, got: %v", common.ErrNoPromptResponse, err)
 		}
 		if confirmed {
 			t.Error("expected confirmed=false without a response")
