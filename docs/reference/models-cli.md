@@ -164,6 +164,12 @@ To automatically select the best match, considering the hardware and compute cap
 Switching engines will trigger the download of engine resources (as snap components).
 A confirmation prompt will appear before downloading.
 
+After a refresh, `use-engine --fix --fallback=<engine>` reapplies the active engine's
+configuration and checks its components. If the engine is removed or incompatible
+with observable hardware, it switches to the fallback only if it is compatible;
+otherwise the command fails. When hardware is not observable, the active engine
+is kept if available, or the fallback is used if it was removed.
+
 ```{tip}
 The `use-engine --auto` command is usually called during the inference snap installation.
 This command can also be used to revert to the original engine after manual changes,

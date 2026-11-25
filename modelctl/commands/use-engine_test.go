@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/commands/common"
@@ -383,16 +384,16 @@ func ExampleUseEngine_printIncompatibleModels() {
 //   - an unsupported model returns an error and leaves state unchanged
 func TestSwitchEngine_withModelID(t *testing.T) {
 	tests := []struct {
-		name                     string
-		engineName               string
-		modelID                  string
-		installedComponents      []string
-		wantErr                  bool
-		wantEngine               string
-		wantModel                string
-		autoSelect               bool
-		setPreviousActiveEngine  string
-		setPreviousActiveModel   string
+		name                    string
+		engineName              string
+		modelID                 string
+		installedComponents     []string
+		wantErr                 bool
+		wantEngine              string
+		wantModel               string
+		autoSelect              bool
+		setPreviousActiveEngine string
+		setPreviousActiveModel  string
 	}{
 		{
 			// Switch to the cpu engine and explicitly request the non-default
@@ -677,6 +678,166 @@ func TestFixActiveEngine_fallbackWhenActiveEngineMissing(t *testing.T) {
 	}
 	if activeEngine != "amd-gpu" {
 		t.Errorf("expected active engine to be 'amd-gpu', got %q", activeEngine)
+	}
+}
+
+func TestFixActiveEngineWithScores(t *testing.T) {
+	tests := []struct {
+		name         string
+		active       string
+		fallback     string
+		observable   bool
+		architecture string
+		engines      []string
+		wantEngine   string
+		wantErr      string
+	}{
+		{name: "compatible engine retained", active: "intel-gpu", fallback: "cpu", observable: true, wantEngine: "intel-gpu"},
+		{name: "incompatible engine uses fallback", active: "amd-gpu", fallback: "cpu", observable: true, wantEngine: "cpu"},
+		{name: "removed engine uses fallback", active: "missing-engine", fallback: "cpu", observable: true, wantEngine: "cpu"},
+		{name: "incompatible fallback", active: "amd-gpu", fallback: "cpu", observable: true, architecture: "riscv64", wantEngine: "amd-gpu", wantErr: `fallback engine "cpu" is unavailable or incompatible`},
+		{name: "missing fallback", active: "amd-gpu", fallback: "cpu", observable: true, engines: []string{"amd-gpu"}, wantEngine: "amd-gpu", wantErr: `fallback engine "cpu" is unavailable or incompatible`},
+		{name: "no fallback", active: "missing-engine", observable: true, fallback: "", wantEngine: "missing-engine", wantErr: "no fallback engine was specified"},
+		{name: "unobservable hardware retains engine", active: "intel-gpu", fallback: "cpu", wantEngine: "intel-gpu"},
+		{name: "unobservable hardware without fallback", active: "missing-engine", fallback: "", wantEngine: "missing-engine", wantErr: "no fallback engine was specified"},
+	}
+	manifests, err := engines.LoadManifests("../test_data/engines")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			setupSnapComponents(t, "runtime-openvino-model-server", "model-4b-it-int4-fq-ov", "runtime-llama-cpp-cpu", "model-26b-a4b-q4-k-m-gguf", "mmproj-26b-bf16-gguf")
+			cmd := newUseEngineCmd()
+			cmd.fallback = tt.fallback
+			if err := cmd.Cache.SetActiveEngine(tt.active); err != nil {
+				t.Fatal(err)
+			}
+			if tt.active == "intel-gpu" {
+				if err := cmd.Cache.SetActiveModel("4b-it-int4-fq-ov"); err != nil {
+					t.Fatal(err)
+				}
+			}
+			machineInfo, err := machineFixture("i7-1165G7")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if tt.architecture != "" {
+				machineInfo.CPUs[0].Architecture = tt.architecture
+			}
+			enginesToScore := manifests
+			if tt.engines != nil {
+				enginesToScore = nil
+				for _, name := range tt.engines {
+					manifest, err := engines.LoadManifest(cmd.EnginesDir, name)
+					if err != nil {
+						t.Fatal(err)
+					}
+					enginesToScore = append(enginesToScore, *manifest)
+				}
+			}
+			scored, err := selector.ScoreEngines(machineInfo, enginesToScore)
+			if err != nil {
+				t.Fatal(err)
+			}
+			machineForFix := machineInfo
+			if !tt.observable {
+				machineForFix = nil
+			}
+			err = cmd.fixActiveEngineWithScores(tt.active, tt.observable, scored, machineForFix)
+			if tt.wantErr == "" && err != nil || tt.wantErr != "" && (err == nil || !strings.Contains(err.Error(), tt.wantErr)) {
+				t.Fatalf("got error %v, want %q", err, tt.wantErr)
+			}
+			active, err := cmd.Cache.GetActiveEngine()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if active != tt.wantEngine {
+				t.Errorf("active engine = %q, want %q", active, tt.wantEngine)
+			}
+			if tt.wantErr == "" {
+				model, err := cmd.Cache.GetActiveModel()
+				if err != nil {
+					t.Fatal(err)
+				}
+				wantModel := "4b-it-int4-fq-ov"
+				configKey, wantConfig := "target-device", any("GPU")
+				if tt.wantEngine == "cpu" {
+					wantModel = "26b-q4-k-m-gguf"
+					configKey, wantConfig = "sleep-idle-seconds", 600
+				}
+				if model != wantModel {
+					t.Errorf("active model = %q, want %q", model, wantModel)
+				}
+				config, err := cmd.Config.Get(configKey)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if config[configKey] != wantConfig {
+					t.Errorf("%s = %v, want %v", configKey, config[configKey], wantConfig)
+				}
+			}
+		})
+	}
+}
+
+func TestFixActiveEngineObservabilityError(t *testing.T) {
+	cmd := newUseEngineCmd()
+	cmd.Snap = snap.MockWithHardwareObservability(false, errors.New("observe failed"))
+	if err := cmd.Cache.SetActiveEngine("cpu"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.fixActiveEngine(); err == nil || !strings.Contains(err.Error(), "observe failed") {
+		t.Fatalf("expected observability error, got %v", err)
+	}
+}
+
+func TestFixActiveEngineUnobservableKeepsEngine(t *testing.T) {
+	setupSnapComponents(t, "runtime-openvino-model-server", "model-4b-it-int4-fq-ov")
+	cmd := newUseEngineCmd()
+	cmd.fallback = "cpu"
+	if err := cmd.Cache.SetActiveEngine("intel-gpu"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Cache.SetActiveModel("4b-it-int4-fq-ov"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.fixActiveEngine(); err != nil {
+		t.Fatal(err)
+	}
+	active, err := cmd.Cache.GetActiveEngine()
+	if err != nil || active != "intel-gpu" {
+		t.Fatalf("active engine = %q, error = %v", active, err)
+	}
+	config, err := cmd.Config.Get("target-device")
+	if err != nil || config["target-device"] != "GPU" {
+		t.Fatalf("engine config = %v, error = %v", config, err)
+	}
+}
+
+func TestFixActiveEngineChecksComponents(t *testing.T) {
+	cmd := newUseEngineCmd()
+	cmd.RuntimesDir = t.TempDir()
+	if err := cmd.Cache.SetActiveEngine("intel-gpu"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Cache.SetActiveModel("4b-it-int4-fq-ov"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.fixActiveEngine(); err == nil || !strings.Contains(err.Error(), "installing missing components") {
+		t.Fatalf("expected component check error, got %v", err)
+	}
+}
+
+func TestFixActiveEngineScoringError(t *testing.T) {
+	cmd := newUseEngineCmd()
+	cmd.EnginesDir = t.TempDir() + "/missing"
+	cmd.Snap = snap.MockWithHardwareObservability(true, nil)
+	if err := cmd.Cache.SetActiveEngine("cpu"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.fixActiveEngine(); err == nil || !strings.Contains(err.Error(), "scoring engines") {
+		t.Fatalf("expected scoring error, got %v", err)
 	}
 }
 
