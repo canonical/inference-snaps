@@ -117,7 +117,7 @@ Moreover, the web interface shows options for controlling reasoning, checking st
 
 To try the model with an image, download this photo of the [{spellexception}`Dom Luís I Bridge`](https://commons.wikimedia.org/wiki/File:Portugal,_Porto,_Dominic_Lu%C3%ADs_l_Bridge_(52594422458).jpg) and attach it to a new chat. Then ask a question that needs some understanding of the image, such as "What is the significance of the triangles?"
 
-On a laptop with an NVIDIA RTX PRO 1000 Blackwell, the response was almost immediate. The model explained that "the triangles are the scaffolding of stability", giving the bridge rigidity, distribute forces, and allow long spans. This is correct (the screenshot below shows only part of the reply):
+On a laptop with an NVIDIA RTX PRO 1000 Blackwell, the response was almost immediate. The model explained that "the triangles are the scaffolding of stability", giving the bridge rigidity, distributing forces, and allowing long spans. This is correct (the screenshot below shows only part of the reply):
 
 ```{image} web-ui-gemma4-image-response.png
 :alt: Response of the model
