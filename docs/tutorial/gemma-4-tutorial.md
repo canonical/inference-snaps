@@ -74,7 +74,7 @@ sudo gemma4 use-engine cpu
 Engine changed to "cpu".
 ```
 
-Switch back to the original engine, for example {command}`sudo gemma4 use-engine nvidia-gpu`, so that the rest of the tutorial matches.
+Switch back to the engine selected during installation (the one shown by the first {command}`gemma4 status`), so that the rest of the tutorial matches. For example, if it was `nvidia-gpu`, run {command}`sudo gemma4 use-engine nvidia-gpu`.
 
 The snap and command-line interface (CLI) versions can be checked to see which versions you are running:
 ```{terminal}
