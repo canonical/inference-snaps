@@ -15,7 +15,7 @@ This packaging workflow is experimental. The steps, prompts, and generated outpu
 This tutorial builds on snap packaging and inference snap concepts. Work through these tutorials first:
 
 - [Create an inference snap](../tutorial/create-inference-snap.md)
-- [Get started with Qwen VL](../tutorial/qwen-vl-tutorial.md)
+- [Get started with Gemma 4](../tutorial/gemma-4-tutorial.md)
 
 To follow this tutorial, you need:
 - A Linux machine where you can install and run snaps.

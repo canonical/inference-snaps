@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 (qwen-vl-tutorial)=
 
 # Get started with Inference Snaps using Qwen VL
