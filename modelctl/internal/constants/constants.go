@@ -1,7 +1,5 @@
 package constants
 
-import "time"
-
 const (
 	PciVendorAmd    = 0x1002
 	PciVendorIntel  = 0x8086
@@ -19,6 +17,4 @@ const (
 
 	SnapStoragePath          = "/var/lib/snapd/snaps" // https://snapcraft.io/docs/system-snap-directory
 	DefaultShareProviderPath = "$SNAP_COMMON/share/provider"
-
-	StoreTimeout = 3 * time.Second
 )

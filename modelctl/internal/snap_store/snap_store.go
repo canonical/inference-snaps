@@ -10,12 +10,12 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-
-	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
+	"time"
 )
 
 var storeURL = "https://api.snapcraft.io"
-var storeTimeout = constants.StoreTimeout
+
+const storeTimeout = 3 * time.Second
 
 var cachedComponentSizes = sync.OnceValues(fetchComponentSizes)
 
