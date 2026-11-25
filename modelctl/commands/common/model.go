@@ -159,7 +159,7 @@ func GetModelDetailsByNameOrAlias(ctx *Context, modelName string, machine *machi
 	for _, manifest := range modelManifests {
 		manifestsByName[manifest.Name] = manifest
 	}
-	scoredModels, err := ScoreModels(activeEngineManifest.Model.Options, manifestsByName, machine, *activeEngineManifest, ctx)
+	scoredModels, err := ScoreModels(ctx, activeEngineManifest.Model.Options, manifestsByName, machine, *activeEngineManifest)
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +276,7 @@ func getRequiredDiskSpaceForModelWithSizes(manifest *models.Manifest, installedC
 	return uint64(totalMissingSize), nil
 }
 
-func ScoreModels(modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest, ctx *Context) ([]models.ScoredManifest, error) {
+func ScoreModels(ctx *Context, modelOptions []string, manifests map[string]models.Manifest, machine *machine.Machine, activeEngineManifest engines.Manifest) ([]models.ScoredManifest, error) {
 	availableDiskSpace, err := availableDiskSpace(machine)
 	if err != nil {
 		return nil, err
@@ -378,7 +378,7 @@ func SelectModel(ctx *Context, engineManifest engines.Manifest, preferredModel s
 		manifestsByName[manifest.Name] = manifest
 	}
 
-	scoredModels, err := ScoreModels(engineManifest.Model.Options, manifestsByName, machine, engineManifest, ctx)
+	scoredModels, err := ScoreModels(ctx, engineManifest.Model.Options, manifestsByName, machine, engineManifest)
 	if err != nil {
 		return "", nil, err
 	}
