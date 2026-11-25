@@ -32,7 +32,7 @@ func main() {
 		Config: storage.NewMockConfig(),
 	}
 	// Enable all optional commands so they are documented
-	root, err := commands.NewRootCmd(ctx, commands.RootOptions{Name: rootName, Chat: true, WebUi: true})
+	root, err := commands.NewRootCmd(ctx, commands.RootOptions{Name: rootName, Chat: true, WebUI: true})
 	if err != nil {
 		log.Fatalf("Error building command tree: %v", err)
 	}

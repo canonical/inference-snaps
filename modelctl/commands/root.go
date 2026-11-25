@@ -17,7 +17,7 @@ type RootOptions struct {
 	// Chat adds the chat command
 	Chat bool
 	// WebUi adds the webui command
-	WebUi bool
+	WebUI bool
 }
 
 // NewRootCmd builds the root command with all subcommands registered
@@ -47,7 +47,7 @@ func NewRootCmd(ctx *common.Context, opts RootOptions) (*cobra.Command, error) {
 	return rootCmd, nil
 }
 
-func persistentPreRunE(cmd *cobra.Command, args []string) error {
+func persistentPreRunE(cmd *cobra.Command, _ []string) error {
 	// get value of verbose flag
 	verbose := cmd.Flags().Lookup("verbose").Value.String() == "true"
 	if verbose {
@@ -103,7 +103,7 @@ func registerCommands(rootCmd *cobra.Command, ctx *common.Context, opts RootOpti
 			return err
 		}
 	}
-	if opts.WebUi {
+	if opts.WebUI {
 		err := appendCommandToGroup(rootCmd, "basic", WebUi(ctx))
 		if err != nil {
 			return err

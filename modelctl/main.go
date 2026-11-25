@@ -39,7 +39,7 @@ func main() {
 	rootCmd, err := commands.NewRootCmd(ctx, commands.RootOptions{
 		Name:  instanceName,
 		Chat:  common.ChatEnabled(),
-		WebUi: common.WebUiEnabled(),
+		WebUI: common.WebUiEnabled(),
 	})
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
