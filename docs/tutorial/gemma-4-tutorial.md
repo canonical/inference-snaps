@@ -29,7 +29,7 @@ In this context, {ref}`engine <engines>` refers to a combination of model weight
 
 ## Check the status
 
-Once the installation is complete, the server used to inference with the model starts automatically.
+Once the installation is complete, the server used for inference with the model starts automatically.
 This server comes from the engine.
 
 Run {command}`gemma4 status` to see the selected engine and the status of the server.
