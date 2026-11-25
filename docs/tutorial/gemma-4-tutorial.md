@@ -77,12 +77,12 @@ Engine changed to "cpu".
 Switch back to the engine selected during installation (the one shown by the first {command}`gemma4 status`), so that the rest of the tutorial matches. For example, if it was `nvidia-gpu`, run {command}`sudo gemma4 use-engine nvidia-gpu`.
 
 The snap and command-line interface (CLI) versions can be checked to see which versions you are running:
+
 ```{terminal}
 gemma4 version
 
 snap: 2.0.0-beta.14+0237ac7
 cli: v2.0.0-beta.14
-
 ```
 
 ## Chat with the LLM
