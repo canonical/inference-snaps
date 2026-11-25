@@ -10,9 +10,12 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/constants"
 )
 
 var storeURL = "https://api.snapcraft.io"
+var storeTimeout = constants.StoreTimeout
 
 var cachedComponentSizes = sync.OnceValues(fetchComponentSizes)
 
@@ -81,7 +84,7 @@ func snapInfo(snapName string) (*snapInfoResponse, error) {
 	req.Header.Add("Snap-Device-Series", "16")
 	req.Header.Add("Accept", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: storeTimeout}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("making http request: %v", err)
@@ -162,7 +165,7 @@ func snapRefresh(snapId string, revision int, snapArch string) (*snapRefreshResp
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: storeTimeout}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("making http request: %v", err)
