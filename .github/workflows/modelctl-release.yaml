@@ -102,6 +102,9 @@ jobs:
           go-version: '1.27.x'
 
       - name: Push CLI docs branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
           # Don't roll the docs back when patching an older release
           latest=$(git tag --list 'v*' | grep -v -- '-' | sort -V | tail -1)
@@ -109,12 +112,17 @@ jobs:
 
           git worktree add ../release "$TAG"
           make -C ../release/modelctl docs-cli VERSION="$TAG"
-          cp ../release/docs/reuse/cli-commands.txt docs/reuse/
+          file=docs/reuse/cli-commands.txt
+          cp "../release/$file" "$file"
           git diff --quiet && { echo "CLI docs are already up to date"; exit 0; }
 
+          # Commit through the API so the commit is authored (and signed) by github-actions[bot],
+          # which the CLA check exempts. A git push would leave the commit unlinked to the bot.
           branch="docs/cli-reference-$TAG"
-          git switch -c "$branch"
-          git -c user.name="github-actions[bot]" -c user.email="41898283+github-actions[bot]@users.noreply.github.com" \
-            commit -am "docs: update CLI reference for $TAG"
-          git push --force origin "$branch"
+          main=$(git rev-parse HEAD)
+          gh api "repos/$REPO/git/refs" -f ref="refs/heads/$branch" -f sha="$main" >/dev/null \
+            || gh api -X PATCH "repos/$REPO/git/refs/heads/$branch" -f sha="$main" -F force=true >/dev/null
+          gh api -X PUT "repos/$REPO/contents/$file" -f branch="$branch" \
+            -f message="docs: update CLI reference for $TAG" \
+            -f sha="$(git rev-parse "HEAD:$file")" -f content="$(base64 -w0 "$file")" >/dev/null
           echo "[Open a PR](${{ github.server_url }}/${{ github.repository }}/compare/main...$branch?expand=1) to update the CLI docs for $TAG" >> "$GITHUB_STEP_SUMMARY"
