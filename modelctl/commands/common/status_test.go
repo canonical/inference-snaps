@@ -100,7 +100,7 @@ func TestStatusStruct_NoActiveEngine(t *testing.T) {
 
 func TestStatusBetterEngineNotice(t *testing.T) {
 	t.Setenv("SNAP_INSTANCE_NAME", "test-snap")
-	notice := "There are better engines for your set up. Run test-snap use-engine --auto to switch."
+	notice := "A better engine is available for your machine. Run test-snap use-engine --auto to switch."
 	tests := []struct {
 		name         string
 		machine      string
@@ -304,7 +304,7 @@ func ExampleStatus_yamlBetterEngine() {
 	// model:
 	//     name: 26b-q4-k-m-gguf
 	// notices:
-	//     - There are better engines for your set up. Run modelctl-test use-engine --auto to switch.
+	//     - A better engine is available for your machine. Run modelctl-test use-engine --auto to switch.
 }
 
 func ExampleStatus_jsonBetterEngine() {
@@ -329,7 +329,7 @@ func ExampleStatus_jsonBetterEngine() {
 	//     "name": "26b-q4-k-m-gguf"
 	//   },
 	//   "notices": [
-	//     "There are better engines for your set up. Run modelctl-test use-engine --auto to switch."
+	//     "A better engine is available for your machine. Run modelctl-test use-engine --auto to switch."
 	//   ]
 	// }
 }

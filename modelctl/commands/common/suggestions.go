@@ -117,7 +117,7 @@ func SuggestBetterEngine() string {
 		instanceName = "<snap-instance-name>"
 	}
 
-	return fmt.Sprintf("There are better engines for your set up. Run %s use-engine --auto to switch.", instanceName)
+	return fmt.Sprintf("A better engine is available for your machine. Run %s use-engine --auto to switch.", instanceName)
 }
 
 func SuggestNoCompatibleModel(newEngine string) string {
