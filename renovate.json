@@ -1,9 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitScopeDisabled"
   ],
-  "semanticCommits": "enabled",
   "packageRules": [
     {
       "description": "Update all submodules in a single PR",
