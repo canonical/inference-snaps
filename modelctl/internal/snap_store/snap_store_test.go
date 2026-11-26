@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 )
 
@@ -127,6 +129,71 @@ func TestGetComponentsErrors(t *testing.T) {
 			_, err := snapComponents(testSnapId, 53, "amd64")
 			if err == nil || !strings.Contains(err.Error(), tc.want) {
 				t.Fatalf("error = %v, want it to contain %q", err, tc.want)
+			}
+		})
+	}
+}
+
+func TestComponentSizesCached(t *testing.T) {
+	for _, tc := range []struct {
+		name          string
+		status        int
+		refreshStatus int
+		wantErr       bool
+		wantRefresh   int32
+	}{
+		{name: "success", status: http.StatusOK, refreshStatus: http.StatusOK, wantRefresh: 1},
+		{name: "failure", status: http.StatusServiceUnavailable, wantErr: true},
+		{name: "refresh failure", status: http.StatusOK, refreshStatus: http.StatusServiceUnavailable, wantErr: true, wantRefresh: 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("SNAP_NAME", "deepseek-r1")
+			t.Setenv("SNAP_REVISION", "53")
+			t.Setenv("SNAP_ARCH", "amd64")
+			var infoRequests, refreshRequests atomic.Int32
+			mux := http.NewServeMux()
+			mux.HandleFunc(infoRoute, func(w http.ResponseWriter, _ *http.Request) {
+				infoRequests.Add(1)
+				w.WriteHeader(tc.status)
+				if _, err := w.Write([]byte(infoFixture)); err != nil {
+					t.Errorf("writing info response: %v", err)
+				}
+			})
+			mux.HandleFunc(refreshRoute, func(w http.ResponseWriter, _ *http.Request) {
+				refreshRequests.Add(1)
+				w.WriteHeader(tc.refreshStatus)
+				if _, err := w.Write([]byte(refreshFixture)); err != nil {
+					t.Errorf("writing refresh response: %v", err)
+				}
+			})
+			server := httptest.NewServer(mux)
+			t.Cleanup(server.Close)
+			originalURL, originalCache := storeURL, cachedComponentSizes
+			storeURL = server.URL
+			cachedComponentSizes = sync.OnceValues(fetchComponentSizes)
+			t.Cleanup(func() {
+				storeURL, cachedComponentSizes = originalURL, originalCache
+			})
+
+			var calls sync.WaitGroup
+			for range 10 {
+				calls.Go(func() {
+					sizes, err := ComponentSizes()
+					if (err != nil) != tc.wantErr {
+						t.Errorf("ComponentSizes error = %v, wantErr %v", err, tc.wantErr)
+					}
+					if !tc.wantErr {
+						want := map[string]int64{"llama-aio": 4947968, "llama-aio-ampereone": 5001216}
+						if !maps.Equal(sizes, want) {
+							t.Errorf("component sizes = %v, want %v", sizes, want)
+						}
+						sizes["llama-aio"] = 0
+					}
+				})
+			}
+			calls.Wait()
+			if infoRequests.Load() != 1 || refreshRequests.Load() != tc.wantRefresh {
+				t.Fatalf("requests: info=%d refresh=%d; want 1 and %d", infoRequests.Load(), refreshRequests.Load(), tc.wantRefresh)
 			}
 		})
 	}

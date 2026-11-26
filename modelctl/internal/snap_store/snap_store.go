@@ -4,15 +4,27 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 )
 
 var storeURL = "https://api.snapcraft.io"
 
+const storeTimeout = 3 * time.Second
+
+var cachedComponentSizes = sync.OnceValues(fetchComponentSizes)
+
 func ComponentSizes() (map[string]int64, error) {
+	sizes, err := cachedComponentSizes()
+	return maps.Clone(sizes), err
+}
+
+func fetchComponentSizes() (map[string]int64, error) {
 	components, err := componentsOfCurrentSnap()
 	if err != nil {
 		return nil, fmt.Errorf("finding snap components: %v", err)
@@ -72,7 +84,7 @@ func snapInfo(snapName string) (*snapInfoResponse, error) {
 	req.Header.Add("Snap-Device-Series", "16")
 	req.Header.Add("Accept", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: storeTimeout}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("making http request: %v", err)
@@ -153,7 +165,7 @@ func snapRefresh(snapId string, revision int, snapArch string) (*snapRefreshResp
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: storeTimeout}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("making http request: %v", err)

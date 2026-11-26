@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/engines"
+	"github.com/canonical/inference-snaps/modelctl/v2/internal/models"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/storage"
 	"github.com/canonical/inference-snaps/modelctl/v2/internal/utils"
 	"github.com/canonical/lscompute/pkg/machine"
@@ -270,6 +271,28 @@ func TestSelectModelMemory(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			modelsDir := t.TempDir()
+			componentsDir := t.TempDir()
+
+			// Set up SNAP_COMPONENTS for InstalledComponents() calls
+			oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+			defer func() {
+				if oldSnapComponents != "" {
+					err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+					if err != nil {
+						t.Fatalf("failed to restore SNAP_COMPONENTS: %v", err)
+					}
+				} else {
+					err := os.Unsetenv("SNAP_COMPONENTS")
+					if err != nil {
+						t.Fatalf("failed to unset SNAP_COMPONENTS: %v", err)
+					}
+				}
+			}()
+			err := os.Setenv("SNAP_COMPONENTS", componentsDir)
+			if err != nil {
+				t.Fatalf("failed to set SNAP_COMPONENTS: %v", err)
+			}
+
 			writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 2\nrequired-memory: 4\n")
 			writeModelYAML(t, modelsDir, "large", "name: large\ndisk-size: 4\nrequired-memory: 16\n")
 			writeModelYAML(t, modelsDir, "implicit", "name: implicit\ndisk-size: 16\n")
@@ -301,6 +324,212 @@ func TestSelectModelMemory(t *testing.T) {
 	}
 }
 
+func TestGetRequiredDiskSpaceForModelWithSizes(t *testing.T) {
+	for _, test := range []struct {
+		name                string
+		diskSize            string
+		components          []string
+		installedComponents []string
+		componentSizes      map[string]int64 // nil means no precise sizes available
+		wantDiskSpace       uint64
+		shouldErr           bool
+	}{
+		{
+			name:                "no components in model, full disk required",
+			diskSize:            "10G",
+			components:          []string{},
+			installedComponents: []string{},
+			componentSizes:      nil,
+			wantDiskSpace:       10 * 1024 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "all components installed, zero disk required",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{"comp-a", "comp-b"},
+			componentSizes:      nil,
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "one component installed, partial disk required (precise sizes)",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{"comp-a"},
+			componentSizes:      map[string]int64{"comp-b": 3 * 1024 * 1024 * 1024},
+			wantDiskSpace:       3 * 1024 * 1024 * 1024, // Only comp-b's size
+			shouldErr:           false,
+		},
+		{
+			name:                "no components installed, precise sizes available",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{},
+			componentSizes:      map[string]int64{"comp-a": 4 * 1024 * 1024 * 1024, "comp-b": 3 * 1024 * 1024 * 1024},
+			wantDiskSpace:       7 * 1024 * 1024 * 1024, // comp-a + comp-b
+			shouldErr:           false,
+		},
+		{
+			name:                "no components installed, no precise sizes (conservative fallback)",
+			diskSize:            "10G",
+			components:          []string{"comp-a", "comp-b"},
+			installedComponents: []string{},
+			componentSizes:      nil,                     // No precise sizes available
+			wantDiskSpace:       10 * 1024 * 1024 * 1024, // Falls back to full disk size
+			shouldErr:           false,
+		},
+		{
+			name:                "all components installed in different order, zero disk required",
+			diskSize:            "5G",
+			components:          []string{"comp-a", "comp-b", "comp-c"},
+			installedComponents: []string{"comp-c", "comp-a", "comp-b"},
+			componentSizes:      nil,
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "single component installed when model needs it",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{"single-comp"},
+			componentSizes:      nil,
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+		{
+			name:                "single component missing with precise size",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{},
+			componentSizes:      map[string]int64{"single-comp": 1500 * 1024 * 1024}, // 1.5G
+			wantDiskSpace:       1500 * 1024 * 1024,
+			shouldErr:           false,
+		},
+		{
+			name:                "missing component without size info (conservative fallback)",
+			diskSize:            "2G",
+			components:          []string{"single-comp"},
+			installedComponents: []string{},
+			componentSizes:      map[string]int64{},     // Component not in sizes map
+			wantDiskSpace:       2 * 1024 * 1024 * 1024, // Falls back to full disk size
+			shouldErr:           false,
+		},
+		{
+			name:                "extra installed components beyond model requirements",
+			diskSize:            "8G",
+			components:          []string{"comp-a"},
+			installedComponents: []string{"comp-a", "comp-b", "comp-c"},
+			componentSizes:      nil,
+			wantDiskSpace:       0,
+			shouldErr:           false,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			modelsDir := t.TempDir()
+			componentsStr := ""
+			if len(test.components) > 0 {
+				componentsStr = "components:\n"
+				for _, comp := range test.components {
+					componentsStr += "  - " + comp + "\n"
+				}
+			}
+
+			modelYaml := "name: test-model\n" +
+				"disk-size: " + test.diskSize + "\n" +
+				componentsStr
+
+			writeModelYAML(t, modelsDir, "test-model", modelYaml)
+
+			manifest, err := models.LoadManifest(modelsDir, "test-model")
+			if err != nil {
+				t.Fatalf("failed to load model manifest: %v", err)
+			}
+
+			got, err := getRequiredDiskSpaceForModelWithSizes(manifest, test.installedComponents, test.componentSizes)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != test.wantDiskSpace {
+				t.Errorf("getRequiredDiskSpaceForModelWithSizes() = %d, want %d", got, test.wantDiskSpace)
+			}
+		})
+	}
+}
+
+func TestSelectModelInstalledComponentsLowDisk(t *testing.T) {
+	modelsDir := t.TempDir()
+	componentsDir := t.TempDir()
+
+	modelYAML := "name: installed-model\n" +
+		"disk-size: 4G\n" +
+		"required-memory: 2G\n" +
+		"components:\n" +
+		"  - comp-a\n" +
+		"  - comp-b\n"
+	writeModelYAML(t, modelsDir, "installed-model", modelYAML)
+
+	writeModelYAML(t, modelsDir, "small", "name: small\ndisk-size: 1G\nrequired-memory: 2G\n")
+
+	if err := os.MkdirAll(filepath.Join(componentsDir, "comp-a"), 0755); err != nil {
+		t.Fatalf("MkdirAll comp-a: %v", err)
+	}
+	if err := os.MkdirAll(filepath.Join(componentsDir, "comp-b"), 0755); err != nil {
+		t.Fatalf("MkdirAll comp-b: %v", err)
+	}
+
+	oldSnapComponents := os.Getenv("SNAP_COMPONENTS")
+	defer func() {
+		if oldSnapComponents != "" {
+			err := os.Setenv("SNAP_COMPONENTS", oldSnapComponents)
+			if err != nil {
+				t.Fatalf("failed to restore SNAP_COMPONENTS: %v", err)
+			}
+		} else {
+			err := os.Unsetenv("SNAP_COMPONENTS")
+			if err != nil {
+				t.Fatalf("failed to unset SNAP_COMPONENTS: %v", err)
+			}
+		}
+	}()
+	err := os.Setenv("SNAP_COMPONENTS", componentsDir)
+	if err != nil {
+		t.Fatalf("failed to set SNAP_COMPONENTS: %v", err)
+	}
+
+	hostMachine := &machine.Machine{}
+	hostMachine.Memory.TotalRam = 10 * 1024 * 1024 * 1024 // 10 GB
+	hostMachine.Disk = []disk.Disk{{Path: "/var/lib/snapd/snaps", Available: 1}}
+
+	engine := engines.Manifest{Model: engines.Model{Options: []string{"installed-model", "small"}}}
+
+	selected, scoredModels, err := SelectModel(
+		&Context{ModelsDir: modelsDir},
+		engine,
+		"installed-model", // Preferred model with all components installed
+		hostMachine,
+	)
+
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	if selected != "installed-model" {
+		t.Errorf("selected = %q, want %q (model with installed components should be retained despite low disk)", selected, "installed-model")
+	}
+
+	for _, model := range scoredModels {
+		if model.Name == "installed-model" {
+			if !model.CompatibilityReport.CompatibleDisk {
+				t.Errorf("installed-model CompatibleDisk = false, want true (all components installed, so no additional disk needed)")
+			}
+			if !model.CompatibilityReport.Compatible() {
+				t.Errorf("installed-model Compatible() = false, want true")
+			}
+			break
+		}
+	}
+}
 func TestGetTopGpuVram(t *testing.T) {
 	m := &machine.Machine{
 		CPUs: []cpu.CPU{{
