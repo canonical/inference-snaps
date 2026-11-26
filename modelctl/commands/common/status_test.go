@@ -267,9 +267,26 @@ func exampleStatusWithBetterEngine() (*Status, error) {
 	return status, nil
 }
 
+func setExampleSnapInstanceName() func() {
+	previous, wasSet := os.LookupEnv("SNAP_INSTANCE_NAME")
+	if err := os.Setenv("SNAP_INSTANCE_NAME", "modelctl-test"); err != nil {
+		panic(err)
+	}
+	return func() {
+		var err error
+		if wasSet {
+			err = os.Setenv("SNAP_INSTANCE_NAME", previous)
+		} else {
+			err = os.Unsetenv("SNAP_INSTANCE_NAME")
+		}
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func ExampleStatus_yamlBetterEngine() {
-	os.Setenv("SNAP_INSTANCE_NAME", "modelctl-test")
-	defer os.Unsetenv("SNAP_INSTANCE_NAME")
+	defer setExampleSnapInstanceName()()
 	status, err := exampleStatusWithBetterEngine()
 	if err != nil {
 		panic(err)
@@ -291,8 +308,7 @@ func ExampleStatus_yamlBetterEngine() {
 }
 
 func ExampleStatus_jsonBetterEngine() {
-	os.Setenv("SNAP_INSTANCE_NAME", "modelctl-test")
-	defer os.Unsetenv("SNAP_INSTANCE_NAME")
+	defer setExampleSnapInstanceName()()
 	status, err := exampleStatusWithBetterEngine()
 	if err != nil {
 		panic(err)
