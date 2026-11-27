@@ -8,7 +8,7 @@
 
 
 # 2026-11-26
-tutorial/qwen-vl-tutorial tutorial/gemma-4-tutorial
+tutorial/qwen-vl-tutorial tutorial/getting-started
 
 # 2026-06-23
 how-to/integration/configure-opencode how-to/integration/opencode

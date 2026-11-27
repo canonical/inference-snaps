@@ -108,7 +108,7 @@ For queries that include images, you can use the Web UI.
 The provided Web UI is a more advanced client interface for working with LLMs.
 You can access the web interface at the URL shown for the webui in {command}`gemma4 status` command (`http://127.0.0.1:8337/` in the example above):
 
-```{image} web-ui-gemma4.png
+```{image} getting-started/gemma4-webui.png
 :alt: Web interface for chatting with Gemma 4 model
 :align: center
 ```
@@ -119,7 +119,7 @@ To try the model with an image, download this photo of the [{spellexception}`Dom
 
 On a laptop with an NVIDIA RTX PRO 1000 Blackwell, the response was almost immediate. The model explained that "the triangles are the scaffolding of stability", giving the bridge rigidity, distributing forces, and allowing long spans. This is correct (the screenshot below shows only part of the reply):
 
-```{image} web-ui-gemma4-image-response.png
+```{image} getting-started/gemma4-image-prompt.png
 :alt: Response of the model
 :align: center
 ```
