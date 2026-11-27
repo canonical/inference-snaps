@@ -7,6 +7,8 @@ import (
 type mockSnap struct {
 	installComponentFn func(name string) error
 	serviceStatuses    map[string]string
+	observable         bool
+	observeErr         error
 }
 
 // Mock returns a no-op Snap suitable for tests that don't exercise InstallComponent or ServiceStatuses.
@@ -23,6 +25,11 @@ func MockWithInstall(fn func(name string) error) Snap {
 // MockWithServiceStatuses returns a Snap that returns the given statuses from ServiceStatuses.
 func MockWithServiceStatuses(statuses map[string]string) Snap {
 	return &mockSnap{serviceStatuses: statuses}
+}
+
+// MockWithHardwareObservability returns a Snap with the given hardware observability result.
+func MockWithHardwareObservability(observable bool, err error) Snap {
+	return &mockSnap{observable: observable, observeErr: err}
 }
 
 func (c *mockSnap) Restart(service ...string) error {
@@ -51,7 +58,7 @@ func (c *mockSnap) Version() string {
 }
 
 func (c *mockSnap) HardwareObservable() (bool, error) {
-	return false, nil
+	return c.observable, c.observeErr
 }
 
 func (c *mockSnap) InstallComponent(name string) error {

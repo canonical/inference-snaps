@@ -47,7 +47,7 @@ func UseEngine(ctx *common.Context) *cobra.Command {
 	// flags
 	cobraCmd.Flags().BoolVar(&cmd.auto, "auto", false, "automatically select a compatible engine")
 	cobraCmd.Flags().BoolVar(&cmd.fix, "fix", false, "fix issues with the currently active engine")
-	cobraCmd.Flags().StringVar(&cmd.fallback, "fallback", "", "fallback engine to use when hardware information is unavailable (requires --auto or --fix)")
+	cobraCmd.Flags().StringVar(&cmd.fallback, "fallback", "", "fallback engine to use when needed (requires --auto or --fix)")
 	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for all prompts")
 	cobraCmd.Flags().BoolVar(&cmd.noRestart, "no-restart", false, "do not restart the snap after changing engine")
 	cobraCmd.Flags().BoolVar(&cmd.considerComponents, "components", false, "consider pre-installed components (requires --auto)")
@@ -362,10 +362,6 @@ func (cmd *useEngineCommand) switchEngineAndModel(newEngineName string, newModel
 	return nil
 }
 
-// fixActiveEngine does the following:
-// - auto selects an engine if the active engine no longer exists
-// - verify that the active model is supported by the active engine, otherwise switches to the default model
-// - if engine exists, make sure it is correctly installed and configured
 func (cmd *useEngineCommand) fixActiveEngine() error {
 	activeEngineName, err := cmd.Cache.GetActiveEngine()
 	if err != nil {
@@ -375,13 +371,42 @@ func (cmd *useEngineCommand) fixActiveEngine() error {
 		return common.ErrNoActiveEngine
 	}
 
-	// If active engine no longer exists, auto select another one
+	observable, err := cmd.Snap.HardwareObservable()
+	if err != nil {
+		return fmt.Errorf("checking hardware observability: %w", err)
+	}
+
+	var scoredEngines []engines.ScoredManifest
+	var machineInfo *machine.Machine
+	if observable {
+		scoredEngines, machineInfo, err = common.ScoreEnginesWithSpinner(cmd.Context)
+		if err != nil {
+			return fmt.Errorf("scoring engines: %w", err)
+		}
+	}
+	return cmd.fixActiveEngineWithScores(activeEngineName, observable, scoredEngines, machineInfo)
+}
+
+func (cmd *useEngineCommand) fixActiveEngineWithScores(activeEngineName string, observable bool, scoredEngines []engines.ScoredManifest, machineInfo *machine.Machine) error {
 	engineManifest, err := engines.LoadManifest(cmd.EnginesDir, activeEngineName)
-	if errors.Is(err, engines.ErrManifestNotFound) {
-		fmt.Printf("Active engine %q not found, performing auto selection instead.\n", activeEngineName)
-		return cmd.autoSelectEngine()
-	} else if err != nil {
+	if err != nil && !errors.Is(err, engines.ErrManifestNotFound) {
 		return fmt.Errorf("loading active engine manifest: %v", err)
+	}
+
+	compatible := func(name string) bool {
+		return slices.ContainsFunc(scoredEngines, func(engine engines.ScoredManifest) bool {
+			return engine.Name == name && engine.Score > 0
+		})
+	}
+	if engineManifest == nil || (observable && !compatible(activeEngineName)) {
+		if cmd.fallback == "" {
+			return fmt.Errorf("active engine %q is unavailable or incompatible and no fallback engine was specified", activeEngineName)
+		}
+		if observable && !compatible(cmd.fallback) {
+			return fmt.Errorf("fallback engine %q is unavailable or incompatible", cmd.fallback)
+		}
+		fmt.Printf("Active engine %q is unavailable or incompatible; falling back to %q.\n", activeEngineName, cmd.fallback)
+		return cmd.switchEngineWithMachine(cmd.fallback, machineInfo)
 	}
 
 	// Check if the model is supported, otherwise switch to the default

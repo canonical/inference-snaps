@@ -63,3 +63,11 @@ func TestSuggestListModels(t *testing.T) {
 		})
 	}
 }
+
+func TestSuggestBetterEngineOutsideSnap(t *testing.T) {
+	t.Setenv("SNAP_INSTANCE_NAME", "")
+	want := "A better engine is available for your machine. Run <snap-instance-name> use-engine --auto to switch."
+	if got := SuggestBetterEngine(); got != want {
+		t.Errorf("SuggestBetterEngine() = %q, want %q", got, want)
+	}
+}

@@ -75,9 +75,9 @@ Details shown:
 
 * Service status and active endpoints
 * Currently selected engine
+* A notice when the machine supports a higher-scoring engine
 
-<!-- * Availability of better engines, e.g., after attaching new hardware or installing drivers.
-* Missing drivers for available hardware
+<!-- * Missing drivers for available hardware
 * Resource usage by engines, including cached data -->
 
 ### `chat`
@@ -163,6 +163,12 @@ To automatically select the best match, considering the hardware and compute cap
 
 Switching engines will trigger the download of engine resources (as snap components).
 A confirmation prompt will appear before downloading.
+
+After a refresh, `use-engine --fix --fallback=<engine>` reapplies the active engine's
+configuration and checks its components. If the engine is removed or incompatible
+with observable hardware, it switches to the fallback only if it is compatible;
+otherwise the command fails. When hardware is not observable, the active engine
+is kept if available, or the fallback is used if it was removed.
 
 ```{tip}
 The `use-engine --auto` command is usually called during the inference snap installation.
