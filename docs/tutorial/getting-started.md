@@ -1,4 +1,4 @@
-(gemma-4-tutorial)=
+(getting-started)=
 
 # Get started with Inference Snaps using Gemma 4
 
