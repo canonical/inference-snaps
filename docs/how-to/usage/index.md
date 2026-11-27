@@ -1,3 +1,5 @@
+(usage)=
+
 # Use inference snaps
 
 Follow these guides to operate, configure, and access inference snaps in day-to-day workflows.

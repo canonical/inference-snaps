@@ -176,5 +176,5 @@ Note that the above command needs {command}`jq` to be installed (which is requir
 ## Next steps
 
 To become more familiar with inference snaps:
-- Learn more about how to {ref}`switch to a different engine <switch-between-engines>` after installation
+- Learn more about how to {ref}`manage and configure inference snaps <usage>` after installation
 - Configure an inference snap to {ref}`work with your (agentic) clients <integration>`
