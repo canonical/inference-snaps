@@ -8,7 +8,7 @@ Examples:
 - docs: add quick filters and search to snaps reference
 - refactor: move from stack-utils to modelctl-test snap
 - test: serve snap store responses from httptest
-- build: version modelctl CLI via ldflag
+- build: version modelctl CLI via ldflags
 - chore: bump YAML dependency to v4.0.0
 - ci: add go linter
 
