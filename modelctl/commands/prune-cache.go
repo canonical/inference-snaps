@@ -18,7 +18,8 @@ type pruneCacheCommand struct {
 	*common.Context
 
 	// flags
-	engine string
+	engine    string
+	assumeYes bool
 }
 
 func PruneCache(ctx *common.Context) *cobra.Command {
@@ -33,6 +34,7 @@ func PruneCache(ctx *common.Context) *cobra.Command {
 
 	// flags
 	cobraCmd.Flags().StringVar(&cmd.engine, "engine", "", "Remove caches of an engine")
+	cobraCmd.Flags().BoolVar(&cmd.assumeYes, "assume-yes", false, "assume yes for all prompts")
 
 	return cobraCmd
 }
@@ -167,13 +169,17 @@ func (cmd *pruneCacheCommand) printComponentsAndConfirm(componentsToRemove []str
 		fmt.Printf("- %s\n", componentLine)
 	}
 
-	if utils.IsTerminalOutput() {
-		fmt.Println()
-		if !common.PromptYN("Continue removing components?", false) {
-			fmt.Println("Cancelled. No changes applied.")
-			return false, nil
-		}
+	if cmd.assumeYes {
+		return true, nil
 	}
 
-	return true, nil
+	fmt.Println()
+	confirmed, err := common.PromptYN("Continue removing components?", false)
+	if err != nil {
+		return false, err
+	}
+	if !confirmed {
+		fmt.Println("Cancelled. No changes applied.")
+	}
+	return confirmed, nil
 }

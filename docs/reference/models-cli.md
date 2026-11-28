@@ -199,6 +199,9 @@ To remove cached data of a specific engine:
 <inference-snap> prune-cache --engine=<engine>
 ```
 
+A confirmation prompt will appear before removing components.
+To skip it, for example in scripts, add `--assume-yes`.
+
 The cache pruning typically involves removal of unused components, configurations, and temporary files.
 Keep in mind that removal of components does not immediately free up disk space.
 The components are marked for deletion and will be removed by the snap system at a later time.
