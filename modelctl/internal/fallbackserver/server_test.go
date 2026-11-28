@@ -49,6 +49,9 @@ func TestHandlerReportsServiceUnavailable(t *testing.T) {
 			if got := recorder.Header().Get("Cache-Control"); got != "no-store" {
 				t.Fatalf("Cache-Control = %q, want %q", got, "no-store")
 			}
+			if got := recorder.Header().Get("X-Should-Retry"); got != "false" {
+				t.Fatalf("X-Should-Retry = %q, want %q", got, "false")
+			}
 
 			var response apiError
 			if err := json.NewDecoder(recorder.Body).Decode(&response); err != nil {
@@ -63,8 +66,8 @@ func TestHandlerReportsServiceUnavailable(t *testing.T) {
 			if response.Error.Param != nil {
 				t.Fatalf("error param = %q, want nil", *response.Error.Param)
 			}
-			if response.Error.Code != "service_unavailable" {
-				t.Fatalf("error code = %q, want %q", response.Error.Code, "service_unavailable")
+			if response.Error.Code != ErrorCode {
+				t.Fatalf("error code = %q, want %q", response.Error.Code, ErrorCode)
 			}
 		})
 	}

@@ -9,7 +9,10 @@ import (
 	"time"
 )
 
-const defaultErrorMessage = "Inference server failed to start."
+const (
+	defaultErrorMessage = "Inference server failed to start."
+	ErrorCode           = "server_startup_failed"
+)
 
 type errorResponse struct {
 	Error struct {
@@ -46,7 +49,7 @@ func handler(errorMessage string) (http.Handler, error) {
 	response := errorResponse{}
 	response.Error.Message = message
 	response.Error.Type = "unavailable_error"
-	response.Error.Code = "service_unavailable"
+	response.Error.Code = ErrorCode
 
 	body, err := json.Marshal(response)
 	if err != nil {
@@ -74,6 +77,7 @@ func handler(errorMessage string) (http.Handler, error) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("X-Should-Retry", "false")
 		w.WriteHeader(status)
 		_, _ = w.Write(body)
 	}), nil
