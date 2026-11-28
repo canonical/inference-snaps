@@ -14,8 +14,8 @@ This packaging workflow is experimental. The steps, prompts, and generated outpu
 
 This tutorial builds on snap packaging and inference snap concepts. Work through these tutorials first:
 
+- [Get started with inference snaps](../tutorial/getting-started.md)
 - [Create an inference snap](../tutorial/create-inference-snap.md)
-- [Get started with Qwen VL](../tutorial/qwen-vl-tutorial.md)
 
 To follow this tutorial, you need:
 - A Linux machine where you can install and run snaps.
